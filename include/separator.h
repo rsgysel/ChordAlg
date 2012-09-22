@@ -1,14 +1,14 @@
 #ifndef SEPARATOR_H_INCLUDED
 #define SEPARATOR_H_INCLUDED
 
-#include<algorithm>
-#include<queue>
-#include<vector>
+#include <algorithm>
+#include <queue>
+#include <vector>
 
-#include"chordalg_types.h"
-#include"graph.h"
+#include "chordalg_types.h"
+#include "graph.h"
 
-namespace chordalg{
+namespace chordalg {
 
 class Separator
 {

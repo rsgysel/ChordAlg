@@ -13,9 +13,6 @@
 *.layout*
 *.cbp
 
-# Dirs
-graphfiles/*
-
 # Compiled Dynamic libraries
 *.so
 

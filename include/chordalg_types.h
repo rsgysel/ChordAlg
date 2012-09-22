@@ -1,8 +1,8 @@
 #ifndef CHORDALG_TYPES_H_INCLUDED
 #define CHORDALG_TYPES_H_INCLUDED
 
-#include<string>
-#include<vector>
+#include <string>
+#include <vector>
 
 namespace chordalg {
 

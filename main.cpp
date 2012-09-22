@@ -1,5 +1,5 @@
-#include<string>
-#include"graph.h"
+#include <string>
+#include "graph.h"
 
 #define TESTS_ON
 
@@ -14,8 +14,8 @@ int main(int argc, char **argv) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 #else
-    std::string file_name = std::string("C:/Users/rob/Desktop/Dropbox/My Research/Code and Executables (Dist.)/dev/ChordAlg/graphfiles/")
-                        + std::string("twocliques.sal.txt");
+    std::string file_name = std::string("graphfiles/")
+                        + std::string("twocliques.sal");
     chordalg::SortedAdjacencyListFR* graph_file = chordalg::NewFileReader< chordalg::SortedAdjacencyListFR >(file_name);
     chordalg::Graph* G = new chordalg::Graph(*graph_file);
     delete G;

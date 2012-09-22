@@ -1,6 +1,6 @@
-#include"separator.h"
+#include "separator.h"
 
-namespace chordalg{
+namespace chordalg {
 
 
 Separator::Separator(Graph* const G) : G_(G), component_of_vertex_(), size(0) {

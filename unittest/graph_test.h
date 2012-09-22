@@ -1,14 +1,14 @@
 #ifndef GRAPH_TEST_H
 #define GRAPH_TEST_H
 
-#include<string>
+#include <string>
 
 #ifdef TESTS_ON
 
 #include "gtest/gtest.h"
 
-#include"file_reader.h"
-#include"graph.h"
+#include "file_reader.h"
+#include "graph.h"
 
 class SortedAdjacencyListFRTest : public ::testing::Test {
  protected:

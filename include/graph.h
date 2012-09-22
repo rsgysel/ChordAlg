@@ -1,8 +1,8 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
-#include"chordalg_types.h"
-#include"file_reader.h"
+#include "chordalg_types.h"
+#include "file_reader.h"
 
 namespace chordalg {
 
