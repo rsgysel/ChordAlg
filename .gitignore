@@ -11,6 +11,7 @@
 *.stackdump
 *.depend
 *.layout*
+*.cbp
 
 # Dirs
 graphfiles/*
