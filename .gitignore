@@ -2,6 +2,18 @@
 *.slo
 *.lo
 *.o
+*.exe
+
+# VIM
+*.swp
+
+# Code::Blocks
+*.stackdump
+*.depend
+*.layout*
+
+# Dirs
+graphfiles/*
 
 # Compiled Dynamic libraries
 *.so
