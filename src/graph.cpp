@@ -7,7 +7,8 @@ namespace chordalg{
 Graph::Graph(FileReader& fr) : neighborhoods_(fr.TakeNeighborhoods()),
     vertex_names_(fr.TakeNames()),
     order_(neighborhoods_->size()),
-    size_(0)
+    size_(0),
+    graph_id_((int) this)
 {
     for(Nbhd const& N : *neighborhoods_)
         size_ += N.size();

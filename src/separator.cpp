@@ -24,8 +24,8 @@ void Separator::Calculate(VertexContainer S) {
         component_of_vertex_[v] = in_separator_;
 
     // BFS to find connected components
-    //for(Vertex const& v : *G_){ // in order for this to work, begin() needs to return an iterator to a vertex set
-    for(Vertex v = G_->begin(); v != G_->end(); ++v){
+    for(Vertex const& v : *G_){ // in order for this to work, begin() needs to return an iterator to a vertex set
+    //for(Vertex &v = G_->begin(); v != G_->end(); ++v){
         if(component_of_vertex_[v] == unsearched_)
         {
             search_queue.push(v);

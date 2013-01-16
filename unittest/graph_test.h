@@ -3,7 +3,7 @@
 
 #include <string>
 
-#ifdef TESTS_ON
+//#ifdef TESTS_ON
 
 #include "gtest/gtest.h"
 
@@ -25,7 +25,8 @@ class SortedAdjacencyListFRTest : public ::testing::Test {
     virtual void SetUp() {}
     virtual void TearDown() {}
 
-    const std::string graph_dir(){return std::string("C:/Users/rob/Desktop/Dropbox/My Research/Code and Executables (Dist.)/dev/ChordAlg/graphfiles/");}
+    const std::string graph_dir(){
+        return std::string("C:/Users/rob/workspace/ChordAlg/graphfiles/");}
 
     virtual void Read(std::string file_name){
         delete graph_file;
@@ -35,7 +36,7 @@ class SortedAdjacencyListFRTest : public ::testing::Test {
     }
 };
 
-#endif // TEST_ON
+//#endif // TEST_ON
 
 #endif // GRAPH_TEST_H
 
