@@ -102,6 +102,7 @@ void SortedAdjacencyListFR::ReadFileOrDie(){
         line_stream.clear(); line_stream.str("");   // reset line stream
     }
 
+    file_stream_.close();
     return;
 }
 

@@ -3,21 +3,19 @@
 
 #include <string>
 
-//#ifdef TESTS_ON
-
 #include "gtest/gtest.h"
 
 #include "file_reader.h"
 #include "graph.h"
 
-class SortedAdjacencyListFRTest : public ::testing::Test {
+class SortedAdjacencyListTest : public ::testing::Test {
  protected:
     chordalg::Graph* G;
     chordalg::SortedAdjacencyListFR* graph_file;
 
-    SortedAdjacencyListFRTest() : G(NULL), graph_file(NULL) {}
+    SortedAdjacencyListTest() : G(NULL), graph_file(NULL) {}
 
-    virtual ~SortedAdjacencyListFRTest() {
+    virtual ~SortedAdjacencyListTest() {
         delete graph_file;
         delete G;
     }
@@ -26,17 +24,15 @@ class SortedAdjacencyListFRTest : public ::testing::Test {
     virtual void TearDown() {}
 
     const std::string graph_dir(){
-        return std::string("C:/Users/rob/workspace/ChordAlg/graphfiles/");}
+        return std::string("graphfiles/");}
 
     virtual void Read(std::string file_name){
         delete graph_file;
         delete G;
         graph_file = chordalg::NewFileReader< chordalg::SortedAdjacencyListFR >(file_name);
-        G = new chordalg::Graph(*graph_file);
+        G = new chordalg::Graph(graph_file);
     }
 };
-
-//#endif // TEST_ON
 
 #endif // GRAPH_TEST_H
 

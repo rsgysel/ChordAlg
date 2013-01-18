@@ -13,8 +13,9 @@ namespace chordalg {
 
 // Abstract class used to read files for graphs.
 // To design a file reader class ClassFR, include the following:
-//      1) Empty constructor ClassFR(std::string)
-//
+//      1) private constructor ClassFR(std::string) that initializes FileReader with input string
+//      2) private ReadFileOrDie() method. you must close file_stream_ here
+//      3) friend access to factory method template< class FR > friend FR* NewFileReader(std::string);
 class FileReader
 {
     public:
@@ -52,12 +53,12 @@ FR* NewFileReader(std::string file_name)
     FR* fr_object = new FR(file_name);
     fr_object->ReadFileOrDie();
 
-    // type_check voided to prevent compiler warning
+    // type check FR. voided to prevent compiler warning
     FileReader* type_check = fr_object; (void) type_check;
     return fr_object;
 }
 
-// FileReader for files in the following format:
+// FileReader for sorted adjacency list (.sal) files having format:
 //      Line 1: non-negative integer denoting the number of vertices
 //      Line i>1: i-1, representing vertex i-1, followed by its neighbors as sorted integers delimited by whitespace
 class SortedAdjacencyListFR : public FileReader {

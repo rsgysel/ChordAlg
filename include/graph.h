@@ -3,6 +3,7 @@
 
 #include "chordalg_types.h"
 #include "file_reader.h"
+#include "macros.h"
 
 namespace chordalg {
 
@@ -10,22 +11,24 @@ class Graph;
 
 class GraphIterator{
     public:
-        GraphIterator(int GraphMemLoc) : GraphMemLoc_(GraphMemLoc), v_(0) {};
-        GraphIterator(int GraphMemLoc, Vertex v) : GraphMemLoc_(GraphMemLoc), v_(v) {};
+        GraphIterator(int graph_id) : graph_id_(graph_id), v_(0) {};
+        GraphIterator(int graph_id, Vertex v) : graph_id_(graph_id), v_(v) {};
 
-        void operator++(){++v_;}
-        bool operator==(const GraphIterator& other) const {return (GraphMemLoc_ == other.GraphMemLoc_) && (v_ == other.v_);}
-        bool operator!=(const GraphIterator& other) const {return !(*this == other);}
-        Vertex operator*() const {return v_;}
+        // implemented for range-based for loops on the graph
+        inline void operator++(){++v_;}
+        inline bool operator==(const GraphIterator& other) const
+            {return (graph_id_ == other.graph_id_) && (v_ == other.v_);}
+        inline bool operator!=(const GraphIterator& other) const {return !(*this == other);}
+        inline Vertex operator*() const {return v_;}
     private:
-        int GraphMemLoc_;
+        const int graph_id_;
         Vertex v_;
 };  // GraphVertexIterator
 
 class Graph
 {
     public:
-        Graph(FileReader&);
+        Graph(FileReader*);
         virtual ~Graph();
 
         // stat accessors
@@ -46,11 +49,12 @@ class Graph
         const AdjacencyLists* neighborhoods_;
         const VertexNameContainer* vertex_names_;
 
-        int order_, size_;  // #vertices, #edges
-        int graph_id_;      // id = memory location
+        unsigned int order_, size_;     // #vertices, #edges
+        int graph_id_;                  // id = memory location
 
     private:
-        Graph() : neighborhoods_(NULL), vertex_names_(NULL), size_(0), graph_id_(0) {};   // default constructor disabled
+        DISALLOW_DEFAULT_CONSTRUCTOR(Graph);
+        DISALLOW_COPY_AND_ASSIGN(Graph);
 };  // Graph
 
 } // namespace chordalg
