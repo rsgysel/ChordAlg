@@ -7,7 +7,7 @@
 
 #include "chordalg_types.h"
 #include "graph.h"
-#include "macros.h"
+#include "utilities.h"
 
 namespace chordalg {
 
@@ -28,7 +28,7 @@ class ConnectedComponentCalculator
 
         void Calculate(VertexContainer const &);
 
-        inline int size() const {return size_;}
+        inline unsigned int size() const {return size_;}
         inline ComputationBuffer const& S() const {return S_;}
         inline ConnectedComponentID kInSeparator() const {return -2;}
         inline ConnectedComponentID kUnsearched() const {return -1;}
@@ -54,7 +54,7 @@ class ConnectedComponentNeighborhoodCalculator
         ConnectedComponentNeighborhoodCalculator(Graph const&, ConnectedComponentCalculator const&);
         ~ConnectedComponentNeighborhoodCalculator() {};
 
-        inline int size() const {return size_;}
+        inline unsigned int size() const {return size_;}
         inline ComputationBuffer const& operator[](Vertex v) const {return neighborhood_[v];}
 
         void Calculate();
@@ -63,7 +63,7 @@ class ConnectedComponentNeighborhoodCalculator
         Graph const& G_;
         ConnectedComponentCalculator const& CC_;
         ComputationBufferSet neighborhood_;
-        int size_;
+        unsigned int size_;
 
         void Init();
         void FindNeighborhoods();

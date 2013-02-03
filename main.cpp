@@ -5,7 +5,6 @@
 
 #ifdef TESTS_ON
     #include "gtest/gtest.h"
-    #include "unittest/graph_test.h"
 #endif
 
 int main(int argc, char **argv) {

@@ -3,7 +3,7 @@
 
 #include "chordalg_types.h"
 #include "file_reader.h"
-#include "macros.h"
+#include "utilities.h"
 
 namespace chordalg {
 
@@ -32,8 +32,8 @@ class Graph
         virtual ~Graph();
 
         // stat accessors
-        inline int order() const {return order_;}
-        inline int size() const {return size_;}
+        inline unsigned int order() const {return order_;}
+        inline unsigned int size() const {return size_;}
 
         // "iteration" accessors
         inline GraphIterator begin() const {return GraphIterator(graph_id_);}

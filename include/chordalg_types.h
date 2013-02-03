@@ -1,11 +1,8 @@
-#ifndef CHORDALG_TYPES_H_INCLUDED
-#define CHORDALG_TYPES_H_INCLUDED
+#ifndef CHORDALG_TYPES_H
+#define CHORDALG_TYPES_H
 
 #include <string>
 #include <vector>
-
-// delete me
-#include <iterator>
 
 namespace chordalg {
 
@@ -23,8 +20,8 @@ typedef std::vector< VertexName > VertexNameContainer;
 // other typedefs
 typedef std::vector< int > ComputationBuffer;       // buffers that will be re-used over numerous computations.
             // Requires back(), clear(), pop_back(), push_back(), resize(), and ranged-for.
-typedef std::vector< ComputationBuffer> ComputationBufferSet;
+typedef std::vector< ComputationBuffer > ComputationBufferSet;
 
 } // namespace chordalg
 
-#endif // CHORDALG_TYPES_H_INCLUDED
+#endif // CHORDALG_TYPES_H
