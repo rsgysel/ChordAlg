@@ -9,9 +9,9 @@ namespace chordalg {
 LexTrieIterator::LexTrieIterator(int n, LexTrieNode* root, const LexTrie* T) :
         n_(), set_(), nodes_(), children_itrs_(), T_(T)
 {
-    set_.resize(n_);        set_.clear();
-    nodes_.resize(n_);      nodes_.clear();
-    children_itrs_.resize(n_);  children_itrs_.clear();
+    set_.reserve(n_);
+    nodes_.reserve(n_);
+    children_itrs_.reserve(n_);
     nodes_.push_back(root);
     children_itrs_.push_back(root->children_.begin());
     return;

@@ -1,0 +1,40 @@
+Figure 1 of An Introduction to Clique Minimal Separator Decomposition
+
+Atoms:
+abck
+cdkj
+defgkj
+ijkh
+
+Correct output:
+h i e g f j d c k b a
+
+Order: 4
+Size: 4
+N(h): i j
+N(i): h k
+N(j): h k
+N(k): i j
+
+Order: 6
+Size: 11
+N(d): e f j k
+N(e): d g
+N(f): d g j k
+N(g): e f j k
+N(j): d f g k
+N(k): d f g j
+
+Order: 4
+Size: 6
+N(c): d j k
+N(d): c j k
+N(j): c d k
+N(k): c d j
+
+Order: 4
+Size: 4
+N(a): b k
+N(b): a c
+N(c): b k
+N(k): a c

@@ -1,13 +1,17 @@
 #ifndef FILE_READER_H
 #define FILE_READER_H
 
+#include<algorithm>
 #include<cstdlib>
 #include<fstream>
 #include<iostream>
+#include<list>
+#include<map>
 #include<sstream>
 #include<string>
 
 #include"chordalg_types.h"
+#include"utilities.h"
 
 namespace chordalg {
 

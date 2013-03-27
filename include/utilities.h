@@ -1,4 +1,4 @@
-#ifndef CHORDALD_UTILITIES_H
+#ifndef CHORDALG_UTILITIES_H
 #define CHORDALG_UTILITIES_H
 
 #include <vector>
@@ -19,6 +19,26 @@ namespace chordalg {
     #define DISALLOW_DEFAULT_CONSTRUCTOR(TypeName) \
       TypeName();
 
+// Debugging Macros
+    #define DEBUG_ENTER\
+      std::cout << "DEBUG: ENTERING " << __PRETTY_FUNCTION__ << std::endl << std::endl;
+
+    #define DEBUG_EXIT\
+      std::cout << "DEBUG: EXITING " << __PRETTY_FUNCTION__ << std::endl << std::endl;
+
+    #define DEBUG_LINE\
+      std::cout << "DEBUG: At LINE " << __LINE__ << " of " << __PRETTY_FUNCTION__ << std::endl << std::endl;
+
+    #define DEBUG_DATA(data)\
+      std::cout << "DEBUG: DATA "  << data << " at LINE " << __LINE__ << " of " << __PRETTY_FUNCTION__ << std::endl << std::endl;
+
+    #define DEBUG_VARIABLE(variable, data)\
+      std::cout << "DEBUG: DATA "  << data << " for VARIABLE " << variable << " at LINE " << __LINE__ << " of " << __PRETTY_FUNCTION__ << std::endl << std::endl;
+
+    #define DEBUG_RANGE(range, data, type)\
+      std::cout << "DEBUG: DATA ";\
+      std::copy( data.begin(), data.end(), std::ostream_iterator< type >(std::cout, " ") );\
+      std::cout << std::endl << "for RANGE " << range << " at LINE " << __LINE__ << " of " << __PRETTY_FUNCTION__ << std::endl << std::endl;
 } // namespace chordalg
 
 #endif // CHORDALG_UTILITIES_H

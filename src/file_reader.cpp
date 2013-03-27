@@ -11,12 +11,14 @@ FileReader::FileReader(std::string filename) : neighborhoods_(NULL), names_(NULL
         std::cerr << "Error opening file " << filename << "." << std::endl;
         exit(EXIT_FAILURE);
     }
+    return;
 }
 
 FileReader::~FileReader(){
     file_stream_.close();
     delete neighborhoods_;
     delete names_;
+    return;
 }
 
 ////////////// data for graphs
@@ -50,9 +52,12 @@ inline void FileReader::AssertFormatOrDie(bool assertion, std::string errormsg) 
 //      Line 1: non-negative integer denoting the number of vertices
 //      Line i>1: i-1, representing vertex i-1, followed by its neighbors as sorted integers delimited by whitespace
 void SortedAdjacencyListFR::ReadFileOrDie(){
-    std::string line;
+    std::string line, vertex, neighbor;
     std::stringstream line_stream;
-    int order, vertex, neighbor, line_number = 0;
+    int order, line_number = 0;
+
+    std::map< std::string, Vertex > vertex_id;
+    std::vector< std::list< std::string > > neighbor_names;
 
     // format error messages
     const std::string first_line_format("Format Error: First line must be a non-negative integer denoting the number of vertices\n"),
@@ -62,9 +67,11 @@ void SortedAdjacencyListFR::ReadFileOrDie(){
     // process first line, consisting of the graphs order
     getline(file_stream_, line); line_stream << line; // grab line into stream
 	line_stream >> order; // parse piece up to whitespace
-	AssertFormatOrDie(0 <= order, first_line_format);
+	AssertFormatOrDie( 0 <= order, first_line_format );
 	line_number++;
     line_stream.clear(); line_stream.str("");   // reset line stream
+
+    neighbor_names.resize(order);
 
     // initialize the adjacency lists for the graph
     neighborhoods_ = new AdjacencyLists;
@@ -74,32 +81,37 @@ void SortedAdjacencyListFR::ReadFileOrDie(){
     names_ = new VertexNameContainer;
     names_->resize(order);
 
-    // buffer used to store one adjacency list at a time, one per file line
-    VertexContainer vertex_buffer;
-
+    int vertex_count = 0;
     while( getline(file_stream_, line) )
     {
-        // put neighborhood of vertex in buffer
-        vertex_buffer.reserve(order);
         line_stream << line;
 
         line_stream >> vertex;
-        AssertFormatOrDie(vertex == line_number - 1, first_int_format);
-        AssertFormatOrDie(vertex <= order, too_many_lines);
+        // assign name
+        (*names_)[vertex_count] = vertex;
+        vertex_id[vertex] = vertex_count;
 
         while(line_stream >> neighbor)
-            vertex_buffer.push_back(neighbor);
+            neighbor_names[vertex_count].push_back(neighbor);
 
-        // assign neighborhood to neighborhoods_
-        vertex_buffer.swap((*neighborhoods_)[vertex]);  // capacity is also swapped, so there is some waste here
-
-        // assign name (in this format, naming is trivial)
-        (*names_)[vertex] = vertex;
-
-        // assign name to names_
+        AssertFormatOrDie(vertex_count <= order, too_many_lines);
         line_number++;
+        vertex_count++;
 
         line_stream.clear(); line_stream.str("");   // reset line stream
+    }
+
+    // turn string representation into vertex representation
+    for( int i = 0; i < order; ++i )
+    {
+        std::vector< Vertex > neighborhood;
+        for( std::string neighbor : neighbor_names[i] )
+        {
+            Vertex v = vertex_id[neighbor];
+            neighborhood.push_back(v);
+        }
+        std::sort(neighborhood.begin(), neighborhood.end());
+        neighborhood.swap((*neighborhoods_)[i]);
     }
 
     file_stream_.close();

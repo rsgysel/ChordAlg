@@ -9,6 +9,10 @@
 
 #define vector_set(X) (X, X + sizeof(X) / sizeof(int))
 
+
+typedef std::vector<int> Container;
+typedef Container::iterator InputIterator;
+
 std::string SetToString(std::vector<int> set)
 {
     std::stringstream ss;
@@ -23,11 +27,11 @@ TEST(LexTrieTest,Basics) {
     EXPECT_EQ(static_cast<int>(T.Size()),0);
 
     int X1[] = {2,4,9};
-    std::vector<int> S1 vector_set(X1);
+    Container S1 vector_set(X1);
 
     bool tf = false;
-    T.Insert(S1,tf);    EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),1);
-    T.Insert(S1,tf);    EXPECT_EQ(tf,false);    EXPECT_EQ(static_cast<int>(T.Size()),1);
+    T.Insert< Container, InputIterator >(S1,tf);    EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),1);
+    T.Insert< Container, InputIterator >(S1,tf);    EXPECT_EQ(tf,false);    EXPECT_EQ(static_cast<int>(T.Size()),1);
 
     return;
 }
@@ -47,20 +51,20 @@ TEST(LexTrieTest,Iterator) {
 
     // Insert sets one at a time, and check that iterator works at each step
     bool tf = false;
-    T.Insert(S1,tf);     EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),1);
-    for(const std::vector<int>& set : T)
+    T.Insert< Container, InputIterator >(S1,tf);     EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),1);
+    for(const Container set : T)
         EXPECT_EQ(T_map.at(SetToString(set)),true);
 
-    T.Insert(S2,tf);     EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),2);
-    for(const std::vector<int>& set : T)
+    T.Insert< Container, InputIterator >(S2,tf);     EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),2);
+    for(const Container set : T)
         EXPECT_EQ(T_map.at(SetToString(set)),true);
 
-    T.Insert(S3,tf);     EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),3);
-    for(const std::vector<int>& set : T)
+    T.Insert< Container, InputIterator >(S3,tf);     EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),3);
+    for(const Container set : T)
         EXPECT_EQ(T_map.at(SetToString(set)),true);
 
-    T.Insert(S4,tf);     EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),4);
-    for(const std::vector<int>& set : T)
+    T.Insert< Container, InputIterator >(S4,tf);     EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),4);
+    for(const Container set : T)
         EXPECT_EQ(T_map.at(SetToString(set)),true);
 
     // If we're here, T is a subset of T_map. Now check equality

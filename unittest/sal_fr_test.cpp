@@ -16,12 +16,14 @@ TEST_F(SortedAdjacencyListTest, TwoCliquesData) {
 
             if(v <= 4){
                 // vertices 0-4 form a clique
-                EXPECT_EQ(G->N(v).size(),static_cast<unsigned int>(4));
+                size_t clique_size = 4;
+                EXPECT_EQ(G->N(v).size(),clique_size);
                 EXPECT_LE(u,4);
             }
             else{
+                size_t clique_size = 1;
                 // vertices 5 & 6 form a clique
-                EXPECT_EQ(G->N(v).size(),static_cast<unsigned int>(1));
+                EXPECT_EQ(G->N(v).size(),clique_size);
                 EXPECT_GT(u,4);
             }
         }

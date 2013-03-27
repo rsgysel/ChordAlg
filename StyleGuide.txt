@@ -1,7 +1,0 @@
-Mostly following (or trying to follow) Google's style guide:
-http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml
-
--Classes involved in heavy computation contain vector-buffers that do not get reallocated (i.e. ConnectedComponentsCalculator will be used to generate minimal separators at least once for every minimal separator)
-
--Constructors of the form Class(Graph G) should be explicit
-	+ graph construction visible to the user

@@ -1,6 +1,7 @@
 #ifndef LEX_TRIE_H_
 #define LEX_TRIE_H_
 
+#include<algorithm>
 #include<fstream>
 #include<iostream>
 #include<iterator>
@@ -76,15 +77,17 @@ class LexTrie
         LexTrie(int n);
         ~LexTrie() {delete this->root_; return;}
 
-        template< class InputIterator > LexTrieNode const* InsertFromIterator(InputIterator begin, InputIterator end, bool& new_set);
         template< class InputIterator > bool Contains(InputIterator begin, InputIterator end);
+        template< class Container, class InputIterator > LexTrieNode const* Insert(Container set, bool& new_set = *(new bool));
 
-        LexTrieNode const* Insert(std::vector< int > set, bool& new_set = *(new bool)) { return InsertFromIterator(set.begin(),set.end(),new_set); }
         int SizeOf() const ;					            // space used by LexTrie
         unsigned int Size() const { return set_count_; }	// number of sets in family
 
         LexTrieIterator begin() const;
         LexTrieIterator end() const { return LexTrieIterator(this); }
+
+    protected:
+        template< class InputIterator > LexTrieNode const* InsertRange(InputIterator begin, InputIterator end, bool& new_set = *(new bool));
 
     private:
         int n_;						// size of original set
@@ -102,7 +105,7 @@ class LexTrie
 
 // Inserts in the lex trie and returns
 template< class InputIterator >
-LexTrieNode const* LexTrie::InsertFromIterator(InputIterator begin, InputIterator end, bool& new_set = false)
+LexTrieNode const* LexTrie::InsertRange(InputIterator begin, InputIterator end, bool& new_set)
 {
 	LexTrieNode* node = root_;
 
@@ -142,6 +145,15 @@ bool LexTrie::Contains(InputIterator begin, InputIterator end)
 
 	return node->has_set_;
 }
+
+// LexTrieNode const* Insert(std::vector< int > set, bool& new_set = *(new bool)) { return InsertRange(set.begin(),set.end(),new_set); }
+template< class Container, class InputIterator  >
+LexTrieNode const* LexTrie::Insert(Container set, bool& new_set)
+{
+    std::sort(set.begin(), set.end());
+    return InsertRange< InputIterator >(set.begin(),set.end(),new_set);
+}
+
 
 //--------------------//
 // Lex trie interface //
