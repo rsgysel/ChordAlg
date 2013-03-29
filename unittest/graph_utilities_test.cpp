@@ -5,9 +5,9 @@ TEST_F(SortedAdjacencyListTest, GraphUtilities) {
     EXPECT_EQ(G->order(),7);
     EXPECT_EQ(G->size(),11);
 
-    VertexContainer clique, vertices;
+    chordalg::VertexContainer clique, vertices;
     int i = 0;
-    for( Vertex v : *G )
+    for( chordalg::Vertex v : *G )
     {
         vertices.push_back(v);
         if(i < 5)
