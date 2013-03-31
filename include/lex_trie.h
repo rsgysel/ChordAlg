@@ -78,7 +78,7 @@ class LexTrie
         ~LexTrie() {delete this->root_; return;}
 
         template< class InputIterator > bool Contains(InputIterator begin, InputIterator end);
-        template< class Container, class InputIterator > LexTrieNode const* Insert(Container set, bool& new_set = *(new bool));
+        template< class Container, class InputIterator > const LexTrieNode* Insert(Container set, bool& new_set = *(new bool));
 
         int SizeOf() const ;					            // space used by LexTrie
         unsigned int Size() const { return set_count_; }	// number of sets in family
@@ -87,7 +87,7 @@ class LexTrie
         LexTrieIterator end() const { return LexTrieIterator(this); }
 
     protected:
-        template< class InputIterator > LexTrieNode const* InsertRange(InputIterator begin, InputIterator end, bool& new_set = *(new bool));
+        template< class InputIterator > const LexTrieNode* InsertRange(InputIterator begin, InputIterator end, bool& new_set = *(new bool));
 
     private:
         int n_;						// size of original set
@@ -105,7 +105,7 @@ class LexTrie
 
 // Inserts in the lex trie and returns
 template< class InputIterator >
-LexTrieNode const* LexTrie::InsertRange(InputIterator begin, InputIterator end, bool& new_set)
+const LexTrieNode* LexTrie::InsertRange(InputIterator begin, InputIterator end, bool& new_set)
 {
 	LexTrieNode* node = root_;
 
@@ -136,7 +136,6 @@ bool LexTrie::Contains(InputIterator begin, InputIterator end)
 {
 	LexTrieNode* node = root_;
 
-	// Traverse trie, if a node doesn't exist exit
 	for(InputIterator itr = begin; itr != end; ++itr){
 		if(!node->HasChild(*itr))
 			return false;
@@ -146,9 +145,8 @@ bool LexTrie::Contains(InputIterator begin, InputIterator end)
 	return node->has_set_;
 }
 
-// LexTrieNode const* Insert(std::vector< int > set, bool& new_set = *(new bool)) { return InsertRange(set.begin(),set.end(),new_set); }
 template< class Container, class InputIterator  >
-LexTrieNode const* LexTrie::Insert(Container set, bool& new_set)
+const LexTrieNode* LexTrie::Insert(Container set, bool& new_set)
 {
     std::sort(set.begin(), set.end());
     return InsertRange< InputIterator >(set.begin(),set.end(),new_set);

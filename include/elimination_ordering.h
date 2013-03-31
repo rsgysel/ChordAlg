@@ -46,6 +46,7 @@ class EliminationOrdering
         std::vector< std::map< Vertex, bool > > fill_neighbors_;
 };
 
+
 } // namespace chordalg
 
 #endif // ELIMINATION_ORDERING_H

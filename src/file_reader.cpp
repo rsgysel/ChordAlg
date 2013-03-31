@@ -35,6 +35,12 @@ VertexNameContainer* FileReader::TakeNames(){
     return temp;
 }
 
+LexTrie* MatrixCellIntGraphFR::TakeSubsetFamily(){
+    LexTrie* temp = subset_family_;
+    subset_family_ = NULL;
+    return temp;
+}
+
 ////////////// file processing
 //
 
@@ -115,6 +121,144 @@ void SortedAdjacencyListFR::ReadFileOrDie(){
     }
 
     file_stream_.close();
+    return;
+}
+
+void MatrixCellIntGraphFR::ReadFileOrDie(){
+
+    std::string line, state;
+    std::stringstream line_stream;
+    int row_count = 0, col_count = 0, line_number = 0;
+
+    std::map< std::string, Vertex > vertex_id;
+    std::vector< std::list< std::string > > neighbor_names;
+
+    // format error messages
+    const std::string first_line_format("Format Error: First line must be two non-negative integer denoting the number of rows and columns\n"),
+        too_many_cols("Format Error: Too many columns\n"),
+        too_many_rows("Format Error: Too many rows\n");
+
+    // skip first line
+    getline(file_stream_, line);
+    line_stream.clear(); line_stream.str("");
+
+    // second line: # of rows and # of columns
+    getline(file_stream_, line);
+    line_stream << line;
+	line_stream >> row_count;
+	line_stream >> col_count;
+	AssertFormatOrDie( 0 <= row_count, first_line_format );
+	AssertFormatOrDie( 0 <= col_count, first_line_format );
+	line_number++;
+    line_stream.clear(); line_stream.str("");   // reset line stream
+
+    // extract matrix from file
+    std::vector< std::vector< int > > matrix(row_count, std::vector< int >(col_count));
+    int i = 0, j = 0, maxstate = 0;
+    while( getline(file_stream_, line) )
+    {
+        AssertFormatOrDie( i < row_count, too_many_rows );
+        j = 0;
+        line_stream << line;
+        while( line_stream >> state )
+        {
+            AssertFormatOrDie( j < col_count, too_many_cols );
+            if( state.compare("?") == 0 || state.compare("*") == 0 )
+                matrix[i][j] = kMissingData();
+            else
+            {
+                matrix[i][j] = atoi(state.c_str());
+                maxstate = std::max( matrix[i][j], maxstate );
+            }
+            ++j;
+        }
+        line_stream.clear(); line_stream.str("");   // reset line stream
+        ++i;
+    }
+    file_stream_.close();
+
+    ComputeGraphData( matrix, maxstate );
+    return;
+}
+
+void MatrixCellIntGraphFR::ComputeGraphData( std::vector< std::vector< int > > matrix, int maxstate )
+{
+    int row_count = matrix.size(), col_count = matrix[ 0 ].size(), cell_count = 0;
+    subset_family_ = new LexTrie(row_count);
+
+    std::map< const LexTrieNode*, Vertex > cell_id;
+
+    // Create subsets_. subsets_[v] is the subset of the ground set related to vertex v
+    for( int j = 0; j < col_count; ++j )
+    {
+        std::vector< Subset > cells( maxstate + 1, Subset() );
+        for( int i = 0; i < row_count; ++i )
+        {
+            int state = matrix[ i ][ j ];
+            if( state != kMissingData() )
+                cells[ state ].push_back( i );
+        }
+
+        for( Subset& C : cells )
+        {
+            if( !C.empty() )
+            {
+                bool new_cell;
+                std::sort( C.begin(), C.end() );
+                const LexTrieNode* node = subset_family_->Insert< Subset, Subset::const_iterator >( C, new_cell );
+                if( new_cell )
+                {
+                    cell_id[ node ] = cell_count;
+                    ++cell_count;
+                    subsets_.push_back( Subset(C) );
+                    vertex_colors_.push_back( Multicolor() );
+                }
+                Vertex v = cell_id[ node ];
+                vertex_colors_[ v ].push_back(j);
+            }
+        }
+    }
+    int order = cell_count;
+
+    names_ = new VertexNameContainer( cell_count );
+    for( int i = 0; i < cell_count; ++i )
+    {
+        std::stringstream i_str;
+        i_str << i;
+        names_->operator[](i) = i_str.str();
+    }
+
+    neighborhoods_ = new AdjacencyLists( order );
+    Vertex v = 0;
+    std::vector< VertexContainer > cells_of_taxon( row_count );
+    for( Subset& C : subsets_ )
+    {
+        for( Element t : C )
+            cells_of_taxon[t].push_back(v);
+        v++;
+    }
+    std::map< VertexPair, bool > edges;
+    for( VertexContainer V : cells_of_taxon )
+    {
+        for( Vertex v : V )
+        {
+            for( Vertex u : V )
+            {
+                if( u < v )
+                    edges[ VertexPair(u,v) ] = true;
+            }
+        }
+    }
+    for( std::pair< VertexPair, bool > p : edges )
+    {
+        VertexPair e = p.first;
+        Vertex u = e.first, v = e.second;
+        neighborhoods_->operator[](u).push_back(v);
+        neighborhoods_->operator[](v).push_back(u);
+    }
+    for( VertexContainer& V : *neighborhoods_ )
+        std::sort( V.begin(), V.end() );
+
     return;
 }
 

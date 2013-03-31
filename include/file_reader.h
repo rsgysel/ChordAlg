@@ -11,6 +11,7 @@
 #include<string>
 
 #include"chordalg_types.h"
+#include"lex_trie.h"
 #include"utilities.h"
 
 namespace chordalg {
@@ -45,11 +46,6 @@ class FileReader
 // FileReader factory construction
 // FR must be derived from FileReader
 //
-// So this is ok:
-// SortedAdjacencyListFR* my_fr = NewFileReader< SortedAdjacencyListFR >(std::string("file_name"));
-//
-// Compile error:
-// FileReader* my_fr = NewFileReader< std::vector >(std::string("file_name"));
 template< class FR >
 FR* NewFileReader(std::string file_name)
 {
@@ -73,6 +69,27 @@ class SortedAdjacencyListFR : public FileReader {
         SortedAdjacencyListFR(std::string file_name) : FileReader(file_name) {};
         void ReadFileOrDie();
 };  // SortedAdjacencyListFR
+
+class MatrixCellIntGraphFR : public FileReader {
+    public:
+        ~MatrixCellIntGraphFR(){};
+
+        LexTrie* TakeSubsetFamily();
+        std::vector< Subset > subsets() const { return subsets_; }
+        std::vector< Multicolor > vertex_colors() const { return vertex_colors_; }
+    private:
+        LexTrie* subset_family_;
+        std::vector< Subset > subsets_;
+        std::vector< Multicolor > vertex_colors_;
+
+        template< class FR > friend FR* NewFileReader( std::string );
+
+        MatrixCellIntGraphFR( std::string file_name ) : FileReader( file_name ) {};
+        void ReadFileOrDie();
+
+        int kMissingData(){ return -1; }
+        void ComputeGraphData( std::vector< std::vector< int > >, int );
+};  // MatrixCellIntGraphFR
 
 }   // namespace chordalg
 

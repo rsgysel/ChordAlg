@@ -38,6 +38,7 @@ class Graph
         Graph(Graph&, VertexContainer);
         virtual ~Graph();
 
+        bool IsIsomorphic(Graph&);
         void PrettyPrint();
 
         // stat accessors
@@ -90,8 +91,6 @@ class InducedSubgraph : public Graph {
         DISALLOW_DEFAULT_CONSTRUCTOR(InducedSubgraph);
         DISALLOW_COPY_AND_ASSIGN(InducedSubgraph);
 };  // InducedSubgraph
-
-
 
 ////////////// Generics
 //

@@ -1,6 +1,6 @@
 #include "elimination_ordering.h"
 
-namespace chordalg{
+namespace chordalg {
 
 EliminationOrdering::EliminationOrdering(Graph& G) : G_(G),
     fill_size_(0),

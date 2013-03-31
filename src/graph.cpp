@@ -92,6 +92,22 @@ Graph::~Graph()
     delete vertex_names_;
 }
 
+// Determines if H is isomorphic to G with respect to their fixed orderings
+bool Graph::IsIsomorphic(Graph& H)
+{
+    Graph& G = *this;
+    if( G.order() != H.order() || G.size() != H.size() )
+        return false;
+    for( Vertex v : G )
+    {
+        if( G.N(v).size() != H.N(v).size() )
+            return false;
+        if( !std::equal( G.N(v).begin(), G.N(v).end(), H.N(v).begin() ) )
+            return false;
+    }
+    return true;
+}
+
 void Graph::PrettyPrint()
 {
     std::cout << "Order: " << order_ << std::endl;
