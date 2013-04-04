@@ -32,13 +32,13 @@ namespace chordalg {
     #define DEBUG_DATA(data)\
       std::cout << "DEBUG: DATA "  << data << " at LINE " << __LINE__ << " of " << __PRETTY_FUNCTION__ << std::endl << std::endl;
 
-    #define DEBUG_VARIABLE(variable, data)\
-      std::cout << "DEBUG: DATA "  << data << " for VARIABLE " << variable << " at LINE " << __LINE__ << " of " << __PRETTY_FUNCTION__ << std::endl << std::endl;
+    #define DEBUG_VARIABLE(description, data)\
+      std::cout << "DEBUG: DATA "  << data << " for VARIABLE " << description << " at LINE " << __LINE__ << " of " << __PRETTY_FUNCTION__ << std::endl << std::endl;
 
-    #define DEBUG_RANGE(range, data, type)\
+    #define DEBUG_RANGE(description, data, type)\
       std::cout << "DEBUG: DATA ";\
       std::copy( data.begin(), data.end(), std::ostream_iterator< type >(std::cout, " ") );\
-      std::cout << std::endl << "for RANGE " << range << " at LINE " << __LINE__ << " of " << __PRETTY_FUNCTION__ << std::endl << std::endl;
+      std::cout << std::endl << "for RANGE " << description << " at LINE " << __LINE__ << " of " << __PRETTY_FUNCTION__ << std::endl << std::endl;
 } // namespace chordalg
 
 #endif // CHORDALG_UTILITIES_H

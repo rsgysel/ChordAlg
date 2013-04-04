@@ -13,16 +13,25 @@ class ColoredIntersectionGraph : public Graph
 {
     public:
         ColoredIntersectionGraph( MatrixCellIntGraphFR* );
+        ColoredIntersectionGraph( ColoredIntersectionGraph&, VertexContainer );
         virtual ~ColoredIntersectionGraph();
+
+        bool IsMonochromatic( Vertex, Vertex );
+        int CommonColorCount( Vertex, Vertex );
+        const Multicolor& vertex_color( Vertex v ){ return vertex_colors_[ v ]; }
 
         void PrettyPrintSubsets();
 
     private:
-        LexTrie* subset_family_;
 
         std::vector< Subset > subsets_;
         std::vector< Multicolor > vertex_colors_;
-};
+        LexTrie* subset_family_;
+
+        std::vector< Subset > InduceSubsets( ColoredIntersectionGraph&, VertexContainer );
+        std::vector< Multicolor > InduceVertexColors( ColoredIntersectionGraph&, VertexContainer );
+        LexTrie* InduceSubsetFamily( ColoredIntersectionGraph& );
+}; // ColoredIntersectionGraph
 
 } // namespace chordalg
 

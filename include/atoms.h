@@ -24,14 +24,14 @@ class Atoms{
 
         int size(){return atom_subgraphs_.size();}
 
-        AtomIterator begin(){ return atom_subgraphs_.begin(); }
-        AtomIterator end(){ return atom_subgraphs_.end(); }
+//        AtomIterator begin(){ return atom_subgraphs_.begin(); }
+//        AtomIterator end(){ return atom_subgraphs_.end(); }
 
     private:
         void MCSmPlus();
         void ComputeAtoms();
 
-        std::vector< AtomSubgraph* > atom_subgraphs_;
+        std::vector< Graph* > atom_subgraphs_;
 
         Graph& G_;
         VertexContainer alpha_;                     // peo. alpha[i] is i^th vertex eliminated

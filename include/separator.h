@@ -18,16 +18,22 @@ typedef int ConnectedComponentID;
 class SeparatorComponents
 {
     public:
-        explicit SeparatorComponents(Graph const&);
+        explicit SeparatorComponents( Graph const& );
         ~SeparatorComponents() {};
 
-        virtual void Set(VertexContainer const &);
+        virtual void Separate( VertexContainer const & );
         int size() const { return size_; }
-        ConnectedComponentID ComponentId(Vertex v) const { return connected_component_[v]; }
-        VertexContainer ConnectedComponent(Vertex v) const;
+        ConnectedComponentID ComponentId( Vertex v ) const { return connected_component_[ v ]; }
+        VertexContainer ConnectedComponent( Vertex ) const;
 
-        ConnectedComponentID kInSeparator() const {return -2;}
-        ConnectedComponentID kUnsearched() const {return -1;}
+        ConnectedComponentID kInSeparator() const { return -2; }
+        ConnectedComponentID kUnsearched() const { return -1; }
+
+        bool IsInSeparator( Vertex );
+        bool AreConnected( Vertex, Vertex );
+        bool AreSeparated( Vertex, Vertex );
+
+        virtual void PrettyPrint();
 
     protected:
         void FindComponents();
@@ -41,19 +47,21 @@ class SeparatorComponents
 
         int size_;                                                     // # of connected components
 
-        DISALLOW_DEFAULT_CONSTRUCTOR(SeparatorComponents);
-        DISALLOW_COPY_AND_ASSIGN(SeparatorComponents);
+        DISALLOW_DEFAULT_CONSTRUCTOR( SeparatorComponents );
+        DISALLOW_COPY_AND_ASSIGN( SeparatorComponents );
 };
 
 class SeparatorBlocks : public SeparatorComponents
 {
     public:
-        SeparatorBlocks(Graph const&);
+        SeparatorBlocks( Graph const& );
         ~SeparatorBlocks() {};
 
-        void Set(VertexContainer const &);
+        void Separate( VertexContainer const & );
         ComputationBufferSet::const_iterator begin(){ return neighborhoods_.begin(); }
         ComputationBufferSet::const_iterator end(){ return neighborhoods_.end(); }
+
+        void PrettyPrint();
 
     private:
         void FindNeighborhoods();
@@ -61,8 +69,8 @@ class SeparatorBlocks : public SeparatorComponents
         ComputationBufferSet neighborhoods_;
         ComputationBuffer last_separator_vertex_seen_;
 
-        DISALLOW_DEFAULT_CONSTRUCTOR(SeparatorBlocks);
-        DISALLOW_COPY_AND_ASSIGN(SeparatorBlocks);
+        DISALLOW_DEFAULT_CONSTRUCTOR( SeparatorBlocks );
+        DISALLOW_COPY_AND_ASSIGN( SeparatorBlocks );
 };
 
 }   // namespace chordalg

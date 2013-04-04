@@ -1,3 +1,43 @@
+Critical:
+
+-abstract class VertexOrder-- EliminationOrdering ( or it takes an EliminationAlgorithm - EliminationGame, LBTriang ? )
+		   |- LBTriangOrdering
+	-In Init(), pick one vertex at a time, and fill one vertex at a time (instead of fill range)
+	-Both take a Heuristic? as template parameter. Default parameter should be traditional fill from canonical order.
+	-virtual methods: refill, unfill or monotone adjacency set. madj should be renamed - maybe to SaturatingSet? Actually this should be SaturatingSets. Add ForEachSaturatingSet -> uses ForEachFillPair & passes function down.
+	-FindSaturatingSets ought to work on a member variable, so pointers don't get passed around
+	-In optimization function (min -> optimize()), call a Reset() function that resets class variables associated to a given vertex
+	- Weight -> FillCost, introduce typedef double Weight
+
+-graph
+	- deficiency set
+
+-use set instead of map
+
+-separator
+	- ComputationBufferSet? wtf
+
+-vertex pair struct ( min, max )
+
+-Reset functions on any class that has containers which are re-used in new computations
+
+-brush up const / inline
+
+-Remove non-debugging macros
+
+Not so critical:
+-PrettyPrint -> use ostream&
+
+-RF chordalg_types -> headers
+
+-clean up test fixtures
+
+-VertexContainer, ComputationBuffer etc -> Vertices 
+
+-for each vertex pair support // do this for Vertices, not for graphs
+ie for( VertexPair uv : Pairs( G ) )
+	Vertex u = uv.first, v = uv.second;
+
 -file parsing
 	-regex?
 	-comment support

@@ -20,12 +20,12 @@ typedef std::map< int, LexTrieNode* > ChildDataStructure;
 class LexTrieIterator
 {
     public:
-        LexTrieIterator(const LexTrie* T) : n_(0), set_(), nodes_(), children_itrs_(), T_(T) { return; }
-        LexTrieIterator(int n, LexTrieNode* root, const LexTrie* T);
+        LexTrieIterator( const LexTrie* T ) : n_( 0 ), set_(), nodes_(), children_itrs_(), T_( T ) { return; }
+        LexTrieIterator( int n, LexTrieNode* root, const LexTrie* T );
 
         LexTrieIterator& operator++();
-        bool operator==(const LexTrieIterator& other) const;
-        bool operator!=(const LexTrieIterator& other) const { return !( *this == other ); }
+        bool operator==( const LexTrieIterator& other ) const;
+        bool operator!=( const LexTrieIterator& other ) const { return !( *this == other ); }
         const std::vector< int >& operator*() const { return set_; }
 
     private:
@@ -37,9 +37,9 @@ class LexTrieIterator
 
         void GetNextSetBelow();
         int GetNextChild();
-        int GetNextChildAfter(int k);
+        int GetNextChildAfter( int k );
 
-        DISALLOW_DEFAULT_CONSTRUCTOR(LexTrieIterator);
+        DISALLOW_DEFAULT_CONSTRUCTOR( LexTrieIterator );
 };
 
 // Each node potentially represents a set by traversing a path from the root to the node.
@@ -48,46 +48,48 @@ class LexTrieIterator
 class LexTrieNode
 {
     private:
-        LexTrieNode(bool has_set) : has_set_(has_set), children_() { return; }
+        LexTrieNode( bool has_set ) : has_set_( has_set ), children_() { return; }
         ~LexTrieNode();
 
         bool has_set_;								// true if node represents a set
         ChildDataStructure children_;
 
-        int SizeOf(int n) const;
-        inline bool HasChild(int k) const {	return (children_.find(k) != children_.end()) ? true : false; }
-        inline void AddChild(LexTrieNode* node,int k) { children_[k] = node; return; }
-        inline LexTrieNode* operator[](int k){ return (children_.find(k) != children_.end()) ? children_[k] : NULL; }
+        int SizeOf( int n ) const;
+        inline bool HasChild( int k ) const {	return ( children_.find( k ) != children_.end() ) ? true : false; }
+        inline void AddChild( LexTrieNode* node, int k ) { children_[ k ] = node; return; }
+        inline LexTrieNode* operator[]( int k ){ return ( children_.find( k ) != children_.end() ) ? children_[ k ] : NULL; }
 
         // Friend functions
-        friend std::ostream& operator <<(std::ostream &os,const LexTrie &obj);
+        friend std::ostream& operator <<( std::ostream &os, const LexTrie &obj );
         friend LexTrieIterator& LexTrieIterator::operator++();
 
         friend class LexTrie;
         friend class LexTrieIterator;
 
-        DISALLOW_DEFAULT_CONSTRUCTOR(LexTrieNode);
-        DISALLOW_COPY_AND_ASSIGN(LexTrieNode);
+        DISALLOW_DEFAULT_CONSTRUCTOR( LexTrieNode );
+        DISALLOW_COPY_AND_ASSIGN( LexTrieNode );
 };
 
 // A tree representing a family of subsets of [0, 1, ..., n-1]
 class LexTrie
 {
     public:
-        LexTrie(int n);
-        ~LexTrie() {delete this->root_; return;}
+        LexTrie( int n );
+        ~LexTrie() { delete this->root_; return; }
 
-        template< class InputIterator > bool Contains(InputIterator begin, InputIterator end);
-        template< class Container, class InputIterator > const LexTrieNode* Insert(Container set, bool& new_set = *(new bool));
+        template< class InputIterator > bool Contains( InputIterator begin, InputIterator end );
+        template< class Container, class InputIterator > const LexTrieNode* Insert( Container set, bool& new_set = *( new bool ) );
 
         int SizeOf() const ;					            // space used by LexTrie
         unsigned int Size() const { return set_count_; }	// number of sets in family
 
+        int n() { return n_; }
+
         LexTrieIterator begin() const;
-        LexTrieIterator end() const { return LexTrieIterator(this); }
+        LexTrieIterator end() const { return LexTrieIterator( this ); }
 
     protected:
-        template< class InputIterator > const LexTrieNode* InsertRange(InputIterator begin, InputIterator end, bool& new_set = *(new bool));
+        template< class InputIterator > const LexTrieNode* InsertRange( InputIterator begin, InputIterator end, bool& new_set = *( new bool ) );
 
     private:
         int n_;						// size of original set
@@ -95,8 +97,8 @@ class LexTrie
         LexTrieNode* root_;
         int lex_trie_id_;
 
-        DISALLOW_DEFAULT_CONSTRUCTOR(LexTrie);
-        DISALLOW_COPY_AND_ASSIGN(LexTrie);
+        DISALLOW_DEFAULT_CONSTRUCTOR( LexTrie );
+        DISALLOW_COPY_AND_ASSIGN( LexTrie );
 };
 
 //--------------------//
@@ -105,22 +107,23 @@ class LexTrie
 
 // Inserts in the lex trie and returns
 template< class InputIterator >
-const LexTrieNode* LexTrie::InsertRange(InputIterator begin, InputIterator end, bool& new_set)
+const LexTrieNode* LexTrie::InsertRange( InputIterator begin, InputIterator end, bool& new_set )
 {
 	LexTrieNode* node = root_;
 
     // Traverse trie, creating nodes if they don't exist
-    for(InputIterator itr = begin; itr != end; ++itr)
+    for( InputIterator itr = begin; itr != end; ++itr )
     {
-        if(!node->HasChild(*itr)){
-            LexTrieNode* newChild = new LexTrieNode(false);
-            if(newChild == NULL){ throw std::bad_alloc(); }
-            node->AddChild(newChild,*itr);
+        if( !node->HasChild( *itr ) )
+        {
+            LexTrieNode* newChild = new LexTrieNode( false );
+            if( newChild == NULL ){ throw std::bad_alloc(); }
+            node->AddChild( newChild, *itr );
         }
-        node = (*node)[*itr];
+        node = (*node)[ *itr ];
     }
 
-	if(node->has_set_)
+	if( node->has_set_ )
 	    new_set = false;
     else
 	{
@@ -132,24 +135,25 @@ const LexTrieNode* LexTrie::InsertRange(InputIterator begin, InputIterator end, 
 }
 
 template< class InputIterator >
-bool LexTrie::Contains(InputIterator begin, InputIterator end)
+bool LexTrie::Contains( InputIterator begin, InputIterator end )
 {
 	LexTrieNode* node = root_;
 
-	for(InputIterator itr = begin; itr != end; ++itr){
-		if(!node->HasChild(*itr))
+	for( InputIterator itr = begin; itr != end; ++itr )
+	{
+		if( !node->HasChild( *itr ) )
 			return false;
-		node = (*node)[*itr];
+		node = (*node)[ *itr ];
 	}
 
 	return node->has_set_;
 }
 
 template< class Container, class InputIterator  >
-const LexTrieNode* LexTrie::Insert(Container set, bool& new_set)
+const LexTrieNode* LexTrie::Insert( Container set, bool& new_set )
 {
-    std::sort(set.begin(), set.end());
-    return InsertRange< InputIterator >(set.begin(),set.end(),new_set);
+    std::sort( set.begin(), set.end() );
+    return InsertRange< InputIterator >( set.begin(), set.end(), new_set );
 }
 
 

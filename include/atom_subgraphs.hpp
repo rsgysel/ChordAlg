@@ -1,15 +1,63 @@
-#include "atoms.h"
+#ifndef ATOM_SUBGRAPHS_HPP_INCLUDED
+#define ATOM_SUBGRAPHS_HPP_INCLUDED
+
+#include<iostream>
+#include<iterator>
+#include<list>
+#include<map>
+#include<vector>
+
+#include"chordalg_types.h"
+#include"graph.h"
+#include"lex_trie.h"
+#include"separator.h"
 
 namespace chordalg {
 
-Atoms::Atoms( Graph& G ) : G_( G )
+template< class GraphType >
+class Atoms
+{
+    public:
+        Atoms( GraphType& G );
+        ~Atoms();
+
+        int size(){ return atom_subgraphs_.size(); }
+
+        typedef typename std::vector< GraphType* >::const_iterator AtomIterator;
+        AtomIterator begin(){ return atom_subgraphs_.begin(); }
+        AtomIterator end(){ return atom_subgraphs_.end(); }
+
+    private:
+        void MCSmPlus();
+        void ComputeAtoms();
+
+        std::vector< GraphType* > atom_subgraphs_;
+
+        GraphType& G_;
+        VertexContainer alpha_;                     // peo. alpha[i] is i^th vertex eliminated
+        std::vector< int > alpha_inverse_;
+        std::vector< std::list< Vertex > > F_;      // as in paper; minimal fill
+        std::list< Vertex > minsep_generators_;     // 'X' in paper
+
+        DISALLOW_DEFAULT_CONSTRUCTOR( Atoms );
+        DISALLOW_COPY_AND_ASSIGN( Atoms );
+};
+
+template< class GraphType >
+Atoms< GraphType >::Atoms( GraphType& G ) : G_( G )
 {
     MCSmPlus();
     ComputeAtoms();
     return;
 }
 
-Atoms::~Atoms() {}
+template< class GraphType >
+Atoms< GraphType >::~Atoms()
+{
+    for( GraphType* a : atom_subgraphs_ )
+        delete a;
+    return;
+}
 
 // Adaptation of MCS-M+, which minimally triangulates a graph.
 // Described for atom computation by Berry, Pogorelcnik, and Simonet.
@@ -17,13 +65,13 @@ Atoms::~Atoms() {}
 //
 //
 // @result: clique minimal separators of G_
-void Atoms::MCSmPlus()
+template< class GraphType >
+void Atoms< GraphType >::MCSmPlus()
 {
-
     int s = -1;				                // as in paper: for finding minimal separator generators
     int n = G_.order();
 
-	std::vector< int > label;	                // as in paper
+	std::vector< int > label;	            // as in paper
 	label.resize( n );
 	for( Vertex v : label )
 		label[ v ] = 0;
@@ -107,7 +155,9 @@ void Atoms::MCSmPlus()
     return;
 }
 
-void Atoms::ComputeAtoms(){
+template< class GraphType >
+void Atoms< GraphType >::ComputeAtoms()
+{
     std::list< VertexContainer > vertices_of_atoms;
     SeparatorComponents cc( G_ );
 
@@ -171,9 +221,13 @@ void Atoms::ComputeAtoms(){
         vertices_of_atoms.push_back( C );
 
     for( VertexContainer U : vertices_of_atoms )
-        atom_subgraphs_.push_back( new Graph( G_, U ) );
+        atom_subgraphs_.push_back( new GraphType( G_, U ) );
 
     return;
 }
 
 } // namespace chordalg
+
+
+
+#endif // ATOM_SUBGRAPHS_HPP_INCLUDED
