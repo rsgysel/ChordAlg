@@ -1,16 +1,16 @@
 #ifndef ATOM_SUBGRAPHS_HPP_INCLUDED
 #define ATOM_SUBGRAPHS_HPP_INCLUDED
 
-#include<iostream>
-#include<iterator>
-#include<list>
-#include<map>
-#include<vector>
+#include <iostream>
+#include <iterator>
+#include <list>
+#include <map>
+#include <vector>
 
-#include"chordalg_types.h"
-#include"graph.h"
-#include"lex_trie.h"
-#include"separator.h"
+#include "chordalg_types.h"
+#include "graph.h"
+#include "lex_trie.h"
+#include "separator.h"
 
 namespace chordalg {
 

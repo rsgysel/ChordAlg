@@ -1,18 +1,18 @@
 #ifndef FILE_READER_H
 #define FILE_READER_H
 
-#include<algorithm>
-#include<cstdlib>
-#include<fstream>
-#include<iostream>
-#include<list>
-#include<map>
-#include<sstream>
-#include<string>
+#include <algorithm>
+#include <cstdlib>
+#include <fstream>
+#include <iostream>
+#include <list>
+#include <map>
+#include <sstream>
+#include <string>
 
-#include"chordalg_types.h"
-#include"lex_trie.h"
-#include"utilities.h"
+#include "chordalg_types.h"
+#include "lex_trie.h"
+#include "utilities.h"
 
 namespace chordalg {
 
@@ -47,14 +47,14 @@ class FileReader
 // FR must be derived from FileReader
 //
 template< class FR >
-FR* NewFileReader(std::string file_name)
+FR* NewFileReader( std::string file_name )
 {
     // ctor
-    FR* fr_object = new FR(file_name);
+    FR* fr_object = new FR( file_name );
     fr_object->ReadFileOrDie();
 
     // type check FR. voided to prevent compiler warning
-    FileReader* type_check = fr_object; (void) type_check;
+    FileReader* type_check = fr_object; ( void ) type_check;
     return fr_object;
 }
 
@@ -70,7 +70,8 @@ class SortedAdjacencyListFR : public FileReader {
         void ReadFileOrDie();
 };  // SortedAdjacencyListFR
 
-class MatrixCellIntGraphFR : public FileReader {
+class MatrixCellIntGraphFR : public FileReader
+{
     public:
         ~MatrixCellIntGraphFR(){};
 

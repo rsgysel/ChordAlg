@@ -6,6 +6,7 @@ MonochromaticFillPairHeuristic::MonochromaticFillPairHeuristic( ColoredIntersect
     H_( H ),
     fill_weight_( 0 )
 {
+    srand( time(NULL) );
     Unfill( 0, H_.order() - 1 );
     Init();
     return;
@@ -71,7 +72,13 @@ std::pair< Weight, Vertex > MonochromaticFillPairHeuristic::Min( std::map< Verte
 
         monochromatic_fill_pairs_count_ = 0;
         EliminationOrdering::ForEachFillPair( v, &MonochromaticFillPairHeuristic::MinBody );
-        min_pair = std::min( min_pair, std::pair< Weight, Vertex >( monochromatic_fill_pairs_count_, v ) );
+
+        if( monochromatic_fill_pairs_count_ < min_pair.first ||
+            ( monochromatic_fill_pairs_count_ == min_pair.first && ( rand()%2 == 0 ) ) )
+        {
+                min_pair.first = monochromatic_fill_pairs_count_;
+                min_pair.second = v;
+        } // update if strictly better or we tie break
 
         alpha_inverse_[ v ] = H_.order();
     }

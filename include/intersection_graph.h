@@ -4,8 +4,8 @@
 #include <list>
 #include <vector>
 
-#include <graph.h>
-#include <lex_trie.h>
+#include "graph.h"
+#include "lex_trie.h"
 
 namespace chordalg {
 
@@ -21,6 +21,9 @@ class ColoredIntersectionGraph : public Graph
         const Multicolor& vertex_color( Vertex v ){ return vertex_colors_[ v ]; }
 
         void PrettyPrintSubsets();
+
+        const LexTrie* subset_family() const { return subset_family_; }
+        const Subset& subset( Vertex v ) const { return subsets_[ v ]; }
 
     private:
 

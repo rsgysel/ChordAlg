@@ -2,10 +2,11 @@
 #define ELIMINATION_ORDERING_H
 
 #include <algorithm>
-#include <map>
-#include <vector>
+#include <cstdlib>
 #include <iostream>
 #include <iterator>
+#include <set>
+#include <vector>
 
 #include "graph.h"
 #include "intersection_graph.h"
@@ -54,7 +55,7 @@ class EliminationOrdering
 
         int fill_size_;
         std::vector< std::vector< int > > fill_edge_count_; // # of vertices
-        std::vector< std::map< Vertex, bool > > fill_neighbors_;
+        std::vector< std::set< Vertex > > fill_neighbors_;
 
 }; // class EliminationOrdering
 

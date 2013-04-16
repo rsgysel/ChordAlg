@@ -15,6 +15,7 @@ namespace chordalg {
 class LexTrie;
 class LexTrieNode;
 
+typedef std::pair< int, LexTrieNode* > ChildData;
 typedef std::map< int, LexTrieNode* > ChildDataStructure;
 
 class LexTrieIterator
@@ -25,8 +26,12 @@ class LexTrieIterator
 
         LexTrieIterator& operator++();
         bool operator==( const LexTrieIterator& other ) const;
-        bool operator!=( const LexTrieIterator& other ) const { return !( *this == other ); }
-        const std::vector< int >& operator*() const { return set_; }
+
+        bool operator!=( const LexTrieIterator& other ) const
+            { return !( *this == other ); }
+
+        const std::vector< int >& operator*() const
+            { return set_; }
 
     private:
         int n_;
@@ -55,9 +60,18 @@ class LexTrieNode
         ChildDataStructure children_;
 
         int SizeOf( int n ) const;
-        inline bool HasChild( int k ) const {	return ( children_.find( k ) != children_.end() ) ? true : false; }
-        inline void AddChild( LexTrieNode* node, int k ) { children_[ k ] = node; return; }
-        inline LexTrieNode* operator[]( int k ){ return ( children_.find( k ) != children_.end() ) ? children_[ k ] : NULL; }
+
+        inline bool HasChild( int k ) const
+            { return children_.find( k ) != children_.end() ? true : false; }
+
+        inline void AddChild( LexTrieNode* node, int k )
+            { children_[ k ] = node; return; }
+
+        inline LexTrieNode* GetChild( int k )
+            { return ( children_.find( k ) != children_.end() ) ? children_[ k ] : NULL; }
+
+        inline const LexTrieNode* GetChild( int k ) const
+            { return ( children_.find( k ) != children_.end() ) ? children_.at( k ) : NULL; }
 
         // Friend functions
         friend std::ostream& operator <<( std::ostream &os, const LexTrie &obj );
@@ -77,8 +91,11 @@ class LexTrie
         LexTrie( int n );
         ~LexTrie() { delete this->root_; return; }
 
-        template< class InputIterator > bool Contains( InputIterator begin, InputIterator end );
-        template< class Container, class InputIterator > const LexTrieNode* Insert( Container set, bool& new_set = *( new bool ) );
+        template< class Container >
+        bool Contains( Container ) const;
+
+        template< class Container, class InputIterator >
+        const LexTrieNode* Insert( Container, bool& new_set = *( new bool ) );
 
         int SizeOf() const ;					            // space used by LexTrie
         unsigned int Size() const { return set_count_; }	// number of sets in family
@@ -89,13 +106,16 @@ class LexTrie
         LexTrieIterator end() const { return LexTrieIterator( this ); }
 
     protected:
-        template< class InputIterator > const LexTrieNode* InsertRange( InputIterator begin, InputIterator end, bool& new_set = *( new bool ) );
+        template< class InputIterator >
+        bool ContainsRange( InputIterator, InputIterator ) const;
+
+        template< class InputIterator >
+        const LexTrieNode* InsertRange( InputIterator, InputIterator, bool& new_set = *( new bool ) );
 
     private:
         int n_;						// size of original set
         int set_count_;				// number of sets in family
         LexTrieNode* root_;
-        int lex_trie_id_;
 
         DISALLOW_DEFAULT_CONSTRUCTOR( LexTrie );
         DISALLOW_COPY_AND_ASSIGN( LexTrie );
@@ -105,7 +125,7 @@ class LexTrie
 // Lex trie interface //
 //--------------------//
 
-// Inserts in the lex trie and returns
+// Inserts new subset into the trie
 template< class InputIterator >
 const LexTrieNode* LexTrie::InsertRange( InputIterator begin, InputIterator end, bool& new_set )
 {
@@ -120,7 +140,7 @@ const LexTrieNode* LexTrie::InsertRange( InputIterator begin, InputIterator end,
             if( newChild == NULL ){ throw std::bad_alloc(); }
             node->AddChild( newChild, *itr );
         }
-        node = (*node)[ *itr ];
+        node = node->GetChild( *itr );
     }
 
 	if( node->has_set_ )
@@ -135,18 +155,25 @@ const LexTrieNode* LexTrie::InsertRange( InputIterator begin, InputIterator end,
 }
 
 template< class InputIterator >
-bool LexTrie::Contains( InputIterator begin, InputIterator end )
+bool LexTrie::ContainsRange( InputIterator begin, InputIterator end ) const
 {
-	LexTrieNode* node = root_;
+	const LexTrieNode* node = root_;
 
 	for( InputIterator itr = begin; itr != end; ++itr )
 	{
 		if( !node->HasChild( *itr ) )
 			return false;
-		node = (*node)[ *itr ];
+		node = node->GetChild( *itr );//( *node )[ *itr ];
 	}
 
 	return node->has_set_;
+}
+
+template< class Container >
+bool LexTrie::Contains( Container set ) const
+{
+    std::sort( set.begin(), set.end() );
+    return ContainsRange< typename Container::const_iterator >( set.begin(), set.end() );
 }
 
 template< class Container, class InputIterator  >

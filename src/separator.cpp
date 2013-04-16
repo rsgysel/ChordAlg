@@ -33,7 +33,7 @@ SeparatorBlocks::SeparatorBlocks( Graph const& G ) :
 
 ////////////// Methods
 // Main computation
-void SeparatorComponents::Separate( VertexContainer const & S )
+void SeparatorComponents::Separate( VertexContainer const & S, FillSet& fill )
 {
     size_ = 0;
 
@@ -49,31 +49,18 @@ void SeparatorComponents::Separate( VertexContainer const & S )
         connected_component_[ v ] = kInSeparator();
 
     // main calculation
-    FindComponents();
+    FindComponents( fill );
     return;
 }
 
-// Finds connected component containing v
-VertexContainer SeparatorComponents::ConnectedComponent( Vertex v ) const
-{
-    VertexContainer C;
-    if( connected_component_[ v ] == kInSeparator() )
-        return C;
-
-    for( Vertex u : G_ )
-    {
-        if( connected_component_[ u ] == connected_component_[ v ] )
-            C.push_back( u );
-    }
-    return C;
-}
-
 // Finds connected components
-void SeparatorComponents::FindComponents()
+void SeparatorComponents::FindComponents( FillSet& fill )
 {
     ConnectedComponentID current_component = kUnsearched();
-    for( Vertex v : G_ ){
-        if( connected_component_[ v ] == kUnsearched() && connected_component_[ v ] != kInSeparator() )
+    for( Vertex v : G_ )
+    {
+
+        if( IsUnsearched( v ) && !IsInSeparator( v ) )
         {
             search_queue_.push_back( v );
             ++current_component;
@@ -83,11 +70,12 @@ void SeparatorComponents::FindComponents()
         while( !search_queue_.empty() )
         {
             Vertex u = search_queue_.back(); search_queue_.pop_back();
+            const VertexContainer& neighborhood = GetNeighborhood( u, fill );
 
             // BFS
-            for( Vertex w : G_.N( u ) )
+            for( Vertex w : neighborhood )
             {
-                if( connected_component_[ w ] == kUnsearched() && connected_component_[ w ] != kInSeparator() )
+                if( IsUnsearched( w ) && !IsInSeparator( w ) )
                 {
                     search_queue_.push_back( w );
                     connected_component_[ w ] = current_component;
@@ -100,16 +88,49 @@ void SeparatorComponents::FindComponents()
     return;
 }
 
-void SeparatorBlocks::Separate( VertexContainer const & S )
+// Finds connected component containing v
+VertexContainer SeparatorComponents::ConnectedComponent( Vertex v ) const
 {
-    SeparatorComponents::Separate( S );
+    VertexContainer C;
+    if( IsInSeparator( v ) )
+        return C;
+
+    for( Vertex u : G_ )
+    {
+        if( AreConnected( u, v ) )
+            C.push_back( u );
+    }
+    return C;
+}
+
+const VertexContainer& SeparatorComponents::GetNeighborhood( Vertex u, FillSet& fill )
+{
+    if( fill.empty() )
+        return G_.N( u );
+    else
+    {
+        VertexContainer* neighborhood = new VertexContainer();
+        for( Vertex v : G_.N( u ) )
+            neighborhood->push_back( v );
+
+        for( Vertex v : fill[ u ] )
+            neighborhood->push_back( v );
+
+        return *neighborhood;
+    }
+}
+
+void SeparatorBlocks::Separate( VertexContainer const & S, FillSet& fill )
+{
+    SeparatorComponents::Separate( S, fill );
 
     neighborhoods_.clear();
     neighborhoods_.resize( size_ );
     last_separator_vertex_seen_.clear();
 
     // main computation
-    FindNeighborhoods();
+    FindNeighborhoods( fill );
+
     return;
 }
 
@@ -117,7 +138,7 @@ void SeparatorBlocks::Separate( VertexContainer const & S )
 // Our implementation is an extension of the algorithm found on p.50 in the paper below.
 // paper: http://www.sciencedirect.com/science/article/pii/S0196677404001142
 // citation: http://www.informatik.uni-trier.de/~ley/db/journals/jal/jal58.html#BerryBHSV06
-void SeparatorBlocks::FindNeighborhoods()
+void SeparatorBlocks::FindNeighborhoods( FillSet& fill )
 {
 
     // used to ensure each element of N(C) appears once
@@ -127,10 +148,12 @@ void SeparatorBlocks::FindNeighborhoods()
 
     for( Vertex v : S_ )
     {
-        for( Vertex u : G_.N( v ) )
+        const VertexContainer& neighborhood = GetNeighborhood( v, fill );
+
+        for( Vertex u : neighborhood )
         {
             ConnectedComponentID C = connected_component_[ u ];
-            if( C != kInSeparator() && last_separator_vertex_seen_[ C ] != v )
+            if( !IsInSeparator( u ) && last_separator_vertex_seen_[ C ] != v )
             {
                 neighborhoods_[ C ].push_back( v );
                 last_separator_vertex_seen_[ C ] = v;
@@ -139,30 +162,6 @@ void SeparatorBlocks::FindNeighborhoods()
     }
 
     return;
-}
-
-bool SeparatorComponents::IsInSeparator( Vertex u )
-{
-    return connected_component_[ u ] == kInSeparator();
-}
-
-bool SeparatorComponents::AreConnected( Vertex u, Vertex v )
-{
-    ConnectedComponentID Cu = connected_component_[ u ], Cv = connected_component_[ v ];
-    if( Cu == kInSeparator() || Cv == kInSeparator() )
-        return false;
-    else
-        return Cu == Cv;
-}
-
-// Note AreSeparated is not the complement of AreConnected, because vertices in S_ are never connected or separated
-bool SeparatorComponents::AreSeparated( Vertex u, Vertex v )
-{
-    ConnectedComponentID Cu = connected_component_[ u ], Cv = connected_component_[ v ];
-    if( Cu == kInSeparator() || Cv == kInSeparator() )
-        return false;
-    else
-        return Cu != Cv;
 }
 
 void SeparatorComponents::PrettyPrint()
@@ -183,7 +182,7 @@ void SeparatorBlocks::PrettyPrint()
     {
         std::cout << "N(C_" << cc << "): ";
         for( Vertex v : NC )
-            std::cout << G_.name(v) << " ";
+            std::cout << G_.name( v ) << " ";
         std::cout << std::endl;
         ++cc;
     }

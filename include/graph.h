@@ -16,8 +16,8 @@ class Graph;
 class GraphIterator
 {
     public:
-        GraphIterator( int graph_id ) : graph_id_( graph_id ), v_( 0 ) {};
-        GraphIterator( int graph_id, Vertex v ) : graph_id_( graph_id ), v_( v ) {};
+        GraphIterator( const Graph* const graph_id ) : graph_id_( graph_id ), v_( 0 ) {};
+        GraphIterator( const Graph* const graph_id, Vertex v ) : graph_id_( graph_id ), v_( v ) {};
 
         // implemented for range-based for loops on the graph
         inline void operator++(){ ++v_; }
@@ -26,7 +26,7 @@ class GraphIterator
         inline bool operator!=( const GraphIterator& other ) const { return !( *this == other ); }
         inline Vertex operator*() const { return v_; }
     private:
-        const int graph_id_;
+        const Graph* const graph_id_;
         Vertex v_;
 };  // GraphVertexIterator
 
@@ -46,11 +46,10 @@ class Graph
         // stat accessors
         int order() const { return order_; }
         int size() const { return size_; }            // # edges
-        int id() const { return reinterpret_cast<int>(this); }
 
         // "iteration" accessors
-        inline GraphIterator begin() const { return GraphIterator( graph_id_ ); }
-        inline GraphIterator end() const { return GraphIterator( graph_id_, order_ ); }
+        inline GraphIterator begin() const { return GraphIterator( this ); }
+        inline GraphIterator end() const { return GraphIterator( this, order_ ); }
 
         // Neighborhood accessor
         inline const VertexContainer& N( Vertex v ) const { return neighborhoods_->operator[]( v ); }
@@ -74,7 +73,6 @@ class Graph
         std::vector< std::vector< bool > > is_edge_;
 
         unsigned int order_, size_;     // #vertices, #edges
-        int graph_id_;                  // id = memory location
 
         // Induced Subgraph Initialization
         VertexNameContainer* InducedNames( Graph&, VertexContainer );

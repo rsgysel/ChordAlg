@@ -80,13 +80,14 @@ void ColoredIntersectionGraph::PrettyPrintSubsets()
 {
     for( Vertex v : *this )
     {
-        std::cout << "C_" << v << ": ";
+        std::cout << "Subset(" << name( v ) << "): ";
         std::copy( subsets_[ v ].begin(), subsets_[ v ].end(), std::ostream_iterator< Vertex >( std::cout, " " ) );
         std::cout << std::endl;
         std::cout << "Colors: ";
         std::copy( vertex_colors_[ v ].begin(), vertex_colors_[ v ].end(), std::ostream_iterator< Color >( std::cout, " " ) );
-        std::cout << std::endl << std::endl;
+        std::cout << std::endl;
     }
+    std::cout << std::endl;
     return;
 }
 

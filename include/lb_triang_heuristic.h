@@ -1,6 +1,9 @@
 #ifndef LB_TRIANG_HEURISTIC_H
 #define LB_TRIANG_HEURISTIC_H
 
+#include <cstdlib>
+#include <ctime>
+
 #include <algorithm>
 #include <cfloat>
 #include <climits>
@@ -23,12 +26,17 @@ class LBTriangHeuristic : public EliminationOrdering
         LBTriangHeuristic( ColoredIntersectionGraph& G );
         virtual ~LBTriangHeuristic();
 
+        Weight fill_weight(){ return fill_cost_; }
+
+        void PrettyPrint();
 
     protected:
         ColoredIntersectionGraph& H_;
         SeparatorBlocks B_;
 
-        std::vector< Weight > fill_of_ith_vertex_, separated_of_ith_vertex_;
+        std::set< Vertex > deleted_vertices_;
+        std::vector< Weight > fill_of_ith_vertex_;
+        std::vector< double > separated_of_ith_vertex_;
 
         void Init();
 
@@ -66,7 +74,7 @@ void LBTriangHeuristic::ForEachSaturatingSet( Vertex v, void ( DerivedFromEO::*b
             for( ++w_itr; w_itr != NC.end() ; ++w_itr )
             {
                 Vertex u = *u_itr,  w = *w_itr;
-                if( !G_.HasEdge( u, w ) )
+                if( !G_.HasEdge( u, w ) && !IsFillEdge( u, w ) )
                     ( this->*body )( u, w );
             }
         }

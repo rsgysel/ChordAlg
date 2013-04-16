@@ -25,11 +25,6 @@ typedef std::vector< int > ComputationBuffer;       // buffers re-used in numero
             // Requires back(), clear(), pop_back(), push_back(), resize(), and ranged-for.
 typedef std::vector< ComputationBuffer > ComputationBufferSet;
 
-//class Graph;
-//typedef Graph AtomSubgraph;
-//typedef std::vector< AtomSubgraph* > AtomList;
-//typedef AtomList::const_iterator AtomIterator;
-
 // intersection graph typedefs
 typedef int Element;
 typedef std::vector< Element > Subset;

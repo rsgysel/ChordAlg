@@ -17,7 +17,7 @@ LexTrieIterator::LexTrieIterator( int n, LexTrieNode* root, const LexTrie* T ) :
     return;
 }
 
-LexTrie::LexTrie( int n ) : n_( n ), set_count_( 0 ), lex_trie_id_( reinterpret_cast< int >( this ) )
+LexTrie::LexTrie( int n ) : n_( n ), set_count_( 0 )
 {
 	try{
 		this->root_ = new LexTrieNode( false );
@@ -32,7 +32,7 @@ LexTrie::LexTrie( int n ) : n_( n ), set_count_( 0 ), lex_trie_id_( reinterpret_
 
 LexTrieNode::~LexTrieNode()
 {
-	for( auto &kv : children_ )
+	for( ChildData kv : children_ )
 		delete kv.second;
 }
 
@@ -53,7 +53,7 @@ int LexTrieNode::SizeOf( int n ) const
 {
 	int size = 0;
 
-    for( auto& kv : children_ )
+    for( ChildData kv : children_ )
         size += kv.second->SizeOf( n );
 
     // may need to fix this

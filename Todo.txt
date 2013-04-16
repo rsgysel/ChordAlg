@@ -1,5 +1,8 @@
 Critical:
 
+-file reader as template class
+	-get rid of factory shit
+
 -abstract class VertexOrder-- EliminationOrdering ( or it takes an EliminationAlgorithm - EliminationGame, LBTriang ? )
 		   |- LBTriangOrdering
 	-In Init(), pick one vertex at a time, and fill one vertex at a time (instead of fill range)
@@ -16,6 +19,7 @@ Critical:
 
 -separator
 	- ComputationBufferSet? wtf
+	- Add "Eliminated" CCid & modify code accordingly
 
 -vertex pair struct ( min, max )
 
@@ -23,10 +27,15 @@ Critical:
 
 -brush up const / inline
 
--Remove non-debugging macros
+-use nullptr
 
 Not so critical:
+-pointers -> references
+
+-PrintVertices function: name 1 2 3 4 etc.
+
 -PrettyPrint -> use ostream&
+		- default ostream& os = NULL; now we can handle both types of output
 
 -RF chordalg_types -> headers
 

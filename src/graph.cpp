@@ -8,8 +8,7 @@ namespace chordalg{
 Graph::Graph( Graph& H ) : neighborhoods_( new AdjacencyLists( *( H.neighborhoods_ ) ) ),
     vertex_names_( new VertexNameContainer( *( H.vertex_names_ ) ) ),
     order_( H.order_ ),
-    size_( H.size_ ),
-    graph_id_( reinterpret_cast< int >( this ) )
+    size_( H.size_ )
 {
     Init();
     return;
@@ -18,8 +17,7 @@ Graph::Graph( Graph& H ) : neighborhoods_( new AdjacencyLists( *( H.neighborhood
 Graph::Graph( FileReader* fr ) : neighborhoods_( fr->TakeNeighborhoods() ),
     vertex_names_( fr->TakeNames() ),
     order_( neighborhoods_->size() ),
-    size_( 0 ),
-    graph_id_( reinterpret_cast< int >( this ) )
+    size_( 0 )
 {
     Init();
     return;
@@ -28,8 +26,7 @@ Graph::Graph( FileReader* fr ) : neighborhoods_( fr->TakeNeighborhoods() ),
 Graph::Graph(AdjacencyLists* a_lists) : neighborhoods_( a_lists ),
     vertex_names_( DefaultNames( a_lists->size() ) ),
     order_( a_lists->size() ),
-    size_( 0 ),
-    graph_id_( reinterpret_cast< int >( this ) )
+    size_( 0 )
 {
     Init();
     return;
@@ -38,8 +35,7 @@ Graph::Graph(AdjacencyLists* a_lists) : neighborhoods_( a_lists ),
 Graph::Graph( AdjacencyLists* a_lists, VertexNameContainer vertex_names ) : neighborhoods_( a_lists ),
     vertex_names_( new VertexNameContainer( vertex_names ) ),
     order_( a_lists->size() ),
-    size_( 0 ),
-    graph_id_( reinterpret_cast< int >( this ) )
+    size_( 0 )
 {
     Init();
     return;
@@ -48,8 +44,7 @@ Graph::Graph( AdjacencyLists* a_lists, VertexNameContainer vertex_names ) : neig
 Graph::Graph( Graph& super_graph, VertexContainer X ) : neighborhoods_( InducedVertices( super_graph, X ) ),
     vertex_names_( InducedNames( super_graph, X ) ),
     order_( X.size() ),
-    size_( 0 ),
-    graph_id_( reinterpret_cast< int >( this ) )
+    size_( 0 )
 {
     Init();
     return;
@@ -186,7 +181,8 @@ void Graph::PrettyPrint()
     for( Vertex v : *this )
     {
         std::cout << "N(" << name( v ) << "): ";
-        std::copy( N( v ).begin(), N( v ).end(), std::ostream_iterator< Vertex >(std::cout, " ") );
+        for( Vertex u : N( v ) )
+            std::cout << name( u ) << " ";
         std::cout << std::endl;
     }
     return;

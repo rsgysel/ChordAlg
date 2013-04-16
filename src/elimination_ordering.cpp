@@ -5,7 +5,7 @@ namespace chordalg {
 EliminationOrdering::EliminationOrdering( Graph& G ) : G_( G ),
     fill_size_( 0 ),
     fill_edge_count_( G_.order(), std::vector<int>( G_.order(), 0 ) ),
-    fill_neighbors_( G_.order(), std::map< Vertex, bool >() )
+    fill_neighbors_( G_.order(), std::set< Vertex >() )
 {
     Init();
     Refill( 0, G_.order() - 1 );
@@ -53,9 +53,8 @@ VertexContainer EliminationOrdering::MonotoneAdjacencySet( Vertex v )
             N_alpha.push_back( u );
     }
 
-    for( std::pair< Vertex, bool > p : fill_neighbors_[ v ] )
+    for( Vertex u : fill_neighbors_[ v ] )
     {
-        Vertex u = p.first;
         if( alpha_inverse_[ v ] < alpha_inverse_[ u ] )
             N_alpha.push_back( u );
     }
@@ -77,9 +76,8 @@ void EliminationOrdering::PrettyPrint()
     std::cout << "fill edges: ";
     for( Vertex v : G_ )
     {
-        for( std::pair< Vertex, bool > p : fill_neighbors_[ v ] )
+        for( Vertex u : fill_neighbors_[ v ] )
         {
-            Vertex u = p.first;
             if( v < u )
             {
                 std::cout << fill_edge_count_[ u ][ v ] << '.' << fill_edge_count_[ v ][ u ]
@@ -164,7 +162,8 @@ void EliminationOrdering::Unfill( int lower, int upper )
 void EliminationOrdering::AddEdge( Vertex u, Vertex w )
 {
     fill_size_++;
-    fill_neighbors_[ u ][ w ] = fill_neighbors_[ w ][ u ] = true;
+    fill_neighbors_[ u ].insert( w );
+    fill_neighbors_[ w ].insert( u );
     return;
 }
 

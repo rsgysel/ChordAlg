@@ -1,10 +1,14 @@
 #ifndef ELIMINATION_HEURISTICS_H
 #define ELIMINATION_HEURISTICS_H
 
+#include <cstdlib>
+#include <ctime>
+
 #include <algorithm>
 #include <climits>
 #include <iterator>
 
+#include "atom_subgraphs.hpp"
 #include "elimination_ordering.h"
 #include "intersection_graph.h"
 
@@ -19,6 +23,9 @@ class MonochromaticFillPairHeuristic : public EliminationOrdering
     public:
         MonochromaticFillPairHeuristic( ColoredIntersectionGraph& H );
         ~MonochromaticFillPairHeuristic();
+
+        Weight fill_weight() const { return fill_weight_; }
+
     private:
         ColoredIntersectionGraph& H_;
 
