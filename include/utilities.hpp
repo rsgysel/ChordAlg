@@ -2,6 +2,7 @@
 #define UTILITIES_HPP_INCLUDED
 
 #include "file_reader.h"
+#include "elimination_order.h"
 #include "elimination_heuristics.h"
 #include "atom_subgraphs.hpp"
 #include "intersection_graph.h"

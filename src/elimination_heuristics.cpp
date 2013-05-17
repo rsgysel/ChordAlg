@@ -32,7 +32,7 @@ void MonochromaticFillPairHeuristic::Init()
 
     for( int i = 0; i < H_.order(); ++i )
     {
-        std::pair< Weight, Vertex > min = Min( remaining_vertices, i );
+        std::pair< unsigned int, Vertex > min = Min( remaining_vertices, i );
 
         fill_weight_ += min.first;
 
@@ -60,9 +60,9 @@ void MonochromaticFillPairHeuristic::MinBody( Vertex u, Vertex w )
     return;
 }
 
-std::pair< Weight, Vertex > MonochromaticFillPairHeuristic::Min( std::map< Vertex, bool >& remaining_vertices, int elimination_index )
+std::pair< unsigned int, Vertex > MonochromaticFillPairHeuristic::Min( std::map< Vertex, bool >& remaining_vertices, int elimination_index )
 {
-    std::pair< Weight, Vertex > min_pair;
+    std::pair< unsigned int, Vertex > min_pair;
     min_pair.first = MAX_WEIGHT;
 
     for( std::pair< Vertex, bool > p : remaining_vertices )

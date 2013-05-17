@@ -1,10 +1,15 @@
 #include "atom_subgraphs.hpp"
-#include "elimination_heuristics.h"
-#include "elimination_ordering.h"
+#include "elimination_order.h"
 #include "file_reader.h"
-#include "lb_triang_heuristic.h"
 #include "graph_test.h"
 #include "utilities.hpp"
+
+#include "classic_heuristics.h"
+#include "separation_heuristics.h"
+
+#include "lb_triang_heuristic.h"
+#include "elimination_heuristics.h"
+#include "elimination_ordering.h"
 
 TEST_F( MatrixCellIntGraphTest, Debug )
 {
@@ -13,22 +18,53 @@ TEST_F( MatrixCellIntGraphTest, Debug )
  //       NewFileReader< MatrixCellIntGraphFR >( graph_dir() + std::string( "BadExample_2state20.20-0.2.dat" ) );
         NewFileReader< MatrixCellIntGraphFR >( graph_dir() + std::string( "18232state50.50-0.1.npp" ) );
     ColoredIntersectionGraph G( graph_reader );
-    Weight total_weight = 0;
+    double old_classic = 0, new_classic = 0, old_lb = 0, new_lb = 0;
 
     Atoms< ColoredIntersectionGraph > A( G );
 
 int i = 0;
     for( ColoredIntersectionGraph* a : A )
     {
-        MonochromaticFillPairHeuristic eo( *a );
-        //a->PrettyPrint();
-        if(i == 3)
-            eo.PrettyPrint();
-        total_weight += eo.fill_weight();
+
+//        MonochromaticFillPairHeuristic eo( *a );
+//        old_classic += eo.fill_weight();
+//
+//        MonochromaticDeficiencyHeuristic new_eo( *a );
+//        new_classic += new_eo.fill_cost();
+
+//std::cout << std::endl << "Old: " << std::endl;
+//        LBTriangHeuristic lbeo( *a );
+//        old_lb += lbeo.fill_weight();
+//std::cout << std::endl << "New: " << std::endl;
+//        MonochromaticPDRS new_lbeo( *a );
+//        new_lb += new_lbeo.fill_cost();
+
+    if( i == 5 )
+    {
+
+std::cout << std::endl << "Old: " << std::endl;
+        LBTriangHeuristic lbeo( *a );
+        old_lb += lbeo.fill_weight();
+std::cout << std::endl << "New: " << std::endl;
+        MonochromaticPDRS new_lbeo( *a );
+        new_lb += new_lbeo.fill_cost();
+            a->PrettyPrint();
+            for( Vertex v : *a )
+            {
+                std::cout << "there are " << a->vertex_color(v).size() << " colors of " << a->name(v) << " " << std::endl;
+                std::copy( a->vertex_color(v).begin(), a->vertex_color(v).end(), std::ostream_iterator<Color>( std::cout, " " )  );
+                std::cout << std::endl;
+            }
+    }
+
+//        if(i == 3)
+//            eo.PrettyPrint();
+
         ++i;
     }
 
-    std::cout << "fill weight: " << total_weight << std::endl;
+    std::cout << "classic fill weights: " << old_classic << " and " << new_classic << std::endl;
+    std::cout << "lb fill weights: " << old_lb << " and " << new_lb << std::endl;
     return;
 }
 

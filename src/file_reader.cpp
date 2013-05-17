@@ -237,6 +237,7 @@ void MatrixCellIntGraphFR::ComputeGraphData( std::vector< std::vector< int > > m
 
     neighborhoods_ = new AdjacencyLists( order );
     Vertex v = 0;
+
     std::vector< VertexContainer > cells_of_taxon( row_count );
     for( Subset& C : subsets_ )
     {
@@ -244,6 +245,7 @@ void MatrixCellIntGraphFR::ComputeGraphData( std::vector< std::vector< int > > m
             cells_of_taxon[t].push_back( v );
         v++;
     }
+
     std::map< VertexPair, bool > edges;
     for( VertexContainer V : cells_of_taxon )
     {
@@ -256,6 +258,7 @@ void MatrixCellIntGraphFR::ComputeGraphData( std::vector< std::vector< int > > m
             }
         }
     }
+
     for( std::pair< VertexPair, bool > p : edges )
     {
         VertexPair e = p.first;
@@ -263,6 +266,7 @@ void MatrixCellIntGraphFR::ComputeGraphData( std::vector< std::vector< int > > m
         neighborhoods_->operator[]( u ).push_back( v );
         neighborhoods_->operator[]( v ).push_back( u );
     }
+
     for( VertexContainer& V : *neighborhoods_ )
         std::sort( V.begin(), V.end() );
 

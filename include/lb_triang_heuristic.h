@@ -17,11 +17,13 @@
 
 namespace chordalg {
 
-typedef unsigned int Weight;
+#undef MAX_WEIGHT
 #define MAX_WEIGHT UINT_MAX;
 
 class LBTriangHeuristic : public EliminationOrdering
 {
+    typedef unsigned int Weight;
+
     public:
         LBTriangHeuristic( ColoredIntersectionGraph& G );
         virtual ~LBTriangHeuristic();

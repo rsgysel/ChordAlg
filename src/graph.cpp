@@ -5,46 +5,51 @@ namespace chordalg{
 ////////////// Graph
 ////////////// ctor & dtors
 //
-Graph::Graph( Graph& H ) : neighborhoods_( new AdjacencyLists( *( H.neighborhoods_ ) ) ),
-    vertex_names_( new VertexNameContainer( *( H.vertex_names_ ) ) ),
-    order_( H.order_ ),
-    size_( H.size_ )
+Graph::Graph( Graph& H ) :
+    neighborhoods_  (   new AdjacencyLists      (   *( H.neighborhoods_ )   )   ),
+    vertex_names_   (   new VertexNameContainer (   *( H.vertex_names_  )   )   ),
+    order_          (   H.order_    ),
+    size_           (   H.size_     )
 {
     Init();
     return;
 }
 
-Graph::Graph( FileReader* fr ) : neighborhoods_( fr->TakeNeighborhoods() ),
-    vertex_names_( fr->TakeNames() ),
-    order_( neighborhoods_->size() ),
-    size_( 0 )
+Graph::Graph( FileReader* fr ) :
+    neighborhoods_  (   fr->TakeNeighborhoods() ),
+    vertex_names_   (   fr->TakeNames()         ),
+    order_          (   neighborhoods_->size()  ),
+    size_           (   0   )
 {
     Init();
     return;
 }
 
-Graph::Graph(AdjacencyLists* a_lists) : neighborhoods_( a_lists ),
-    vertex_names_( DefaultNames( a_lists->size() ) ),
-    order_( a_lists->size() ),
-    size_( 0 )
+Graph::Graph( AdjacencyLists* a_lists ) :
+    neighborhoods_  (   a_lists                         ),
+    vertex_names_   (   DefaultNames( a_lists->size() ) ),
+    order_          (   a_lists->size()                 ),
+    size_           (   0   )
 {
     Init();
     return;
 }
 
-Graph::Graph( AdjacencyLists* a_lists, VertexNameContainer vertex_names ) : neighborhoods_( a_lists ),
-    vertex_names_( new VertexNameContainer( vertex_names ) ),
-    order_( a_lists->size() ),
-    size_( 0 )
+Graph::Graph( AdjacencyLists* a_lists, VertexNameContainer vertex_names ) :
+    neighborhoods_  (   a_lists                                 ),
+    vertex_names_   (   new VertexNameContainer( vertex_names ) ),
+    order_          (   a_lists->size()                         ),
+    size_           (   0   )
 {
     Init();
     return;
 }
 
-Graph::Graph( Graph& super_graph, VertexContainer X ) : neighborhoods_( InducedVertices( super_graph, X ) ),
-    vertex_names_( InducedNames( super_graph, X ) ),
-    order_( X.size() ),
-    size_( 0 )
+Graph::Graph( Graph& super_graph, VertexContainer X ) :
+    neighborhoods_  (   InducedVertices( super_graph, X )   ),
+    vertex_names_   (   InducedNames( super_graph, X )      ),
+    order_          (   X.size()    ),
+    size_           (   0           )
 {
     Init();
     return;
@@ -91,7 +96,8 @@ AdjacencyLists* Graph::InducedVertices( Graph& super_graph, VertexContainer X )
         {
             if(in_subgraph[ u ])
             {
-                Vertex v_induced_id = vertex_order[ v ], u_induced_id = vertex_order[ u ];
+                Vertex  v_induced_id = vertex_order[ v ],
+                        u_induced_id = vertex_order[ u ];
                 a_lists->operator[]( v_induced_id ).push_back( u_induced_id );
             }
         }
@@ -102,8 +108,9 @@ AdjacencyLists* Graph::InducedVertices( Graph& super_graph, VertexContainer X )
 
 VertexNameContainer* Graph::DefaultNames( size_t order )
 {
-    int n = order;
-    VertexNameContainer* names = new VertexNameContainer();
+    int                     n       =   order;
+    VertexNameContainer*    names   =   new VertexNameContainer();
+
     names->resize( n );
     for( int i = 0; i < n; ++i )
     {
@@ -161,12 +168,14 @@ Graph::~Graph()
 bool Graph::IsIsomorphic( Graph& H )
 {
     Graph& G = *this;
-    if( G.order() != H.order() || G.size() != H.size() )
+    if( G.order()   !=  H.order() ||
+        G.size()    !=  H.size() )
         return false;
     for( Vertex v : G )
     {
         if( G.N( v ).size() != H.N( v ).size() )
             return false;
+
         if( !std::equal( G.N( v ).begin(), G.N( v ).end(), H.N( v ).begin() ) )
             return false;
     }
@@ -175,8 +184,8 @@ bool Graph::IsIsomorphic( Graph& H )
 
 void Graph::PrettyPrint()
 {
-    std::cout << "Order: " << order_ << std::endl;
-    std::cout << "Size: " << size_ << std::endl;
+    std::cout   <<  "Order: "   <<  order_  <<  std::endl;
+    std::cout   <<  "Size: "    <<  size_   <<  std::endl;
 
     for( Vertex v : *this )
     {
@@ -185,6 +194,60 @@ void Graph::PrettyPrint()
             std::cout << name( u ) << " ";
         std::cout << std::endl;
     }
+    return;
+}
+
+////////////// VertexPairs
+////////////// ctor
+//
+
+VertexPairsIterator::VertexPairsIterator( const VertexContainer* const V, int begin, int end ) :
+    V_  (   V       ),
+    v1_ (   begin   ),
+    v2_ (   begin   )
+{
+    if( V->size() == 1 )
+        v1_ = v2_ = V->size();
+    else if( begin != end )
+        v2_++;
+
+    return;
+}
+
+////////////// methods
+
+VertexPairsIterator VertexPairs::begin() const
+{
+    return VertexPairsIterator( &V_, begin_, end_ );
+}
+
+VertexPairsIterator VertexPairs::end() const
+{
+    return VertexPairsIterator( &V_, end_,   end_ );
+}
+
+////////////// Iterator
+//
+
+void VertexPairsIterator::operator++()
+{
+    int n = V_->size();
+
+    if( v1_ == n )
+        return;
+
+    if( v2_ == n - 1 )
+    {
+        ++v1_;
+
+        if( v1_ == n - 1 )
+            v1_ = v2_ = n;
+        else
+            v2_ = v1_ + 1;
+    }
+    else
+        ++v2_;
+
     return;
 }
 

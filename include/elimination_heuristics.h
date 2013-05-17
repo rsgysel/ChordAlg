@@ -14,12 +14,14 @@
 
 namespace chordalg {
 
-typedef unsigned int Weight;
+#undef MAX_WEIGHT
 #define MAX_WEIGHT UINT_MAX;
 
 // Picks vertex that adds fewest monochromatic fill edges ( i.e. compatible with two-state CR, not general CR )
 class MonochromaticFillPairHeuristic : public EliminationOrdering
 {
+    typedef unsigned int Weight;
+
     public:
         MonochromaticFillPairHeuristic( ColoredIntersectionGraph& H );
         ~MonochromaticFillPairHeuristic();

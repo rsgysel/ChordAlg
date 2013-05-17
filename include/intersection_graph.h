@@ -16,24 +16,24 @@ class ColoredIntersectionGraph : public Graph
         ColoredIntersectionGraph( ColoredIntersectionGraph&, VertexContainer );
         virtual ~ColoredIntersectionGraph();
 
-        bool IsMonochromatic( Vertex, Vertex );
-        int CommonColorCount( Vertex, Vertex );
-        const Multicolor& vertex_color( Vertex v ){ return vertex_colors_[ v ]; }
+        bool                IsMonochromatic ( Vertex, Vertex    );
+        int                 CommonColorCount( Vertex, Vertex    );
+        const Multicolor&   vertex_color    ( Vertex v          ){ return vertex_colors_[ v ]; }
 
         void PrettyPrintSubsets();
 
-        const LexTrie* subset_family() const { return subset_family_; }
-        const Subset& subset( Vertex v ) const { return subsets_[ v ]; }
+        const LexTrie*  subset_family()     const { return subset_family_;  }
+        const Subset&   subset( Vertex v )  const { return subsets_[ v ];   }
 
     private:
 
-        std::vector< Subset > subsets_;
-        std::vector< Multicolor > vertex_colors_;
-        LexTrie* subset_family_;
+        std::vector< Subset >       subsets_;
+        std::vector< Multicolor >   vertex_colors_;
+        LexTrie*                    subset_family_;
 
-        std::vector< Subset > InduceSubsets( ColoredIntersectionGraph&, VertexContainer );
-        std::vector< Multicolor > InduceVertexColors( ColoredIntersectionGraph&, VertexContainer );
-        LexTrie* InduceSubsetFamily( ColoredIntersectionGraph& );
+        std::vector< Subset >       InduceSubsets       ( ColoredIntersectionGraph&, VertexContainer    );
+        std::vector< Multicolor >   InduceVertexColors  ( ColoredIntersectionGraph&, VertexContainer    );
+        LexTrie*                    InduceSubsetFamily  ( ColoredIntersectionGraph&                     );
 }; // ColoredIntersectionGraph
 
 } // namespace chordalg

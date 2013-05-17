@@ -19,7 +19,6 @@ class GraphIterator
         GraphIterator( const Graph* const graph_id ) : graph_id_( graph_id ), v_( 0 ) {};
         GraphIterator( const Graph* const graph_id, Vertex v ) : graph_id_( graph_id ), v_( v ) {};
 
-        // implemented for range-based for loops on the graph
         inline void operator++(){ ++v_; }
         inline bool operator==( const GraphIterator& other ) const
             { return ( graph_id_ == other.graph_id_ ) && ( v_ == other.v_ ); }
@@ -48,14 +47,16 @@ class Graph
         int size() const { return size_; }            // # edges
 
         // "iteration" accessors
-        inline GraphIterator begin() const { return GraphIterator( this ); }
-        inline GraphIterator end() const { return GraphIterator( this, order_ ); }
+        inline GraphIterator begin()    const   { return GraphIterator( this );         }
+        inline GraphIterator end()      const   { return GraphIterator( this, order_ ); }
 
         // Neighborhood accessor
         inline const VertexContainer& N( Vertex v ) const { return neighborhoods_->operator[]( v ); }
 
         // Edge accessors
-        inline bool HasEdge( Vertex u, Vertex v ) { return is_edge_[ u ][ v ]; }
+        inline bool HasEdge( Vertex u, Vertex v ) { return is_edge_[ u ][ v ];              }
+        inline bool HasEdge( VertexPair p       ) { return HasEdge( p.first, p.second );    }
+
         template< class Container >
         bool HasClique( Container set ){ return HasClique( set.begin(), set.end() ); }
 
@@ -82,6 +83,43 @@ class Graph
         DISALLOW_COPY_AND_ASSIGN( Graph );
 };  // Graph
 
+class VertexPairs;
+
+typedef VertexContainer::const_iterator VCIterator;
+
+class VertexPairsIterator
+{
+    public:
+        VertexPairsIterator( const VertexContainer* const, int, int );
+
+        void                operator++  ( );
+        inline bool         operator==  ( const VertexPairsIterator& other ) const
+                {   return ( V_ == other.V_ ) && ( v1_ == other.v1_ ) && ( v2_ == other.v2_ ); }
+        inline bool         operator!=  ( const VertexPairsIterator& other ) const
+                {   return !( *this == other ); }
+        inline VertexPair   operator*   ( )
+                {   return VertexPair( V_->operator[]( v1_ ), V_->operator[]( v2_ ) ); }
+
+    private:
+        const VertexContainer* const V_;
+        int v1_, v2_;
+};  // VertexPairsIterator
+
+class VertexPairs
+{
+    public:
+        VertexPairs( VertexContainer    V ) : V_( V ), begin_( 0 ), end_( V.size() ) {}
+        //VertexPairs( Graph              G ) : begin_( G.begin() ), end_( G.end() ) {}
+
+        VertexPairsIterator begin    ()  const ;
+        VertexPairsIterator end      ()  const ;
+
+    private:
+        const VertexContainer   V_;
+        int                     begin_,
+                                end_;
+};  // VertexPairs
+
 ////////////// Generics
 //
 
@@ -97,6 +135,7 @@ bool Graph::HasClique( InputIterator begin, InputIterator end )
                 return false;
         }
     }
+
     return true;
 }
 

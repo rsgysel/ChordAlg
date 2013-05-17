@@ -1,5 +1,10 @@
 Critical:
 
+-VertexContainer as a class, VertexSet too.
+	-sub-class GraphVertexContainer, fold graph iterator into this class (for VertexPair usage)
+
+-VertexPairs separated from graph
+
 -file reader as template class
 	-get rid of factory shit
 

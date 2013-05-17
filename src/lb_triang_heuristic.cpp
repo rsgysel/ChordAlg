@@ -51,7 +51,7 @@ void LBTriangHeuristic::Init()
 
     for( int i = 0; i < G_.order(); ++i )
     {
-        std::pair< std::pair< Weight, double >, Vertex > min = Min( remaining_vertices, i );
+        std::pair< std::pair< unsigned int, double >, Vertex > min = Min( remaining_vertices, i );
 
         fill_cost_ += min.first.first;
 
@@ -94,7 +94,7 @@ void LBTriangHeuristic::Saturate( Vertex u, Vertex w )
 void LBTriangHeuristic::UpdateMonochromaticPairs( Vertex v )
 {
     std::vector< std::pair< Vertex, Vertex > > to_erase;
-    for( std::pair< std::pair< Vertex, Vertex >, Weight > p : monochromatic_pairs_ )
+    for( std::pair< std::pair< Vertex, Vertex >, unsigned int > p : monochromatic_pairs_ )
     {
         std::pair< Vertex, Vertex > f = p.first;
         Vertex u = f.first, w = f.second;
@@ -160,32 +160,32 @@ void LBTriangHeuristic::MinBody( Vertex u, Vertex v )
 
 void LBTriangHeuristic::CountSeparatedMonochromaticPair( Vertex v )
 {
-    for( std::pair< std::pair< Vertex, Vertex >, Weight > p : monochromatic_pairs_ )
+    for( std::pair< std::pair< Vertex, Vertex >, unsigned int > p : monochromatic_pairs_ )
     {
         std::pair< Vertex, Vertex > f = p.first;
-        Weight f_cost = p.second;
+        unsigned int f_cost = p.second;
 
         if( fill_from_v_.find( f ) == fill_from_v_.end() )
         {
             Vertex u = f.first, w = f.second;
             ConnectedComponentID Cu = B_.ComponentId( u ), Cw = B_.ComponentId( w );
 
-            if( B_.AreSeparated( u, w ) )
-                    separated_weight_ += f_cost;
-            else if( ( u == v && Cw != B_.kInSeparator() )
-                || ( w == v && Cu != B_.kInSeparator() ) )
-            {
-                separated_weight_ += f_cost;
-            } // if either u or w is v, and the other vertex is not in N[v]
+//            if( B_.AreSeparated( u, w ) )
+//                    separated_weight_ += f_cost;
+//            else if( ( u == v && Cw != B_.kInSeparator() )
+//                || ( w == v && Cu != B_.kInSeparator() ) )
+//            {
+//                separated_weight_ += f_cost;
+//            } // if either u or w is v, and the other vertex is not in N[v]
         }
     }
 
     return;
 }
 
-std::pair< std::pair< Weight, double >, Vertex > LBTriangHeuristic::Min( std::map< Vertex, bool >& remaining_vertices, int elimination_index )
+std::pair< std::pair< unsigned int, double >, Vertex > LBTriangHeuristic::Min( std::map< Vertex, bool >& remaining_vertices, int elimination_index )
 {
-    std::pair< std::pair< Weight, double >, Vertex > min_triple;
+    std::pair< std::pair< unsigned int, double >, Vertex > min_triple;
     min_triple.first.second = DBL_MAX;
 
     for( std::pair< Vertex, bool > p : remaining_vertices )
@@ -199,6 +199,9 @@ std::pair< std::pair< Weight, double >, Vertex > LBTriangHeuristic::Min( std::ma
         FindSaturatingSets( v );
         ForEachSaturatingSet( v, &LBTriangHeuristic::MinBody );
         CountSeparatedMonochromaticPair( v );
+
+if( deleted_vertices_.empty() )
+    std::cout << v << " " << fill_weight_ << " " << separated_weight_ << std::endl;
 
         double cost = fill_weight_ / ( 1 + separated_weight_ );
         if( cost < min_triple.first.second ||
