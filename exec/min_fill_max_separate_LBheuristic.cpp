@@ -1,5 +1,5 @@
 #include "atom_subgraphs.hpp"
-#include "lb_triang_heuristic.h"
+#include "separation_heuristics.h"
 #include "file_reader.h"
 #include "intersection_graph.h"
 #include "utilities.hpp"
@@ -14,7 +14,7 @@ int main( int argc, char* argv[] )
     {
         AnalyzeFile<    ColoredIntersectionGraph,
                         MatrixCellIntGraphFR,
-                        LBTriangHeuristic >
+                        MonochromaticPDRS >
                         ( argv[ 1 ] );
     }
 

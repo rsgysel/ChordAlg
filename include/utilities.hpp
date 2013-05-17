@@ -3,7 +3,6 @@
 
 #include "file_reader.h"
 #include "elimination_order.h"
-#include "elimination_heuristics.h"
 #include "atom_subgraphs.hpp"
 #include "intersection_graph.h"
 
@@ -21,8 +20,11 @@ void AnalyzeFile( std::string filename )
 
     for( GraphType* a : A )
     {
-        HeuristicType eo( *a );
-        total_weight += eo.fill_weight();
+        if( !a->IsClique() )
+        {
+            HeuristicType eo( *a );
+            total_weight += eo.fill_cost();
+        }
     }
 
     std::cout << "fill weight: " << total_weight << std::endl;

@@ -12,7 +12,10 @@ TEST_F( SortedAdjacencyListTest, Debug )
     for( int i = 0; i < 6; ++i )
     {
         for( VertexPair p : VertexPairs( G->N(i) ) )
+        {
             ++pairs_count;
+            EXPECT_LT( p.first, p.second );
+        }
     }
     EXPECT_EQ( pairs_count, 31 );
 

@@ -58,7 +58,8 @@ class Graph
         inline bool HasEdge( VertexPair p       ) { return HasEdge( p.first, p.second );    }
 
         template< class Container >
-        bool HasClique( Container set ){ return HasClique( set.begin(), set.end() ); }
+        bool HasClique( Container set ) { return HasClique( set.begin(), set.end() ); }
+        bool IsClique () { return 2*size_ == order_ * ( order_ - 1 ); }
 
         // Name accessor
         const VertexName& name( Vertex v ) const { return vertex_names_->operator[]( v ); }
