@@ -8,11 +8,12 @@
 #include "chordalg_types.h"
 #include "graph.h"
 #include "utilities.h"
+#include "vertex_utilities.h"
 
 namespace chordalg {
 
-typedef int                                 ConnectedComponentID;
-typedef std::vector< std::set< Vertex > >   FillSet;
+typedef int                         ConnectedComponentID;
+typedef std::vector< VertexSet >    FillSet;
 
 // Calculates the connected components of G - S for a graph G and vertex set S
 // Intended for numerous computations on the same graph.
@@ -23,9 +24,9 @@ class SeparatorComponents
         explicit SeparatorComponents( Graph const& );
         ~SeparatorComponents() {};
 
-        const VertexContainer& GetNeighborhood( Vertex, FillSet& );
-        virtual void Separate( VertexContainer const &, FillSet& fill = *( new FillSet() ) );
-        VertexContainer ConnectedComponent( Vertex ) const;
+        const VertexVector& GetNeighborhood( Vertex, FillSet& );
+        virtual void Separate( VertexVector const &, FillSet& fill = *( new FillSet() ) );
+        VertexVector ConnectedComponent( Vertex ) const;
 
         int size() const
             { return size_; }
@@ -60,7 +61,6 @@ class SeparatorComponents
 
         int size_;                                                     // # of connected components
 
-
         inline bool IsUnsearched( Vertex u ) const
             { return connected_component_[ u ] == kUnsearched(); }
 
@@ -74,7 +74,7 @@ class SeparatorBlocks : public SeparatorComponents
         SeparatorBlocks( Graph const& );
         ~SeparatorBlocks() {};
 
-        void Separate( VertexContainer const &, FillSet& fill = *( new FillSet() ) );
+        void Separate( VertexVector const &, FillSet& fill = *( new FillSet() ) );
 
         ComputationBufferSet::const_iterator begin()
             { return neighborhoods_.begin(); }

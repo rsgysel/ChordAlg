@@ -10,7 +10,7 @@ ColoredIntersectionGraph::ColoredIntersectionGraph( MatrixCellIntGraphFR* fr ) :
     return;
 }
 
-ColoredIntersectionGraph::ColoredIntersectionGraph( ColoredIntersectionGraph& super_graph, VertexContainer X ) :
+ColoredIntersectionGraph::ColoredIntersectionGraph( ColoredIntersectionGraph& super_graph, VertexVector X ) :
     Graph( super_graph, X ),
     subsets_( InduceSubsets( super_graph, X ) ),
     vertex_colors_( InduceVertexColors( super_graph, X ) ),
@@ -25,7 +25,7 @@ ColoredIntersectionGraph::~ColoredIntersectionGraph()
     return;
 }
 
-std::vector< Subset > ColoredIntersectionGraph::InduceSubsets( ColoredIntersectionGraph& super_graph, VertexContainer X )
+std::vector< Subset > ColoredIntersectionGraph::InduceSubsets( ColoredIntersectionGraph& super_graph, VertexVector X )
 {
     std::sort( X.begin(), X.end() );
 
@@ -38,7 +38,7 @@ std::vector< Subset > ColoredIntersectionGraph::InduceSubsets( ColoredIntersecti
     return subsets;
 }
 
-std::vector< Multicolor > ColoredIntersectionGraph::InduceVertexColors( ColoredIntersectionGraph& super_graph, VertexContainer X )
+std::vector< Multicolor > ColoredIntersectionGraph::InduceVertexColors( ColoredIntersectionGraph& super_graph, VertexVector X )
 {
     std::sort( X.begin(), X.end() );
 

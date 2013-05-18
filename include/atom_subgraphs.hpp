@@ -34,7 +34,7 @@ class Atoms
         std::vector< GraphType* > atom_subgraphs_;
 
         GraphType& G_;
-        VertexContainer alpha_;                     // peo. alpha[i] is i^th vertex eliminated
+        VertexVector alpha_;                     // peo. alpha[i] is i^th vertex eliminated
         std::vector< int > alpha_inverse_;
         std::vector< std::list< Vertex > > F_;      // as in paper; minimal fill
         std::list< Vertex > minsep_generators_;     // 'X' in paper
@@ -158,10 +158,10 @@ void Atoms< GraphType >::MCSmPlus()
 template< class GraphType >
 void Atoms< GraphType >::ComputeAtoms()
 {
-    std::list< VertexContainer > vertices_of_atoms;
+    std::list< VertexVector > vertices_of_atoms;
     SeparatorComponents cc( G_ );
 
-    VertexContainer deleted_vertices;                   // in paper, this is V(G_) - V(G_')
+    VertexVector deleted_vertices;                   // in paper, this is V(G_) - V(G_')
     std::vector< bool > is_deleted( G_.order(), false );
 
     int last_deleted;                                   // track index of last deleted vertex, for adding last atom
@@ -190,8 +190,8 @@ void Atoms< GraphType >::ComputeAtoms()
                 S.push_back( u );
 
             cc.Separate( S );
-            VertexContainer C = cc.ConnectedComponent( v );
-            VertexContainer atom;
+            VertexVector C = cc.ConnectedComponent( v );
+            VertexVector atom;
 
             for( Vertex u : C )
             {
@@ -214,13 +214,13 @@ void Atoms< GraphType >::ComputeAtoms()
     }
 
     // Remaining vertices form an atom
-    VertexContainer C;
+    VertexVector C;
     for( int i = last_deleted + 1; i < G_.order(); ++i )
         C.push_back( alpha_[ i ] );
     if( !C.empty() )
         vertices_of_atoms.push_back( C );
 
-    for( VertexContainer U : vertices_of_atoms )
+    for( VertexVector U : vertices_of_atoms )
         atom_subgraphs_.push_back( new GraphType( G_, U ) );
 
     return;

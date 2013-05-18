@@ -16,7 +16,7 @@ TEST_F( MatrixCellIntGraphTest, Debug )
 
     Atoms< ColoredIntersectionGraph > A( G );
 
-    Cost classic = 0, lb = 0;
+//    Cost classic = 0, lb = 0;
 
     int i = 0;
     for( ColoredIntersectionGraph* a : A )
@@ -74,7 +74,7 @@ TEST_F( MatrixCellIntGraphTest, MinfillUnchordalTest )
     chordalg::MonochromaticDeficiencyHeuristic eo( *H );
 
 //// need to turn off tie breaking for this
-//    chordalg::VertexContainer pi = { 0, 4, 1, 5, 6, 7, 2, 3, 8 };
+//    chordalg::VertexVector pi = { 0, 4, 1, 5, 6, 7, 2, 3, 8 };
 //    EXPECT_EQ( eo.Ordering() == pi, true );
 
     return;

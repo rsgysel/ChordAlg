@@ -8,6 +8,7 @@
 #include "chordalg_types.h"
 #include "file_reader.h"
 #include "utilities.h"
+#include "vertex_utilities.h"
 
 namespace chordalg {
 
@@ -35,8 +36,8 @@ class Graph
         Graph( Graph& H );
         Graph( FileReader* );
         Graph( AdjacencyLists* );
-        Graph( AdjacencyLists*, VertexNameContainer );
-        Graph( Graph&, VertexContainer );
+        Graph( AdjacencyLists*, VertexNames );
+        Graph( Graph&, VertexVector );
         virtual ~Graph();
 
         bool IsIsomorphic( Graph& );
@@ -51,7 +52,7 @@ class Graph
         inline GraphIterator end()      const   { return GraphIterator( this, order_ ); }
 
         // Neighborhood accessor
-        inline const VertexContainer& N( Vertex v ) const { return neighborhoods_->operator[]( v ); }
+        inline const VertexVector& N( Vertex v ) const { return neighborhoods_->operator[]( v ); }
 
         // Edge accessors
         inline bool HasEdge( Vertex u, Vertex v ) { return is_edge_[ u ][ v ];              }
@@ -65,61 +66,24 @@ class Graph
         const VertexName& name( Vertex v ) const { return vertex_names_->operator[]( v ); }
 
     protected:
-        VertexNameContainer* DefaultNames( size_t );
+        VertexNames* DefaultNames( size_t );
         void Init();
         template< class InputIterator >
         bool HasClique( InputIterator begin, InputIterator end );
 
         const AdjacencyLists* neighborhoods_;
-        const VertexNameContainer* vertex_names_;
+        const VertexNames* vertex_names_;
         std::vector< std::vector< bool > > is_edge_;
 
         unsigned int order_, size_;     // #vertices, #edges
 
         // Induced Subgraph Initialization
-        VertexNameContainer* InducedNames( Graph&, VertexContainer );
-        AdjacencyLists* InducedVertices( Graph&, VertexContainer );
+        VertexNames* InducedNames( Graph&, VertexVector );
+        AdjacencyLists* InducedVertices( Graph&, VertexVector );
 
         DISALLOW_DEFAULT_CONSTRUCTOR( Graph );
         DISALLOW_COPY_AND_ASSIGN( Graph );
 };  // Graph
-
-class VertexPairs;
-
-typedef VertexContainer::const_iterator VCIterator;
-
-class VertexPairsIterator
-{
-    public:
-        VertexPairsIterator( const VertexContainer* const, int, int );
-
-        void                operator++  ( );
-        inline bool         operator==  ( const VertexPairsIterator& other ) const
-                {   return ( V_ == other.V_ ) && ( v1_ == other.v1_ ) && ( v2_ == other.v2_ ); }
-        inline bool         operator!=  ( const VertexPairsIterator& other ) const
-                {   return !( *this == other ); }
-        inline VertexPair   operator*   ( )
-                {   return VertexPair( V_->operator[]( v1_ ), V_->operator[]( v2_ ) ); }
-
-    private:
-        const VertexContainer* const V_;
-        int v1_, v2_;
-};  // VertexPairsIterator
-
-class VertexPairs
-{
-    public:
-        VertexPairs( VertexContainer    V ) : V_( V ), begin_( 0 ), end_( V.size() ) {}
-        //VertexPairs( Graph              G ) : begin_( G.begin() ), end_( G.end() ) {}
-
-        VertexPairsIterator begin    ()  const ;
-        VertexPairsIterator end      ()  const ;
-
-    private:
-        const VertexContainer   V_;
-        int                     begin_,
-                                end_;
-};  // VertexPairs
 
 ////////////// Generics
 //

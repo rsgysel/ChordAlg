@@ -13,6 +13,7 @@
 #include "chordalg_types.h"
 #include "lex_trie.h"
 #include "utilities.h"
+#include "vertex_utilities.h"
 
 namespace chordalg {
 
@@ -27,13 +28,13 @@ class FileReader
         virtual ~FileReader();
 
         AdjacencyLists* TakeNeighborhoods();
-        VertexNameContainer* TakeNames();
+        VertexNames* TakeNames();
     protected:
         FileReader(std::string);
         inline void AssertFormatOrDie(bool,std::string) const;
 
         AdjacencyLists* neighborhoods_;
-        VertexNameContainer* names_;
+        VertexNames* names_;
         std::ifstream file_stream_;
     private:
         FileReader(){};   // default constructor disabled

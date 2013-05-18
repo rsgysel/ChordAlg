@@ -12,10 +12,10 @@ LexTrie& BerryBordatCogis( Graph G )
     LexTrie* minimal_separators = new LexTrie( n );
 
     // minimal separators not yet processed. entries are sorted
-    std::vector< VertexContainer > minimal_separator_queue;
+    std::vector< VertexVector > minimal_separator_queue;
 
     // current vertex separator
-    VertexContainer U;  U.resize( n );
+    VertexVector U;  U.resize( n );
     SeparatorBlocks S( G );
 
     // first phase: the neighborhood of each connected component
@@ -28,9 +28,9 @@ LexTrie& BerryBordatCogis( Graph G )
             U.push_back( u );
 
         S.Separate( U );
-        for( VertexContainer NC : S )
+        for( VertexVector NC : S )
         {
-            minimal_separators->Insert< VertexContainer, VertexIterator >( NC, new_set );
+            minimal_separators->Insert< VertexVector, VVConstItr >( NC, new_set );
             if( new_set )
                 minimal_separator_queue.push_back( NC );
         }
@@ -38,7 +38,7 @@ LexTrie& BerryBordatCogis( Graph G )
 
     // second phase: for each v in S, the neighborhood of each
     // connected components of G - S U N[v] is a minimal separator
-    VertexContainer V;  V.resize( n );
+    VertexVector V;  V.resize( n );
     while( !minimal_separator_queue.empty() )
     {
         U = minimal_separator_queue.back();
@@ -52,10 +52,10 @@ LexTrie& BerryBordatCogis( Graph G )
                         V.begin());
 
             S.Separate( V );
-            for( VertexContainer NC : S )
+            for( VertexVector NC : S )
             {
                 std::sort( NC.begin(), NC.end() );
-                minimal_separators->Insert< VertexContainer, VertexIterator >( NC, new_set );
+                minimal_separators->Insert< VertexVector, VVConstItr >( NC, new_set );
                 if( new_set )
                     minimal_separator_queue.push_back( NC );
             }

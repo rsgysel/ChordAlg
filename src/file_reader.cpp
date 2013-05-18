@@ -32,9 +32,9 @@ AdjacencyLists* FileReader::TakeNeighborhoods()
     return temp;
 }
 
-VertexNameContainer* FileReader::TakeNames()
+VertexNames* FileReader::TakeNames()
 {
-    VertexNameContainer* temp = names_;
+    VertexNames* temp = names_;
     names_ = NULL;
     return temp;
 }
@@ -91,7 +91,7 @@ void SortedAdjacencyListFR::ReadFileOrDie()
     neighborhoods_->resize( order );   // create empty neighborhoods
 
     // initialize vertex names
-    names_ = new VertexNameContainer;
+    names_ = new VertexNames;
     names_->resize( order );
 
     int vertex_count = 0;
@@ -227,7 +227,7 @@ void MatrixCellIntGraphFR::ComputeGraphData( std::vector< std::vector< int > > m
     }
     int order = cell_count;
 
-    names_ = new VertexNameContainer( cell_count );
+    names_ = new VertexNames( cell_count );
     for( int i = 0; i < cell_count; ++i )
     {
         std::stringstream i_str;
@@ -238,7 +238,7 @@ void MatrixCellIntGraphFR::ComputeGraphData( std::vector< std::vector< int > > m
     neighborhoods_ = new AdjacencyLists( order );
     Vertex v = 0;
 
-    std::vector< VertexContainer > cells_of_taxon( row_count );
+    std::vector< VertexVector > cells_of_taxon( row_count );
     for( Subset& C : subsets_ )
     {
         for( Element t : C )
@@ -247,7 +247,7 @@ void MatrixCellIntGraphFR::ComputeGraphData( std::vector< std::vector< int > > m
     }
 
     std::map< VertexPair, bool > edges;
-    for( VertexContainer V : cells_of_taxon )
+    for( VertexVector V : cells_of_taxon )
     {
         for( Vertex v : V )
         {
@@ -267,7 +267,7 @@ void MatrixCellIntGraphFR::ComputeGraphData( std::vector< std::vector< int > > m
         neighborhoods_->operator[]( v ).push_back( u );
     }
 
-    for( VertexContainer& V : *neighborhoods_ )
+    for( VertexVector& V : *neighborhoods_ )
         std::sort( V.begin(), V.end() );
 
     return;

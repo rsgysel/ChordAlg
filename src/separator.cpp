@@ -33,7 +33,7 @@ SeparatorBlocks::SeparatorBlocks( Graph const& G ) :
 
 ////////////// Methods
 // Main computation
-void SeparatorComponents::Separate( VertexContainer const & S, FillSet& fill )
+void SeparatorComponents::Separate( VertexVector const & S, FillSet& fill )
 {
     size_ = 0;
 
@@ -70,7 +70,7 @@ void SeparatorComponents::FindComponents( FillSet& fill )
         while( !search_queue_.empty() )
         {
             Vertex u = search_queue_.back(); search_queue_.pop_back();
-            const VertexContainer& neighborhood = GetNeighborhood( u, fill );
+            const VertexVector& neighborhood = GetNeighborhood( u, fill );
 
             // BFS
             for( Vertex w : neighborhood )
@@ -89,9 +89,9 @@ void SeparatorComponents::FindComponents( FillSet& fill )
 }
 
 // Finds connected component containing v
-VertexContainer SeparatorComponents::ConnectedComponent( Vertex v ) const
+VertexVector SeparatorComponents::ConnectedComponent( Vertex v ) const
 {
-    VertexContainer C;
+    VertexVector C;
     if( IsInSeparator( v ) )
         return C;
 
@@ -103,13 +103,13 @@ VertexContainer SeparatorComponents::ConnectedComponent( Vertex v ) const
     return C;
 }
 
-const VertexContainer& SeparatorComponents::GetNeighborhood( Vertex u, FillSet& fill )
+const VertexVector& SeparatorComponents::GetNeighborhood( Vertex u, FillSet& fill )
 {
     if( fill.empty() )
         return G_.N( u );
     else
     {
-        VertexContainer* neighborhood = new VertexContainer();
+        VertexVector* neighborhood = new VertexVector();
         for( Vertex v : G_.N( u ) )
             neighborhood->push_back( v );
 
@@ -120,7 +120,7 @@ const VertexContainer& SeparatorComponents::GetNeighborhood( Vertex u, FillSet& 
     }
 }
 
-void SeparatorBlocks::Separate( VertexContainer const & S, FillSet& fill )
+void SeparatorBlocks::Separate( VertexVector const & S, FillSet& fill )
 {
     SeparatorComponents::Separate( S, fill );
 
@@ -148,7 +148,7 @@ void SeparatorBlocks::FindNeighborhoods( FillSet& fill )
 
     for( Vertex v : S_ )
     {
-        const VertexContainer& neighborhood = GetNeighborhood( v, fill );
+        const VertexVector& neighborhood = GetNeighborhood( v, fill );
 
         for( Vertex u : neighborhood )
         {

@@ -81,7 +81,7 @@ bool EliminationOrder::IsRemoved( Vertex v )
     return remaining_vertices_.find( v ) == remaining_vertices_.end();
 }
 
-void EliminationOrder::Saturate( VertexContainer U )
+void EliminationOrder::Saturate( VertexVector U )
 {
     for( VertexPair p : VertexPairs( U ) )
     {
@@ -128,9 +128,9 @@ VertexCost EliminationOrder::TieBreak()
     return ties_[ i ];
 }
 
-VertexContainer EliminationOrder::MonotoneNbhd( Vertex v )
+VertexVector EliminationOrder::MonotoneNbhd( Vertex v )
 {
-    VertexContainer N_alpha;
+    VertexVector N_alpha;
 
     for( Vertex u : G_.N( v ) )
     {

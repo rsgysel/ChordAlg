@@ -9,13 +9,9 @@
 #include <vector>
 
 #include "chordalg_types.h"
-#include "graph.h"
+#include "graph_types.h"
 
 namespace chordalg {
-
-typedef double Weight;  // argument to minimize
-typedef double Cost;    // price for fill edge
-typedef std::pair< Vertex, Cost > VertexCost;
 
 #undef MAX_WEIGHT
 #define MAX_WEIGHT DBL_MAX;
@@ -41,26 +37,26 @@ class EliminationOrder
         bool IsEdge         ( VertexPair        );
         bool IsFillEdge     ( VertexPair        );
         bool IsRemoved      ( Vertex            );
-        void Saturate       ( VertexContainer   );
+        void Saturate       ( VertexVector      );
 
-        VertexContainer MonotoneNbhd( Vertex );
+        VertexVector MonotoneNbhd( Vertex );
 
         virtual void                        Eliminate   ( Vertex ) = 0;
         virtual std::pair< Weight, Cost >   WeightOf    ( Vertex ) = 0;
 
 
-        Graph&                                  G_;
+        Graph&                      G_;
 
-        VertexContainer                         alpha_;             // alpha[i] = ith vertex eliminated
-        std::vector < int                   >   alpha_inverse_;     // alpha_inverse[v] = elimination # of v
+        VertexVector                    alpha_;             // alpha[i] = ith vertex eliminated
+        std::vector < int           >   alpha_inverse_;     // alpha_inverse[v] = elimination # of v
 
-        int                                     fill_count_;
-        Weight                                  fill_cost_;
-        std::vector < std::set< Vertex >    >   fill_neighbors_;
-        std::set    < Vertex                >   remaining_vertices_;
+        int                             fill_count_;
+        Weight                          fill_cost_;
+        std::vector < VertexSet     >   fill_neighbors_;
+        VertexSet                       remaining_vertices_;
 
-        std::vector < VertexCost            >   ties_;
-        std::vector < int                   >   tie_count_;
+        std::vector < VertexCost    >   ties_;
+        std::vector < int           >   tie_count_;
 }; // EliminationOrder
 
 } // namespace chordalg

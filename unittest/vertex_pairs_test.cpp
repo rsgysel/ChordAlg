@@ -1,4 +1,4 @@
-#include "graph.h"
+#include "graph_types.h"
 #include "file_reader.h"
 #include "graph_test.h"
 #include "utilities.hpp"

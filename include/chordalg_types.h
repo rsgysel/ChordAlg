@@ -8,18 +8,6 @@
 
 namespace chordalg {
 
-// graph typedefs
-typedef int Vertex;
-typedef std::pair< Vertex, Vertex > VertexPair;
-typedef std::vector< Vertex > VertexContainer;
-typedef VertexContainer::const_iterator VertexIterator;
-
-typedef VertexContainer Nbhd;
-typedef std::vector< Nbhd > AdjacencyLists;
-
-typedef std::string VertexName;
-typedef std::vector< std::string > VertexNameContainer;
-
 // other typedefs
 typedef std::vector< int > ComputationBuffer;       // buffers re-used in numerous computations
             // Requires back(), clear(), pop_back(), push_back(), resize(), and ranged-for.

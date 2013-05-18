@@ -1,9 +1,19 @@
 #ifndef CHORDALG_UTILITIES_H
 #define CHORDALG_UTILITIES_H
 
+#include <algorithm>
+#include <iostream>
 #include <vector>
 
 namespace chordalg {
+
+//template< class Container, class Data >
+//void TPrettyPrint( const Container& C )
+//{
+//    std::copy( C.begin(), C.end(), std::ostream_iterator< Data >( std::cout, " " ) );
+//    std::cout << std::endl;
+//    return;
+//}
 
 // Macros
 
