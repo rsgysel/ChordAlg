@@ -42,7 +42,11 @@ void MonochromaticPDRS::Eliminate( Vertex v )
     S.add( v );
     B_.Separate( S, fill_neighbors_ );
 
+<<<<<<< HEAD
     for( Vertices NC : B_ )
+=======
+    for( VertexVector NC : B_ )
+>>>>>>> 137a14401e4ae061416a9d50dabfd29c7da40d9d
     {
         for( VertexPair uv : VertexPairs( NC ) )
         {
@@ -59,13 +63,22 @@ std::pair< Weight, Cost > MonochromaticPDRS::WeightOf( Vertex v )
     Weight  deficiency_wt   = 0,
             separated_wt    = 0;
 
+<<<<<<< HEAD
     Vertices S = MonotoneNbhd( v );
     S.add( v );
+=======
+    VertexVector S = MonotoneNbhd( v );
+    S.push_back( v );
+>>>>>>> 137a14401e4ae061416a9d50dabfd29c7da40d9d
     B_.Separate( S , fill_neighbors_ );
 
     // monochromatic fill pairs
     std::set< VertexPair > seen_fill_pairs;
+<<<<<<< HEAD
     for( Vertices NC : B_ )
+=======
+    for( VertexVector NC : B_ )
+>>>>>>> 137a14401e4ae061416a9d50dabfd29c7da40d9d
     {
         for( VertexPair uw : VertexPairs( NC ) )
         {

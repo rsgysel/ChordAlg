@@ -52,10 +52,12 @@ LexTrie& BerryBordatCogis( Graph G )
                         V.begin());
 
             S.Separate( V );
+
             for( Vertices NC : S )
             {
                 std::sort( NC.begin(), NC.end() );
                 minimal_separators->Insert< Vertices >( NC, new_set );
+
                 if( new_set )
                     minimal_separator_queue.push_back( NC );
             }
