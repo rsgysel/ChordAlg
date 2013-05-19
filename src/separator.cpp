@@ -91,7 +91,7 @@ void SeparatorComponents::FindComponents( FillSet& fill )
 // Finds connected component containing v
 Vertices SeparatorComponents::ConnectedComponent( Vertex v ) const
 {
-    Vertices C( 0 );
+    Vertices C;
     if( IsInSeparator( v ) )
         return C;
 
@@ -110,7 +110,7 @@ Vertices SeparatorComponents::GetNeighborhood( Vertex u, FillSet& fill )
         return Vertices( G_.N( u ) );
     else
     {
-        Vertices neighborhood( 0 );
+        Vertices neighborhood;
 
         for( Vertex v : G_.N( u ) )
             neighborhood.add( v );

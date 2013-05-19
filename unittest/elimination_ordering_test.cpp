@@ -38,6 +38,7 @@ TEST_F( MatrixCellIntGraphTest, Debug )
     std::cout << "Classic: " << classic << " lb: " << lb << std::endl;
     EXPECT_EQ( classic, 19 );
     EXPECT_EQ( lb, 19 );
+
     return;
 }
 

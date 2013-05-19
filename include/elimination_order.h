@@ -40,10 +40,8 @@ class EliminationOrder
         bool IsRemoved      ( Vertex        );
         void Saturate       ( Vertices      );
 
-
         virtual void                        Eliminate   ( Vertex ) = 0;
         virtual std::pair< Weight, Cost >   WeightOf    ( Vertex ) = 0;
-
 
         Graph&                          G_;
 

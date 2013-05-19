@@ -7,7 +7,7 @@ namespace chordalg{
 //
 Graph::Graph( Graph& H ) :
     neighborhoods_  (   new AdjacencyLists      (   *( H.neighborhoods_ )   )   ),
-    vertex_names_   (   new VertexNames (   *( H.vertex_names_  )   )   ),
+    vertex_names_   (   new VertexNames         (   *( H.vertex_names_  )   )   ),
     order_          (   H.order_    ),
     size_           (   H.size_     )
 {

@@ -134,6 +134,7 @@ class VertexPairs
         const Vertices  V_;
         int             begin_,
                         end_;
+
 };  // VertexPairs
 
 } // namespace chordalg
