@@ -3,8 +3,8 @@
 
 #include <algorithm>
 
+#include "graph_types.h"
 #include "elimination_order.h"
-#include "intersection_graph.h"
 
 namespace chordalg {
 

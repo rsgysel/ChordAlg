@@ -1,9 +1,14 @@
 Critical:
 
+-clean up dependencies. in particular, utilities.h and utilities.hpp -> utilities.hpp needs to be something else
+
 -VertexContainer as a class, VertexSet too.
 	-sub-class GraphVertexContainer, fold graph iterator into this class (for VertexPair usage)
 
 -VertexPairs separated from graph
+
+-separator
+	-use nbhd instead of vertexcontainers
 
 -file reader as template class
 	-get rid of factory shit

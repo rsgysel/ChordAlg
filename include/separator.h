@@ -8,11 +8,12 @@
 #include "chordalg_types.h"
 #include "graph.h"
 #include "utilities.h"
+#include "vertex_utilities.h"
 
 namespace chordalg {
 
-typedef int                                 ConnectedComponentID;
-typedef std::vector< std::set< Vertex > >   FillSet;
+typedef int                         ConnectedComponentID;
+typedef std::vector< VertexSet >    FillSet;
 
 // Calculates the connected components of G - S for a graph G and vertex set S
 // Intended for numerous computations on the same graph.
@@ -23,9 +24,9 @@ class SeparatorComponents
         explicit SeparatorComponents( Graph const& );
         ~SeparatorComponents() {};
 
-        const VertexContainer& GetNeighborhood( Vertex, FillSet& );
-        virtual void Separate( VertexContainer const &, FillSet& fill = *( new FillSet() ) );
-        VertexContainer ConnectedComponent( Vertex ) const;
+        Vertices        GetNeighborhood     ( Vertex, FillSet& );
+        virtual void    Separate            ( Vertices const &, FillSet& fill = *( new FillSet() ) );
+        Vertices        ConnectedComponent  ( Vertex ) const;
 
         int size() const
             { return size_; }
@@ -34,8 +35,8 @@ class SeparatorComponents
             { return connected_component_[ v ]; }
 
         ConnectedComponentID kInSeparator() const   { return -2; }
-        ConnectedComponentID kUnsearched() const    { return -1; }
-        ConnectedComponentID kRemoved() const       { return -3; }
+        ConnectedComponentID kUnsearched()  const   { return -1; }
+        ConnectedComponentID kRemoved()     const   { return -3; }
 
         inline bool IsInSeparator( Vertex u ) const
             { return connected_component_[ u ] == kInSeparator(); }
@@ -52,14 +53,13 @@ class SeparatorComponents
     protected:
         void FindComponents( FillSet& );
 
-        Graph const& G_;
-        ComputationBuffer S_;
+        Graph const&            G_;
+        Vertices                S_;
 
-        ComputationBuffer connected_component_;
-        ComputationBuffer search_queue_;
+        ComputationBuffer       connected_component_;
+        ComputationBuffer       search_queue_;
 
-        int size_;                                                     // # of connected components
-
+        int                     size_;                  // # of connected components
 
         inline bool IsUnsearched( Vertex u ) const
             { return connected_component_[ u ] == kUnsearched(); }
@@ -74,12 +74,12 @@ class SeparatorBlocks : public SeparatorComponents
         SeparatorBlocks( Graph const& );
         ~SeparatorBlocks() {};
 
-        void Separate( VertexContainer const &, FillSet& fill = *( new FillSet() ) );
+        void Separate( Vertices const &, FillSet& fill = *( new FillSet() ) );
 
-        ComputationBufferSet::const_iterator begin()
+        std::vector< Vertices >::const_iterator begin()
             { return neighborhoods_.begin(); }
 
-        ComputationBufferSet::const_iterator end()
+        std::vector< Vertices >::const_iterator end()
             { return neighborhoods_.end(); }
 
         void PrettyPrint();
@@ -87,8 +87,8 @@ class SeparatorBlocks : public SeparatorComponents
     private:
         void FindNeighborhoods( FillSet& );
 
-        ComputationBufferSet neighborhoods_;
-        ComputationBuffer last_separator_vertex_seen_;
+        std::vector< Vertices >     neighborhoods_;
+        ComputationBuffer           last_separator_vertex_seen_;
 
         DISALLOW_DEFAULT_CONSTRUCTOR( SeparatorBlocks );
         DISALLOW_COPY_AND_ASSIGN( SeparatorBlocks );

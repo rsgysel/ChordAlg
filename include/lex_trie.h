@@ -94,7 +94,7 @@ class LexTrie
         template< class Container >
         bool Contains( Container ) const;
 
-        template< class Container, class InputIterator >
+        template< class Container >
         const LexTrieNode* Insert( Container, bool& new_set = *( new bool ) );
 
         int SizeOf() const ;					            // space used by LexTrie
@@ -176,11 +176,11 @@ bool LexTrie::Contains( Container set ) const
     return ContainsRange< typename Container::const_iterator >( set.begin(), set.end() );
 }
 
-template< class Container, class InputIterator  >
+template< class Container >
 const LexTrieNode* LexTrie::Insert( Container set, bool& new_set )
 {
     std::sort( set.begin(), set.end() );
-    return InsertRange< InputIterator >( set.begin(), set.end(), new_set );
+    return InsertRange< typename Container::const_iterator >( set.begin(), set.end(), new_set );
 }
 
 

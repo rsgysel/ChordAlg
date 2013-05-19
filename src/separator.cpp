@@ -5,11 +5,11 @@ namespace chordalg {
 ////////////// ctor & dtors
 //
 SeparatorComponents::SeparatorComponents( Graph const& G ) :
-    G_( G ),
-    S_(),
-    connected_component_(),
-    search_queue_(),
-    size_( 0 )
+    G_                  ( G         ),
+    S_                  ( G.order() ),
+    connected_component_(           ),
+    search_queue_       (           ),
+    size_               ( 0         )
 {
     int n = G.order();
 
@@ -33,14 +33,14 @@ SeparatorBlocks::SeparatorBlocks( Graph const& G ) :
 
 ////////////// Methods
 // Main computation
-void SeparatorComponents::Separate( VertexContainer const & S, FillSet& fill )
+void SeparatorComponents::Separate( Vertices const & S, FillSet& fill )
 {
     size_ = 0;
 
     // intialize separator
     S_.clear();
     for( Vertex v : S )
-        S_.push_back( v );
+        S_.add( v );
 
     // initialize connected component of each vertex
     for( Vertex v : G_ )
@@ -70,7 +70,7 @@ void SeparatorComponents::FindComponents( FillSet& fill )
         while( !search_queue_.empty() )
         {
             Vertex u = search_queue_.back(); search_queue_.pop_back();
-            const VertexContainer& neighborhood = GetNeighborhood( u, fill );
+            const Vertices& neighborhood = GetNeighborhood( u, fill );
 
             // BFS
             for( Vertex w : neighborhood )
@@ -89,38 +89,40 @@ void SeparatorComponents::FindComponents( FillSet& fill )
 }
 
 // Finds connected component containing v
-VertexContainer SeparatorComponents::ConnectedComponent( Vertex v ) const
+Vertices SeparatorComponents::ConnectedComponent( Vertex v ) const
 {
-    VertexContainer C;
+    Vertices C( 0 );
     if( IsInSeparator( v ) )
         return C;
 
     for( Vertex u : G_ )
     {
         if( AreConnected( u, v ) )
-            C.push_back( u );
+            C.add( u );
     }
     return C;
 }
 
-const VertexContainer& SeparatorComponents::GetNeighborhood( Vertex u, FillSet& fill )
+Vertices SeparatorComponents::GetNeighborhood( Vertex u, FillSet& fill )
 {
+
     if( fill.empty() )
-        return G_.N( u );
+        return Vertices( G_.N( u ) );
     else
     {
-        VertexContainer* neighborhood = new VertexContainer();
+        Vertices neighborhood( 0 );
+
         for( Vertex v : G_.N( u ) )
-            neighborhood->push_back( v );
+            neighborhood.add( v );
 
         for( Vertex v : fill[ u ] )
-            neighborhood->push_back( v );
+            neighborhood.add( v );
 
-        return *neighborhood;
+        return neighborhood;
     }
 }
 
-void SeparatorBlocks::Separate( VertexContainer const & S, FillSet& fill )
+void SeparatorBlocks::Separate( Vertices const & S, FillSet& fill )
 {
     SeparatorComponents::Separate( S, fill );
 
@@ -148,14 +150,14 @@ void SeparatorBlocks::FindNeighborhoods( FillSet& fill )
 
     for( Vertex v : S_ )
     {
-        const VertexContainer& neighborhood = GetNeighborhood( v, fill );
+        const Vertices& neighborhood = GetNeighborhood( v, fill );
 
         for( Vertex u : neighborhood )
         {
             ConnectedComponentID C = connected_component_[ u ];
             if( !IsInSeparator( u ) && last_separator_vertex_seen_[ C ] != v )
             {
-                neighborhoods_[ C ].push_back( v );
+                neighborhoods_[ C ].add( v );
                 last_separator_vertex_seen_[ C ] = v;
             } // if u is not a separator vertex, u is in C, and we haven't determined that v is in N(C)
         }
@@ -178,7 +180,7 @@ void SeparatorBlocks::PrettyPrint()
     SeparatorComponents::PrettyPrint();
     ConnectedComponentID cc = 0;
 
-    for( ComputationBuffer NC : *this )
+    for( Vertices NC : *this )
     {
         std::cout << "N(C_" << cc << "): ";
         for( Vertex v : NC )

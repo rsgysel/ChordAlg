@@ -21,7 +21,8 @@ std::string SetToString(std::vector<int> set)
     return ss.str();
 }
 
-TEST(LexTrieTest,Basics) {
+TEST( LexTrieTest, Basics )
+{
     int n = 10;
     chordalg::LexTrie T(n);
     EXPECT_EQ(static_cast<int>(T.Size()),0);
@@ -30,13 +31,14 @@ TEST(LexTrieTest,Basics) {
     Container S1 vector_set(X1);
 
     bool tf = false;
-    T.Insert< Container, InputIterator >(S1,tf);    EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),1);
-    T.Insert< Container, InputIterator >(S1,tf);    EXPECT_EQ(tf,false);    EXPECT_EQ(static_cast<int>(T.Size()),1);
+    T.Insert< Container >(S1,tf);    EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),1);
+    T.Insert< Container >(S1,tf);    EXPECT_EQ(tf,false);    EXPECT_EQ(static_cast<int>(T.Size()),1);
 
     return;
 }
 
-TEST(LexTrieTest,Iterator) {
+TEST( LexTrieTest, Iterator )
+{
     int n = 10;
     chordalg::LexTrie T(n);
     EXPECT_EQ(static_cast<int>(T.Size()),0);
@@ -51,19 +53,19 @@ TEST(LexTrieTest,Iterator) {
 
     // Insert sets one at a time, and check that iterator works at each step
     bool tf = false;
-    T.Insert< Container, InputIterator >(S1,tf);     EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),1);
+    T.Insert< Container >(S1,tf);     EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),1);
     for(const Container set : T)
         EXPECT_EQ(T_map.at(SetToString(set)),true);
 
-    T.Insert< Container, InputIterator >(S2,tf);     EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),2);
+    T.Insert< Container >(S2,tf);     EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),2);
     for(const Container set : T)
         EXPECT_EQ(T_map.at(SetToString(set)),true);
 
-    T.Insert< Container, InputIterator >(S3,tf);     EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),3);
+    T.Insert< Container >(S3,tf);     EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),3);
     for(const Container set : T)
         EXPECT_EQ(T_map.at(SetToString(set)),true);
 
-    T.Insert< Container, InputIterator >(S4,tf);     EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),4);
+    T.Insert< Container >(S4,tf);     EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),4);
     for(const Container set : T)
         EXPECT_EQ(T_map.at(SetToString(set)),true);
 

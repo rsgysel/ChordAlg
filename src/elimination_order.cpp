@@ -3,9 +3,10 @@
 namespace chordalg {
 
 EliminationOrder::EliminationOrder( Graph& G ) :
-    G_          ( G ),
-    fill_count_ ( 0 ),
-    fill_cost_  ( 0 )
+    G_          ( G         ),
+    alpha_      ( G.order() ),
+    fill_count_ ( 0         ),
+    fill_cost_  ( 0         )
 {
     srand( time(NULL) );
     return;
@@ -20,7 +21,6 @@ void EliminationOrder::Init()
 {
     int n = G_.order();
 
-    alpha_.resize           ( n );
     alpha_inverse_.resize   ( n );
     fill_neighbors_.resize  ( n );
     tie_count_.resize       ( n );
@@ -81,7 +81,7 @@ bool EliminationOrder::IsRemoved( Vertex v )
     return remaining_vertices_.find( v ) == remaining_vertices_.end();
 }
 
-void EliminationOrder::Saturate( VertexContainer U )
+void EliminationOrder::Saturate( Vertices U )
 {
     for( VertexPair p : VertexPairs( U ) )
     {
@@ -128,20 +128,20 @@ VertexCost EliminationOrder::TieBreak()
     return ties_[ i ];
 }
 
-VertexContainer EliminationOrder::MonotoneNbhd( Vertex v )
+Vertices EliminationOrder::MonotoneNbhd( Vertex v )
 {
-    VertexContainer N_alpha;
+    Vertices N_alpha;
 
     for( Vertex u : G_.N( v ) )
     {
         if( !IsRemoved( u ) )
-            N_alpha.push_back( u );
+            N_alpha.add( u );
     }
 
     for( Vertex u : fill_neighbors_[ v ] )
     {
         if( !IsRemoved( u ) )
-            N_alpha.push_back( u );
+            N_alpha.add( u );
     }
 
     return N_alpha;

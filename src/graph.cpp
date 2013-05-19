@@ -7,7 +7,7 @@ namespace chordalg{
 //
 Graph::Graph( Graph& H ) :
     neighborhoods_  (   new AdjacencyLists      (   *( H.neighborhoods_ )   )   ),
-    vertex_names_   (   new VertexNameContainer (   *( H.vertex_names_  )   )   ),
+    vertex_names_   (   new VertexNames (   *( H.vertex_names_  )   )   ),
     order_          (   H.order_    ),
     size_           (   H.size_     )
 {
@@ -35,31 +35,31 @@ Graph::Graph( AdjacencyLists* a_lists ) :
     return;
 }
 
-Graph::Graph( AdjacencyLists* a_lists, VertexNameContainer vertex_names ) :
-    neighborhoods_  (   a_lists                                 ),
-    vertex_names_   (   new VertexNameContainer( vertex_names ) ),
-    order_          (   a_lists->size()                         ),
-    size_           (   0   )
+Graph::Graph( AdjacencyLists* a_lists, VertexNames vertex_names ) :
+    neighborhoods_  (   a_lists                             ),
+    vertex_names_   (   new VertexNames ( vertex_names )    ),
+    order_          (   a_lists->size   ( )                 ),
+    size_           (   0                                   )
 {
     Init();
     return;
 }
 
-Graph::Graph( Graph& super_graph, VertexContainer X ) :
-    neighborhoods_  (   InducedVertices( super_graph, X )   ),
-    vertex_names_   (   InducedNames( super_graph, X )      ),
-    order_          (   X.size()    ),
-    size_           (   0           )
+Graph::Graph( Graph& super_graph, Vertices X ) :
+    neighborhoods_  (   InducedVertices ( super_graph, X )  ),
+    vertex_names_   (   InducedNames    ( super_graph, X )  ),
+    order_          (   X.size          ( )                 ),
+    size_           (   0                                   )
 {
     Init();
     return;
 }
 
-VertexNameContainer* Graph::InducedNames( Graph& super_graph, VertexContainer X )
+VertexNames* Graph::InducedNames( Graph& super_graph, Vertices X )
 {
     std::sort( X.begin(), X.end() );
 
-    VertexNameContainer* names = new VertexNameContainer;
+    VertexNames* names = new VertexNames;
     names->reserve( X.size() );
 
     for( Vertex v : X )
@@ -68,7 +68,7 @@ VertexNameContainer* Graph::InducedNames( Graph& super_graph, VertexContainer X 
     return names;
 }
 
-AdjacencyLists* Graph::InducedVertices( Graph& super_graph, VertexContainer X )
+AdjacencyLists* Graph::InducedVertices( Graph& super_graph, Vertices X )
 {
     std::sort( X.begin(), X.end() );
 
@@ -85,6 +85,7 @@ AdjacencyLists* Graph::InducedVertices( Graph& super_graph, VertexContainer X )
 
     std::vector< bool > in_subgraph;
     in_subgraph.resize( super_graph.order() );
+
     for( Vertex v : super_graph )
         in_subgraph[ v ] = false;
     for( Vertex v : X )
@@ -98,7 +99,7 @@ AdjacencyLists* Graph::InducedVertices( Graph& super_graph, VertexContainer X )
             {
                 Vertex  v_induced_id = vertex_order[ v ],
                         u_induced_id = vertex_order[ u ];
-                a_lists->operator[]( v_induced_id ).push_back( u_induced_id );
+                a_lists->operator[]( v_induced_id ).add( u_induced_id );
             }
         }
     }
@@ -106,10 +107,10 @@ AdjacencyLists* Graph::InducedVertices( Graph& super_graph, VertexContainer X )
     return a_lists;
 }
 
-VertexNameContainer* Graph::DefaultNames( size_t order )
+VertexNames* Graph::DefaultNames( size_t order )
 {
-    int                     n       =   order;
-    VertexNameContainer*    names   =   new VertexNameContainer();
+    int             n       =   order;
+    VertexNames*    names   =   new VertexNames();
 
     names->resize( n );
     for( int i = 0; i < n; ++i )
@@ -194,60 +195,6 @@ void Graph::PrettyPrint()
             std::cout << name( u ) << " ";
         std::cout << std::endl;
     }
-    return;
-}
-
-////////////// VertexPairs
-////////////// ctor
-//
-
-VertexPairsIterator::VertexPairsIterator( const VertexContainer* const V, int begin, int end ) :
-    V_  (   V       ),
-    v1_ (   begin   ),
-    v2_ (   begin   )
-{
-    if( V->size() == 1 )
-        v1_ = v2_ = V->size();
-    else if( begin != end )
-        v2_++;
-
-    return;
-}
-
-////////////// methods
-
-VertexPairsIterator VertexPairs::begin() const
-{
-    return VertexPairsIterator( &V_, begin_, end_ );
-}
-
-VertexPairsIterator VertexPairs::end() const
-{
-    return VertexPairsIterator( &V_, end_,   end_ );
-}
-
-////////////// Iterator
-//
-
-void VertexPairsIterator::operator++()
-{
-    int n = V_->size();
-
-    if( v1_ == n )
-        return;
-
-    if( v2_ == n - 1 )
-    {
-        ++v1_;
-
-        if( v1_ == n - 1 )
-            v1_ = v2_ = n;
-        else
-            v2_ = v1_ + 1;
-    }
-    else
-        ++v2_;
-
     return;
 }
 

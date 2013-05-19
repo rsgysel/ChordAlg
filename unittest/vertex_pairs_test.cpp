@@ -1,4 +1,4 @@
-#include "graph.h"
+#include "graph_types.h"
 #include "file_reader.h"
 #include "graph_test.h"
 #include "utilities.hpp"
@@ -12,7 +12,12 @@ TEST_F( SortedAdjacencyListTest, Debug )
     for( int i = 0; i < 6; ++i )
     {
         for( VertexPair p : VertexPairs( G->N(i) ) )
+        {
             ++pairs_count;
+            EXPECT_LT( -1,          p.first     );
+            EXPECT_LT( p.first,     p.second    );
+            EXPECT_LT( p.second,    G->order()  );
+        }
     }
     EXPECT_EQ( pairs_count, 31 );
 

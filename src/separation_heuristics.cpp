@@ -38,9 +38,11 @@ void MonochromaticPDRS::Init()
 
 void MonochromaticPDRS::Eliminate( Vertex v )
 {
-    B_.Separate( MonotoneNbhd( v ) , fill_neighbors_ );
+    Vertices S = MonotoneNbhd( v );
+    S.add( v );
+    B_.Separate( S, fill_neighbors_ );
 
-    for( VertexContainer NC : B_ )
+    for( Vertices NC : B_ )
     {
         for( VertexPair uv : VertexPairs( NC ) )
         {
@@ -57,19 +59,13 @@ std::pair< Weight, Cost > MonochromaticPDRS::WeightOf( Vertex v )
     Weight  deficiency_wt   = 0,
             separated_wt    = 0;
 
-    VertexContainer S = MonotoneNbhd( v );
-    S.push_back( v );
+    Vertices S = MonotoneNbhd( v );
+    S.add( v );
     B_.Separate( S , fill_neighbors_ );
-
-if( G_.order() == remaining_vertices_.size() && v == 0)
-{
-    std::cout << "num of cc " << B_.size()  << std::endl;
-    B_.PrettyPrint();
-}
 
     // monochromatic fill pairs
     std::set< VertexPair > seen_fill_pairs;
-    for( VertexContainer NC : B_ )
+    for( Vertices NC : B_ )
     {
         for( VertexPair uw : VertexPairs( NC ) )
         {
@@ -78,10 +74,6 @@ if( G_.order() == remaining_vertices_.size() && v == 0)
                 fill_cost > 0 &&
                 seen_fill_pairs.find( uw ) == seen_fill_pairs.end() )
             {
-if( G_.order() == remaining_vertices_.size() && v == 0 )
-{
-    std::cout << G_.name(uw.first) << " " << G_.name(uw.second) << " wt:" << H_.CommonColorCount( uw.first, uw.second ) << std::endl;
-}
                 deficiency_wt += fill_cost;
                 seen_fill_pairs.insert( uw );
             }
@@ -99,8 +91,6 @@ if( G_.order() == remaining_vertices_.size() && v == 0 )
         if( B_.AreSeparated( u, w ) )
             separated_wt += fill_cost;
     }
-if( G_.order() == remaining_vertices_.size() )
-    std::cout << v << " " << deficiency_wt << " " << separated_wt << std::endl;
 
     return ObjectiveFunction( deficiency_wt, separated_wt );
 }
