@@ -1,9 +1,9 @@
 #include "atom_subgraphs.hpp"
-#include "classic_heuristics.h"
+#include "classic_elimination.h"
 #include "elimination_order.h"
 #include "file_reader.h"
 #include "graph_test.h"
-#include "separation_heuristics.h"
+#include "lb_elimination.h"
 #include "utilities.hpp"
 
 TEST_F( MatrixCellIntGraphTest, Debug )
@@ -27,10 +27,10 @@ TEST_F( MatrixCellIntGraphTest, Debug )
         {
             EXPECT_EQ( a->IsClique(), false );
 
-            MonochromaticDeficiencyHeuristic eo( *a );
+            ClassicElimination eo( *a, new DeficiencyCriterion() );
             classic += eo.fill_cost();
 
-            MonochromaticPDRS lb_eo( *a );
+            LBElimination lb_eo( *a, new RatioCriterion() );
             lb += lb_eo.fill_cost();
         }
         ++i;
@@ -49,7 +49,7 @@ TEST_F( MatrixCellIntGraphTest, MinFillMaxSeparateTest )
     chordalg::Atoms< chordalg::ColoredIntersectionGraph > A( *H );
     for( chordalg::ColoredIntersectionGraph* a : A )
     {
-        chordalg::MonochromaticPDRS eo( *a );
+        chordalg::LBElimination eo( *a, new chordalg::RatioCriterion() );
     }
 
     return;
@@ -57,10 +57,13 @@ TEST_F( MatrixCellIntGraphTest, MinFillMaxSeparateTest )
 
 TEST_F( MatrixCellIntGraphTest, MinFillFile )
 {
-    chordalg::AnalyzeFile<  chordalg::ColoredIntersectionGraph,
-                        chordalg::MatrixCellIntGraphFR,
-                        chordalg::MonochromaticDeficiencyHeuristic >
-                        ( "graphfiles/minfill_test.m" );
+    using namespace chordalg;
+    RunHeuristic<   ColoredIntersectionGraph,
+                    MatrixCellIntGraphFR,
+                    ClassicElimination,
+                    DeficiencyCriterion >
+                    ( "graphfiles/minfill_test.m" );
+
     return;
 }
 
@@ -68,7 +71,7 @@ TEST_F( MatrixCellIntGraphTest, MinfillChordalTest )
 {
 
     Read( graph_dir() + std::string( "cig_test.m" ) );
-    chordalg::MonochromaticDeficiencyHeuristic eo( *H );
+    chordalg::ClassicElimination eo( *H, new chordalg::DeficiencyCriterion() );
 
     return;
 }
@@ -77,7 +80,7 @@ TEST_F( MatrixCellIntGraphTest, MinfillUnchordalTest )
 {
 
     Read( graph_dir() + std::string( "minfill_test.m" ) );
-    chordalg::MonochromaticDeficiencyHeuristic eo( *H );
+    chordalg::ClassicElimination eo( *H, new chordalg::DeficiencyCriterion() );
 
 //// need to turn off tie breaking for this
 //    chordalg::VertexVector pi = { 0, 4, 1, 5, 6, 7, 2, 3, 8 };

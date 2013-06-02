@@ -9,7 +9,7 @@ FileReader::FileReader( std::string filename ) : neighborhoods_( NULL ), names_(
     file_stream_.open( filename.c_str() );
     if( !file_stream_ ) // exit on error
     {
-        std::cerr << "Error opening file " << filename << "." << std::endl;
+        std::cerr << "ChordAlg: Error opening file " << filename << "." << std::endl;
         exit( EXIT_FAILURE );
     }
     return;

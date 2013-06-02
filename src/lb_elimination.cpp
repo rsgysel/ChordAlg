@@ -1,22 +1,23 @@
-#include "separation_heuristics.h"
+#include "lb_elimination.h"
 
 namespace chordalg {
 
-MonochromaticPDRS::MonochromaticPDRS(  ColoredIntersectionGraph& H ) :
+LBElimination::LBElimination(  ColoredIntersectionGraph& H, LBCriterion* f ) :
     EliminationOrder    ( H ),
     H_                  ( H ),
-    B_                  ( H )
+    B_                  ( H ),
+    f_                  ( f )
 {
-    MonochromaticPDRS::Init();
+    LBElimination::Init();
     return;
 }
 
-MonochromaticPDRS::~MonochromaticPDRS()
+LBElimination::~LBElimination()
 {
     return;
 }
 
-void MonochromaticPDRS::Init()
+void LBElimination::Init()
 {
     // Monochromatic pair costs
     for( Vertex v : H_ )
@@ -36,18 +37,14 @@ void MonochromaticPDRS::Init()
     return;
 }
 
-void MonochromaticPDRS::Eliminate( Vertex v )
+void LBElimination::Eliminate( Vertex v )
 {
     Vertices S = MonotoneNbhd( v );
     S.add( v );
     B_.Separate( S, fill_neighbors_ );
 
-<<<<<<< HEAD
     for( Vertices NC : B_ )
-=======
-    for( VertexVector NC : B_ )
->>>>>>> 137a14401e4ae061416a9d50dabfd29c7da40d9d
-    {
+   {
         for( VertexPair uv : VertexPairs( NC ) )
         {
             AddEdge( uv );
@@ -58,27 +55,18 @@ void MonochromaticPDRS::Eliminate( Vertex v )
     return;
 }
 
-std::pair< Weight, Cost > MonochromaticPDRS::WeightOf( Vertex v )
+std::pair< Weight, Cost > LBElimination::WeightOf( Vertex v )
 {
     Weight  deficiency_wt   = 0,
             separated_wt    = 0;
 
-<<<<<<< HEAD
     Vertices S = MonotoneNbhd( v );
     S.add( v );
-=======
-    VertexVector S = MonotoneNbhd( v );
-    S.push_back( v );
->>>>>>> 137a14401e4ae061416a9d50dabfd29c7da40d9d
     B_.Separate( S , fill_neighbors_ );
 
     // monochromatic fill pairs
     std::set< VertexPair > seen_fill_pairs;
-<<<<<<< HEAD
     for( Vertices NC : B_ )
-=======
-    for( VertexVector NC : B_ )
->>>>>>> 137a14401e4ae061416a9d50dabfd29c7da40d9d
     {
         for( VertexPair uw : VertexPairs( NC ) )
         {
@@ -105,10 +93,11 @@ std::pair< Weight, Cost > MonochromaticPDRS::WeightOf( Vertex v )
             separated_wt += fill_cost;
     }
 
-    return ObjectiveFunction( deficiency_wt, separated_wt );
+    return std::pair< Weight, Cost>( f_->Calculate( deficiency_wt, separated_wt ), deficiency_wt );
+//    return ObjectiveFunction( deficiency_wt, separated_wt );
 }
 
-std::pair< Weight, Cost > MonochromaticPDRS::ObjectiveFunction( Weight deficiency_wt, Weight separated_wt )
+std::pair< Weight, Cost > LBElimination::ObjectiveFunction( Weight deficiency_wt, Weight separated_wt )
 {
     return std::pair< Weight, Cost >(   deficiency_wt / ( 1 + separated_wt ) ,
                                         deficiency_wt );

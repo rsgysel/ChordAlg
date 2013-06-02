@@ -55,6 +55,62 @@ Graph::Graph( Graph& super_graph, Vertices X ) :
     return;
 }
 
+Graph::~Graph()
+{
+    delete neighborhoods_;
+    delete vertex_names_;
+}
+
+void Graph::Init()
+{
+    for( Nbhd const& N : *neighborhoods_ )
+        size_ += N.size();
+    size_ /= 2;
+
+    // adjacency matrix
+    is_edge_.resize( order_ );
+    for( std::vector< bool >& V : is_edge_ )
+        V.resize( order_ );
+
+    for( Vertex x : *this )
+    {
+        for( Vertex y : *this )
+            is_edge_[ x ][ y ] = false;
+    }
+
+//    for( VertexPair uv : VertexPairs( this->V() ) )
+//        is_edge_[ uv.first ][ uv.second ] = is_edge_[ uv.second ][ uv.first ] = false;
+
+    for( Vertex x : *this )
+    {
+        for( Vertex y : this->N( x ) )
+            is_edge_[ x ][ y ] = true;
+    }
+
+    // check consistency
+    for( Vertex x : *this )
+    {
+        for( Vertex y : *this )
+        {
+            if( is_edge_[ x ][ y ] != is_edge_[ y ][ x ] )
+            {
+                std::cerr << "Error: edge relationships not symmetric wrt " << name( x ) << " and " << name( y ) << std::endl;
+                exit( 0 );
+            }
+        }
+    }
+//    for( VertexPair uv : VertexPairs( this->V() ) )
+//    {
+//        if( is_edge_[ uv.first ][ uv.second ] != is_edge_[ uv.second ][ uv.first ] )
+//        {
+//            std::cerr << "Error: edge relationships not symmetric wrt " << name( uv.first )
+//                            << " and " << name( uv.second ) << std::endl;
+//            exit( 0 );
+//        }
+//    }
+    return;
+}
+
 VertexNames* Graph::InducedNames( Graph& super_graph, Vertices X )
 {
     std::sort( X.begin(), X.end() );
@@ -122,48 +178,6 @@ VertexNames* Graph::DefaultNames( size_t order )
     return names;
 }
 
-void Graph::Init()
-{
-    for( Nbhd const& N : *neighborhoods_ )
-        size_ += N.size();
-    size_ /= 2;
-
-    is_edge_.resize( order_ );
-    for( std::vector< bool >& V : is_edge_ )
-        V.resize( order_ );
-
-    for( Vertex x : *this )
-    {
-        for( Vertex y : *this )
-            is_edge_[ x ][ y ] = false;
-    }
-
-    for( Vertex x : *this )
-    {
-        for( Vertex y : this->N( x ) )
-            is_edge_[ x ][ y ] = true;
-    }
-
-    // check consistency
-    for( Vertex x : *this )
-    {
-        for( Vertex y : *this )
-        {
-            if( is_edge_[ x ][ y ] != is_edge_[ y ][ x ] )
-            {
-                std::cerr << "Error: edge relationships not symmetric wrt " << name( x ) << " and " << name( y ) << std::endl;
-                exit( 0 );
-            }
-        }
-    }
-    return;
-}
-
-Graph::~Graph()
-{
-    delete neighborhoods_;
-    delete vertex_names_;
-}
 
 // Determines if H is isomorphic to G with respect to their fixed orderings
 bool Graph::IsIsomorphic( Graph& H )

@@ -20,18 +20,6 @@ VertexPairsIterator::VertexPairsIterator( const Vertices* const V, int begin, in
     return;
 }
 
-////////////// methods
-
-VertexPairsIterator VertexPairs::begin() const
-{
-    return VertexPairsIterator( &V_, begin_, end_ );
-}
-
-VertexPairsIterator VertexPairs::end() const
-{
-    return VertexPairsIterator( &V_, end_,   end_ );
-}
-
 ////////////// Iterator
 //
 

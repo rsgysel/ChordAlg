@@ -3,10 +3,15 @@
 namespace chordalg {
 
 EliminationOrder::EliminationOrder( Graph& G ) :
-    G_          ( G         ),
-    alpha_      ( G.order() ),
-    fill_count_ ( 0         ),
-    fill_cost_  ( 0         )
+    G_                  ( G         ),
+    alpha_              ( G.order() ),
+    alpha_inverse_      (           ),
+    fill_cost_          ( 0         ),
+    fill_count_         ( 0         ),
+    fill_neighbors_     (           ),
+    remaining_vertices_ (           ),
+    ties_               (           ),
+    tie_count_          (           )
 {
     srand( time(NULL) );
     return;
@@ -145,6 +150,20 @@ Vertices EliminationOrder::MonotoneNbhd( Vertex v )
     }
 
     return N_alpha;
+}
+
+void EliminationOrder::PrettyPrint() const
+{
+    std::cout << "elimination order:\t" ;
+    for( Vertex v : alpha_ )
+        std::cout << G_.name( v ) << " ";
+    std::cout << std::endl;
+
+    std::cout << "tie distribution:\t"  ;
+    std::copy( tie_count_.begin(), tie_count_.end(), std::ostream_iterator< int >( std::cout, " " ) );
+    std::cout << std::endl;
+
+    return;
 }
 
 } // namespace chordalg

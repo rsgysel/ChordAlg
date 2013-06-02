@@ -16,13 +16,23 @@ namespace chordalg {
 #undef MAX_WEIGHT
 #define MAX_WEIGHT DBL_MAX;
 
+struct EliminationCriterion
+{
+    virtual Weight Calculate    ( Weight deficiency )                   = 0;
+    virtual Weight Calculate    ( Weight deficiency, Weight separated ) = 0;
+}; // struct EliminationCriterion
+
 class EliminationOrder
 {
     public:
-        EliminationOrder( Graph& G );
+        EliminationOrder( Graph& );
         virtual ~EliminationOrder();
 
-        Weight fill_cost() { return fill_cost_; }
+        void    PrettyPrint() const;
+
+        Weight                          fill_cost()     const   { return fill_cost_;    }
+        int                             fill_count()    const   { return fill_count_;   }
+        const std::vector< int >&       tie_count()     const   { return tie_count_;    }
 
     protected:
         virtual void Init();
@@ -48,8 +58,8 @@ class EliminationOrder
         Vertices                        alpha_;             // alpha[i] = ith vertex eliminated
         std::vector < int           >   alpha_inverse_;     // alpha_inverse[v] = elimination # of v
 
-        int                             fill_count_;
-        Weight                          fill_cost_;
+        Weight                          fill_cost_;         //
+        int                             fill_count_;        // # of fill edges added (monochromatic or not)
         std::vector < VertexSet     >   fill_neighbors_;
         VertexSet                       remaining_vertices_;
 

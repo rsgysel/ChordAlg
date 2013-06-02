@@ -74,27 +74,27 @@ class Vertices
 class GVIterator
 {
     public:
-        GVIterator( const Graph* const graph_id             )   : graph_id_( graph_id ), v_( 0 ) {};
-        GVIterator( const Graph* const graph_id, Vertex v   )   : graph_id_( graph_id ), v_( v ) {};
+        GVIterator( const Graph* const G            )   : G_( G ), v_( 0 ) {};
+        GVIterator( const Graph* const G, Vertex v  )   : G_( G ), v_( v ) {};
 
         void     operator++ ( )                                 { ++v_;                         }
         Vertex   operator*  ( )                         const   { return v_;                    }
         bool     operator!= ( const GVIterator& other ) const   { return !( *this == other );   }
         bool     operator== ( const GVIterator& other ) const
-            { return ( graph_id_ == other.graph_id_ ) && ( v_ == other.v_ );                    }
+            { return ( G_ == other.G_ ) && ( v_ == other.v_ );                    }
 
     private:
-        const Graph* const  graph_id_;
+        const Graph* const  G_;
         Vertex              v_;
 };  // GraphVertexIterator
 
 class GraphVertices : public Vertices
 {
     public:
-        GraphVertices ( const Graph* const G, int order ) : Vertices( 0 ), G_( G ), order_( order ) {}
+        GraphVertices ( const Graph* const G, int order ) : Vertices( ), G_( G ), order_( order ) {}
 
-        inline GVIterator begin()   const   { return GVIterator( G_ );          }
-        inline GVIterator end()     const   { return GVIterator( G_, order_ );  }
+        GVIterator begin()   const   { return GVIterator( G_ );          }
+        GVIterator end()     const   { return GVIterator( G_, order_ );  }
 
     private:
         const Graph* const  G_;
@@ -124,11 +124,10 @@ class VertexPairsIterator
 class VertexPairs
 {
     public:
-        VertexPairs( Vertices   V ) : V_( V ),                              begin_( 0 ),            end_( V.size() )    {}
-//        VertexPairs( Graph      G ) : V_( GraphVertices( &G, G.order() ) ), begin_( G.begin() ),    end_( G.end() )     {}
+        VertexPairs( Vertices   V ) : V_( V ),  begin_( 0 ),            end_( V.size() )    {}
 
-        VertexPairsIterator begin    ()  const ;
-        VertexPairsIterator end      ()  const ;
+        VertexPairsIterator begin    ()  const {    return VertexPairsIterator( &V_, begin_, end_ ); }
+        VertexPairsIterator end      ()  const {    return VertexPairsIterator( &V_, end_,   end_ ); }
 
     private:
         const Vertices  V_;

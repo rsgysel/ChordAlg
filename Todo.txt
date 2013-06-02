@@ -2,25 +2,11 @@ Critical:
 
 -clean up dependencies. in particular, utilities.h and utilities.hpp -> utilities.hpp needs to be something else
 
--VertexContainer as a class, VertexSet too.
-	-sub-class GraphVertexContainer, fold graph iterator into this class (for VertexPair usage)
-
--VertexPairs separated from graph
-
 -separator
 	-use nbhd instead of vertexcontainers
 
 -file reader as template class
 	-get rid of factory shit
-
--abstract class VertexOrder-- EliminationOrdering ( or it takes an EliminationAlgorithm - EliminationGame, LBTriang ? )
-		   |- LBTriangOrdering
-	-In Init(), pick one vertex at a time, and fill one vertex at a time (instead of fill range)
-	-Both take a Heuristic? as template parameter. Default parameter should be traditional fill from canonical order.
-	-virtual methods: refill, unfill or monotone adjacency set. madj should be renamed - maybe to SaturatingSet? Actually this should be SaturatingSets. Add ForEachSaturatingSet -> uses ForEachFillPair & passes function down.
-	-FindSaturatingSets ought to work on a member variable, so pointers don't get passed around
-	-In optimization function (min -> optimize()), call a Reset() function that resets class variables associated to a given vertex
-	- Weight -> FillCost, introduce typedef double Weight
 
 -graph
 	- deficiency set
@@ -31,7 +17,6 @@ Critical:
 	- ComputationBufferSet? wtf
 	- Add "Eliminated" CCid & modify code accordingly
 
--vertex pair struct ( min, max )
 
 -Reset functions on any class that has containers which are re-used in new computations
 
@@ -51,13 +36,9 @@ Not so critical:
 
 -clean up test fixtures
 
--VertexContainer, ComputationBuffer etc -> Vertices 
-
--for each vertex pair support // do this for Vertices, not for graphs
-ie for( VertexPair uv : Pairs( G ) )
-	Vertex u = uv.first, v = uv.second;
-
 -file parsing
 	-regex?
 	-comment support
 -use size_type
+
+-vertex pair struct ( min, max )

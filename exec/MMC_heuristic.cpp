@@ -1,5 +1,5 @@
 #include "atom_subgraphs.hpp"
-#include "classic_heuristics.h"
+#include "classic_elimination.h"
 #include "file_reader.h"
 #include "intersection_graph.h"
 #include "utilities.hpp"
@@ -12,10 +12,11 @@ int main( int argc, char* argv[] )
         std::cout << "usage: " << argv[0] << " <filename>" << std::endl;
     else
     {
-        AnalyzeFile<  ColoredIntersectionGraph,
-                      MatrixCellIntGraphFR,
-                      MonochromaticDeficiencyHeuristic >
-                      ( argv[ 1 ] );
+        RunHeuristic<   ColoredIntersectionGraph,
+                        MatrixCellIntGraphFR,
+                        ClassicElimination,
+                        ClassicCriterion >
+                        ( argv[ 1 ] );
     }
 
     return 1;

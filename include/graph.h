@@ -32,13 +32,13 @@ class Graph
         int                     order   ( )                       const { return order_;                                }
         int                     size    ( )                       const { return size_;                                 }
 
-        const Vertices&         N       ( Vertex v              ) const { return neighborhoods_->operator[]( v );       }
         bool                    HasEdge ( Vertex u, Vertex v    ) const { return is_edge_[ u ][ v ];                    }
         bool                    HasEdge ( VertexPair p          ) const { return HasEdge( p.first, p.second );          }
-
         template< class Container >
         bool                    HasClique( Container set )        const { return HasClique( set.begin(), set.end() );   }
         bool                    IsClique ( )                      const { return 2*size_ == order_ * ( order_ - 1 );    }
+        const Vertices&         N       ( Vertex v              ) const { return neighborhoods_->operator[]( v );       }
+// REQUIRES DEBUGGING //        const Vertices&         V       (                       ) const { return GraphVertices( this, order_ );         }
 
 
     protected:
