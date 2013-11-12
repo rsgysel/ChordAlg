@@ -4,6 +4,7 @@
 #include "file_reader.h"
 #include "graph_test.h"
 #include "lb_elimination.h"
+#include "mixed_elimination.h"
 #include "utilities.hpp"
 
 TEST_F( MatrixCellIntGraphTest, Debug )
@@ -29,7 +30,6 @@ TEST_F( MatrixCellIntGraphTest, Debug )
 
             ClassicElimination eo( *a, new DeficiencyCriterion() );
             classic += eo.fill_cost();
-
             LBElimination lb_eo( *a, new RatioCriterion() );
             lb += lb_eo.fill_cost();
         }
@@ -62,16 +62,39 @@ TEST_F( MatrixCellIntGraphTest, MinFillFile )
                     MatrixCellIntGraphFR,
                     ClassicElimination,
                     DeficiencyCriterion >
-                    ( "graphfiles/minfill_test.m" );
+                    ( graph_dir() + "minfill_test.m" );
 
     return;
 }
+
+
+TEST_F( MatrixCellIntGraphTest, MixedElimFillFile )
+{
+    using namespace chordalg;
+    RunHeuristic<   ColoredIntersectionGraph,
+                    MatrixCellIntGraphFR,
+                    MixedElimination,
+                    DeficiencyCriterion >
+                    ( graph_dir() + "minfill_test.m" );
+
+    return;
+}
+
 
 TEST_F( MatrixCellIntGraphTest, MinfillChordalTest )
 {
 
     Read( graph_dir() + std::string( "cig_test.m" ) );
     chordalg::ClassicElimination eo( *H, new chordalg::DeficiencyCriterion() );
+
+    return;
+}
+
+TEST_F( MatrixCellIntGraphTest, MixedElimCigTest )
+{
+
+    Read( graph_dir() + std::string( "cig_test.m" ) );
+    chordalg::MixedElimination eo( *H, new chordalg::DeficiencyCriterion() );
 
     return;
 }

@@ -20,7 +20,7 @@ class GraphTest : public ::testing::Test
         virtual void SetUp() {}
         virtual void TearDown() {}
 
-        const std::string graph_dir(){ return std::string( "graphfiles/" ); }
+        const std::string graph_dir(){ return std::string( "/Users/katnieh/Desktop/RobsDropbox/Dropbox/MyResearch/CodeAndExecutables/ChordAlg/graphfiles/" ); }
 
         virtual void Read( std::string file_name ) = 0;
 };  // GraphTest

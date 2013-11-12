@@ -11,7 +11,11 @@ TEST_F( SortedAdjacencyListTest, SeparatorComponents )
     EXPECT_EQ( G->size(), 23 );
 
     chordalg::SeparatorComponents S( *G );
-    chordalg::Vertices X = { 0, 1, 2, 3 };
+    chordalg::Vertices X(4);
+    for( int i = 0; i < X.size(); ++i )
+    {
+        X[i] = i;
+    }
     S.Separate( X );
     EXPECT_EQ( S.size(), 4 );
 
