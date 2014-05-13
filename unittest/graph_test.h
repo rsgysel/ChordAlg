@@ -25,6 +25,24 @@ class GraphTest : public ::testing::Test
         virtual void Read( std::string file_name ) = 0;
 };  // GraphTest
 
+class DimacsGraphTest : public GraphTest
+{
+     protected:
+        chordalg::DimacsGraphFR* graph_file;
+
+        DimacsGraphTest() : graph_file( NULL ) {}
+        ~DimacsGraphTest() { delete graph_file; return; }
+
+        void Read( std::string file_name )
+        {
+            delete graph_file;
+            delete G;
+            graph_file = chordalg::NewFileReader< chordalg::DimacsGraphFR >( file_name );
+            G = new chordalg::Graph( graph_file );
+            return;
+        }
+};  // DimacsGraphTest
+
 class SortedAdjacencyListTest : public GraphTest
 {
      protected:

@@ -1,11 +1,31 @@
-#ifndef SEPARATION_HEURISTICS_H
+/*
+ *  lb_elimination.h - computes a triangulation via lb-elimination
+ *  Copyright (C) 2013 Rob Gysel
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#ifndef LB_ELIMINATION_H
 #define LB_ELIMINATION_H
 
 #include <algorithm>
+#include <set>
 
 #include "elimination_order.h"
 #include "intersection_graph.h"
 #include "separator.h"
+#include "vertex_utilities.h"
 
 namespace chordalg {
 
@@ -33,7 +53,7 @@ struct WSumCriterion : public LBCriterion
         Weight d_, s_;
 }; // WSumCriterion
 
-class LBElimination : public EliminationOrder
+class LBElimination : public EliminationAlgorithm
 {
     public:
         LBElimination( ColoredIntersectionGraph&, LBCriterion* );

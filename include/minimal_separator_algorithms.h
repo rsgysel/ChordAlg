@@ -1,13 +1,32 @@
-#ifndef MINIMAL_SEPARATOR_ALGORITHMS_H_INCLUDED
-#define MINIMAL_SEPARATOR_ALGORITHMS_H_INCLUDED
+/*
+ *  minimal_separator_algorithms.h
+ *  Copyright (C) 2013 Rob Gysel
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#ifndef MINIMAL_SEPARATOR_ALGORITHMS_H
+#define MINIMAL_SEPARATOR_ALGORITHMS_H
 
 
 #include <algorithm>
 #include <vector>
 
-#include "separator.h"
 #include "graph.h"
 #include "lex_trie.h"
+#include "separator.h"
+#include "vertex_utilities.h"
 
 namespace chordalg {
 
@@ -15,4 +34,4 @@ LexTrie& BerryBordatCogis(Graph G);
 
 } // namespace chordalg
 
-#endif // MINIMAL_SEPARATOR_ALGORITHMS_H_INCLUDED
+#endif // MINIMAL_SEPARATOR_ALGORITHMS_H

@@ -1,4 +1,5 @@
 #include "file_reader.h"
+#include "utilities.h"
 
 namespace chordalg {
 
@@ -60,6 +61,109 @@ inline void FileReader::AssertFormatOrDie( bool assertion, std::string errormsg 
     return;
 }
 
+// FileReader for files in Dimacs Format:
+// c This is a comment line
+// p FORMAT NODES EDGES // we ignore FORMAT, NODES = number of nodes, etc.
+// e U V // edge descriptors: (U,V) = e is an edge of G. not to be duplicated with e V U. U and V are integers in 1, 2, ..., n
+void DimacsGraphFR::ReadFileOrDie()
+{
+    // format error messages
+    const std::string problem_line_count( "Format Error: Only one problem line allowed\n" ),
+        nm_range( "Format Error: NODES and EDGES must be non-negative integers"),
+        problem_line_first( "Format Error: a problem line must occur before any edge line"),
+        duplicate_edge("Format Error: duplicated edge(s) detected"),
+        unknown_character("Format Error: line(s) detected that start with unrecognized format");
+
+    bool problem_line_seen = false;
+    int n = 0, m = 0;
+    std::string line;
+    std::set< std::pair<int,int> > edges;
+    while( getline( file_stream_, line ) )
+    {
+        std::stringstream line_stream;
+        std::string start_character, devnull;
+        line_stream << line;
+        line_stream >> start_character;
+        if( start_character == "c" )
+        {
+            continue;
+        }
+        else if( start_character == "p" )
+        {
+            AssertFormatOrDie( !problem_line_seen, problem_line_count );
+            problem_line_seen = true;
+            line_stream << line;
+            line_stream >> devnull;
+            line_stream >> n;
+            line_stream >> m;
+            AssertFormatOrDie( n >= 0 && m >= 0, nm_range);
+        }
+        else if( start_character == "e" )
+        {
+            AssertFormatOrDie( problem_line_seen, problem_line_first );
+            int u, v;
+            line_stream << line;
+            line_stream >> u;
+            line_stream >> v;
+            if( u < 1 || v < 1 || u > n || v > n || u == v )
+            {
+                // Die, invalid range
+            }
+            if( u < v )
+            {
+                std::swap(u,v);
+            }
+            std::pair<int,int> e = std::pair<int,int>(u,v);
+            AssertFormatOrDie( edges.find(e) == edges.end(), duplicate_edge );
+            edges.insert(e);
+        }
+        else
+        {
+            AssertFormatOrDie( line.empty(), unknown_character );
+        }
+    }
+
+    // initialize the adjacency lists for the graph
+    neighborhoods_ = new AdjacencyLists;
+    neighborhoods_->resize( n );   // create empty neighborhoods
+    // initialize vertex names
+    names_ = new VertexNames;
+    names_->resize( n );
+    for( int i = 0; i < n; ++i )
+    {
+        std::stringstream ss;
+        ss << i+1;
+        names_->operator[](i) = ss.str();
+    }
+
+    // get neighbors from edge set
+    std::vector< std::list< int > > neighbors;
+    neighbors.resize(n);
+    for( std::pair<int,int> e : edges )
+    {
+        int u = e.first;
+        int v = e.second;
+
+        neighbors[u-1].push_back(v-1);
+        neighbors[v-1].push_back(u-1);
+    }
+
+    // turn string representation into vertex representation
+    for( int i = 0; i < n; ++i )
+    {
+        Vertices* nbhd = &neighborhoods_->operator[]( i );
+        for( int v : neighbors[ i ] )
+        {
+            nbhd->add( v );
+        }
+        std::sort( nbhd->begin(), nbhd->end() );
+    }
+    file_stream_.close();
+
+    return;
+}
+
+
 // FileReader for files in the following format:
 //      Line 1: non-negative integer denoting the number of vertices
 //      Line i>1: i-1, representing vertex i-1, followed by its neighbors as sorted integers delimited by whitespace
@@ -79,9 +183,9 @@ void SortedAdjacencyListFR::ReadFileOrDie()
 
     // process first line, consisting of the graphs order
     getline( file_stream_, line ); line_stream << line; // grab line into stream
-	line_stream >> order; // parse piece up to whitespace
-	AssertFormatOrDie( 0 <= order, first_line_format );
-	line_number++;
+    line_stream >> order; // parse piece up to whitespace
+    AssertFormatOrDie( 0 <= order, first_line_format );
+    line_number++;
     line_stream.clear(); line_stream.str( "" );   // reset line stream
 
     neighbor_names.resize( order );
@@ -151,11 +255,11 @@ void MatrixCellIntGraphFR::ReadFileOrDie()
     // second line: # of rows and # of columns
     getline( file_stream_, line );
     line_stream << line;
-	line_stream >> row_count;
-	line_stream >> col_count;
-	AssertFormatOrDie( 0 <= row_count, first_line_format );
-	AssertFormatOrDie( 0 <= col_count, first_line_format );
-	line_number++;
+    line_stream >> row_count;
+    line_stream >> col_count;
+    AssertFormatOrDie( 0 <= row_count, first_line_format );
+    AssertFormatOrDie( 0 <= col_count, first_line_format );
+    line_number++;
     line_stream.clear(); line_stream.str( "" );   // reset line stream
 
     // extract matrix from file

@@ -2,11 +2,11 @@
 
 namespace chordalg {
 
-MixedElimination::MixedElimination( ColoredIntersectionGraph& H, RatioCriterion* f ) :
+MixedElimination::MixedElimination( ColoredIntersectionGraph& H, LBCriterion* f ) :
     LBElimination( H, f ),
     H_           ( H ),
-    B_           ( H ),
-    f_           ( f )
+    B_           ( H )
+//    f_           ( f )
 {
     LBElimination::Init();
     return;

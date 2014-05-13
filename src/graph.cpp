@@ -16,9 +16,9 @@ Graph::Graph( Graph& H ) :
 }
 
 Graph::Graph( FileReader* fr ) :
-    neighborhoods_  (   fr->TakeNeighborhoods() ),
-    vertex_names_   (   fr->TakeNames()         ),
-    order_          (   neighborhoods_->size()  ),
+    neighborhoods_  (   fr->TakeNeighborhoods ()  ),
+    vertex_names_   (   fr->TakeNames         ()  ),
+    order_          (   neighborhoods_->size  ()  ),
     size_           (   0   )
 {
     Init();
@@ -26,9 +26,9 @@ Graph::Graph( FileReader* fr ) :
 }
 
 Graph::Graph( AdjacencyLists* a_lists ) :
-    neighborhoods_  (   a_lists                         ),
-    vertex_names_   (   DefaultNames( a_lists->size() ) ),
-    order_          (   a_lists->size()                 ),
+    neighborhoods_  (   a_lists                           ),
+    vertex_names_   (   DefaultNames  ( a_lists->size() ) ),
+    order_          (   a_lists->size ()                  ),
     size_           (   0   )
 {
     Init();
@@ -77,17 +77,13 @@ void Graph::Init()
         for( Vertex y : *this )
             is_edge_[ x ][ y ] = false;
     }
-
-//    for( VertexPair uv : VertexPairs( this->V() ) )
-//        is_edge_[ uv.first ][ uv.second ] = is_edge_[ uv.second ][ uv.first ] = false;
-
     for( Vertex x : *this )
     {
         for( Vertex y : this->N( x ) )
             is_edge_[ x ][ y ] = true;
     }
 
-    // check consistency
+    // check consistency of file
     for( Vertex x : *this )
     {
         for( Vertex y : *this )
@@ -99,15 +95,6 @@ void Graph::Init()
             }
         }
     }
-//    for( VertexPair uv : VertexPairs( this->V() ) )
-//    {
-//        if( is_edge_[ uv.first ][ uv.second ] != is_edge_[ uv.second ][ uv.first ] )
-//        {
-//            std::cerr << "Error: edge relationships not symmetric wrt " << name( uv.first )
-//                            << " and " << name( uv.second ) << std::endl;
-//            exit( 0 );
-//        }
-//    }
     return;
 }
 

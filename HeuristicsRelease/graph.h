@@ -1,3 +1,21 @@
+/*
+ *  graph.h - a graph data structure
+ *  Copyright (C) 2013 Rob Gysel
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #ifndef GRAPH_H
 #define GRAPH_H
 
@@ -7,7 +25,6 @@
 
 #include "chordalg_types.h"
 #include "file_reader.h"
-#include "utilities.h"
 #include "vertex_utilities.h"
 
 namespace chordalg {
@@ -38,8 +55,6 @@ class Graph
         bool                    HasClique( Container set )        const { return HasClique( set.begin(), set.end() );   }
         bool                    IsClique ( )                      const { return 2*size_ == order_ * ( order_ - 1 );    }
         const Vertices&         N       ( Vertex v              ) const { return neighborhoods_->operator[]( v );       }
-// REQUIRES DEBUGGING //        const Vertices&         V       (                       ) const { return GraphVertices( this, order_ );         }
-
 
     protected:
         void Init();
@@ -59,8 +74,10 @@ class Graph
         template< class InputIterator >
         bool                HasClique       ( InputIterator begin, InputIterator end    ) const ;
 
-        DISALLOW_DEFAULT_CONSTRUCTOR        ( Graph                                     );
-        DISALLOW_COPY_AND_ASSIGN            ( Graph                                     );
+        // Disable default constructor, copy constructor, assignment
+        Graph();
+        Graph(const Graph&);
+        void operator=(const Graph&);
 };  // Graph
 
 ////////////// Generics

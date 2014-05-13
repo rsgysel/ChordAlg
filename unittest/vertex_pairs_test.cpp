@@ -1,7 +1,5 @@
-#include "graph_types.h"
 #include "file_reader.h"
 #include "graph_test.h"
-#include "utilities.hpp"
 
 TEST_F( SortedAdjacencyListTest, Debug )
 {

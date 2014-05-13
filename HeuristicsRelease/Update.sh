@@ -10,6 +10,7 @@ ls -l
 
 printf "\n"
 echo ...Copying files...
+# Copy classes (both .h and .cpp)
 classes[0]="classic_elimination"
 classes[1]="elimination_order"
 classes[2]="file_reader"
@@ -27,18 +28,17 @@ do
 	cp ../src/${filename}.cpp .
 done
 
-# Because we have .h and .hpp, add the entire filename here
+# Copy header-only (.h and .hpp)
 headers[0]="atom_subgraphs.hpp"
 headers[1]="chordalg_types.h"
-headers[2]="graph_types.h"
-headers[3]="utilities.h"
-headers[4]="utilities.hpp"
+headers[3]="utilities.hpp"
 
 for filename in "${headers[@]}"
 do
 	cp ../include/${filename} .
 done
 
+# Copy executable src
 executables[0]="CellIntersectionGraph"
 executables[1]="Composite_heuristic"
 executables[2]="MMC_heuristic"

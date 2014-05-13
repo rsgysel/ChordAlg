@@ -44,7 +44,7 @@ void LBElimination::Eliminate( Vertex v )
     B_.Separate( S, fill_neighbors_ );
 
     for( Vertices NC : B_ )
-   {
+    {
         for( VertexPair uv : VertexPairs( NC ) )
         {
             AddEdge( uv );
@@ -93,13 +93,13 @@ std::pair< Weight, Cost > LBElimination::WeightOf( Vertex v )
             separated_wt += fill_cost;
     }
 
-    return std::pair< Weight, Cost>( f_->Calculate( deficiency_wt, separated_wt ), deficiency_wt );
-//    return ObjectiveFunction( deficiency_wt, separated_wt );
+    return std::pair< Weight, Cost>( f_->Calculate( deficiency_wt, separated_wt ),
+                                     deficiency_wt );
 }
 
 std::pair< Weight, Cost > LBElimination::ObjectiveFunction( Weight deficiency_wt, Weight separated_wt )
 {
-    return std::pair< Weight, Cost >(   deficiency_wt / ( 1 + separated_wt ) ,
+    return std::pair< Weight, Cost >(   deficiency_wt / ( 1 + separated_wt ),
                                         deficiency_wt );
 }
 

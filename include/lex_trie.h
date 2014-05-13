@@ -1,14 +1,30 @@
-#ifndef LEX_TRIE_H_
-#define LEX_TRIE_H_
+/*
+ *  lex_trie.h - A trie data structure to store subsets of {0, 1, ..., n-1}.
+ *  Copyright (C) 2013 Rob Gysel
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-#include<algorithm>
-#include<fstream>
-#include<iostream>
-#include<iterator>
-#include<map>
-#include<vector>
+#ifndef LEX_TRIE_H
+#define LEX_TRIE_H
 
-#include "utilities.h"
+#include <algorithm>
+#include <fstream>
+#include <iostream>
+#include <iterator>
+#include <map>
+#include <vector>
 
 namespace chordalg {
 
@@ -44,7 +60,8 @@ class LexTrieIterator
         int GetNextChild();
         int GetNextChildAfter( int k );
 
-        DISALLOW_DEFAULT_CONSTRUCTOR( LexTrieIterator );
+        // Disable default constructor
+        LexTrieIterator();
 };
 
 // Each node potentially represents a set by traversing a path from the root to the node.
@@ -80,8 +97,10 @@ class LexTrieNode
         friend class LexTrie;
         friend class LexTrieIterator;
 
-        DISALLOW_DEFAULT_CONSTRUCTOR( LexTrieNode );
-        DISALLOW_COPY_AND_ASSIGN( LexTrieNode );
+        // Disable default constructor, copy constructor, assignment
+        LexTrieNode();
+        LexTrieNode(const LexTrieNode&);
+        void operator=(const LexTrieNode&);
 };
 
 // A tree representing a family of subsets of [0, 1, ..., n-1]
@@ -117,8 +136,10 @@ class LexTrie
         int set_count_;				// number of sets in family
         LexTrieNode* root_;
 
-        DISALLOW_DEFAULT_CONSTRUCTOR( LexTrie );
-        DISALLOW_COPY_AND_ASSIGN( LexTrie );
+        // Disable default constructor, copy constructor, assignment
+        LexTrie();
+        LexTrie(const LexTrie&);
+        void operator=(const LexTrie&);
 };
 
 //--------------------//
@@ -190,5 +211,5 @@ const LexTrieNode* LexTrie::Insert( Container set, bool& new_set )
 
 } // namespace chordalg
 
-#endif /*LEX_TRIE_H_*/
+#endif // LEX_TRIE_H
 

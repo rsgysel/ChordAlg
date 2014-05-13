@@ -7,28 +7,6 @@
 
 namespace chordalg {
 
-//template< class Container, class Data >
-//void TPrettyPrint( const Container& C )
-//{
-//    std::copy( C.begin(), C.end(), std::ostream_iterator< Data >( std::cout, " " ) );
-//    std::cout << std::endl;
-//    return;
-//}
-
-// Macros
-
-    // A macro to disallow the copy constructor and operator= functions
-    // This should be used in the private: declarations for a class
-    // Taken from Google's Style Guide: http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml
-    #define DISALLOW_COPY_AND_ASSIGN(TypeName) \
-      TypeName(const TypeName&);               \
-      void operator=(const TypeName&)
-
-    // A macro to disallow default construction
-    // This should be used in the private: declarations for a class
-    #define DISALLOW_DEFAULT_CONSTRUCTOR(TypeName) \
-      TypeName();
-
 // Debugging Macros
     #define DEBUG_ENTER\
       std::cout << "DEBUG: ENTERING " << __PRETTY_FUNCTION__ << std::endl << std::endl;
@@ -37,7 +15,7 @@ namespace chordalg {
       std::cout << "DEBUG: EXITING " << __PRETTY_FUNCTION__ << std::endl << std::endl;
 
     #define DEBUG_LINE\
-      std::cout << "DEBUG: At LINE " << __LINE__ << " of " << __PRETTY_FUNCTION__ << std::endl << std::endl;
+      std::cout << "DEBUG: AT LINE " << __LINE__ << " of " << __PRETTY_FUNCTION__ << std::endl << std::endl;
 
     #define DEBUG_DATA(data)\
       std::cout << "DEBUG: DATA "  << data << " at LINE " << __LINE__ << " of " << __PRETTY_FUNCTION__ << std::endl << std::endl;

@@ -79,9 +79,9 @@ void SortedAdjacencyListFR::ReadFileOrDie()
 
     // process first line, consisting of the graphs order
     getline( file_stream_, line ); line_stream << line; // grab line into stream
-	line_stream >> order; // parse piece up to whitespace
-	AssertFormatOrDie( 0 <= order, first_line_format );
-	line_number++;
+    line_stream >> order; // parse piece up to whitespace
+    AssertFormatOrDie( 0 <= order, first_line_format );
+    line_number++;
     line_stream.clear(); line_stream.str( "" );   // reset line stream
 
     neighbor_names.resize( order );
@@ -151,11 +151,11 @@ void MatrixCellIntGraphFR::ReadFileOrDie()
     // second line: # of rows and # of columns
     getline( file_stream_, line );
     line_stream << line;
-	line_stream >> row_count;
-	line_stream >> col_count;
-	AssertFormatOrDie( 0 <= row_count, first_line_format );
-	AssertFormatOrDie( 0 <= col_count, first_line_format );
-	line_number++;
+    line_stream >> row_count;
+    line_stream >> col_count;
+    AssertFormatOrDie( 0 <= row_count, first_line_format );
+    AssertFormatOrDie( 0 <= col_count, first_line_format );
+    line_number++;
     line_stream.clear(); line_stream.str( "" );   // reset line stream
 
     // extract matrix from file

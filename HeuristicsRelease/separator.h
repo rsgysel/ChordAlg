@@ -1,3 +1,22 @@
+/*
+ *  separator.h - a data structure representing a vertex separator, and
+ *  its connected components and their neighborhoods
+ *  Copyright (C) 2013 Rob Gysel
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #ifndef SEPARATOR_H
 #define SEPARATOR_H
 
@@ -7,7 +26,6 @@
 
 #include "chordalg_types.h"
 #include "graph.h"
-#include "utilities.h"
 #include "vertex_utilities.h"
 
 namespace chordalg {
@@ -64,8 +82,10 @@ class SeparatorComponents
         inline bool IsUnsearched( Vertex u ) const
             { return connected_component_[ u ] == kUnsearched(); }
 
-        DISALLOW_DEFAULT_CONSTRUCTOR( SeparatorComponents );
-        DISALLOW_COPY_AND_ASSIGN( SeparatorComponents );
+        // Disable default constructor, copy constructor, assignment
+        SeparatorComponents();
+        SeparatorComponents(const SeparatorComponents&);
+        void operator=(const SeparatorComponents&);
 };
 
 class SeparatorBlocks : public SeparatorComponents
@@ -90,8 +110,10 @@ class SeparatorBlocks : public SeparatorComponents
         std::vector< Vertices >     neighborhoods_;
         ComputationBuffer           last_separator_vertex_seen_;
 
-        DISALLOW_DEFAULT_CONSTRUCTOR( SeparatorBlocks );
-        DISALLOW_COPY_AND_ASSIGN( SeparatorBlocks );
+        // Disable default constructor, copy constructor, assignment
+        SeparatorBlocks();
+        SeparatorBlocks(const SeparatorBlocks&);
+        void operator=(const SeparatorBlocks&);
 };
 
 }   // namespace chordalg

@@ -5,7 +5,6 @@
 #include "graph_test.h"
 #include "lb_elimination.h"
 #include "mixed_elimination.h"
-#include "utilities.hpp"
 
 TEST_F( MatrixCellIntGraphTest, Debug )
 {
@@ -74,7 +73,7 @@ TEST_F( MatrixCellIntGraphTest, MixedElimFillFile )
     RunHeuristic<   ColoredIntersectionGraph,
                     MatrixCellIntGraphFR,
                     MixedElimination,
-                    DeficiencyCriterion >
+                    RatioCriterion >
                     ( graph_dir() + "minfill_test.m" );
 
     return;
@@ -94,7 +93,7 @@ TEST_F( MatrixCellIntGraphTest, MixedElimCigTest )
 {
 
     Read( graph_dir() + std::string( "cig_test.m" ) );
-    chordalg::MixedElimination eo( *H, new chordalg::DeficiencyCriterion() );
+    chordalg::MixedElimination eo( *H, new chordalg::RatioCriterion() );
 
     return;
 }

@@ -1,5 +1,30 @@
-#ifndef ATOM_SUBGRAPHS_HPP_INCLUDED
-#define ATOM_SUBGRAPHS_HPP_INCLUDED
+/*
+ *  atoms.hpp - computes atom subgraphs
+ *  Copyright (C) 2013 Rob Gysel
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+ *  Given a graph G, atoms returns the subgraphs of G induced by its atoms.
+ *  This is known as the clique-separator decomposition of a graph. See
+ *  Berry, Pogorelcnik, and Simonet "An introduction to clique minimal
+ *  separator decomposition"
+ */
+
+#ifndef ATOM_SUBGRAPHS_HPP
+#define ATOM_SUBGRAPHS_HPP
 
 #include <iostream>
 #include <iterator>
@@ -11,6 +36,7 @@
 #include "graph.h"
 #include "lex_trie.h"
 #include "separator.h"
+#include "vertex_utilities.h"
 
 namespace chordalg {
 
@@ -24,8 +50,8 @@ class Atoms
         int size(){ return atom_subgraphs_.size(); }
 
         typedef typename std::vector< GraphType* >::const_iterator AtomIterator;
-        AtomIterator begin(){ return atom_subgraphs_.begin(); }
-        AtomIterator end(){ return atom_subgraphs_.end(); }
+        AtomIterator begin()  { return atom_subgraphs_.begin(); }
+        AtomIterator end()    { return atom_subgraphs_.end(); }
 
     private:
         void MCSmPlus();
@@ -33,14 +59,16 @@ class Atoms
 
         std::vector< GraphType* > atom_subgraphs_;
 
-        GraphType& G_;
-        VertexVector alpha_;                     // peo. alpha[i] is i^th vertex eliminated
-        std::vector< int > alpha_inverse_;
-        std::vector< std::list< Vertex > > F_;      // as in paper; minimal fill
-        std::list< Vertex > minsep_generators_;     // 'X' in paper
+        GraphType&                G_;
+        VertexVector              alpha_; // peo. alpha[i] is i^th vertex eliminated
+        std::vector< int >        alpha_inverse_;
+        std::vector< VertexList > F_; // as in paper; minimal fill
+        VertexList                minsep_generators_; // 'X' in paper
 
-        DISALLOW_DEFAULT_CONSTRUCTOR( Atoms );
-        DISALLOW_COPY_AND_ASSIGN( Atoms );
+        // Disable default constructor, copy constructor, assignment
+        Atoms();
+        Atoms(const Atoms&);
+  void operator=(const Atoms&);
 };
 
 template< class GraphType >
@@ -59,7 +87,7 @@ Atoms< GraphType >::~Atoms()
     return;
 }
 
-// Adaptation of MCS-M+, which minimally triangulates a graph.
+// Implementation of MCS-M+, which minimally triangulates a graph.
 // Described for atom computation by Berry, Pogorelcnik, and Simonet.
 // paper: http://www.mdpi.com/1999-4893/3/2/197
 //
@@ -214,8 +242,10 @@ void Atoms< GraphType >::ComputeAtoms()
 
     // Remaining vertices form an atom
     Vertices C;
-    for( int i = last_deleted + 1; i < G_.order(); ++i )
-        C.add( alpha_[ i ] );
+    for( Vertex v : G_ )
+        if( !is_deleted[ v ] )
+            C.add( v );
+
     if( !C.empty() )
         vertices_of_atoms.push_back( C );
 
@@ -227,6 +257,4 @@ void Atoms< GraphType >::ComputeAtoms()
 
 } // namespace chordalg
 
-
-
-#endif // ATOM_SUBGRAPHS_HPP_INCLUDED
+#endif // ATOM_SUBGRAPHS_HPP
