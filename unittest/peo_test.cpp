@@ -67,3 +67,10 @@ TEST_F(DimacsGraphTest, SetOrderSanity){
         EXPECT_EQ(i, eo.PositionOf(order[i]));
     }
 }
+
+TEST_F(DimacsGraphTest, MCSCliqueTree){
+    Read(graph_dir() + std::string("chordal1.dimacs"));
+    chordalg::CliqueTree* ct = chordalg::MCSCliqueTree(*G);
+    EXPECT_EQ(ct->T().size(), 4);
+    EXPECT_EQ(ct->T().order(), 5);
+}

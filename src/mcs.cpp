@@ -20,35 +20,84 @@ EliminationOrder MCS(Graph& G)
 
 	return eo;
 }
-/*
-EliminationOrder MCS(Graph& G)
-{
-    MCSQueue mcs_q( G.order() );
-	EliminationOrder eo(G);
 
-    int prev_card = 0;
-	for(int i = G.order() ; i > 0 ; i-- )
+std::string SerializeMaxcliqueAsString(VertexList K, Graph& G)
+{
+    std::string maxclique("(");
+    for(Vertex v : K)
+        maxclique += G.name(v) + std::string(", ");
+    maxclique.erase(maxclique.end()-2, maxclique.end());
+    maxclique += std::string(")");
+    return maxclique;
+}
+
+CliqueTree* MCSCliqueTree(Graph& G)
+{
+    MCSQueue                        mcs_q(G.order());
+	EliminationOrder                eo(G);
+    std::list< std::pair<int,int> > ct_edges;
+
+    int                 s = 0;
+    VertexList          Ks;
+    std::list<int>      Ks_indices;
+    int                 prev_card = -1;
+    std::vector<int>    clique;
+    clique.resize(G.order());
+    VertexNames         Maxcliques;
+
+	for(int i = G.order(); i > 0; i--)
 	{
 	    // Get max weight vertex and update others
-	    int new_card = mcs_q.MaxWeight();
+	    int new_card = mcs_q.max_weight();
 	    Vertex v = mcs_q.Pop();
 	    eo.Emplace(v, i-1);
-		if( i != 1 )
+		if(i != 1)
 		{
 		    for( Vertex u : G.N(v) )
-            {
                 mcs_q.Increment(u);
-            }
 		}
-		// Check for maxclique construction
-		if(new_card < prev_card)
-        {
-            //VertexSet K =
-        }
-	}
 
-	return eo;
-}*/
+		// Check for maxclique construction
+		if(new_card <= prev_card)
+        {
+            std::string maxclique = SerializeMaxcliqueAsString(Ks, G);
+            Maxcliques.push_back(maxclique);
+            Ks.clear();
+            Ks_indices.clear();
+            ++s;
+            for(Vertex u : eo.RNbhd(v))
+            {
+                Ks.push_back(u);
+                Ks_indices.push_back( eo.PositionOf(u) );
+            }
+            if(new_card != 0)
+            {
+                int k = *std::min_element(Ks_indices.begin(), Ks_indices.end());
+                int p = clique[ eo.VertexAt(k) ];
+                ct_edges.push_back( std::make_pair(s, p) );
+            }
+        }
+        clique[v] = s;
+        Ks.push_back(v);
+        Ks_indices.push_back(i);
+        prev_card = new_card;
+	}
+	if(!Ks.empty())
+    {
+        std::string maxclique = SerializeMaxcliqueAsString(Ks, G);
+        Maxcliques.push_back(maxclique);
+    }
+
+    AdjacencyLists*     E = new AdjacencyLists;
+    E->resize(s+1);
+    for(std::pair<int,int> e : ct_edges)
+    {
+        E->operator[](e.first).add(e.second);
+        E->operator[](e.second).add(e.first);
+    }
+    CliqueTree* tr = new CliqueTree(E, Maxcliques, G);
+	return tr;
+}
 
 MCSQueue::MCSQueue(int order) :
     order_              ( order ),

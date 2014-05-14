@@ -3,6 +3,7 @@
 
 #include "elimination_order.h"
 #include "graph.h"
+#include "tree_representation.h"
 #include "vertex_utilities.h"
 
 #include <algorithm>
@@ -10,30 +11,29 @@
 #include <set>
 #include <utility>
 
-namespace chordalg{
+namespace chordalg {
 
-EliminationOrder MCS(Graph& G);
+EliminationOrder    MCS             ( Graph& G );
+CliqueTree*         MCSCliqueTree   ( Graph& G );
 
 class MCSQueue {
+    public:
+        MCSQueue                    ( int order );
+        ~MCSQueue                   (           ) {                     };
 
-public:
-    MCSQueue(int order);
-    ~MCSQueue() {};
+        int     max_weight          (           ) { return max_weight_; };
 
-    int max_weight() { return max_weight_; }
+        Vertex  Pop                 (           );
+        void    Increment           ( Vertex v  );
 
-    Vertex Pop();
-    void Increment(Vertex v);
+    private:
+        static int kDeletedVertex   (           ) { return -1;          };
 
-private:
-    static int kDeletedVertex(){ return -1; }
-
-    int order_;
-    int max_weight_;
-    int remaining_vertices_;
-    std::vector< std::set<Vertex> > queue_;
-    std::vector< int > weight_;
-
+        int                             order_;
+        int                             max_weight_;
+        int                             remaining_vertices_;
+        std::vector< std::set<Vertex> > queue_;
+        std::vector< int >              weight_;
 }; // class MCSQueue
 
 } // namespace chordalg

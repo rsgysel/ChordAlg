@@ -207,7 +207,7 @@ bool Graph::IsIsomorphic( Graph& H )
     return true;
 }
 
-void Graph::PrettyPrint()
+void Graph::PrettyPrint() const
 {
     std::cout   <<  "Order: "   <<  order_  <<  std::endl;
     std::cout   <<  "Size: "    <<  size_   <<  std::endl;

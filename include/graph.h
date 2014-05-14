@@ -40,7 +40,7 @@ class Graph
         virtual ~Graph();
 
         bool IsIsomorphic( Graph& );
-        void PrettyPrint();
+        void PrettyPrint() const;
 
         GVIterator              begin   ( )                       const { return GraphVertices( this, order_ ).begin(); }
         GVIterator              end     ( )                       const { return GraphVertices( this, order_ ).end();   }
