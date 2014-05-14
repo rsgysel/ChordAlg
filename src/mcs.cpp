@@ -10,8 +10,29 @@ EliminationOrder MCS(Graph& G)
 	for(int i = G.order() ; i > 0 ; i-- )
 	{
 	    Vertex v = mcs_q.Pop();
-	    eo.SetVertex(i-1, v);
-	    eo.SetPosition(v, i-1);
+	    eo.Emplace(v, i-1);
+		if( i != 1 )
+		{
+		    for( Vertex u : G.N(v) )
+                mcs_q.Increment(u);
+		}
+	}
+
+	return eo;
+}
+/*
+EliminationOrder MCS(Graph& G)
+{
+    MCSQueue mcs_q( G.order() );
+	EliminationOrder eo(G);
+
+    int prev_card = 0;
+	for(int i = G.order() ; i > 0 ; i-- )
+	{
+	    // Get max weight vertex and update others
+	    int new_card = mcs_q.MaxWeight();
+	    Vertex v = mcs_q.Pop();
+	    eo.Emplace(v, i-1);
 		if( i != 1 )
 		{
 		    for( Vertex u : G.N(v) )
@@ -19,10 +40,15 @@ EliminationOrder MCS(Graph& G)
                 mcs_q.Increment(u);
             }
 		}
+		// Check for maxclique construction
+		if(new_card < prev_card)
+        {
+            //VertexSet K =
+        }
 	}
 
 	return eo;
-}
+}*/
 
 MCSQueue::MCSQueue(int order) :
     order_              ( order ),
@@ -43,7 +69,7 @@ Vertex MCSQueue::Pop()
     if(remaining_vertices_ == 0)
     {
         std::cerr << "Error in MCSQueue: pop requested on empty queue" << std::endl;
-        exit(1);
+        exit(EXIT_FAILURE);
     }
     Vertex v =  *( queue_[ max_weight_ ].begin() );
     queue_[ max_weight_ ].erase(v);

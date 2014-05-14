@@ -9,11 +9,39 @@ EliminationOrder::EliminationOrder( Graph& G ) :
     alpha_inverse_      ( G.order()     ),
     fill_count_         ( kUnfilled()   )
 {
+    Init();
     return;
 }
 
 EliminationOrder::~EliminationOrder()
 {
+    return;
+}
+
+void EliminationOrder::Init()
+{
+    int i = 0;
+    for(Vertex v : G_)
+    {
+        alpha_[i] = v;
+        alpha_inverse_[v] = i;
+        ++i;
+    }
+    return;
+}
+
+void EliminationOrder::Emplace(Vertex v, int i)
+{
+    Swap(i, alpha_inverse_[v]);
+    return;
+}
+
+void EliminationOrder::Swap(int i, int j)
+{
+    Vertex  vi = alpha_[i],
+            vj = alpha_[j];
+    std::swap(alpha_[i], alpha_[j]);
+    std::swap(alpha_inverse_[vi], alpha_inverse_[vj]);
     return;
 }
 
@@ -39,23 +67,20 @@ int EliminationOrder::ComputeFill()
         Vertex w = VertexAt(i);
         follower[w] = w;
         index[w] = i;
-        for(Vertex v : G_.N(w))
+        for(Vertex v : LNbhd(w))
         {
-            if(Before(v, w))
+            Vertex x = v;
+            while(index[x] < i)
             {
-                Vertex x = v;
-                while(index[x] < i)
-                {
-                    index[x] = i;
-                    ++fill_count_;
-                    triangulation_nbhds_[x].insert(w);
-                    triangulation_nbhds_[w].insert(x);
-                    x = follower[x];
-                }
-                if(follower[x] == x)
-                {
-                    follower[x] = w;
-                }
+                index[x] = i;
+                ++fill_count_;
+                triangulation_nbhds_[x].insert(w);
+                triangulation_nbhds_[w].insert(x);
+                x = follower[x];
+            }
+            if(follower[x] == x)
+            {
+                follower[x] = w;
             }
         }
     }
@@ -82,29 +107,79 @@ bool EliminationOrder::ZeroFill() const
         Vertex w = VertexAt(i);
         follower[w] = w;
         index[w] = i;
-        for(Vertex v : G_.N(w))
+        for(Vertex v : LNbhd(w))
         {
-            if(Before(v, w))
+            index[v] = i;
+            if(follower[v] == v)
             {
-                index[v] = i;
-                if(follower[v] == v)
-                {
-                    follower[v] = w;
-                }
+                follower[v] = w;
             }
         }
-        for(Vertex v : G_.N(w))
+        for(Vertex v : LNbhd(w))
         {
-            if(Before(v, w))
+            if(index[follower[v]] < i)
             {
-                if(index[follower[v]] < i)
-                {
-                    return false;
-                }
+                return false;
             }
         }
     }
     return true;
+}
+
+Vertices EliminationOrder::LNbhd(Vertex v) const
+{
+    Vertices L_N;
+
+    for( Vertex u : G_.N( v ) )
+    {
+        if(Before(u,v))
+            L_N.add( u );
+    }
+
+    if(!triangulation_nbhds_.empty())
+    {
+        for( Vertex u : triangulation_nbhds_[ v ] )
+        {
+            if(Before(u,v))
+                L_N.add( u );
+        }
+    }
+
+    return L_N;
+}
+
+Vertices EliminationOrder::RNbhd(Vertex v) const
+{
+    Vertices R_N;
+
+    for( Vertex u : G_.N( v ) )
+    {
+        if(Before(v,u))
+            R_N.add( u );
+    }
+
+    if(!triangulation_nbhds_.empty())
+    {
+        for( Vertex u : triangulation_nbhds_[ v ] )
+        {
+            if(Before(v,u))
+                R_N.add( u );
+        }
+    }
+
+    return R_N;
+}
+
+void EliminationOrder::SetOrder(VertexVector pi)
+{
+    if(pi.size() != G_.order())
+    {
+        std::cerr << "Error in SetOrder: elimination order size and graph order does not match" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    for(int i = 0; i < pi.size(); ++i)
+        Emplace(pi[i], i);
+    return;
 }
 
 void EliminationOrder::PrettyPrint() const

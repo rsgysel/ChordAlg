@@ -95,7 +95,30 @@ void Graph::Init()
             }
         }
     }
+
+    // construct vertex id map
+    for( Vertex x : *this )
+        vertex_ids_[ vertex_names_->operator[](x) ] = x;
+
     return;
+}
+
+Vertex Graph::vertex( char id ) const
+{
+    std::stringstream ss;
+    ss << id;
+    return vertex(ss.str());
+}
+
+Vertex Graph::vertex( std::string id ) const
+{
+    auto itr = vertex_ids_.find(id);
+    if(itr == vertex_ids_.end())
+    {
+        std::cerr << "Error in Graph::vertex: vertex identifier " << id << " not found" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    return itr->second;
 }
 
 VertexNames* Graph::InducedNames( Graph& super_graph, Vertices X )

@@ -56,20 +56,29 @@ class EliminationOrder
     public:
         EliminationOrder( Graph& );
         virtual ~EliminationOrder();
+        void Init();
 
-        int ComputeFill();
-        void PrettyPrint() const;
-        bool ZeroFill() const;
+        int     ComputeFill();
+        void    Emplace(Vertex v, int i);
+        void    Swap(int i, int j);
+
+        void    PrettyPrint()   const;
+        bool    ZeroFill()      const;
 
         // Accessors
         bool            Before(Vertex u, Vertex v) const    { return alpha_inverse_[u] < alpha_inverse_[v]; }
         int             PositionOf(Vertex v) const          { return alpha_inverse_[v];                     }
         Vertex          VertexAt(int i) const               { return alpha_[i];                             }
 
-        int             fill_count() const  { return fill_count_;   }
-        const Graph&    G() const           { return G_;            }
+        Vertices        LNbhd(Vertex v) const;    // neighbors of v ``left" (before) v. Unsorted.
+        Vertices        RNbhd(Vertex v) const;    // neighbors of v ``right" (after) v. Unsorted.
+
+        int             fill_count() const                  { return fill_count_;   }
+        int             size() const                        { return alpha_.size(); }
+        const Graph&    G() const                           { return G_;            }
 
         // Mutators
+        void SetOrder   (VertexVector pi);
         void SetPosition(Vertex v, int i) { alpha_inverse_[v] = i;  }
         void SetVertex  (int i, Vertex v) { alpha_[i] = v;          }
 

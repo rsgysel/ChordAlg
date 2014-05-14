@@ -21,3 +21,9 @@ TEST_F(SortedAdjacencyListTest, GraphUtilities) {
     return;
 }
 
+TEST_F(SortedAdjacencyListTest, NameConsistency2) {
+    Read(graph_dir() + std::string("twocliques.sal"));
+    for(chordalg::Vertex v : *G)
+        EXPECT_EQ(v, G->vertex(G->name(v)));
+    return;
+}

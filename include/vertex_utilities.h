@@ -49,7 +49,7 @@ typedef Vertices                        Nbhd;
 typedef std::vector< Nbhd >             AdjacencyLists;
 
 typedef std::string                     VertexName;
-typedef std::vector< std::string >      VertexNames;
+typedef std::vector< VertexName >       VertexNames;
 
 // elimination ordering typedefs
 typedef double                          Weight;         // argument to minimize

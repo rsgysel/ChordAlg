@@ -1,4 +1,5 @@
 c A simple chordal graph, 5 triangles that meet on edges (a bridge)
+c Deterministic MCS yields peo 4 7 3 6 5 2 1
 p edge 7 11
 e 1 2
 e 1 5

@@ -6,8 +6,10 @@
 #include "lb_elimination.h"
 #include "mixed_elimination.h"
 
+#ifdef ENABLE_FILL_HEURISTIC_TESTS
 TEST_F( MatrixCellIntGraphTest, Debug )
 {
+
     using namespace chordalg;
     MatrixCellIntGraphFR* graph_reader =
  //       NewFileReader< MatrixCellIntGraphFR >( graph_dir() + std::string( "BadExample_2state20.20-0.2.dat" ) );
@@ -111,3 +113,4 @@ TEST_F( MatrixCellIntGraphTest, MinfillUnchordalTest )
     return;
 }
 
+#endif

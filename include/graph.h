@@ -45,6 +45,8 @@ class Graph
         GVIterator              begin   ( )                       const { return GraphVertices( this, order_ ).begin(); }
         GVIterator              end     ( )                       const { return GraphVertices( this, order_ ).end();   }
 
+        Vertex                  vertex  ( char id               ) const;
+        Vertex                  vertex  ( std::string id        ) const;
         const VertexName&       name    ( Vertex v              ) const { return vertex_names_->operator[]( v );        }
         int                     order   ( )                       const { return order_;                                }
         int                     size    ( )                       const { return size_;                                 }
@@ -54,13 +56,16 @@ class Graph
         template< class Container >
         bool                    HasClique( Container set )        const { return HasClique( set.begin(), set.end() );   }
         bool                    IsClique ( )                      const { return 2*size_ == order_ * ( order_ - 1 );    }
-        const Vertices&         N       ( Vertex v              ) const { return neighborhoods_->operator[]( v );       }
+        const Vertices&         N        ( Vertex v             ) const { return neighborhoods_->operator[]( v );       }
 
     protected:
         void Init();
 
         const AdjacencyLists*               neighborhoods_;
         const VertexNames*                  vertex_names_;
+        std::map<VertexName, Vertex>        vertex_ids_;
+
+        // TODO: try changing to std::set< VertexPair >, time experiments otherwise for thousands of vertices this is huge..
         std::vector< std::vector< bool > >  is_edge_;
 
         unsigned int                        order_,         // #vertices

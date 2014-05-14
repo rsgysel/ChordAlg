@@ -19,6 +19,9 @@ class MCSQueue {
 public:
     MCSQueue(int order);
     ~MCSQueue() {};
+
+    int max_weight() { return max_weight_; }
+
     Vertex Pop();
     void Increment(Vertex v);
 
