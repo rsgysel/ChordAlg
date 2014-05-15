@@ -23,11 +23,11 @@ EliminationOrder MCS(Graph& G)
 
 std::string SerializeMaxcliqueAsString(VertexList K, Graph& G)
 {
-    std::string maxclique("(");
+    std::string maxclique("{");
     for(Vertex v : K)
-        maxclique += G.name(v) + std::string(", ");
-    maxclique.erase(maxclique.end()-2, maxclique.end());
-    maxclique += std::string(")");
+        maxclique += G.name(v) + std::string(" ");
+    maxclique.erase(maxclique.end()-1, maxclique.end());
+    maxclique += std::string("}");
     return maxclique;
 }
 

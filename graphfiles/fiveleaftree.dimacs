@@ -1,0 +1,10 @@
+c A binary tree with 5 leaves with splits 12|345, 123|45
+c Leaves 1-5, internal nodes 6-8
+p edge 8 7
+e 1 6
+e 2 6
+e 3 7
+e 4 8
+e 5 8
+e 6 7
+e 7 8

@@ -69,8 +69,8 @@ TEST_F(DimacsGraphTest, SetOrderSanity){
 }
 
 TEST_F(DimacsGraphTest, MCSCliqueTree){
-    Read(graph_dir() + std::string("chordal1.dimacs"));
+    Read(graph_dir() + std::string("fiveleaftree.dimacs"));
     chordalg::CliqueTree* ct = chordalg::MCSCliqueTree(*G);
-    EXPECT_EQ(ct->T().size(), 4);
-    EXPECT_EQ(ct->T().order(), 5);
+    EXPECT_EQ(ct->T().size(), 6);
+    EXPECT_EQ(ct->T().order(), 7);
 }

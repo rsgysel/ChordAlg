@@ -8,9 +8,12 @@ namespace chordalg {
 class TreeRepresentation
 {
     public:
-        TreeRepresentation          ( AdjacencyLists* E,  VertexNames K, Graph& G   );
-        virtual ~TreeRepresentation (                                               );
+        TreeRepresentation          ( AdjacencyLists* E,  VertexNames K, Graph& G           );
+        virtual ~TreeRepresentation (                                                       );
 
+        void            NewickVisit (VertexSet& visited, Vertex v, std::string& newick_tree ) const;
+
+        void            NewickPrint()   const;
         void            PrettyPrint()   const   { T_.PrettyPrint(); }
 
         const Graph&    G()             const   { return G_;        }
