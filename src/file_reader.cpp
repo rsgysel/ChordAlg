@@ -107,6 +107,8 @@ void DimacsGraphFR::ReadFileOrDie()
             line_stream >> v;
             if( u < 1 || v < 1 || u > n || v > n || u == v )
             {
+                std::cerr << "Dimacs graph file format error: invalid vertex range" << std::endl;
+                exit(EXIT_FAILURE);
                 // Die, invalid range
             }
             if( u < v )
@@ -296,7 +298,8 @@ void MatrixCellIntGraphFR::ComputeGraphData( std::vector< std::vector< int > > m
     int row_count = matrix.size(), col_count = matrix[ 0 ].size(), cell_count = 0;
     subset_family_ = new LexTrie( row_count );
 
-    std::map< const LexTrieNode*, Vertex > cell_id;
+    std::map< const LexTrieNode*, Vertex >  cell_id;
+    std::map< std::string, Vertex>          vertex_id;
 
     // Create subsets_. subsets_[v] is the subset of the ground set related to vertex v
     for( int j = 0; j < col_count; ++j )
@@ -322,6 +325,11 @@ void MatrixCellIntGraphFR::ComputeGraphData( std::vector< std::vector< int > > m
                     ++cell_count;
                     subsets_.push_back( Subset( C ) );
                     vertex_colors_.push_back( Multicolor() );
+
+                    int state = matrix[ C[0] ][ j ];
+                    std::stringstream name;
+                    name << '(' << j << ',' << state << ')';
+                    vertex_id[name.str()] = cell_count;
                 }
                 Vertex v = cell_id[ node ];
                 vertex_colors_[ v ].push_back( j );
@@ -330,12 +338,12 @@ void MatrixCellIntGraphFR::ComputeGraphData( std::vector< std::vector< int > > m
     }
     int order = cell_count;
 
-    names_ = new VertexNames( cell_count );
-    for( int i = 0; i < cell_count; ++i )
+    names_ = new VertexNames( order );
+    for( auto p : vertex_id )
     {
-        std::stringstream i_str;
-        i_str << i;
-        names_->operator[]( i ) = i_str.str();
+        std::string name    = p.first;
+        Vertex v            = p.second;
+        names_->operator[](v-1) = name;
     }
 
     neighborhoods_ = new AdjacencyLists( order );
