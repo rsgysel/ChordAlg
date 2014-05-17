@@ -55,6 +55,13 @@ Graph::Graph( Graph& super_graph, Vertices X ) :
     return;
 }
 
+Supergraph::Supergraph( Graph& G, AdjacencyLists* a_lists ) :
+    Graph           (   a_lists         ),
+    G_              (   G               )
+{
+    return;
+}
+
 Graph::~Graph()
 {
     delete neighborhoods_;
@@ -67,7 +74,7 @@ void Graph::Init()
         size_ += N.size();
     size_ /= 2;
 
-    // adjacency matrix
+// adjacency matrix
     is_edge_.resize( order_ );
     for( std::vector< bool >& V : is_edge_ )
         V.resize( order_ );

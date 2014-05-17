@@ -29,6 +29,7 @@
 #include <cstdlib>
 #include <ctime>
 
+#include <algorithm>
 #include <set>
 #include <vector>
 
@@ -50,7 +51,6 @@ struct EliminationCriterion
 }; // struct EliminationCriterion
 
 // ToDo: fold into EliminationAlgorithm
-// ToDo: MADJ vertex iterator.
 class EliminationOrder
 {
     public:
@@ -61,6 +61,7 @@ class EliminationOrder
         int             ComputeFill (                       );
         void            Emplace     ( Vertex v, int i       );
         void            Swap        ( int i, int j          );
+        AdjacencyLists* TriangNbhds (                       );
 
         void            PrettyPrint (                       ) const;
         bool            ZeroFill    (                       ) const;

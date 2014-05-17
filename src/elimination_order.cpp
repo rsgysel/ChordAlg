@@ -45,6 +45,34 @@ void EliminationOrder::Swap(int i, int j)
     return;
 }
 
+// Produces (and passes ownership of) adjacency lists
+// form triagnulation neighborhoods
+AdjacencyLists* EliminationOrder::TriangNbhds()
+{
+    AdjacencyLists* a_lists = new AdjacencyLists();
+    a_lists->resize(G_.order());
+    if(fill_count_ == 0)
+    {
+        for(Vertex v : G_)
+        {
+            a_lists->operator[](v).reserve(triangulation_nbhds_[v].size());
+            for(Vertex u : G_.N(v))
+                a_lists->operator[](v).add(u);
+        }
+    }
+    else
+    {
+        a_lists = new AdjacencyLists(G_.order());
+        for(Vertex v : G_)
+        {
+            a_lists->operator[](v).reserve(triangulation_nbhds_[v].size());
+            for(Vertex u : triangulation_nbhds_[v])
+                a_lists->operator[](v).add(u);
+        }
+    }
+    return a_lists;
+}
+
 // Tarjan and Yannakakis' algorithm to compute fill edges from an elimination order, from:
 // R.E. Tarjan and M. Yannakakis. "Simple linear-time algorithms to test chordality of
 // graphs, test acyclicity of hypergraphs, and selectively reduce acyclic hypergraphs".

@@ -74,3 +74,19 @@ TEST_F(DimacsGraphTest, MCSCliqueTree){
     EXPECT_EQ(ct->T().size(), 6);
     EXPECT_EQ(ct->T().order(), 7);
 }
+
+TEST_F(DimacsGraphTest, ChordalIsomorphism){
+    Read(graph_dir() + std::string("chordal1.dimacs"));
+    chordalg::EliminationOrder eo = chordalg::MCS(*G);
+    eo.ComputeFill();
+    chordalg::Supergraph H(*G, eo.TriangNbhds());
+    EXPECT_EQ(G->IsIsomorphic(H), true);
+}
+
+TEST_F(DimacsGraphTest, Triangulation){
+    Read(graph_dir() + std::string("myciel3.dimacs"));
+    chordalg::EliminationOrder eo = chordalg::MCS(*G);
+    eo.ComputeFill();
+    chordalg::Supergraph H(*G, eo.TriangNbhds());
+    EXPECT_EQ(H.size()-21,G->size());
+}
