@@ -67,12 +67,13 @@ TEST_F(DimacsGraphTest, SetOrderSanity){
         EXPECT_EQ(i, eo.PositionOf(order[i]));
     }
 }
-
+#include "utilities.h"
 TEST_F(DimacsGraphTest, MCSCliqueTree){
     Read(graph_dir() + std::string("fiveleaftree.dimacs"));
     chordalg::CliqueTree* ct = chordalg::MCSCliqueTree(*G);
     EXPECT_EQ(ct->T().size(), 6);
     EXPECT_EQ(ct->T().order(), 7);
+    ct->NewickPrint();
 }
 
 TEST_F(DimacsGraphTest, ChordalIsomorphism){

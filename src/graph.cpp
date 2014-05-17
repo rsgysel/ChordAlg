@@ -102,11 +102,9 @@ void Graph::Init()
             }
         }
     }
-
     // construct vertex id map
     for( Vertex x : *this )
         vertex_ids_[ vertex_names_->operator[](x) ] = x;
-
     return;
 }
 

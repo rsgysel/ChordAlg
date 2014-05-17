@@ -21,16 +21,6 @@ EliminationOrder MCS(Graph& G)
 	return eo;
 }
 
-std::string SerializeMaxcliqueAsString(VertexList K, Graph& G)
-{
-    std::string maxclique("{");
-    for(Vertex v : K)
-        maxclique += G.name(v) + std::string(" ");
-    maxclique.erase(maxclique.end()-1, maxclique.end());
-    maxclique += std::string("}");
-    return maxclique;
-}
-
 CliqueTree* MCSCliqueTree(Graph& G)
 {
     MCSQueue                        mcs_q(G.order());
@@ -43,7 +33,7 @@ CliqueTree* MCSCliqueTree(Graph& G)
     int                 prev_card = -1;
     std::vector<int>    clique;
     clique.resize(G.order());
-    VertexNames         Maxcliques;
+    std::vector< Vertices > clique_map;
 
 	for(int i = G.order(); i > 0; i--)
 	{
@@ -60,8 +50,7 @@ CliqueTree* MCSCliqueTree(Graph& G)
 		// Check for maxclique construction
 		if(new_card <= prev_card)
         {
-            std::string maxclique = SerializeMaxcliqueAsString(Ks, G);
-            Maxcliques.push_back(maxclique);
+            clique_map.push_back(Ks);
             Ks.clear();
             Ks_indices.clear();
             ++s;
@@ -83,10 +72,7 @@ CliqueTree* MCSCliqueTree(Graph& G)
         prev_card = new_card;
 	}
 	if(!Ks.empty())
-    {
-        std::string maxclique = SerializeMaxcliqueAsString(Ks, G);
-        Maxcliques.push_back(maxclique);
-    }
+        clique_map.push_back(Ks);
 
     AdjacencyLists*     E = new AdjacencyLists;
     E->resize(s+1);
@@ -95,7 +81,8 @@ CliqueTree* MCSCliqueTree(Graph& G)
         E->operator[](e.first).add(e.second);
         E->operator[](e.second).add(e.first);
     }
-    CliqueTree* tr = new CliqueTree(E, Maxcliques, G);
+
+    CliqueTree* tr = new CliqueTree(E, G, clique_map);
 	return tr;
 }
 

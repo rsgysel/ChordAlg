@@ -8,8 +8,8 @@ namespace chordalg {
 class TreeRepresentation
 {
     public:
-        TreeRepresentation          ( AdjacencyLists* E,  VertexNames K, Graph& G           );
-        virtual ~TreeRepresentation (                                                       );
+        TreeRepresentation          ( AdjacencyLists* E, Graph& G, std::vector< Vertices > clique_map   );
+        virtual ~TreeRepresentation (                                                                   );
 
         void            NewickVisit (VertexSet& visited, Vertex v, std::string& newick_tree ) const;
 
@@ -19,15 +19,20 @@ class TreeRepresentation
         const Graph&    G()             const   { return G_;        }
         const Graph&    T()             const   { return T_;        }
     protected:
-        Graph&  G_;     // underlying chordal graph
-        Graph   T_;     // topology
+        Graph&                  G_;             // underlying chordal graph
+        Graph                   T_;             // topology
+        std::vector< Vertices > clique_map_;    // maps nodes of T_ to cliques of G_
+
+        std::string SerializeMaxcliqueAsString  ( Vertices K                            ) const;
+        VertexNames NamesFromCliqueMap          ( std::vector< Vertices > clique_map    ) const;
+
 }; // TreeRepresentation
 
 class CliqueTree : public TreeRepresentation
 {
     public:
-        CliqueTree  ( AdjacencyLists* E,  VertexNames K, Graph& G   );
-        ~CliqueTree (                                               );
+        CliqueTree  ( AdjacencyLists* E, Graph& G, std::vector< Vertices > clique_map   );
+        ~CliqueTree (                                                                   );
 }; // CliqueTree
 
 }; // namespace chordalg
