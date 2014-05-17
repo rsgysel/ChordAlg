@@ -8,6 +8,7 @@ ColoredIntersectionGraph::ColoredIntersectionGraph( MatrixCellIntGraphFR* fr ) :
     vertex_colors_  ( fr->vertex_colors()       ),
     subset_family_  ( fr->TakeSubsetFamily()    )
 {
+    Init();
     return;
 }
 
@@ -17,12 +18,23 @@ ColoredIntersectionGraph::ColoredIntersectionGraph( ColoredIntersectionGraph& su
     vertex_colors_  ( InduceVertexColors    ( super_graph, X    )   ),
     subset_family_  ( InduceSubsetFamily    ( super_graph       )   )
 {
+    Init();
     return;
 }
 
 ColoredIntersectionGraph::~ColoredIntersectionGraph()
 {
     delete subset_family_;
+    return;
+}
+#include "utilities.h"
+void ColoredIntersectionGraph::Init()
+{
+    for( Vertex v : *this )
+    {
+        for( Element e : subsets_[v] )
+            taxon_clique_[e].add(v);
+    }
     return;
 }
 
