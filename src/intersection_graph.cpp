@@ -12,6 +12,16 @@ ColoredIntersectionGraph::ColoredIntersectionGraph( MatrixCellIntGraphFR* fr ) :
     return;
 }
 
+ColoredIntersectionGraph::ColoredIntersectionGraph( NexusMRPFR* fr ) :
+    Graph           ( fr                                        ),
+    subsets_        ( fr->subsets()                             ),
+    vertex_colors_  ( fr->vertex_colors()                       ),
+    subset_family_  ( fr->TakeSubsetFamily()                    ),
+    taxon_name_     ( fr->TaxonName()                           )
+{
+    return;
+}
+
 ColoredIntersectionGraph::ColoredIntersectionGraph( ColoredIntersectionGraph& super_graph, Vertices X ) :
     Graph           ( super_graph, X                                ),
     subsets_        ( InduceSubsets         ( super_graph, X    )   ),

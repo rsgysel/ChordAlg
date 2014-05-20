@@ -32,18 +32,19 @@ class ColoredIntersectionGraph : public Graph
 {
     public:
         ColoredIntersectionGraph( MatrixCellIntGraphFR* );
+        ColoredIntersectionGraph( NexusMRPFR* );
         ColoredIntersectionGraph( ColoredIntersectionGraph&, Vertices );
         virtual ~ColoredIntersectionGraph();
 
         bool                IsMonochromatic ( Vertex, Vertex    );
         int                 CommonColorCount( Vertex, Vertex    );
-        const Multicolor&   vertex_color    ( Vertex v          ){ return vertex_colors_[ v ]; }
+        const Multicolor&   vertex_color    ( Vertex v          ) { return vertex_colors_[ v ]; }
 
         void PrettyPrintSubsets();
 
-        const LexTrie*  subset_family()     const { return subset_family_;  }
-        const Subset&   subset( Vertex v )  const { return subsets_[ v ];   }
-        const std::string& taxon_name( Element e ) const { return taxon_name_[e]; }
+        const LexTrie*      subset_family   (           ) const { return subset_family_;    }
+        const Subset&       subset          ( Vertex v  ) const { return subsets_[ v ];     }
+        const std::string&  taxon_name      ( Element e ) const { return taxon_name_[e];    }
 
     private:
         std::vector< Subset >       subsets_;

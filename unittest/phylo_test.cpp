@@ -50,8 +50,5 @@ TEST_F( MatrixCellIntGraphTest, MinfillPhyloTest )
     chordalg::ClassicElimination eo( *H, new chordalg::DeficiencyCriterion() );
     chordalg::Supergraph triangulation(*H,eo.TriangNbhds());
     chordalg::CliqueTree* ct = chordalg::MCSCliqueTree(triangulation);
-    ct->PhyloNewickPrint(*H);
-    std::cout << eo.fill_cost() << " " << eo.fill_count() << std::endl;
-
     return;
 }

@@ -123,7 +123,11 @@ class NexusMRPFR : public MatrixCellIntGraphFR
 {
     public:
         ~NexusMRPFR(){};
+
+        std::vector< std::string > TaxonName() const { return taxon_name_; }
     private:
+        std::vector< std::string > taxon_name_;
+
         template< class FR > friend FR* NewFileReader( std::string );
         NexusMRPFR( std::string file_name ) : MatrixCellIntGraphFR( file_name ) {};
         void ReadFileOrDie();

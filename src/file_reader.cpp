@@ -446,6 +446,8 @@ void NexusMRPFR::ReadFileOrDie()
     getline( file_stream_, line );
     getline( file_stream_, line );
 
+    taxon_name_.resize(row_count);
+
     // extract matrix from file
     std::vector< std::vector< int > > matrix( row_count, std::vector< int >( col_count ) );
     int i = 0;
@@ -456,8 +458,10 @@ void NexusMRPFR::ReadFileOrDie()
         AssertFormatOrDie( i < row_count, too_many_rows );
         std::stringstream line_stream;
         line_stream << line;
-        std::string taxon_name;
-        line_stream >> taxon_name;
+        line_stream >> taxon_name_[i];
+//        std::string taxon;
+  //      line_stream >> taxon;
+    //    taxon_name[i] = taxon;
         std::string row;
         line_stream >> row;
         for(int j = 0; j < row.size(); ++j)
