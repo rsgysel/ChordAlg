@@ -2,22 +2,31 @@
 #define TREE_REPRESENTATION_H
 
 #include "graph.h"
+#include "intersection_graph.h"
 
 namespace chordalg {
 
 class TreeRepresentation
 {
     public:
-        TreeRepresentation          ( AdjacencyLists* E, Graph& G, std::vector< Vertices > clique_map   );
-        virtual ~TreeRepresentation (                                                                   );
+        TreeRepresentation              ( AdjacencyLists* E, Graph& G, std::vector< Vertices > clique_map                       );
+        virtual ~TreeRepresentation     (                                                                                       );
 
-        void            NewickVisit (VertexSet& visited, Vertex v, std::string& newick_tree ) const;
+        void            NewickVisit     (   VertexSet&                          visited,
+                                            Vertex                              v,
+                                            std::string&                        newick_tree         ) const;
+        void            PhyloNewickVisit(   VertexSet&                          visited,
+                                            Vertex                              v,
+                                            std::string&                        newick_tree,
+                                            const ColoredIntersectionGraph&     cig,
+                                            std::vector< int >&                 taxon_clique_size   ) const;
 
-        void            NewickPrint()   const;
-        void            PrettyPrint()   const   { T_.PrettyPrint(); }
+        void            NewickPrint     (                               ) const;
+        void            PhyloNewickPrint( const ColoredIntersectionGraph& cig ) const;
+        void            PrettyPrint     (                               ) const    { T_.PrettyPrint(); }
 
-        const Graph&    G()             const   { return G_;        }
-        const Graph&    T()             const   { return T_;        }
+        const Graph&    G               (                               ) const    { return G_;        }
+        const Graph&    T               (                               ) const    { return T_;        }
     protected:
         Graph&                  G_;             // underlying chordal graph
         Graph                   T_;             // topology

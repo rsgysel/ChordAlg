@@ -328,7 +328,7 @@ void MatrixCellIntGraphFR::ComputeGraphData( std::vector< std::vector< int > > m
 
                     int state = matrix[ C[0] ][ j ];
                     std::stringstream name;
-                    name << '(' << j << ',' << state << ')';
+                    name << j << '#' << state;
                     vertex_id[name.str()] = cell_count;
                 }
                 Vertex v = cell_id[ node ];

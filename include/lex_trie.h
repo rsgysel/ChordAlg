@@ -119,7 +119,7 @@ class LexTrie
         int SizeOf() const ;					            // space used by LexTrie
         unsigned int Size() const { return set_count_; }	// number of sets in family
 
-        int n() { return n_; }
+        int n() const { return n_; }
 
         LexTrieIterator begin() const;
         LexTrieIterator end()   const { return LexTrieIterator( this ); }

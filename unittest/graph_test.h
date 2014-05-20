@@ -82,4 +82,3 @@ class MatrixCellIntGraphTest : public GraphTest
 };  // MatrixCellIntGraphTest
 
 #endif // GRAPH_TEST_H
-

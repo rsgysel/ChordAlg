@@ -1,4 +1,3 @@
-#include "file_reader.h"
 #include "graph_test.h"
 #include "mcs.h"
 
@@ -8,7 +7,6 @@ TEST_F(DimacsGraphTest, MCSChordalPerfectTest) {
     Read(graph_dir() + std::string("chordal1.dimacs"));
     chordalg::EliminationOrder eo = chordalg::MCS(*G);
     EXPECT_EQ(eo.ZeroFill(), true);
-    eo.PrettyPrint();
 }
 
 TEST_F(DimacsGraphTest, MCSNonChordalPerfectTest) {
@@ -67,13 +65,12 @@ TEST_F(DimacsGraphTest, SetOrderSanity){
         EXPECT_EQ(i, eo.PositionOf(order[i]));
     }
 }
-#include "utilities.h"
+
 TEST_F(DimacsGraphTest, MCSCliqueTree){
     Read(graph_dir() + std::string("fiveleaftree.dimacs"));
     chordalg::CliqueTree* ct = chordalg::MCSCliqueTree(*G);
     EXPECT_EQ(ct->T().size(), 6);
     EXPECT_EQ(ct->T().order(), 7);
-    ct->NewickPrint();
 }
 
 TEST_F(DimacsGraphTest, ChordalIsomorphism){

@@ -3,10 +3,11 @@
 namespace chordalg {
 
 ColoredIntersectionGraph::ColoredIntersectionGraph( MatrixCellIntGraphFR* fr ) :
-    Graph           ( fr                        ),
-    subsets_        ( fr->subsets()             ),
-    vertex_colors_  ( fr->vertex_colors()       ),
-    subset_family_  ( fr->TakeSubsetFamily()    )
+    Graph           ( fr                                        ),
+    subsets_        ( fr->subsets()                             ),
+    vertex_colors_  ( fr->vertex_colors()                       ),
+    subset_family_  ( fr->TakeSubsetFamily()                    ),
+    taxon_name_     ( DefaultTaxonNames( subset_family_->n() )  )
 {
     return;
 }
@@ -15,7 +16,8 @@ ColoredIntersectionGraph::ColoredIntersectionGraph( ColoredIntersectionGraph& su
     Graph           ( super_graph, X                                ),
     subsets_        ( InduceSubsets         ( super_graph, X    )   ),
     vertex_colors_  ( InduceVertexColors    ( super_graph, X    )   ),
-    subset_family_  ( InduceSubsetFamily    ( super_graph       )   )
+    subset_family_  ( InduceSubsetFamily    ( super_graph       )   ),
+    taxon_name_     ( DefaultTaxonNames( subset_family_->n() )      )
 {
     return;
 }
@@ -24,6 +26,19 @@ ColoredIntersectionGraph::~ColoredIntersectionGraph()
 {
     delete subset_family_;
     return;
+}
+
+std::vector<std::string> ColoredIntersectionGraph::DefaultTaxonNames( int n )
+{
+    std::vector<std::string> taxon_name;
+    taxon_name.resize(n);
+    for(int i = 0; i < n; ++i)
+    {
+        std::stringstream ss;
+        ss << i;
+        taxon_name[i] = ss.str();
+    }
+    return taxon_name;
 }
 
 std::vector< Subset > ColoredIntersectionGraph::InduceSubsets( ColoredIntersectionGraph& super_graph, Vertices X )
