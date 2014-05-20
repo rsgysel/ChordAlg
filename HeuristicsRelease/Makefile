@@ -1,6 +1,7 @@
 COMPILER = g++
 OPTFLAGS = -O3 -std=c++0x
 OBJ = elimination_order.o file_reader.o graph.o lex_trie.o intersection_graph.o separator.o vertex_utilities.o
+STOBJ = mcs.o tree_representation.o
 
 all:
 	make classic_elimination.o
@@ -10,8 +11,10 @@ all:
 	make intersection_graph.o
 	make lb_elimination.o
 	make lex_trie.o
+	make mcs.o
 	make mixed_elimination.o
 	make separator.o
+	make tree_representation.o
 	make vertex_utilities.o
 	make CellIntersectionGraph
 	make Composite_heuristic
@@ -19,6 +22,10 @@ all:
 	make Mixed_heuristic
 	make PDRS_ratio_heuristic
 	make PDRS_wsum_heuristic
+	make MMC_MaxCompatSupertree
+
+MMC_MaxCompatSupertree: MMC_MaxCompatSupertree.cpp
+	${COMPILER} ${OPTFLAGS} MMC_MaxCompatSupertree.cpp ${OBJ} ${STOBJ} classic_elimination.o -o MMC_MaxCompatSupertree
 
 CellIntersectionGraph: CellIntersectionGraph.cpp file_reader.h intersection_graph.h
 	${COMPILER} ${OPTFLAGS} CellIntersectionGraph.cpp ${OBJ} -o CellIntersectionGraph
@@ -59,11 +66,17 @@ lb_elimination.o: lb_elimination.h lb_elimination.cpp elimination_order.h inters
 lex_trie.o: lex_trie.h lex_trie.cpp
 	${COMPILER} ${OPTFLAGS} -c lex_trie.cpp
 
+mcs.o: mcs.h mcs.cpp elimination_order.h graph.h tree_representation.h vertex_utilities.h
+	${COMPILER} ${OPTFLAGS} -c mcs.cpp
+
 mixed_elimination.o: mixed_elimination.h mixed_elimination.cpp classic_elimination.h lb_elimination.h intersection_graph.h vertex_utilities.h
 	${COMPILER} ${OPTFLAGS} -c mixed_elimination.cpp
 
 separator.o: separator.h separator.cpp graph.h vertex_utilities.h
 	${COMPILER} ${OPTFLAGS} -c separator.cpp
+
+tree_representation.o: tree_representation.h tree_representation.cpp graph.h intersection_graph.h
+	${COMPILER} ${OPTFLAGS} -c tree_representation.cpp
 
 vertex_utilities.o: vertex_utilities.h vertex_utilities.cpp
 	${COMPILER} ${OPTFLAGS} -c vertex_utilities.cpp

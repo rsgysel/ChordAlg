@@ -76,6 +76,15 @@ FR* NewFileReader( std::string file_name )
     return fr_object;
 }
 
+class DimacsGraphFR : public FileReader {
+public:
+    ~DimacsGraphFR(){};
+private:
+    template< class FR > friend FR* NewFileReader(std::string);
+    DimacsGraphFR(std::string file_name) : FileReader(file_name) {};
+    void ReadFileOrDie();
+};
+
 // FileReader for sorted adjacency list (.sal) files having format:
 //      Line 1: non-negative integer denoting the number of vertices
 //      Line i>1: i-1, representing vertex i-1, followed by its neighbors as sorted integers delimited by whitespace

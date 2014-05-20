@@ -3,7 +3,7 @@
 namespace chordalg {
 
 LBElimination::LBElimination(  ColoredIntersectionGraph& H, LBCriterion* f ) :
-    EliminationOrder    ( H ),
+    EliminationAlgorithm    ( H ),
     H_                  ( H ),
     B_                  ( H ),
     f_                  ( f )
@@ -32,7 +32,7 @@ void LBElimination::Init()
         }
     }
 
-    EliminationOrder::Init();
+    EliminationAlgorithm::Init();
 
     return;
 }

@@ -47,7 +47,7 @@ void EliminationOrder::Swap(int i, int j)
 
 // Produces (and passes ownership of) adjacency lists
 // form triagnulation neighborhoods
-AdjacencyLists* EliminationOrder::TriangNbhds()
+AdjacencyLists* EliminationOrder::TriangNbhds() const
 {
     AdjacencyLists* a_lists = new AdjacencyLists();
     a_lists->resize(G_.order());
@@ -62,11 +62,38 @@ AdjacencyLists* EliminationOrder::TriangNbhds()
     }
     else
     {
-        a_lists = new AdjacencyLists(G_.order());
         for(Vertex v : G_)
         {
             a_lists->operator[](v).reserve(triangulation_nbhds_[v].size());
             for(Vertex u : triangulation_nbhds_[v])
+                a_lists->operator[](v).add(u);
+        }
+    }
+    return a_lists;
+}
+
+
+AdjacencyLists* EliminationAlgorithm::TriangNbhds() const
+{
+    AdjacencyLists* a_lists = new AdjacencyLists();
+    a_lists->resize(G_.order());
+    if(fill_count_ == 0)
+    {
+        for(Vertex v : G_)
+        {
+            a_lists->operator[](v).reserve(G_.N(v).size());
+            for(Vertex u : G_.N(v))
+                a_lists->operator[](v).add(u);
+        }
+    }
+    else
+    {
+        for(Vertex v : G_)
+        {
+            a_lists->operator[](v).reserve(G_.N(v).size() + fill_neighbors_[v].size());
+            for(Vertex u : G_.N(v))
+                a_lists->operator[](v).add(u);
+            for(Vertex u : fill_neighbors_[v])
                 a_lists->operator[](v).add(u);
         }
     }

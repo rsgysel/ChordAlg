@@ -53,7 +53,7 @@ struct WSumCriterion : public LBCriterion
         Weight d_, s_;
 }; // WSumCriterion
 
-class LBElimination : public EliminationOrder
+class LBElimination : public EliminationAlgorithm
 {
     public:
         LBElimination( ColoredIntersectionGraph&, LBCriterion* );

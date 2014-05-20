@@ -60,6 +60,111 @@ inline void FileReader::AssertFormatOrDie( bool assertion, std::string errormsg 
     return;
 }
 
+// FileReader for files in Dimacs Format:
+// c This is a comment line
+// p FORMAT NODES EDGES // we ignore FORMAT, NODES = number of nodes, etc.
+// e U V // edge descriptors: (U,V) = e is an edge of G. not to be duplicated with e V U. U and V are integers in 1, 2, ..., n
+void DimacsGraphFR::ReadFileOrDie()
+{
+    // format error messages
+    const std::string problem_line_count( "Format Error: Only one problem line allowed\n" ),
+        nm_range( "Format Error: NODES and EDGES must be non-negative integers"),
+        problem_line_first( "Format Error: a problem line must occur before any edge line"),
+        duplicate_edge("Format Error: duplicated edge(s) detected"),
+        unknown_character("Format Error: line(s) detected that start with unrecognized format");
+
+    bool problem_line_seen = false;
+    int n = 0, m = 0;
+    std::string line;
+    std::set< std::pair<int,int> > edges;
+    while( getline( file_stream_, line ) )
+    {
+        std::stringstream line_stream;
+        std::string start_character, devnull;
+        line_stream << line;
+        line_stream >> start_character;
+        if( start_character == "c" )
+        {
+            continue;
+        }
+        else if( start_character == "p" )
+        {
+            AssertFormatOrDie( !problem_line_seen, problem_line_count );
+            problem_line_seen = true;
+            line_stream << line;
+            line_stream >> devnull;
+            line_stream >> n;
+            line_stream >> m;
+            AssertFormatOrDie( n >= 0 && m >= 0, nm_range);
+        }
+        else if( start_character == "e" )
+        {
+            AssertFormatOrDie( problem_line_seen, problem_line_first );
+            int u, v;
+            line_stream << line;
+            line_stream >> u;
+            line_stream >> v;
+            if( u < 1 || v < 1 || u > n || v > n || u == v )
+            {
+                std::cerr << "Dimacs graph file format error: invalid vertex range" << std::endl;
+                exit(EXIT_FAILURE);
+                // Die, invalid range
+            }
+            if( u < v )
+            {
+                std::swap(u,v);
+            }
+            std::pair<int,int> e = std::pair<int,int>(u,v);
+            AssertFormatOrDie( edges.find(e) == edges.end(), duplicate_edge );
+            edges.insert(e);
+        }
+        else
+        {
+            AssertFormatOrDie( line.empty(), unknown_character );
+        }
+    }
+
+    // initialize the adjacency lists for the graph
+    neighborhoods_ = new AdjacencyLists;
+    neighborhoods_->resize( n );   // create empty neighborhoods
+    // initialize vertex names
+    names_ = new VertexNames;
+    names_->resize( n );
+    for( int i = 0; i < n; ++i )
+    {
+        std::stringstream ss;
+        ss << i+1;
+        names_->operator[](i) = ss.str();
+    }
+
+    // get neighbors from edge set
+    std::vector< std::list< int > > neighbors;
+    neighbors.resize(n);
+    for( std::pair<int,int> e : edges )
+    {
+        int u = e.first;
+        int v = e.second;
+
+        neighbors[u-1].push_back(v-1);
+        neighbors[v-1].push_back(u-1);
+    }
+
+    // turn string representation into vertex representation
+    for( int i = 0; i < n; ++i )
+    {
+        Vertices* nbhd = &neighborhoods_->operator[]( i );
+        for( int v : neighbors[ i ] )
+        {
+            nbhd->add( v );
+        }
+        std::sort( nbhd->begin(), nbhd->end() );
+    }
+    file_stream_.close();
+
+    return;
+}
+
+
 // FileReader for files in the following format:
 //      Line 1: non-negative integer denoting the number of vertices
 //      Line i>1: i-1, representing vertex i-1, followed by its neighbors as sorted integers delimited by whitespace
@@ -192,7 +297,8 @@ void MatrixCellIntGraphFR::ComputeGraphData( std::vector< std::vector< int > > m
     int row_count = matrix.size(), col_count = matrix[ 0 ].size(), cell_count = 0;
     subset_family_ = new LexTrie( row_count );
 
-    std::map< const LexTrieNode*, Vertex > cell_id;
+    std::map< const LexTrieNode*, Vertex >  cell_id;
+    std::map< std::string, Vertex>          vertex_id;
 
     // Create subsets_. subsets_[v] is the subset of the ground set related to vertex v
     for( int j = 0; j < col_count; ++j )
@@ -218,6 +324,11 @@ void MatrixCellIntGraphFR::ComputeGraphData( std::vector< std::vector< int > > m
                     ++cell_count;
                     subsets_.push_back( Subset( C ) );
                     vertex_colors_.push_back( Multicolor() );
+
+                    int state = matrix[ C[0] ][ j ];
+                    std::stringstream name;
+                    name << j << '#' << state;
+                    vertex_id[name.str()] = cell_count;
                 }
                 Vertex v = cell_id[ node ];
                 vertex_colors_[ v ].push_back( j );
@@ -226,12 +337,12 @@ void MatrixCellIntGraphFR::ComputeGraphData( std::vector< std::vector< int > > m
     }
     int order = cell_count;
 
-    names_ = new VertexNames( cell_count );
-    for( int i = 0; i < cell_count; ++i )
+    names_ = new VertexNames( order );
+    for( auto p : vertex_id )
     {
-        std::stringstream i_str;
-        i_str << i;
-        names_->operator[]( i ) = i_str.str();
+        std::string name    = p.first;
+        Vertex v            = p.second;
+        names_->operator[](v-1) = name;
     }
 
     neighborhoods_ = new AdjacencyLists( order );

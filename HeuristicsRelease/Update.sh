@@ -18,9 +18,11 @@ classes[3]="graph"
 classes[4]="intersection_graph"
 classes[5]="lb_elimination"
 classes[6]="lex_trie"
-classes[7]="mixed_elimination"
-classes[8]="separator"
-classes[9]="vertex_utilities"
+classes[7]="mcs"
+classes[8]="mixed_elimination"
+classes[9]="separator"
+classes[10]="tree_representation"
+classes[11]="vertex_utilities"
 
 for filename in "${classes[@]}"
 do
@@ -45,6 +47,7 @@ executables[2]="MMC_heuristic"
 executables[3]="Mixed_heuristic"
 executables[4]="PDRS_ratio_heuristic"
 executables[5]="PDRS_wsum_heuristic"
+executables[6]="MMC_MaxCompatSupertree"
 
 for filename in "${executables[@]}"
 do

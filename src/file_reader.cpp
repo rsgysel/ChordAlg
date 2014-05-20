@@ -1,5 +1,4 @@
 #include "file_reader.h"
-#include "utilities.h"
 
 namespace chordalg {
 

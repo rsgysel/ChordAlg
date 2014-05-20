@@ -3,11 +3,11 @@
 namespace chordalg {
 
 ClassicElimination::ClassicElimination( ColoredIntersectionGraph& H, ClassicCriterion* f ) :
-    EliminationOrder( H ),
+    EliminationAlgorithm( H ),
     H_              ( H ),
     f_              ( f )
 {
-    EliminationOrder::Init();
+    EliminationAlgorithm::Init();
     return;
 }
 

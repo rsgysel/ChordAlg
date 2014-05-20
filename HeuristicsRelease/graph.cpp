@@ -55,6 +55,13 @@ Graph::Graph( Graph& super_graph, Vertices X ) :
     return;
 }
 
+Supergraph::Supergraph( Graph& G, AdjacencyLists* a_lists ) :
+    Graph           (   a_lists         ),
+    G_              (   G               )
+{
+    return;
+}
+
 Graph::~Graph()
 {
     delete neighborhoods_;
@@ -67,7 +74,7 @@ void Graph::Init()
         size_ += N.size();
     size_ /= 2;
 
-    // adjacency matrix
+// adjacency matrix
     is_edge_.resize( order_ );
     for( std::vector< bool >& V : is_edge_ )
         V.resize( order_ );
@@ -95,7 +102,28 @@ void Graph::Init()
             }
         }
     }
+    // construct vertex id map
+    for( Vertex x : *this )
+        vertex_ids_[ vertex_names_->operator[](x) ] = x;
     return;
+}
+
+Vertex Graph::vertex( char id ) const
+{
+    std::stringstream ss;
+    ss << id;
+    return vertex(ss.str());
+}
+
+Vertex Graph::vertex( std::string id ) const
+{
+    auto itr = vertex_ids_.find(id);
+    if(itr == vertex_ids_.end())
+    {
+        std::cerr << "Error in Graph::vertex: vertex identifier " << id << " not found" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    return itr->second;
 }
 
 VertexNames* Graph::InducedNames( Graph& super_graph, Vertices X )
@@ -184,7 +212,7 @@ bool Graph::IsIsomorphic( Graph& H )
     return true;
 }
 
-void Graph::PrettyPrint()
+void Graph::PrettyPrint() const
 {
     std::cout   <<  "Order: "   <<  order_  <<  std::endl;
     std::cout   <<  "Size: "    <<  size_   <<  std::endl;

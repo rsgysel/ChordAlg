@@ -29,6 +29,7 @@
 #include <cstdlib>
 #include <ctime>
 
+#include <algorithm>
 #include <set>
 #include <vector>
 
@@ -49,18 +50,66 @@ struct EliminationCriterion
     virtual Weight Calculate    ( Weight deficiency, Weight separated ) = 0;
 }; // struct EliminationCriterion
 
+// ToDo: fold into EliminationAlgorithm
 class EliminationOrder
 {
     public:
-        EliminationOrder( Graph& );
-        virtual ~EliminationOrder();
+        EliminationOrder            ( Graph&                );
+        ~EliminationOrder           (                       );
+        void            Init        (                       );
+
+        int             ComputeFill (                       );
+        void            Emplace     ( Vertex v, int i       );
+        void            Swap        ( int i, int j          );
+        AdjacencyLists* TriangNbhds (                       ) const;
+
+        void            PrettyPrint (                       ) const;
+        bool            ZeroFill    (                       ) const;
+
+        // Accessors
+        bool            Before      ( Vertex u, Vertex v    ) const { return alpha_inverse_[u] < alpha_inverse_[v]; }
+        int             PositionOf  ( Vertex v              ) const { return alpha_inverse_[v];                     }
+        Vertex          VertexAt    ( int i                 ) const { return alpha_[i];                             }
+
+        Vertices        LNbhd       ( Vertex v              ) const;    // neighbors of v ``left" (before) v. Unsorted.
+        Vertices        RNbhd       ( Vertex v              ) const;    // neighbors of v ``right" (after) v. Unsorted.
+
+        int             fill_count  (                       ) const { return fill_count_;                           }
+        int             size        (                       ) const { return alpha_.size();                         }
+        const Graph&    G           (                       ) const { return G_;                                    }
+
+        // Mutators
+        void SetOrder               ( VertexVector pi       );
+        void SetPosition            ( Vertex v, int i       )       { alpha_inverse_[v] = i;                        }
+        void SetVertex              ( int i, Vertex v       )       { alpha_[i] = v;                                }
+
+    private:
+        Graph&                      G_;
+        Vertices                    alpha_;             // alpha[i] = ith vertex eliminated
+        std::vector< int >          alpha_inverse_;     // alpha_inverse[v] = elimination # of v
+
+
+        int                         fill_count_;        // # of fill edges added (monochromatic or not)
+
+        std::vector < VertexSet >   triangulation_nbhds_;
+
+        static int kUnfilled() { return -1; }
+}; // class EliminationOrder
+
+class EliminationAlgorithm
+{
+    public:
+        EliminationAlgorithm( Graph& );
+        virtual ~EliminationAlgorithm();
 
         void    PrettyPrint() const;
 
-        Weight                          fill_cost()     const   { return fill_cost_;    }
-        int                             fill_count()    const   { return fill_count_;   }
-        const std::vector< int >&       tie_count()     const   { return tie_count_;    }
+        Weight                              fill_cost()         const   { return fill_cost_;        }
+        int                                 fill_count()        const   { return fill_count_;       }
+        const std::vector< int >&           tie_count()         const   { return tie_count_;        }
+        const std::vector< VertexSet >&     fill_neighbors()    const   { return fill_neighbors_;   }
 
+        AdjacencyLists*                     TriangNbhds()       const;
     protected:
         virtual void Init();
 
@@ -92,7 +141,7 @@ class EliminationOrder
 
         std::vector < VertexCost    >   ties_;
         std::vector < int           >   tie_count_;
-}; // EliminationOrder
+}; // EliminationAlgorithm
 
 template< class GraphType, class FileReaderType, class EliminationType, class CriterionType >
 void RunAtomHeuristic( std::string filename, CriterionType* criterion = new CriterionType(), int runs = 1 )

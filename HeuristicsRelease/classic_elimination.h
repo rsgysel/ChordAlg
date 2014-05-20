@@ -45,7 +45,7 @@ struct DeficiencyCriterion : public ClassicCriterion
     Weight Calculate    ( Weight deficiency ) { return deficiency; }
 }; // DeficiencyCriterion
 
-class ClassicElimination : public EliminationOrder
+class ClassicElimination : public EliminationAlgorithm
 {
     public:
         ClassicElimination( ColoredIntersectionGraph&, ClassicCriterion* );

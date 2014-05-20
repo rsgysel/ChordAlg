@@ -61,7 +61,7 @@ class EliminationOrder
         int             ComputeFill (                       );
         void            Emplace     ( Vertex v, int i       );
         void            Swap        ( int i, int j          );
-        AdjacencyLists* TriangNbhds (                       );
+        AdjacencyLists* TriangNbhds (                       ) const;
 
         void            PrettyPrint (                       ) const;
         bool            ZeroFill    (                       ) const;
@@ -104,10 +104,12 @@ class EliminationAlgorithm
 
         void    PrettyPrint() const;
 
-        Weight                          fill_cost()     const   { return fill_cost_;    }
-        int                             fill_count()    const   { return fill_count_;   }
-        const std::vector< int >&       tie_count()     const   { return tie_count_;    }
+        Weight                              fill_cost()         const   { return fill_cost_;        }
+        int                                 fill_count()        const   { return fill_count_;       }
+        const std::vector< int >&           tie_count()         const   { return tie_count_;        }
+        const std::vector< VertexSet >&     fill_neighbors()    const   { return fill_neighbors_;   }
 
+        AdjacencyLists*                     TriangNbhds()       const;
     protected:
         virtual void Init();
 

@@ -56,9 +56,9 @@ class LexTrieIterator
         std::vector< ChildDataStructure::const_iterator > children_itrs_;
         const LexTrie* T_;
 
-        void GetNextSetBelow();
-        int GetNextChild();
-        int GetNextChildAfter( int k );
+        void    GetNextSetBelow     (       );
+        int     GetNextChild        (       );
+        int     GetNextChildAfter   ( int k );
 
         // Disable default constructor
         LexTrieIterator();
@@ -98,9 +98,9 @@ class LexTrieNode
         friend class LexTrieIterator;
 
         // Disable default constructor, copy constructor, assignment
-        LexTrieNode();
-        LexTrieNode(const LexTrieNode&);
-        void operator=(const LexTrieNode&);
+        LexTrieNode     (                   );
+        LexTrieNode     (const LexTrieNode& );
+        void operator=  (const LexTrieNode& );
 };
 
 // A tree representing a family of subsets of [0, 1, ..., n-1]
@@ -119,10 +119,10 @@ class LexTrie
         int SizeOf() const ;					            // space used by LexTrie
         unsigned int Size() const { return set_count_; }	// number of sets in family
 
-        int n() { return n_; }
+        int n() const { return n_; }
 
         LexTrieIterator begin() const;
-        LexTrieIterator end() const { return LexTrieIterator( this ); }
+        LexTrieIterator end()   const { return LexTrieIterator( this ); }
 
     protected:
         template< class InputIterator >

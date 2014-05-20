@@ -40,27 +40,32 @@ class Graph
         virtual ~Graph();
 
         bool IsIsomorphic( Graph& );
-        void PrettyPrint();
+        void PrettyPrint() const;
 
-        GVIterator              begin   ( )                       const { return GraphVertices( this, order_ ).begin(); }
-        GVIterator              end     ( )                       const { return GraphVertices( this, order_ ).end();   }
+        GVIterator              begin    (                      ) const { return GraphVertices( this, order_ ).begin(); }
+        GVIterator              end      (                      ) const { return GraphVertices( this, order_ ).end();   }
 
-        const VertexName&       name    ( Vertex v              ) const { return vertex_names_->operator[]( v );        }
-        int                     order   ( )                       const { return order_;                                }
-        int                     size    ( )                       const { return size_;                                 }
+        virtual Vertex          vertex   ( char id              ) const;
+        virtual Vertex          vertex   ( std::string id       ) const;
+        virtual VertexName      name     ( Vertex v             ) const { return vertex_names_->operator[]( v );        }
+        int                     order    (                      ) const { return order_;                                }
+        int                     size     (                      ) const { return size_;                                 }
 
-        bool                    HasEdge ( Vertex u, Vertex v    ) const { return is_edge_[ u ][ v ];                    }
-        bool                    HasEdge ( VertexPair p          ) const { return HasEdge( p.first, p.second );          }
+        bool                    HasEdge  ( Vertex u, Vertex v   ) const { return is_edge_[ u ][ v ];                    }
+        bool                    HasEdge  ( VertexPair p         ) const { return HasEdge( p.first, p.second );          }
         template< class Container >
         bool                    HasClique( Container set )        const { return HasClique( set.begin(), set.end() );   }
         bool                    IsClique ( )                      const { return 2*size_ == order_ * ( order_ - 1 );    }
-        const Vertices&         N       ( Vertex v              ) const { return neighborhoods_->operator[]( v );       }
+        const Vertices&         N        ( Vertex v             ) const { return neighborhoods_->operator[]( v );       }
 
     protected:
         void Init();
 
         const AdjacencyLists*               neighborhoods_;
         const VertexNames*                  vertex_names_;
+        std::map<VertexName, Vertex>        vertex_ids_;
+
+        // TODO: try changing to std::set< VertexPair >, time experiments otherwise for thousands of vertices this is huge..
         std::vector< std::vector< bool > >  is_edge_;
 
         unsigned int                        order_,         // #vertices
@@ -79,6 +84,22 @@ class Graph
         Graph(const Graph&);
         void operator=(const Graph&);
 };  // Graph
+
+class Supergraph : public Graph {
+    public:
+        Supergraph(Graph&, AdjacencyLists*);
+
+        Vertex          vertex   ( char id              ) const { return G_.vertex(id); }
+        Vertex          vertex   ( std::string id       ) const { return G_.vertex(id); }
+        VertexName      name     ( Vertex v             ) const { return G_.name(v);    }
+    protected:
+        Graph&  G_;     // G = (V,E) is triangulated by this graph, denoted H = (V,E+F)
+
+        // Disable default constructor, copy constructor, assignment
+        Supergraph();
+        Supergraph(const Supergraph&);
+        void operator=(const Supergraph&);
+};  // Supergraph
 
 ////////////// Generics
 //

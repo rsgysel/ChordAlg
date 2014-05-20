@@ -1,5 +1,8 @@
 #include "graph_test.h"
+
+#include "classic_elimination.h"
 #include "mcs.h"
+#include "tree_representation.h"
 
 TEST_F( MatrixCellIntGraphTest, ChordalPhyloTest )
 {
@@ -38,4 +41,17 @@ TEST_F( MatrixCellIntGraphTest, SimplePhyloTest )
 
     EXPECT_EQ(check_phylo.str().compare(phylo_buffer.str()) ,0);
     EXPECT_EQ(check_ct.str().compare(ct_buffer.str()) ,0);
+}
+
+TEST_F( MatrixCellIntGraphTest, MinfillPhyloTest )
+{
+
+    Read( graph_dir() + std::string( "minfill_test.m" ) );
+    chordalg::ClassicElimination eo( *H, new chordalg::DeficiencyCriterion() );
+    chordalg::Supergraph triangulation(*H,eo.TriangNbhds());
+    chordalg::CliqueTree* ct = chordalg::MCSCliqueTree(triangulation);
+    ct->PhyloNewickPrint(*H);
+    std::cout << eo.fill_cost() << " " << eo.fill_count() << std::endl;
+
+    return;
 }
