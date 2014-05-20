@@ -70,7 +70,7 @@ class MatrixCellIntGraphTest : public GraphTest
         MatrixCellIntGraphTest() : H( NULL ), graph_file( NULL ) {}
         ~MatrixCellIntGraphTest() { delete graph_file; return; }
 
-        void Read( std::string file_name )
+        virtual void Read( std::string file_name )
         {
             delete graph_file;
             delete H;
@@ -80,5 +80,24 @@ class MatrixCellIntGraphTest : public GraphTest
             return;
         }
 };  // MatrixCellIntGraphTest
+
+class NexusGraphTest : public MatrixCellIntGraphTest
+{
+    protected:
+        chordalg::NexusMRPFR* graph_file;
+
+        NexusGraphTest() : MatrixCellIntGraphTest(), graph_file( NULL ) {}
+        ~NexusGraphTest() { delete graph_file; return; }
+        void Read( std::string file_name )
+        {
+            delete graph_file;
+            delete H;
+            graph_file = chordalg::NewFileReader< chordalg::NexusMRPFR >( file_name );
+            H = new chordalg::ColoredIntersectionGraph( graph_file );
+            G = H;
+            return;
+        }
+
+};  // NexusGraphTest
 
 #endif // GRAPH_TEST_H

@@ -1,0 +1,10 @@
+#NEXUS
+    Begin Data;
+    Dimensions ntax = 3 nchar = 3;
+    Format datatype=standard symbols="01" Missing = ?;
+    Matrix
+taxon.name_1	000
+taxon.name_2	010
+taxon.name_3	?01
+;
+    END;
