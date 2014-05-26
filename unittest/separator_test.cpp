@@ -36,18 +36,18 @@ TEST_F( SortedAdjacencyListTest, SeparatorComponents )
     chordalg::SeparatorBlocks Sblocks( *G );
     Sblocks.Separate( X );
     int i = 0, sizes[] = { 4, 1, 2, 4 };
-    for( const chordalg::Vertices& NC : Sblocks )
+    for( const chordalg::Block& B : Sblocks )
     {
-        EXPECT_EQ( NC.size(), static_cast< unsigned int >( sizes[ i ] ) );
+        EXPECT_EQ( B.NC().size(), static_cast< unsigned int >( sizes[ i ] ) );
         i++;
     }
 
 
     Sblocks.Separate( X );
     i = 0;
-    for( const chordalg::Vertices& NC : Sblocks )
+    for( const chordalg::Block& B : Sblocks )
     {
-        EXPECT_EQ( NC.size(), static_cast< unsigned int >( sizes[ i ] ) );
+        EXPECT_EQ( B.NC().size(), static_cast< unsigned int >( sizes[ i ] ) );
         i++;
     }
 

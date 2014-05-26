@@ -18,7 +18,6 @@ TEST_F( MatrixCellIntGraphTest, SimplePhyloTest )
     Read( graph_dir() + std::string( "phylo_test.m" ) );
     chordalg::CliqueTree* ct = chordalg::MCSCliqueTree(*G);
 
-
     std::stringstream phylo_buffer;
     std::streambuf* old = std::cout.rdbuf(phylo_buffer.rdbuf());
     ct->PhyloNewickPrint(*H);
@@ -26,7 +25,7 @@ TEST_F( MatrixCellIntGraphTest, SimplePhyloTest )
     std::stringstream check_phylo;
     old = std::cout.rdbuf(check_phylo.rdbuf());
     // These strings have been carefully hand-checked, see jpgs in graphfiles
-    std::cout << "((1,(4 5,(2 5,3 5)5)5)5)0;" << std::endl;
+    std::cout << "((1,((4,5),((2,5),(3,5),(5)),(5)),(5)),(0));" << std::endl;
     std::cout.rdbuf( old );
 
     std::stringstream ct_buffer;
@@ -50,5 +49,6 @@ TEST_F( MatrixCellIntGraphTest, MinfillPhyloTest )
     chordalg::ClassicElimination eo( *H, new chordalg::DeficiencyCriterion() );
     chordalg::Supergraph triangulation(*H,eo.TriangNbhds());
     chordalg::CliqueTree* ct = chordalg::MCSCliqueTree(triangulation);
+    EXPECT_GT(ct->T().size(), 0);
     return;
 }

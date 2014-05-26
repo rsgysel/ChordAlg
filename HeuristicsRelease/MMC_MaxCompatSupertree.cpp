@@ -43,12 +43,12 @@ int main( int argc, char* argv[] )
         MMC_heuristic_usage( argv[0] );
     else
     {
-        MatrixCellIntGraphFR* graph_reader    = NewFileReader < MatrixCellIntGraphFR >  ( argv[1] );
+        NexusMRPFR* graph_reader    = NewFileReader < NexusMRPFR >  ( argv[1] );
         ColoredIntersectionGraph G( graph_reader );
         ClassicElimination eo( G, new DeficiencyCriterion() );
         chordalg::Supergraph triangulation(G,eo.TriangNbhds());
         chordalg::CliqueTree* ct = chordalg::MCSCliqueTree(triangulation);
-        ct->PhyloNewickPrint(G);
+        ct->PhyloNewickPrint(G,true);
 
         std::cout << std::endl;
         eo.PrettyPrint();

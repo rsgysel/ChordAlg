@@ -105,7 +105,7 @@ class MatrixCellIntGraphFR : public FileReader
         LexTrie* TakeSubsetFamily();
         std::vector< Subset > subsets() const { return subsets_; }
         std::vector< Multicolor > vertex_colors() const { return vertex_colors_; }
-    private:
+    protected:
         LexTrie* subset_family_;
         std::vector< Subset > subsets_;
         std::vector< Multicolor > vertex_colors_;
@@ -118,6 +118,22 @@ class MatrixCellIntGraphFR : public FileReader
         int kMissingData(){ return -1; }
         void ComputeGraphData( std::vector< std::vector< int > >, int );
 };  // MatrixCellIntGraphFR
+
+class NexusMRPFR : public MatrixCellIntGraphFR
+{
+    public:
+        ~NexusMRPFR(){};
+
+        std::vector< std::string > TaxonName() const { return taxon_name_; }
+    private:
+        std::vector< std::string > taxon_name_;
+
+        template< class FR > friend FR* NewFileReader( std::string );
+        NexusMRPFR( std::string file_name ) : MatrixCellIntGraphFR( file_name ) {};
+        void ReadFileOrDie();
+
+        std::string ParseParameter( std::string line, std::string parameter ) const;
+};  // NexusMRPFR
 
 }   // namespace chordalg
 

@@ -5,6 +5,6 @@
     Matrix
 taxon.name_1	000
 taxon.name_2	010
-taxon.name_3	?01
+roottaxon	?01
 ;
     END;

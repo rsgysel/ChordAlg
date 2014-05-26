@@ -202,8 +202,8 @@ void SortedAdjacencyListFR::ReadFileOrDie()
     int vertex_count = 0;
     while( getline( file_stream_, line ) )
     {
+        AssertFormatOrDie( vertex_count < order, too_many_lines );
         line_stream << line;
-
         line_stream >> vertex;
         // assign name
         names_->operator[]( vertex_count ) = vertex;
@@ -212,7 +212,6 @@ void SortedAdjacencyListFR::ReadFileOrDie()
         while( line_stream >> neighbor )
             neighbor_names[ vertex_count ].push_back( neighbor );
 
-        AssertFormatOrDie( vertex_count <= order, too_many_lines );
         line_number++;
         vertex_count++;
 
@@ -447,7 +446,6 @@ void NexusMRPFR::ReadFileOrDie()
     getline( file_stream_, line );
 
     taxon_name_.resize(row_count);
-
     // extract matrix from file
     std::vector< std::vector< int > > matrix( row_count, std::vector< int >( col_count ) );
     int i = 0;
@@ -459,9 +457,6 @@ void NexusMRPFR::ReadFileOrDie()
         std::stringstream line_stream;
         line_stream << line;
         line_stream >> taxon_name_[i];
-//        std::string taxon;
-  //      line_stream >> taxon;
-    //    taxon_name[i] = taxon;
         std::string row;
         line_stream >> row;
         for(int j = 0; j < row.size(); ++j)

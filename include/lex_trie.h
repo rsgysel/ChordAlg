@@ -111,10 +111,16 @@ class LexTrie
         ~LexTrie() { delete this->root_; return; }
 
         template< class Container >
-        bool Contains( Container ) const;
+        bool Contains( Container& ) const;
 
         template< class Container >
-        const LexTrieNode* Insert( Container, bool& new_set = *( new bool ) );
+        bool SortedContains( const Container& ) const;
+
+        template< class Container >
+        const LexTrieNode* Insert( Container&, bool& new_set = *( new bool ) );
+
+        template< class Container >
+        const LexTrieNode* SortedInsert( const Container&, bool& new_set = *( new bool ) );
 
         int SizeOf() const ;					            // space used by LexTrie
         unsigned int Size() const { return set_count_; }	// number of sets in family
@@ -179,31 +185,40 @@ template< class InputIterator >
 bool LexTrie::ContainsRange( InputIterator begin, InputIterator end ) const
 {
 	const LexTrieNode* node = root_;
-
 	for( InputIterator itr = begin; itr != end; ++itr )
 	{
 		if( !node->HasChild( *itr ) )
 			return false;
 		node = node->GetChild( *itr );//( *node )[ *itr ];
 	}
-
 	return node->has_set_;
 }
 
 template< class Container >
-bool LexTrie::Contains( Container set ) const
+bool LexTrie::Contains( Container& set ) const
 {
     std::sort( set.begin(), set.end() );
     return ContainsRange< typename Container::const_iterator >( set.begin(), set.end() );
 }
 
 template< class Container >
-const LexTrieNode* LexTrie::Insert( Container set, bool& new_set )
+bool LexTrie::SortedContains( const Container& set ) const
+{
+    return ContainsRange< typename Container::const_iterator >( set.begin(), set.end() );
+}
+
+template< class Container >
+const LexTrieNode* LexTrie::Insert( Container& set, bool& new_set )
 {
     std::sort( set.begin(), set.end() );
     return InsertRange< typename Container::const_iterator >( set.begin(), set.end(), new_set );
 }
 
+template< class Container >
+const LexTrieNode* LexTrie::SortedInsert( const Container& set, bool& new_set )
+{
+    return InsertRange< typename Container::const_iterator >( set.begin(), set.end(), new_set );
+}
 
 //--------------------//
 // Lex trie interface //

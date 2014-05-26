@@ -33,6 +33,23 @@ namespace chordalg {
 typedef int                         ConnectedComponentID;
 typedef std::vector< VertexSet >    FillSet;
 
+class Block
+{
+    public:
+        Block   (                           ) : C_(),   NC_()   {};
+        Block   ( Vertices& C               ) : C_(C),  NC_()   {};
+        Block   ( Vertices& C, Vertices& NC ) : C_(C),  NC_(NC) {};
+        ~Block  (                           ) {};
+
+        const Vertices& C () const { return C_;  }
+        const Vertices& NC() const { return NC_; }
+
+        void addC   ( Vertex v )    { C_.add(v);    }
+        void addNC  ( Vertex v )    { NC_.add(v);   }
+    private:
+        Vertices C_, NC_;
+}; // Block
+
 // Calculates the connected components of G - S for a graph G and vertex set S
 // Intended for numerous computations on the same graph.
 //
@@ -42,9 +59,12 @@ class SeparatorComponents
         explicit SeparatorComponents( Graph const& );
         ~SeparatorComponents() {};
 
-        Vertices        GetNeighborhood     ( Vertex, FillSet& );
-        virtual void    Separate            ( Vertices const &, FillSet& fill = *( new FillSet() ) );
-        Vertices        ConnectedComponent  ( Vertex ) const;
+        Vertices        GetNeighborhood     ( Vertex, FillSet&                  );
+        virtual void    SeparateNbhd        ( Vertex                            );
+        virtual void    SeparateClosedNbhd  ( Vertex                            );
+        virtual void    Separate            ( const Vertices&                   );
+        virtual void    Separate            ( const Vertices&, FillSet& fill    );
+        Vertices        ConnectedComponent  ( Vertex                            ) const;
 
         int size() const
             { return size_; }
@@ -66,10 +86,11 @@ class SeparatorComponents
         inline bool AreSeparated( Vertex u, Vertex v ) const
             { return ( IsInSeparator( u ) || IsInSeparator( v ) ) ? false : ( connected_component_[ u ] != connected_component_[ v ] ); }
 
-        virtual void PrettyPrint();
+        virtual void PrettyPrint() const;
 
     protected:
-        void FindComponents( FillSet& );
+        void            InitializeS    ( const Vertices&   );
+        virtual void    FindComponents ( FillSet&          );
 
         Graph const&            G_;
         Vertices                S_;
@@ -94,21 +115,29 @@ class SeparatorBlocks : public SeparatorComponents
         SeparatorBlocks( Graph const& );
         ~SeparatorBlocks() {};
 
-        void Separate( Vertices const &, FillSet& fill = *( new FillSet() ) );
+        std::vector< Block >::const_iterator begin()
+            { return blocks_.begin(); }
 
-        std::vector< Vertices >::const_iterator begin()
-            { return neighborhoods_.begin(); }
+        std::vector< Block >::const_iterator end()
+            { return blocks_.end(); }
 
-        std::vector< Vertices >::const_iterator end()
-            { return neighborhoods_.end(); }
+        bool            IsFull      ( ConnectedComponentID C    ) const { return S_.size() == NComponent(C).size();    }
+        const Vertices& Component   ( ConnectedComponentID C    ) const { return blocks_[C].C();                       }
+        const Vertices& NComponent  ( ConnectedComponentID C    ) const { return blocks_[C].NC();                      }
+        const Block&    BlockOf     ( Vertex v                  ) const { return blocks_[ ComponentId(v) ];            }
+        const Vertices& ComponentOf ( Vertex v                  ) const { return blocks_[ ComponentId(v) ].C();        }
+        const Vertices& NComponentOf( Vertex v                  ) const { return blocks_[ ComponentId(v) ].NC();       }
 
-        void PrettyPrint();
+        int     FullComponentCt     () const;
+        int     NonFullComponentCt  () const;
+        void    PrettyPrint         () const;
 
     private:
-        void FindNeighborhoods( FillSet& );
+        virtual void    FindComponents      ( FillSet& );
+        void            FindNeighborhoods   ( FillSet& );
 
-        std::vector< Vertices >     neighborhoods_;
-        ComputationBuffer           last_separator_vertex_seen_;
+        std::vector< Block >    blocks_;
+        ComputationBuffer       last_separator_vertex_seen_;
 
         // Disable default constructor, copy constructor, assignment
         SeparatorBlocks();

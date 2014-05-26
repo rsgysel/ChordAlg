@@ -30,7 +30,13 @@
 
 namespace chordalg {
 
-LexTrie& BerryBordatCogis(Graph G);
+void PrettyPrintMinimalSeparators(const LexTrie& minseps, const Graph& G);
+
+// All minimal separators
+LexTrie* BerryBordatCogis   ( Graph G                       );
+
+// minimal ab-separators
+LexTrie* KloksKratsch       ( Graph G, Vertex a, Vertex b   );
 
 } // namespace chordalg
 

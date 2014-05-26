@@ -19,6 +19,7 @@
 #ifndef VERTEX_UTILITIES_H
 #define VERTEX_UTILITIES_H
 
+#include <algorithm>
 #include <list>
 #include <set>
 #include <vector>
@@ -65,18 +66,20 @@ class Vertices
         Vertices    ( )                                                                 { return;                       }
         Vertices    ( int n                             )                               { V_.resize( n, 0 ); return;    }
         Vertices    ( const Vertices& other             ) : V_( other.V_ )              { return;                       }
-        //Vertices    ( std::initializer_list< Vertex > V ) : V_( V )                     { return;                       }
         Vertices    ( VertexList                      V ) : V_( V.begin(), V.end() )    { return;                       }
         Vertices    ( VertexSet                       V ) : V_( V.begin(), V.end() )    { return;                       }
         Vertices    ( VertexVector                    V ) : V_( V )                     { return;                       }
 
-        void            add         ( Vertex v   )          { V_.push_back( v );    }
-        bool            empty       ( )             const   { return V_.empty();    }
-        Vertex&         operator[]  ( int i      )          { return V_[ i ];       }
-        const Vertex&   operator[]  ( int i      )  const   { return V_[ i ] ;      }
-        void            clear       ( )                     { V_.clear();           }
-        void            reserve     ( int n      )          { V_.reserve( n );      }
-        int             size        ( )             const   { return V_.size();     }
+        void            add         ( Vertex v  )       { V_.push_back( v );                }
+        bool            empty       (           ) const { return V_.empty();                }
+        Vertex&         operator[]  ( int i     )       { return V_[ i ];                   }
+        const Vertex&   operator[]  ( int i     ) const { return V_[ i ] ;                  }
+        void            clear       (           )       { V_.clear();                       }
+        void            reserve     ( int n     )       { V_.reserve( n );                  }
+        int             size        (           ) const { return V_.size();                 }
+        void            sort        (           )       { std::sort(V_.begin(), V_.end());  }
+
+        void            merge       ( Vertices U, Vertices W );
 
         VertexVector::iterator          begin   ( )         { return V_.begin(); }
         VertexVector::const_iterator    begin   ( ) const   { return V_.begin(); }

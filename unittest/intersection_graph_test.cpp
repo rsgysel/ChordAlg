@@ -25,7 +25,7 @@ TEST_F( MatrixCellIntGraphTest, AtomsOfCig )
                 if( H->name( v ) == a->name( u ) )
                 {
                     const chordalg::Subset& subset = a->subset( u );
-                    bool H_has_subset = H->subset_family()->Contains< chordalg::Subset >( subset );
+                    bool H_has_subset = H->subset_family()->SortedContains< chordalg::Subset >( subset );
                     EXPECT_EQ( H_has_subset , true );
                 }
             }

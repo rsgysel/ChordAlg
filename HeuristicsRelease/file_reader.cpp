@@ -245,9 +245,9 @@ void MatrixCellIntGraphFR::ReadFileOrDie()
     std::vector< std::list< std::string > > neighbor_names;
 
     // format error messages
-    const std::string first_line_format( "Format Error: First line must be two non-negative integer denoting the number of rows and columns\n" ),
-        too_many_cols( "Format Error: Too many columns\n" ),
-        too_many_rows( "Format Error: Too many rows\n" );
+    const std::string   first_line_format   ( "Format Error: First line must be two non-negative integer denoting the number of rows and columns\n" ),
+                        too_many_cols       ( "Format Error: Too many columns\n"                                                                    ),
+                        too_many_rows       ( "Format Error: Too many rows\n"                                                                       );
 
     // skip first line
     getline( file_stream_, line );
@@ -274,7 +274,7 @@ void MatrixCellIntGraphFR::ReadFileOrDie()
         while( line_stream >> state )
         {
             AssertFormatOrDie( j < col_count, too_many_cols );
-            if( state.compare( "?" ) == 0 || state.compare( "*" ) == 0 )
+            if( state.compare( "?" ) == 0 || state.compare( "*" ) == 0 || state.compare( "-" ) == 0 )
                 matrix[ i ] [ j ] = kMissingData();
             else
             {
@@ -380,6 +380,102 @@ void MatrixCellIntGraphFR::ComputeGraphData( std::vector< std::vector< int > > m
     for( Vertices& V : *neighborhoods_ )
         std::sort( V.begin(), V.end() );
 
+    return;
+}
+
+std::string NexusMRPFR::ParseParameter( std::string line, std::string parameter ) const
+{
+    std::string result;
+    std::string delimeter_nospace   = parameter + std::string("="),
+                delimeter_space     = parameter + std::string(" = ");
+    std::stringstream ss;
+    if( line.find(delimeter_nospace) != std::string::npos )
+    {
+        std::string right_half = line.substr(line.find(delimeter_nospace)+delimeter_nospace.size());
+        if( right_half[right_half.size() - 1] == ';')
+            right_half.erase(right_half.end()-1);
+        ss << right_half;
+        ss >> result;
+    }
+    else if( line.find(delimeter_space) != std::string::npos )
+    {
+        std::string right_half = line.substr(line.find(delimeter_space)+delimeter_space.size());
+        if(right_half[right_half.size() - 1] == ';')
+            right_half.erase(right_half.end()-1);
+        ss << right_half;
+        ss >> result;
+    }
+    else
+    {
+        std::cerr << "Error in Nexus file format, cannot find '" << delimeter_nospace << "' or '" << delimeter_space <<"'" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    return result;
+}
+
+void NexusMRPFR::ReadFileOrDie()
+{
+    std::string line, state;
+    std::stringstream parameter;
+    int row_count = 0, col_count = 0;
+
+    std::map< std::string, Vertex > vertex_id;
+    std::vector< std::list< std::string > > neighbor_names;
+
+    // format error messages
+    const std::string   too_many_cols   ( "Format Error: Too many columns\n"                        ),
+                        too_many_rows   ( "Format Error: Too many rows\n"                           ),
+                        row_col_sanity  ( "Format Error: ntax and nchar must be positive numbers\n" ),
+                        unknown_symbol  ( "Format Error: unknown symbol\n"                          );
+
+    // skip first two lines
+    getline( file_stream_, line );
+    getline( file_stream_, line );
+
+    // third line: # of rows and # of columns
+    getline( file_stream_, line );
+    parameter << ParseParameter(line, "ntax");
+    parameter >> row_count;
+    parameter.clear(); parameter.str("");
+    parameter << ParseParameter(line, "nchar");
+    parameter >> col_count;
+    AssertFormatOrDie( 0 <= row_count, row_col_sanity );
+    AssertFormatOrDie( 0 <= col_count, row_col_sanity );
+
+    // skip next two lines
+    getline( file_stream_, line );
+    getline( file_stream_, line );
+
+    taxon_name_.resize(row_count);
+    // extract matrix from file
+    std::vector< std::vector< int > > matrix( row_count, std::vector< int >( col_count ) );
+    int i = 0;
+    while( getline( file_stream_, line ) )
+    {
+        if( line == std::string(";") )
+            break;
+        AssertFormatOrDie( i < row_count, too_many_rows );
+        std::stringstream line_stream;
+        line_stream << line;
+        line_stream >> taxon_name_[i];
+        std::string row;
+        line_stream >> row;
+        for(int j = 0; j < row.size(); ++j)
+        {
+            AssertFormatOrDie( j < col_count, too_many_cols );
+            if( row[j] == '?' || row[j] == '*' || row[j] == '-' )
+                matrix[ i ][ j ] = kMissingData();
+            else if( row[j] == '1' )
+                matrix[ i ][ j ] = 1;
+            else if( row[j] == '0' )
+                matrix[ i ][ j ] = 0;
+            else
+                AssertFormatOrDie( false, unknown_symbol );
+        }
+        ++i;
+    }
+    file_stream_.close();
+    ComputeGraphData( matrix, 1 );
     return;
 }
 

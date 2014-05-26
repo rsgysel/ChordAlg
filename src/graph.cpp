@@ -195,9 +195,9 @@ VertexNames* Graph::DefaultNames( size_t order )
 
 
 // Determines if H is isomorphic to G with respect to their fixed orderings
-bool Graph::IsIsomorphic( Graph& H )
+bool Graph::IsIsomorphic( Graph& H ) const
 {
-    Graph& G = *this;
+    const Graph& G = *this;
     if( G.order()   !=  H.order() ||
         G.size()    !=  H.size() )
         return false;
@@ -224,6 +224,21 @@ void Graph::PrettyPrint() const
             std::cout << name( u ) << " ";
         std::cout << std::endl;
     }
+    return;
+}
+
+void Graph::PrettyPrint( const LexTrie& T ) const
+{
+    for( Subset S : T )
+        PrettyPrint( Vertices(S) );
+    return;
+}
+
+void Graph::PrettyPrint( const Vertices& U ) const
+{
+    for( Vertex v : U )
+        std::cout << name(v) << " ";
+    std::cout << std::endl;
     return;
 }
 

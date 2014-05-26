@@ -45,6 +45,7 @@ class ColoredIntersectionGraph : public Graph
         const LexTrie*      subset_family   (           ) const { return subset_family_;    }
         const Subset&       subset          ( Vertex v  ) const { return subsets_[ v ];     }
         const std::string&  taxon_name      ( Element e ) const { return taxon_name_[e];    }
+        int                 taxa            (           ) const { return taxon_name_.size();}
 
     private:
         std::vector< Subset >       subsets_;

@@ -21,12 +21,12 @@ class TreeRepresentation
                                             const ColoredIntersectionGraph&     cig,
                                             std::vector< int >&                 taxon_clique_size   ) const;
 
-        void            NewickPrint     (                                       ) const;
-        void            PhyloNewickPrint( const ColoredIntersectionGraph& cig   ) const;
-        void            PrettyPrint     (                                       ) const    { T_.PrettyPrint(); }
+        void            NewickPrint     (                                                           ) const;
+        void            PhyloNewickPrint( const ColoredIntersectionGraph& cig, bool rooted = false  ) const;
+        void            PrettyPrint     (                                                           ) const    { T_.PrettyPrint(); }
 
-        const Graph&    G               (                                       ) const    { return G_;        }
-        const Graph&    T               (                                       ) const    { return T_;        }
+        const Graph&    G               (                                                           ) const    { return G_;        }
+        const Graph&    T               (                                                           ) const    { return T_;        }
     protected:
         Graph&                  G_;             // underlying chordal graph
         Graph                   T_;             // topology

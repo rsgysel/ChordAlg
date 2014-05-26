@@ -23,9 +23,9 @@ void MixedElimination::Eliminate( Vertex v )
     S.add( v );
     B_.Separate( S, fill_neighbors_ );
 
-    for( Vertices NC : B_ )
+    for( Block B : B_ )
     {
-        for( VertexPair uv : VertexPairs( NC ) )
+        for( VertexPair uv : VertexPairs( B.NC() ) )
         {
             AddEdge( uv );
             unseparated_monochromatic_pairs_.erase( uv );

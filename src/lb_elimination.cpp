@@ -43,9 +43,9 @@ void LBElimination::Eliminate( Vertex v )
     S.add( v );
     B_.Separate( S, fill_neighbors_ );
 
-    for( Vertices NC : B_ )
+    for( Block B : B_ )
     {
-        for( VertexPair uv : VertexPairs( NC ) )
+        for( VertexPair uv : VertexPairs( B.NC() ) )
         {
             AddEdge( uv );
             unseparated_monochromatic_pairs_.erase( uv );
@@ -66,9 +66,9 @@ std::pair< Weight, Cost > LBElimination::WeightOf( Vertex v )
 
     // monochromatic fill pairs
     std::set< VertexPair > seen_fill_pairs;
-    for( Vertices NC : B_ )
+    for( Block B : B_ )
     {
-        for( VertexPair uw : VertexPairs( NC ) )
+        for( VertexPair uw : VertexPairs( B.NC() ) )
         {
             Cost fill_cost = H_.CommonColorCount( uw.first, uw.second );
             if( !IsEdge( uw ) &&

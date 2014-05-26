@@ -25,6 +25,7 @@
 
 #include "chordalg_types.h"
 #include "file_reader.h"
+#include "lex_trie.h"
 #include "vertex_utilities.h"
 
 namespace chordalg {
@@ -39,8 +40,10 @@ class Graph
         Graph   ( Graph&,           Vertices    );
         virtual ~Graph();
 
-        bool IsIsomorphic( Graph& );
-        void PrettyPrint() const;
+        bool IsIsomorphic   ( Graph&            ) const;
+        void PrettyPrint    (                   ) const;
+        void PrettyPrint    ( const LexTrie& T  ) const;
+        void PrettyPrint    ( const Vertices& U ) const;
 
         GVIterator              begin    (                      ) const { return GraphVertices( this, order_ ).begin(); }
         GVIterator              end      (                      ) const { return GraphVertices( this, order_ ).end();   }

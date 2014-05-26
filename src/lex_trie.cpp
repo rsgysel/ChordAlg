@@ -71,9 +71,14 @@ int LexTrieNode::SizeOf( int n ) const
 
 LexTrieIterator LexTrie::begin() const
 {
-	LexTrieIterator itr( n_, root_, this );
-	++itr;
-	return itr;
+    if(set_count_ == 0)
+        return end();
+    else
+    {
+        LexTrieIterator itr( n_, root_, this );
+        ++itr;
+        return itr;
+    }
 }
 
 bool LexTrieIterator::operator==( const LexTrieIterator& other ) const

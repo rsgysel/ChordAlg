@@ -67,7 +67,7 @@ int main( int argc, char** argv )
             if( !a->IsClique() )
             {
                 LBElimination eo1( *a, new RatioCriterion() );
-                LBElimination eo2( *a, new WSumCriterion( d, s) );
+                LBElimination eo2( *a, new WSumCriterion( d, s ) );
                 ClassicElimination eo3( *a, new ClassicCriterion() );
                 Weight min_weight = std::min( eo1.fill_cost(), std::min(eo2.fill_cost(), eo3.fill_cost() ) );
                 if( eo1.fill_cost() == min_weight )
