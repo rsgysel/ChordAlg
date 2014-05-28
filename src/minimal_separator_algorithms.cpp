@@ -30,7 +30,7 @@ LexTrie* MinimalSeparators( Graph G )
         S.SeparateClosedNbhd( v );
         for( Block B : S )
         {
-            minimal_separators->SortedInsert< Vertices >( B.NC(), new_set );
+            minimal_separators->SortedInsert< Vertices >( B.NC(), &new_set );
             if( new_set )
                 minimal_separator_queue.push_back( B.NC() );
         }
@@ -51,7 +51,7 @@ LexTrie* MinimalSeparators( Graph G )
 
             for( Block B : S )
             {
-                minimal_separators->SortedInsert< Vertices >( B.NC(), new_set );
+                minimal_separators->SortedInsert< Vertices >( B.NC(), &new_set );
                 if( new_set )
                     minimal_separator_queue.push_back( B.NC() );
             }
@@ -95,7 +95,7 @@ LexTrie* MinimalSeparators( Graph G, Vertex a, Vertex b )
             S.Separate( V );
             if( !S.IsInSeparator(b) && !S.NComponentOf(b).empty() )
             {
-                minimal_separators->SortedInsert< Vertices >( S.NComponentOf(b), new_set );
+                minimal_separators->SortedInsert< Vertices >( S.NComponentOf(b), &new_set );
                 if( new_set )
                     minimal_separator_queue.push_back( S.NComponentOf(b) );
             }

@@ -117,10 +117,10 @@ class LexTrie
         bool SortedContains( const Container& ) const;
 
         template< class Container >
-        const LexTrieNode* Insert( Container&, bool& new_set = *( new bool ) );
+        const LexTrieNode* Insert( Container&, bool* new_set = nullptr );
 
         template< class Container >
-        const LexTrieNode* SortedInsert( const Container&, bool& new_set = *( new bool ) );
+        const LexTrieNode* SortedInsert( const Container&, bool* new_set = nullptr );
 
         int SizeOf() const ;					            // space used by LexTrie
         unsigned int Size() const { return set_count_; }	// number of sets in family
@@ -129,13 +129,12 @@ class LexTrie
 
         LexTrieIterator begin() const;
         LexTrieIterator end()   const { return LexTrieIterator( this ); }
-
     protected:
         template< class InputIterator >
         bool ContainsRange( InputIterator, InputIterator ) const;
 
         template< class InputIterator >
-        const LexTrieNode* InsertRange( InputIterator, InputIterator, bool& new_set = *( new bool ) );
+        const LexTrieNode* InsertRange( InputIterator, InputIterator, bool* new_set = nullptr );
 
     private:
         int n_;						// size of original set
@@ -154,7 +153,7 @@ class LexTrie
 
 // Inserts new subset into the trie
 template< class InputIterator >
-const LexTrieNode* LexTrie::InsertRange( InputIterator begin, InputIterator end, bool& new_set )
+const LexTrieNode* LexTrie::InsertRange( InputIterator begin, InputIterator end, bool* new_set )
 {
 	LexTrieNode* node = root_;
 
@@ -170,12 +169,14 @@ const LexTrieNode* LexTrie::InsertRange( InputIterator begin, InputIterator end,
         node = node->GetChild( *itr );
     }
 
-	if( node->has_set_ )
-	    new_set = false;
+	if( node->has_set_ && new_set != nullptr )
+	    *new_set = false;
     else
 	{
 		set_count_++;
-        node->has_set_ = new_set = true;
+        node->has_set_ = true;
+        if( new_set != nullptr )
+            *new_set = true;
 	}
 
 	return node;
@@ -189,7 +190,7 @@ bool LexTrie::ContainsRange( InputIterator begin, InputIterator end ) const
 	{
 		if( !node->HasChild( *itr ) )
 			return false;
-		node = node->GetChild( *itr );//( *node )[ *itr ];
+		node = node->GetChild( *itr );
 	}
 	return node->has_set_;
 }
@@ -208,17 +209,18 @@ bool LexTrie::SortedContains( const Container& set ) const
 }
 
 template< class Container >
-const LexTrieNode* LexTrie::Insert( Container& set, bool& new_set )
+const LexTrieNode* LexTrie::Insert( Container& set, bool* new_set )
 {
     std::sort( set.begin(), set.end() );
     return InsertRange< typename Container::const_iterator >( set.begin(), set.end(), new_set );
 }
 
 template< class Container >
-const LexTrieNode* LexTrie::SortedInsert( const Container& set, bool& new_set )
+const LexTrieNode* LexTrie::SortedInsert( const Container& set, bool* new_set )
 {
     return InsertRange< typename Container::const_iterator >( set.begin(), set.end(), new_set );
 }
+
 
 //--------------------//
 // Lex trie interface //

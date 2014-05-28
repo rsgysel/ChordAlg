@@ -322,7 +322,7 @@ void MatrixCellIntGraphFR::ComputeGraphData( std::vector< std::vector< int > > m
             {
                 bool new_cell;
                 std::sort( C.begin(), C.end() );
-                const LexTrieNode* node = subset_family_->Insert< Subset >( C, new_cell );
+                const LexTrieNode* node = subset_family_->Insert< Subset >( C, &new_cell );
                 if( new_cell )
                 {
                     cell_id[ node ] = cell_count;

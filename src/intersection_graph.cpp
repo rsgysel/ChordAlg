@@ -82,7 +82,7 @@ LexTrie* ColoredIntersectionGraph::InduceSubsetFamily( ColoredIntersectionGraph&
     LexTrie* subset_family = new LexTrie( super_graph.subset_family_->n() );
 
     for( Subset& S : subsets_ )
-        subset_family->Insert< Subset >( S );
+        subset_family->SortedInsert< Subset >( S );
 
     return subset_family;
 }

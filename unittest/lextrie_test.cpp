@@ -31,8 +31,8 @@ TEST( LexTrieTest, Basics )
     Container S1 vector_set(X1);
 
     bool tf = false;
-    T.Insert< Container >(S1,tf);    EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),1);
-    T.Insert< Container >(S1,tf);    EXPECT_EQ(tf,false);    EXPECT_EQ(static_cast<int>(T.Size()),1);
+    T.Insert< Container >(S1,&tf);    EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),1);
+    T.Insert< Container >(S1,&tf);    EXPECT_EQ(tf,false);    EXPECT_EQ(static_cast<int>(T.Size()),1);
 
     return;
 }
@@ -53,19 +53,19 @@ TEST( LexTrieTest, Iterator )
 
     // Insert sets one at a time, and check that iterator works at each step
     bool tf = false;
-    T.Insert< Container >(S1,tf);     EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),1);
+    T.Insert< Container >(S1,&tf);     EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),1);
     for(const Container set : T)
         EXPECT_EQ(T_map.at(SetToString(set)),true);
 
-    T.Insert< Container >(S2,tf);     EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),2);
+    T.Insert< Container >(S2,&tf);     EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),2);
     for(const Container set : T)
         EXPECT_EQ(T_map.at(SetToString(set)),true);
 
-    T.Insert< Container >(S3,tf);     EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),3);
+    T.Insert< Container >(S3,&tf);     EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),3);
     for(const Container set : T)
         EXPECT_EQ(T_map.at(SetToString(set)),true);
 
-    T.Insert< Container >(S4,tf);     EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),4);
+    T.Insert< Container >(S4,&tf);     EXPECT_EQ(tf,true);     EXPECT_EQ(static_cast<int>(T.Size()),4);
     for(const Container set : T)
         EXPECT_EQ(T_map.at(SetToString(set)),true);
 
