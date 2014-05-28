@@ -24,7 +24,6 @@ TEST_F( SortedAdjacencyListTest, AtomsOfTwoCliques )
             EXPECT_EQ( a->size(), 10 );
         }
     }
-
     return;
 }
 
@@ -38,7 +37,9 @@ TEST_F( SortedAdjacencyListTest, AtomsOfPaperEx )
     {
         std::stringstream atom_file;
         atom_file << "atom_test_" << i << ".sal";
-        chordalg::Graph H( chordalg::NewFileReader< chordalg::SortedAdjacencyListFR >( graph_dir() + atom_file.str() ) );
+        chordalg::SortedAdjacencyListFR* file = chordalg::NewFileReader< chordalg::SortedAdjacencyListFR >( graph_dir() + atom_file.str() );
+        chordalg::Graph H( file );
+        delete file;
         EXPECT_EQ( a->IsIsomorphic( H ), true );
         ++i;
     }

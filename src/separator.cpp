@@ -98,10 +98,8 @@ void SeparatorComponents::FindComponents( FillSet& fill )
         while( !search_queue_.empty() )
         {
             Vertex u = search_queue_.back(); search_queue_.pop_back();
-            const Vertices& neighborhood = GetNeighborhood( u, fill );
-
             // BFS
-            for( Vertex w : neighborhood )
+            for( Vertex w : GetNeighborhood( u, fill ) )
             {
                 if( IsUnsearched( w ) && !IsInSeparator( w ) )
                 {

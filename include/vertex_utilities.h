@@ -63,31 +63,36 @@ class Vertices
     public:
         typedef VertexVector::const_iterator    const_iterator;
 
-        Vertices    ( )                                                                 { return;                       }
-        Vertices    ( int n                             )                               { V_.resize( n, 0 ); return;    }
-        Vertices    ( const Vertices& other             ) : V_( other.V_ )              { return;                       }
-        Vertices    ( VertexList                      V ) : V_( V.begin(), V.end() )    { return;                       }
-        Vertices    ( VertexSet                       V ) : V_( V.begin(), V.end() )    { return;                       }
-        Vertices    ( VertexVector                    V ) : V_( V )                     { return;                       }
+        Vertices    (                                   ) : V_( new VertexVector() )                    { return;                       }
+        Vertices    ( int n                             ) : V_( new VertexVector(n,0) )                 { return;                       }
+        Vertices    ( const Vertices& other             ) : V_( new VertexVector( *(other.V_) ) )       { return;                       }
+        Vertices    ( VertexList                      V ) : V_( new VertexVector(V.begin(), V.end()) )  { return;                       }
+        Vertices    ( VertexSet                       V ) : V_( new VertexVector(V.begin(), V.end()) )  { return;                       }
+        Vertices    ( VertexVector                    V ) : V_( new VertexVector(V) )                   { return;                       }
+        Vertices    ( Vertices&& other                  ) : V_( other.V_ )                              { other.V_ = nullptr; return;   }
+        ~Vertices   (                                   )                               { delete V_; return;            }
 
-        void            add         ( Vertex v  )       { V_.push_back( v );                }
-        bool            empty       (           ) const { return V_.empty();                }
-        Vertex&         operator[]  ( int i     )       { return V_[ i ];                   }
-        const Vertex&   operator[]  ( int i     ) const { return V_[ i ] ;                  }
-        void            clear       (           )       { V_.clear();                       }
-        void            reserve     ( int n     )       { V_.reserve( n );                  }
-        int             size        (           ) const { return V_.size();                 }
-        void            sort        (           )       { std::sort(V_.begin(), V_.end());  }
+        Vertices&       operator=   ( Vertices other    )  { std::swap(V_, other.V_); return *this; }
+        Vertices&       operator=   ( Vertices&& other  )  { std::swap(V_, other.V_); return *this; }
+
+        void            add         ( Vertex v  )       { V_->push_back( v );               }
+        bool            empty       (           ) const { return V_->empty();               }
+        Vertex&         operator[]  ( int i     )       { return V_->operator[](i);         }
+        const Vertex&   operator[]  ( int i     ) const { return V_->operator[](i);         }
+        void            clear       (           )       { V_->clear();                      }
+        void            reserve     ( int n     )       { V_->reserve( n );                 }
+        int             size        (           ) const { return V_->size();                }
+        void            sort        (           )       { std::sort(begin(), end());        }
 
         void            merge       ( Vertices U, Vertices W );
 
-        VertexVector::iterator          begin   ( )         { return V_.begin(); }
-        VertexVector::const_iterator    begin   ( ) const   { return V_.begin(); }
-        VertexVector::iterator          end     ( )         { return V_.end();   }
-        VertexVector::const_iterator    end     ( ) const   { return V_.end();   }
+        VertexVector::iterator          begin   ( )         { return V_->begin(); }
+        VertexVector::const_iterator    begin   ( ) const   { return V_->begin(); }
+        VertexVector::iterator          end     ( )         { return V_->end();   }
+        VertexVector::const_iterator    end     ( ) const   { return V_->end();   }
 
     private:
-        VertexVector V_;
+        VertexVector* V_;
 };  // Vertices
 
 class GVIterator

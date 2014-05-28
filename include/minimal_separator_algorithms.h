@@ -33,10 +33,10 @@ namespace chordalg {
 void PrettyPrintMinimalSeparators(const LexTrie& minseps, const Graph& G);
 
 // All minimal separators
-LexTrie* BerryBordatCogis   ( Graph G                       );
+LexTrie* MinimalSeparators( Graph G                     );
 
 // minimal ab-separators
-LexTrie* KloksKratsch       ( Graph G, Vertex a, Vertex b   );
+LexTrie* MinimalSeparators( Graph G, Vertex a, Vertex b );
 
 } // namespace chordalg
 

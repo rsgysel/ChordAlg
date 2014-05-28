@@ -13,6 +13,7 @@ ClassicElimination::ClassicElimination( ColoredIntersectionGraph& H, ClassicCrit
 
 ClassicElimination::~ClassicElimination()
 {
+    delete f_;
     return;
 }
 

@@ -4,11 +4,11 @@ namespace chordalg {
 
 void Vertices::merge( Vertices U, Vertices W )
 {
-    V_.clear();
-    V_.reserve(U.size() + W.size());
+    V_->clear();
+    V_->reserve(U.size() + W.size());
     std::merge( U.begin(), U.end(),
                 W.begin(), W.end(),
-                std::back_inserter(V_));
+                std::back_inserter(*V_));
     return;
 }
 

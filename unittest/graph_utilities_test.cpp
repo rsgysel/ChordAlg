@@ -16,7 +16,6 @@ TEST_F(SortedAdjacencyListTest, GraphUtilities) {
     }
     EXPECT_EQ(G->HasClique(clique),true);
     EXPECT_EQ(G->HasClique(vertices),false);
-
     EXPECT_EQ(G->IsIsomorphic(*G),true);
     return;
 }

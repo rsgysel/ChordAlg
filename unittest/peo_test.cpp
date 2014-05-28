@@ -7,24 +7,28 @@ TEST_F(DimacsGraphTest, MCSChordalPerfectTest) {
     Read(graph_dir() + std::string("chordal1.dimacs"));
     chordalg::EliminationOrder eo = chordalg::MCS(*G);
     EXPECT_EQ(eo.ZeroFill(), true);
+    return;
 }
 
 TEST_F(DimacsGraphTest, MCSNonChordalPerfectTest) {
     Read(graph_dir() + std::string("myciel3.dimacs"));
     chordalg::EliminationOrder eo = chordalg::MCS(*G);
     EXPECT_EQ(eo.ZeroFill(), false);
+    return;
 }
 
 TEST_F(DimacsGraphTest, MCSChordalFillTest) {
     Read(graph_dir() + std::string("chordal1.dimacs"));
     chordalg::EliminationOrder eo = chordalg::MCS(*G);
     EXPECT_EQ(eo.ComputeFill(), 0);
+    return;
 }
 
 TEST_F(DimacsGraphTest, MCSNonChordalFillTest) {
     Read(graph_dir() + std::string("myciel3.dimacs"));
     chordalg::EliminationOrder eo = chordalg::MCS(*G);
     EXPECT_EQ(eo.ComputeFill(), 21);
+    return;
 }
 
 // MCS peo is 4 7 3 6 5 2 1
@@ -35,6 +39,7 @@ TEST_F(DimacsGraphTest, LNbhdTest){
     chordalg::EliminationOrder eo = chordalg::MCS(*G);
     EXPECT_EQ(eo.LNbhd(G->vertex("2")).size(), 3);
     EXPECT_EQ(eo.LNbhd(G->vertex("3")).size(), 2);
+    return;
 }
 
 TEST_F(DimacsGraphTest, RNbhdTest){
@@ -42,6 +47,7 @@ TEST_F(DimacsGraphTest, RNbhdTest){
     chordalg::EliminationOrder eo = chordalg::MCS(*G);
     EXPECT_EQ(eo.RNbhd(G->vertex("2")).size(), 1);
     EXPECT_EQ(eo.RNbhd(G->vertex("3")).size(), 2);
+    return;
 }
 
 TEST_F(DimacsGraphTest, VertexPositionSanity){
@@ -52,6 +58,7 @@ TEST_F(DimacsGraphTest, VertexPositionSanity){
     chordalg::EliminationOrder pi = chordalg::MCS(*G);
     for(chordalg::Vertex v : *G)
         EXPECT_EQ(pi.VertexAt(pi.PositionOf(v)), v);
+    return;
 }
 
 TEST_F(DimacsGraphTest, SetOrderSanity){
@@ -64,6 +71,7 @@ TEST_F(DimacsGraphTest, SetOrderSanity){
         EXPECT_EQ(order[i], eo.VertexAt(i));
         EXPECT_EQ(i, eo.PositionOf(order[i]));
     }
+    return;
 }
 
 TEST_F(DimacsGraphTest, MCSCliqueTree){
@@ -71,6 +79,8 @@ TEST_F(DimacsGraphTest, MCSCliqueTree){
     chordalg::CliqueTree* ct = chordalg::MCSCliqueTree(*G);
     EXPECT_EQ(ct->T().size(), 6);
     EXPECT_EQ(ct->T().order(), 7);
+    delete ct;
+    return;
 }
 
 TEST_F(DimacsGraphTest, ChordalIsomorphism){
@@ -79,6 +89,7 @@ TEST_F(DimacsGraphTest, ChordalIsomorphism){
     eo.ComputeFill();
     chordalg::Supergraph H(*G, eo.TriangNbhds());
     EXPECT_EQ(G->IsIsomorphic(H), true);
+    return;
 }
 
 TEST_F(DimacsGraphTest, Triangulation){
@@ -87,4 +98,5 @@ TEST_F(DimacsGraphTest, Triangulation){
     eo.ComputeFill();
     chordalg::Supergraph H(*G, eo.TriangNbhds());
     EXPECT_EQ(H.size()-21,G->size());
+    return;
 }

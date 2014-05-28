@@ -27,5 +27,6 @@ TEST_F(NexusGraphTest, NexusRootedPhyloTest) {
     // These strings have been carefully hand-checked, see jpgs in graphfiles
     std::cout << "((taxon.name_2,(taxon.name_1)))roottaxon;" << std::endl;
     std::cout.rdbuf( old );
+    delete ct;
     return;
 }

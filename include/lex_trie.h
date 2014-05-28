@@ -40,7 +40,7 @@ class LexTrieIterator
         LexTrieIterator( const LexTrie* T ) : n_( 0 ), set_(), nodes_(), children_itrs_(), T_( T ) { return; }
         LexTrieIterator( int n, LexTrieNode* root, const LexTrie* T );
 
-        LexTrieIterator& operator++();
+        LexTrieIterator operator++();
         bool operator==( const LexTrieIterator& other ) const;
 
         bool operator!=( const LexTrieIterator& other ) const
@@ -92,7 +92,7 @@ class LexTrieNode
 
         // Friend functions
         friend std::ostream& operator <<( std::ostream &os, const LexTrie &obj );
-        friend LexTrieIterator& LexTrieIterator::operator++();
+        friend LexTrieIterator LexTrieIterator::operator++();
 
         friend class LexTrie;
         friend class LexTrieIterator;

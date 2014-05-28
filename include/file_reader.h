@@ -100,7 +100,7 @@ class SortedAdjacencyListFR : public FileReader {
 class MatrixCellIntGraphFR : public FileReader
 {
     public:
-        ~MatrixCellIntGraphFR(){};
+        ~MatrixCellIntGraphFR();
 
         LexTrie* TakeSubsetFamily();
         std::vector< Subset > subsets() const { return subsets_; }

@@ -14,6 +14,7 @@ LBElimination::LBElimination(  ColoredIntersectionGraph& H, LBCriterion* f ) :
 
 LBElimination::~LBElimination()
 {
+    delete f_;
     return;
 }
 

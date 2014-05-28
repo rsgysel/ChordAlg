@@ -23,26 +23,32 @@ FileReader::~FileReader()
     return;
 }
 
+MatrixCellIntGraphFR::~MatrixCellIntGraphFR()
+{
+    delete subset_family_;
+    return;
+}
+
 ////////////// data for graphs
 //
 AdjacencyLists* FileReader::TakeNeighborhoods()
 {
-    AdjacencyLists* temp = neighborhoods_;
-    neighborhoods_ = NULL;
+    AdjacencyLists* temp = nullptr;
+    std::swap(temp, neighborhoods_);
     return temp;
 }
 
 VertexNames* FileReader::TakeNames()
 {
-    VertexNames* temp = names_;
-    names_ = NULL;
+    VertexNames* temp = nullptr;
+    std::swap(temp, names_);
     return temp;
 }
 
 LexTrie* MatrixCellIntGraphFR::TakeSubsetFamily()
 {
-    LexTrie* temp = subset_family_;
-    subset_family_ = NULL;
+    LexTrie* temp = nullptr;
+    std::swap(temp, subset_family_);
     return temp;
 }
 

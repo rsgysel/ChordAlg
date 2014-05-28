@@ -34,6 +34,7 @@ LexTrieNode::~LexTrieNode()
 {
 	for( ChildData kv : children_ )
 		delete kv.second;
+    return;
 }
 
 //----------------------------//
@@ -91,11 +92,11 @@ bool LexTrieIterator::operator==( const LexTrieIterator& other ) const
         return nodes_.back() == other.nodes_.back();
 }
 
-LexTrieIterator& LexTrieIterator::operator++()
+LexTrieIterator LexTrieIterator::operator++()
 {
     // if at end of trie
 	if( nodes_.empty() || T_->Size() == 0 )
-	    return *( new LexTrieIterator( T_ ) );
+	    return LexTrieIterator( T_ );
     // otherwise Iterator either points to root, leaf, or internal node
 
     // we only traverse up trie if Iterator points to leaf
@@ -113,7 +114,7 @@ LexTrieIterator& LexTrieIterator::operator++()
 
         // if at last set, exit
         if( nodes_.empty() )
-            return *( new LexTrieIterator( T_ ) );
+            return LexTrieIterator( T_ );
     }
 
     // now we dive down trie to find next set

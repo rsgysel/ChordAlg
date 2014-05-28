@@ -6,7 +6,9 @@
 TEST_F( MatrixCellIntGraphTest, FileReaderTest )
 {
     Read( graph_dir() + std::string( "cig_test.m" ) );
-    chordalg::Graph H( chordalg::NewFileReader< chordalg::SortedAdjacencyListFR >( graph_dir() + std::string( "cig_test.sal" ) ) );
+    chordalg::SortedAdjacencyListFR* file = chordalg::NewFileReader< chordalg::SortedAdjacencyListFR >( graph_dir() + std::string( "cig_test.sal" ) );
+    chordalg::Graph H( file );
+    delete file;
     EXPECT_EQ( G->IsIsomorphic( H ), true );
     return;
 }

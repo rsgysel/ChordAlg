@@ -11,8 +11,6 @@ TEST_F( MatrixCellIntGraphTest, ChordalPhyloTest )
     EXPECT_EQ(eo.ZeroFill(), true);
 }
 
-
-
 TEST_F( MatrixCellIntGraphTest, SimplePhyloTest )
 {
     Read( graph_dir() + std::string( "phylo_test.m" ) );
@@ -40,6 +38,8 @@ TEST_F( MatrixCellIntGraphTest, SimplePhyloTest )
 
     EXPECT_EQ(check_phylo.str().compare(phylo_buffer.str()) ,0);
     EXPECT_EQ(check_ct.str().compare(ct_buffer.str()) ,0);
+    delete ct;
+    return;
 }
 
 TEST_F( MatrixCellIntGraphTest, MinfillPhyloTest )
@@ -50,5 +50,6 @@ TEST_F( MatrixCellIntGraphTest, MinfillPhyloTest )
     chordalg::Supergraph triangulation(*H,eo.TriangNbhds());
     chordalg::CliqueTree* ct = chordalg::MCSCliqueTree(triangulation);
     EXPECT_GT(ct->T().size(), 0);
+    delete ct;
     return;
 }
