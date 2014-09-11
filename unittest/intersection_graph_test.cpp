@@ -18,11 +18,11 @@ TEST_F( MatrixCellIntGraphTest, AtomsOfCig )
     Read( graph_dir() + std::string( "cig_test.m" ) );
 
     chordalg::Atoms< chordalg::ColoredIntersectionGraph > A( *H );
-    for( chordalg::ColoredIntersectionGraph* a : A )
+for( chordalg::ColoredIntersectionGraph* a : A )
     {
-        for( chordalg::Vertex v : *H )
+for( chordalg::Vertex v : *H )
         {
-            for( chordalg::Vertex u : *a )
+for( chordalg::Vertex u : *a )
             {
                 if( H->name( v ) == a->name( u ) )
                 {

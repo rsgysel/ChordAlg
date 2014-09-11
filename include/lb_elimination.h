@@ -16,11 +16,13 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef LB_ELIMINATION_H
-#define LB_ELIMINATION_H
+#ifndef INCLUDE_LB_ELIMINATION_H_
+#define INCLUDE_LB_ELIMINATION_H_
 
 #include <algorithm>
+#include <map>
 #include <set>
+#include <utility>
 
 #include "elimination_order.h"
 #include "intersection_graph.h"
@@ -29,50 +31,54 @@
 
 namespace chordalg {
 
-struct LBCriterion : public EliminationCriterion
-{
-    public:
-        virtual Weight Calculate    ( Weight deficiency, Weight separated ) { return 0; }
-    private:
-        virtual Weight Calculate    ( Weight deficiency )                   { return 0; }
-}; // DeficiencyCriterion
+struct LBCriterion : public EliminationCriterion {
+ public:
+    virtual Weight Calculate(Weight deficiency, Weight separated) {
+        return 0;
+    }
+ private:
+    virtual Weight Calculate(Weight deficiency) {
+        return 0;
+    }
+};  // DeficiencyCriterion
 
-struct RatioCriterion : public LBCriterion
-{
-    Weight Calculate    ( Weight deficiency, Weight separated ) { return deficiency / (1 + separated); }
-}; // RatioCriterion
+struct RatioCriterion : public LBCriterion {
+    Weight Calculate(Weight deficiency, Weight separated) {
+        return deficiency / (1 + separated);
+    }
+};  // RatioCriterion
 
-struct WSumCriterion : public LBCriterion
-{
-    public:
-        WSumCriterion(                      )   : d_( 1 ), s_( 1 )  {};
-        WSumCriterion( Weight d, Weight s   )   : d_( d ), s_( s )  {};
+struct WSumCriterion : public LBCriterion {
+ public:
+    WSumCriterion() : d_(1), s_(1) {}
+    WSumCriterion(Weight d, Weight s) : d_(d), s_(s) {}
 
-        Weight Calculate ( Weight deficiency, Weight separated ) { return d_*deficiency - s_*separated; }
-    private:
-        Weight d_, s_;
-}; // WSumCriterion
+    Weight Calculate(Weight deficiency, Weight separated) {
+        return d_*deficiency - s_*separated;
+    }
+ private:
+    Weight d_, s_;
+};  // WSumCriterion
 
-class LBElimination : public EliminationAlgorithm
-{
-    public:
-        LBElimination( ColoredIntersectionGraph&, LBCriterion* );
-        virtual ~LBElimination();
+class LBElimination : public EliminationAlgorithm {
+ public:
+    LBElimination(ColoredIntersectionGraph&, LBCriterion*);
+    virtual ~LBElimination();
 
-    protected:
-        void                        Init        ( );
-        void                        Eliminate   ( Vertex );
-        std::pair< Weight, Cost >   WeightOf    ( Vertex );
+ protected:
+    void Init();
+    void Eliminate(Vertex);
+    std::pair< Weight, Cost > WeightOf(Vertex);
 
-        virtual std::pair< Weight, Cost >   ObjectiveFunction( Weight, Weight );
+    virtual std::pair< Weight, Cost > ObjectiveFunction(Weight, Weight);
 
-        ColoredIntersectionGraph&   H_;
-        SeparatorBlocks             B_;
-        LBCriterion*                f_;
+    ColoredIntersectionGraph& H_;
+    SeparatorBlocks B_;
+    LBCriterion* f_;
 
-        std::map< VertexPair, Weight >  unseparated_monochromatic_pairs_;
-}; // class LBElimination
+    std::map< VertexPair, Weight > unseparated_monochromatic_pairs_;
+};  // class LBElimination
 
-} // namespace chordalg
+}  // namespace chordalg
 
-#endif // LB_ELIMINATION_H
+#endif  // INCLUDE_LB_ELIMINATION_H_

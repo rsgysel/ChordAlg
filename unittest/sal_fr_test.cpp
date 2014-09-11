@@ -7,21 +7,21 @@ TEST_F(SortedAdjacencyListTest, FileReaderTest) {
     EXPECT_EQ(G->order(),7);
     EXPECT_EQ(G->size(),11);
 
-    for(chordalg::Vertex v : *G){
+for(chordalg::Vertex v : *G) {
         chordalg::Vertex w = *(G->begin());
-        for(chordalg::Vertex u : G->N(v))
+for(chordalg::Vertex u : G->N(v))
         {
             EXPECT_NE(u,v);     // no self-loops
             EXPECT_LE(w,u);     // nbhd sorted
             w = u;
 
-            if(v <= 4){
+            if(v <= 4) {
                 // vertices 0-4 form a clique
                 size_t clique_size = 4;
                 EXPECT_EQ(G->N(v).size(),clique_size);
                 EXPECT_LE(u,4);
             }
-            else{
+            else {
                 size_t clique_size = 1;
                 // vertices 5 & 6 form a clique
                 EXPECT_EQ(G->N(v).size(),clique_size);

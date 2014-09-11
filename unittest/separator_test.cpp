@@ -20,12 +20,12 @@ TEST_F( SortedAdjacencyListTest, SeparatorComponents )
     EXPECT_EQ( S.size(), 4 );
 
     // now check connected component consistency. subroutine below is independent of cc_test.sal
-    for( chordalg::Vertex v : *G )
+for( chordalg::Vertex v : *G )
     {
         EXPECT_NE( S.ComponentId( v ), S.kUnsearched() );
         if( !S.IsInSeparator( v ) )
         {
-            for( chordalg::Vertex u : G->N( v ) )
+for( chordalg::Vertex u : G->N( v ) )
             {
                 if( !S.IsInSeparator( u ) )
                     EXPECT_EQ( S.ComponentId( v ), S.ComponentId( u ) );
@@ -36,7 +36,7 @@ TEST_F( SortedAdjacencyListTest, SeparatorComponents )
     chordalg::SeparatorBlocks Sblocks( *G );
     Sblocks.Separate( X );
     int i = 0, sizes[] = { 4, 1, 2, 4 };
-    for( const chordalg::Block& B : Sblocks )
+for( const chordalg::Block& B : Sblocks )
     {
         EXPECT_EQ( B.NC().size(), static_cast< unsigned int >( sizes[ i ] ) );
         i++;
@@ -45,7 +45,7 @@ TEST_F( SortedAdjacencyListTest, SeparatorComponents )
 
     Sblocks.Separate( X );
     i = 0;
-    for( const chordalg::Block& B : Sblocks )
+for( const chordalg::Block& B : Sblocks )
     {
         EXPECT_EQ( B.NC().size(), static_cast< unsigned int >( sizes[ i ] ) );
         i++;

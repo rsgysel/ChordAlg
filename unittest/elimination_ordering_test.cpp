@@ -12,7 +12,7 @@ TEST_F( MatrixCellIntGraphTest, Debug )
 
     using namespace chordalg;
     MatrixCellIntGraphFR* graph_reader =
- //       NewFileReader< MatrixCellIntGraphFR >( graph_dir() + std::string( "BadExample_2state20.20-0.2.dat" ) );
+//       NewFileReader< MatrixCellIntGraphFR >( graph_dir() + std::string( "BadExample_2state20.20-0.2.dat" ) );
         NewFileReader< MatrixCellIntGraphFR >( graph_dir() + std::string( "18232state50.50-0.1.npp" ) );
     ColoredIntersectionGraph G( graph_reader );
 
@@ -21,7 +21,7 @@ TEST_F( MatrixCellIntGraphTest, Debug )
     Cost classic = 0, lb = 0;
 
     int i = 0;
-    for( ColoredIntersectionGraph* a : A )
+for( ColoredIntersectionGraph* a : A )
     {
         if( i < 5)
             EXPECT_EQ( a->IsClique(), true );
@@ -48,7 +48,7 @@ TEST_F( MatrixCellIntGraphTest, MinFillMaxSeparateTest )
     Read( graph_dir() + std::string( "minfill_test.m" ) );
 
     chordalg::Atoms< chordalg::ColoredIntersectionGraph > A( *H );
-    for( chordalg::ColoredIntersectionGraph* a : A )
+for( chordalg::ColoredIntersectionGraph* a : A )
     {
         chordalg::LBElimination eo( *a, new chordalg::RatioCriterion() );
     }

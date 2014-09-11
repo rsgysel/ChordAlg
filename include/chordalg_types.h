@@ -16,8 +16,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef CHORDALG_TYPES_H
-#define CHORDALG_TYPES_H
+#ifndef INCLUDE_CHORDALG_TYPES_H_
+#define INCLUDE_CHORDALG_TYPES_H_
 
 #include <list>
 #include <string>
@@ -26,9 +26,10 @@
 
 namespace chordalg {
 
-// other typedefs
-typedef std::vector< int > ComputationBuffer;       // buffers re-used in numerous computations
-            // Requires back(), clear(), pop_back(), push_back(), resize(), and ranged-for.
+// buffers re-used in numerous computations
+typedef std::vector< int > ComputationBuffer;
+
+// Requires back(), clear(), pop_back(), push_back(), resize(), and ranged-for
 typedef std::vector< ComputationBuffer > ComputationBufferSet;
 
 // intersection graph typedefs
@@ -38,6 +39,6 @@ typedef std::vector< Element > Subset;
 typedef int Color;
 typedef std::list< Color > Multicolor;
 
-} // namespace chordalg
+}  // namespace chordalg
 
-#endif // CHORDALG_TYPES_H
+#endif  // INCLUDE_CHORDALG_TYPES_H_

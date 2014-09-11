@@ -16,9 +16,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef MINIMAL_SEPARATOR_ALGORITHMS_H
-#define MINIMAL_SEPARATOR_ALGORITHMS_H
-
+#ifndef INCLUDE_MINIMAL_SEPARATOR_ALGORITHMS_H_
+#define INCLUDE_MINIMAL_SEPARATOR_ALGORITHMS_H_
 
 #include <algorithm>
 #include <vector>
@@ -33,11 +32,11 @@ namespace chordalg {
 void PrettyPrintMinimalSeparators(const LexTrie& minseps, const Graph& G);
 
 // All minimal separators
-LexTrie* MinimalSeparators( Graph G                     );
+LexTrie* MinimalSeparators(Graph G);
 
 // minimal ab-separators
-LexTrie* MinimalSeparators( Graph G, Vertex a, Vertex b );
+LexTrie* MinimalSeparators(Graph G, Vertex a, Vertex b);
 
-} // namespace chordalg
+}  // namespace chordalg
 
-#endif // MINIMAL_SEPARATOR_ALGORITHMS_H
+#endif  // INCLUDE_MINIMAL_SEPARATOR_ALGORITHMS_H_

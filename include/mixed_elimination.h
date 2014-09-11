@@ -25,8 +25,10 @@
  *  an upper bound on the cost of lb-eliminating that vertex.
  */
 
-#ifndef MIXED_ELIMINATION_H
-#define MIXED_ELIMINATION_H
+#ifndef INCLUDE_MIXED_ELIMINATION_H_
+#define INCLUDE_MIXED_ELIMINATION_H_
+
+#include <utility>
 
 #include "intersection_graph.h"
 #include "classic_elimination.h"
@@ -35,21 +37,19 @@
 
 namespace chordalg {
 
-class MixedElimination : public LBElimination
-{
-    public:
-        MixedElimination( ColoredIntersectionGraph&, LBCriterion* );
-        virtual ~MixedElimination();
+class MixedElimination : public LBElimination {
+ public:
+    MixedElimination(ColoredIntersectionGraph&, LBCriterion*);
+    virtual ~MixedElimination();
 
-    private:
-        void                        Eliminate   ( Vertex );
-        std::pair< Weight, Cost >   WeightOf    ( Vertex );
+ private:
+    void Eliminate(Vertex);
+    std::pair< Weight, Cost > WeightOf(Vertex);
 
-        ColoredIntersectionGraph&   H_;
-        SeparatorBlocks             B_;
-//        RatioCriterion*             f_;
+    ColoredIntersectionGraph& H_;
+    SeparatorBlocks B_;
 };  // MixedElimination
 
 }  // namespace chordalg
 
-#endif // MIXED_ELIMINATION_H
+#endif  // INCLUDE_MIXED_ELIMINATION_H_

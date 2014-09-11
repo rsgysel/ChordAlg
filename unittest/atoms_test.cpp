@@ -10,7 +10,7 @@ TEST_F( SortedAdjacencyListTest, AtomsOfTwoCliques )
     chordalg::Atoms< chordalg::Graph > A( *G );
 
     bool first_clique = true;
-    for( chordalg::Graph* a : A )
+for( chordalg::Graph* a : A )
     {
         if( first_clique )
         {
@@ -33,7 +33,7 @@ TEST_F( SortedAdjacencyListTest, AtomsOfPaperEx )
     chordalg::Atoms< chordalg::Graph > A( *G );
 
     int i = 0;
-    for( chordalg::Graph* a : A )
+for( chordalg::Graph* a : A )
     {
         std::stringstream atom_file;
         atom_file << "atom_test_" << i << ".sal";

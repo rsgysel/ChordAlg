@@ -41,7 +41,7 @@ TEST_F(SortedAdjacencyListTest, BipartiteReduction) {
 TEST_F(SortedAdjacencyListTest, BipartiteReductionSTMinsepComponents) {
     Read(graph_dir() + std::string("bipartite_reduction.sal"));
     chordalg::LexTrie* ab_minseps = chordalg::MinimalSeparators(*G, 6, 7);
-    for(chordalg::Subset S : *ab_minseps)
+for(chordalg::Subset S : *ab_minseps)
     {
         chordalg::SeparatorBlocks B(*G);
         B.Separate(S);
@@ -63,7 +63,7 @@ TEST_F(SortedAdjacencyListTest, XBipartiteReduction) {
 TEST_F(SortedAdjacencyListTest, XBipartiteReductionSTMinsepComponents) {
     Read(graph_dir() + std::string("bipartite_reduction_x.sal"));
     chordalg::LexTrie* ab_minseps = chordalg::MinimalSeparators(*G, 6, 7);
-    for(chordalg::Subset S : *ab_minseps)
+for(chordalg::Subset S : *ab_minseps)
     {
         chordalg::SeparatorBlocks B(*G);
         B.Separate(S);

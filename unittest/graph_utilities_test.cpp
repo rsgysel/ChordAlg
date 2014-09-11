@@ -7,7 +7,7 @@ TEST_F(SortedAdjacencyListTest, GraphUtilities) {
 
     chordalg::VertexVector clique, vertices;
     int i = 0;
-    for( chordalg::Vertex v : *G )
+for( chordalg::Vertex v : *G )
     {
         vertices.push_back(v);
         if(i < 5)
@@ -22,7 +22,7 @@ TEST_F(SortedAdjacencyListTest, GraphUtilities) {
 
 TEST_F(SortedAdjacencyListTest, NameConsistency2) {
     Read(graph_dir() + std::string("twocliques.sal"));
-    for(chordalg::Vertex v : *G)
+for(chordalg::Vertex v : *G)
         EXPECT_EQ(v, G->vertex(G->name(v)));
     return;
 }

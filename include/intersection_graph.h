@@ -16,10 +16,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef INTERSECTION_GRAPH_H
-#define INTERSECTION_GRAPH_H
+#ifndef INCLUDE_INTERSECTION_GRAPH_H_
+#define INCLUDE_INTERSECTION_GRAPH_H_
 
 #include <list>
+#include <string>
 #include <vector>
 
 #include "graph.h"
@@ -28,37 +29,48 @@
 
 namespace chordalg {
 
-class ColoredIntersectionGraph : public Graph
-{
-    public:
-        ColoredIntersectionGraph( MatrixCellIntGraphFR* );
-        ColoredIntersectionGraph( NexusMRPFR* );
-        ColoredIntersectionGraph( ColoredIntersectionGraph&, Vertices );
-        virtual ~ColoredIntersectionGraph();
+class ColoredIntersectionGraph : public Graph {
+ public:
+    explicit ColoredIntersectionGraph(MatrixCellIntGraphFR* M);
+    explicit ColoredIntersectionGraph(NexusMRPFR* M);
+    ColoredIntersectionGraph(ColoredIntersectionGraph&, Vertices);
+    virtual ~ColoredIntersectionGraph();
 
-        bool                IsMonochromatic ( Vertex, Vertex    );
-        int                 CommonColorCount( Vertex, Vertex    );
-        const Multicolor&   vertex_color    ( Vertex v          ) { return vertex_colors_[ v ]; }
+    bool IsMonochromatic(Vertex, Vertex);
+    int CommonColorCount(Vertex, Vertex);
+    const Multicolor& vertex_color(Vertex v) {
+        return vertex_colors_[v];
+    }
 
-        void PrettyPrintSubsets();
+    void PrettyPrintSubsets();
 
-        const LexTrie*      subset_family   (           ) const { return subset_family_;    }
-        const Subset&       subset          ( Vertex v  ) const { return subsets_[ v ];     }
-        const std::string&  taxon_name      ( Element e ) const { return taxon_name_[e];    }
-        int                 taxa            (           ) const { return taxon_name_.size();}
+    const LexTrie* subset_family() const {
+        return subset_family_;
+    }
+    const Subset& subset(Vertex v) const {
+        return subsets_[v];
+    }
+    const std::string& taxon_name(Element e) const {
+        return taxon_name_[e];
+    }
+    int taxa() const {
+        return taxon_name_.size();
+    }
 
-    private:
-        std::vector< Subset >       subsets_;
-        std::vector< Multicolor >   vertex_colors_;
-        LexTrie*                    subset_family_;
-        std::vector< std::string >  taxon_name_;
+ private:
+    std::vector< Subset > subsets_;
+    std::vector< Multicolor > vertex_colors_;
+    LexTrie* subset_family_;
+    std::vector< std::string > taxon_name_;
 
-        std::vector< std::string >  DefaultTaxonNames   ( int n                                 );
-        std::vector< Subset >       InduceSubsets       ( ColoredIntersectionGraph&, Vertices   );
-        std::vector< Multicolor >   InduceVertexColors  ( ColoredIntersectionGraph&, Vertices   );
-        LexTrie*                    InduceSubsetFamily  ( ColoredIntersectionGraph&             );
-}; // ColoredIntersectionGraph
+    std::vector< std::string > DefaultTaxonNames(int n);
+    std::vector< Subset > InduceSubsets(ColoredIntersectionGraph&,
+                                        Vertices);
+    std::vector< Multicolor > InduceVertexColors(ColoredIntersectionGraph&,
+                                                 Vertices);
+    LexTrie* InduceSubsetFamily(ColoredIntersectionGraph&);
+};  // ColoredIntersectionGraph
 
-} // namespace chordalg
+}  // namespace chordalg
 
-#endif // INTERSECTION_GRAPH_H
+#endif  // INCLUDE_INTERSECTION_GRAPH_H_

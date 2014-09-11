@@ -22,10 +22,11 @@
  *  the elimination process"
  */
 
-#ifndef CLASSIC_ELIMINATION_H
-#define CLASSIC_ELIMINATION_H
+#ifndef INCLUDE_CLASSIC_ELIMINATION_H_
+#define INCLUDE_CLASSIC_ELIMINATION_H_
 
 #include <algorithm>
+#include <utility>
 
 #include "elimination_order.h"
 #include "intersection_graph.h"
@@ -33,32 +34,36 @@
 
 namespace chordalg {
 
-struct ClassicCriterion : public EliminationCriterion
-{
-        virtual Weight  Calculate   ( Weight deficiency )                   { return 0; }
-    private:
-        Weight          Calculate   ( Weight deficiency, Weight separted )  { return 0; }
-}; // ClassicCriterion
+struct ClassicCriterion : public EliminationCriterion {
+    virtual Weight Calculate(Weight deficiency) {
+        return 0;
+    }
 
-struct DeficiencyCriterion : public ClassicCriterion
-{
-    Weight Calculate    ( Weight deficiency ) { return deficiency; }
-}; // DeficiencyCriterion
+ private:
+    Weight Calculate(Weight deficiency, Weight separted) {
+        return 0;
+    }
+};  // ClassicCriterion
 
-class ClassicElimination : public EliminationAlgorithm
-{
-    public:
-        ClassicElimination( ColoredIntersectionGraph&, ClassicCriterion* );
-        virtual ~ClassicElimination();
+struct DeficiencyCriterion : public ClassicCriterion {
+    Weight Calculate(Weight deficiency) {
+        return deficiency;
+    }
+};  // DeficiencyCriterion
 
-    private:
-        void                        Eliminate   ( Vertex );
-        std::pair< Weight, Cost >   WeightOf    ( Vertex );
+class ClassicElimination : public EliminationAlgorithm {
+ public:
+    ClassicElimination(ColoredIntersectionGraph&, ClassicCriterion*);
+    virtual ~ClassicElimination();
 
-        ColoredIntersectionGraph&   H_;
-        ClassicCriterion*           f_;
-}; // class ClassicElimination
+ private:
+    void Eliminate(Vertex);
+    std::pair< Weight, Cost > WeightOf(Vertex);
 
-} // namespace chordalg
+    ColoredIntersectionGraph& H_;
+    ClassicCriterion* f_;
+};  // class ClassicElimination
 
-#endif // CLASSIC_ELIMINATION_H
+}  // namespace chordalg
+
+#endif  // INCLUDE_CLASSIC_ELIMINATION_H_
