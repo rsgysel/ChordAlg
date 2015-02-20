@@ -10,7 +10,7 @@ namespace chordalg {
 EliminationOrder MCS(Graph& G) {
     MCSQueue mcs_q(G.order());
     EliminationOrder eo(G);
-    for (int i = G.order() ; i > 0 ; i--) {
+    for (size_t i = G.order() ; i > 0 ; i--) {
         Vertex v = mcs_q.Pop();
         eo.Emplace(v, i - 1);
         if (i != 1) {
@@ -25,17 +25,18 @@ EliminationOrder MCS(Graph& G) {
 CliqueTree* MCSCliqueTree(Graph& G) {
     MCSQueue mcs_q(G.order());
     EliminationOrder eo(G);
-    std::list< std::pair<int, int> > ct_edges;
-    int s = 0;
+    std::list< std::pair<size_t, size_t> > ct_edges;
+    size_t s = 0;
     VertexList Ks;
-    std::list<int> Ks_indices;
-    int prev_card = -1;
-    std::vector<int> clique;
+    std::list<size_t> Ks_indices;
+    size_t prev_card = 0;
+    bool init_prev_card = true;
+    std::vector<size_t> clique;
     clique.resize(G.order());
     std::vector< Vertices > clique_map;
-    for (int i = G.order(); i > 0; i--) {
+    for (size_t i = G.order(); i > 0; i--) {
         // Get max weight vertex and update others
-        int new_card = mcs_q.max_weight();
+        size_t new_card = mcs_q.max_weight();
         Vertex v = mcs_q.Pop();
         eo.Emplace(v, i - 1);
         if (i != 1) {
@@ -44,7 +45,8 @@ CliqueTree* MCSCliqueTree(Graph& G) {
             }
         }
         // Check for maxclique construction
-        if (new_card <= prev_card) {
+        if (new_card <= prev_card || init_prev_card) {
+            init_prev_card = false;
             clique_map.push_back(Vertices(Ks));
             Ks.clear();
             Ks_indices.clear();
@@ -54,9 +56,9 @@ CliqueTree* MCSCliqueTree(Graph& G) {
                 Ks_indices.push_back(eo.PositionOf(u));
             }
             if (new_card != 0) {
-                int k = *std::min_element(Ks_indices.begin(),
+                size_t k = *std::min_element(Ks_indices.begin(),
                                           Ks_indices.end());
-                int p = clique[eo.VertexAt(k)];
+                size_t p = clique[eo.VertexAt(k)];
                 ct_edges.push_back(std::make_pair(s, p));
             }
         }
@@ -78,7 +80,7 @@ CliqueTree* MCSCliqueTree(Graph& G) {
     return tr;
 }
 
-MCSQueue::MCSQueue(int order) :
+MCSQueue::MCSQueue(size_t order) :
     order_(order),
     max_weight_(0),
     remaining_vertices_(order) {

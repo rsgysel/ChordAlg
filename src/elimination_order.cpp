@@ -106,7 +106,7 @@ int EliminationOrder::ComputeFill() {
     follower.resize(G_.order());
     VertexVector index;
     index.resize(G_.order());
-    for (int i = 0; i < G_.order(); ++i) {
+    for (size_t i = 0; i < G_.order(); ++i) {
         Vertex w = VertexAt(i);
         follower[w] = w;
         index[w] = i;
@@ -142,7 +142,7 @@ bool EliminationOrder::ZeroFill() const {
     follower.resize(G_.order());
     VertexVector index;
     index.resize(G_.order());
-    for (int i = 0; i < G_.order(); ++i) {
+    for (size_t i = 0; i < G_.order(); ++i) {
         Vertex w = VertexAt(i);
         follower[w] = w;
         index[w] = i;
@@ -201,7 +201,7 @@ void EliminationOrder::SetOrder(VertexVector pi) {
         std::cerr << "order does not match" << std::endl;
         exit(EXIT_FAILURE);
     }
-    for (int i = 0; i < pi.size(); ++i) {
+    for (size_t i = 0; i < pi.size(); ++i) {
         Emplace(pi[i], i);
     }
     return;
@@ -249,7 +249,7 @@ void EliminationAlgorithm::Init() {
 }
 
 void EliminationAlgorithm::Elimination() {
-    for (int i = 0; i < G_.order(); ++i) {
+    for (size_t i = 0; i < G_.order(); ++i) {
         VertexCost vc = ArgMin();
         fill_cost_ += vc.second;
         Vertex v = vc.first;

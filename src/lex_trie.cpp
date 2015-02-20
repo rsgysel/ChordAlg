@@ -6,8 +6,8 @@
 
 namespace chordalg {
 
-LexTrieIterator::LexTrieIterator(int n, LexTrieNode* root, const LexTrie* T) :
-    n_(),
+LexTrieIterator::LexTrieIterator(size_t n, LexTrieNode* root, const LexTrie* T) :
+    n_(n),
     set_(),
     nodes_(),
     children_itrs_(),
@@ -20,7 +20,7 @@ LexTrieIterator::LexTrieIterator(int n, LexTrieNode* root, const LexTrie* T) :
     return;
 }
 
-LexTrie::LexTrie(int n) : n_(n), set_count_(0) {
+LexTrie::LexTrie(size_t n) : n_(n), set_count_(0) {
     try {
         this->root_ = new LexTrieNode(false);
     } catch(const std::bad_alloc& e) {
@@ -44,12 +44,12 @@ LexTrieNode::~LexTrieNode() {
 // Member functions //
 //------------------//
 
-int LexTrie::SizeOf() const {
+size_t LexTrie::SizeOf() const {
     return sizeof(*this) + root_->SizeOf(n_);
 }
 
-int LexTrieNode::SizeOf(int n) const {
-    int size = 0;
+size_t LexTrieNode::SizeOf(size_t n) const {
+    size_t size = 0;
     for (ChildData kv : children_) {
         size += kv.second->SizeOf(n);
     }
@@ -111,7 +111,7 @@ LexTrieIterator LexTrieIterator::operator++() {
     }
     // now we dive down trie to find next set
     do {
-        int index = children_itrs_.back()->first;
+        size_t index = children_itrs_.back()->first;
         LexTrieNode* child_node = nodes_.back()->children_[index];
         children_itrs_.push_back(child_node->children_.begin());
         nodes_.push_back(child_node);

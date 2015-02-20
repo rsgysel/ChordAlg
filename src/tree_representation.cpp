@@ -99,31 +99,34 @@ void TreeRepresentation::PhyloNewickPrint(const ColoredIntersectionGraph& cig,
     // DFS info
     std::string newick_tree;
     VertexSet visited;
-    Element root_element =  - 1;
+    Element root_element;
+    bool init_root_element = false;
     if (rooted) {
-        for (int i = 0; i < cig.taxa(); ++i) {
+        for (size_t i = 0; i < cig.taxa(); ++i) {
             if (cig.taxon_name(i) == "roottaxon") {
                 root_element = i;
+                init_root_element = true;
             }
         }
-        if (root_element ==  - 1) {
+        if (!init_root_element) {
             std::cerr << "Error in TreeRepresentation::PhyloNewickPrint: no ";
             std::cerr << "roottaxon found" << std::endl;
             std::exit(EXIT_FAILURE);
         }
     }
     // Taxon Clique info
-    std::vector< int > taxon_clique_size(cig.subset_family()->n(), 0);
+    std::vector< size_t > taxon_clique_size(cig.subset_family()->n(), 0);
     for (Vertex v : cig) {
         Subset S = cig.subset(v);
         for (Element e : S) {
             ++taxon_clique_size[e];
         }
     }
-    Vertex v =  - 1;
+    Vertex v;
+    bool init_v = false;
     if (rooted) {
         for (Vertex u : T_) {
-            int root_count = 0;
+            size_t root_count = 0;
             for (Vertex w : clique_map_[u]) {
                 for (Element e : cig.subset(w)) {
                     if (e == root_element) {
@@ -133,10 +136,11 @@ void TreeRepresentation::PhyloNewickPrint(const ColoredIntersectionGraph& cig,
             }
             if (root_count == taxon_clique_size[root_element]) {
                 v = u;
+                init_v = true;
                 break;
             }
         }
-        if (v ==  - 1) {
+        if (!init_v) {
             std::cerr << "Error in TreeRepresentation::PhyloNewickPrint: ";
             std::cerr << "no roottaxon clique found" << std::endl;
             std::exit(EXIT_FAILURE);
@@ -160,7 +164,7 @@ void TreeRepresentation::PhyloNewickVisit(VertexSet& visited,
         Vertex v,
         std::string& newick_tree,
         const ColoredIntersectionGraph& cig,
-        std::vector< int >& taxon_clique_size) const {
+        std::vector< size_t >& taxon_clique_size) const {
     visited.insert(v);
     bool is_leaf = true;
     newick_tree += std::string("(");
@@ -174,15 +178,15 @@ void TreeRepresentation::PhyloNewickVisit(VertexSet& visited,
         }
     }
     // Calculate candidate-ness of node
-    std::vector< int > cell_count(taxon_clique_size.size(), 0);
-    for (Vertex v : clique_map_[v]) {
-        for (Element e : cig.subset(v)) {
+    std::vector< size_t > cell_count(taxon_clique_size.size(), 0);
+    for (Vertex u : clique_map_[v]) {
+        for (Element e : cig.subset(u)) {
             ++cell_count[e];
         }
     }
     std::vector<std::string> node_taxa;
-    int roottaxon = 0;
-    for (int i = 0; i < cell_count.size(); ++i) {
+    size_t roottaxon = 0;
+    for (size_t i = 0; i < cell_count.size(); ++i) {
         if (cell_count[i] == taxon_clique_size[i]) {
             node_taxa.push_back(cig.taxon_name(i));
             if (cig.taxon_name(i) == "roottaxon") {

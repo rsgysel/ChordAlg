@@ -39,10 +39,10 @@ ColoredIntersectionGraph::~ColoredIntersectionGraph() {
     return;
 }
 
-std::vector<std::string> ColoredIntersectionGraph::DefaultTaxonNames(int n) {
+std::vector<std::string> ColoredIntersectionGraph::DefaultTaxonNames(size_t n) {
     std::vector<std::string> taxon_name;
     taxon_name.resize(n);
-    for (int i = 0; i < n; ++i) {
+    for (size_t i = 0; i < n; ++i) {
         std::stringstream ss;
         ss << i;
         taxon_name[i] = ss.str();
@@ -85,7 +85,7 @@ bool ColoredIntersectionGraph::IsMonochromatic(Vertex u, Vertex v) {
     return CommonColorCount(u, v) > 0;
 }
 
-int ColoredIntersectionGraph::CommonColorCount(Vertex u, Vertex v) {
+size_t ColoredIntersectionGraph::CommonColorCount(Vertex u, Vertex v) {
     Multicolor intersection;
     std::set_intersection(vertex_color(u).begin(), vertex_color(u).end(),
                           vertex_color(v).begin(), vertex_color(v).end(),

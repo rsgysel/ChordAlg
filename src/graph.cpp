@@ -208,6 +208,10 @@ void Graph::PrettyPrint(const LexTrie& T) const {
     return;
 }
 
+void Graph::PrettyPrint(const VertexVector& U) const {
+    PrettyPrint(Vertices(U));
+}
+
 void Graph::PrettyPrint(const Vertices& U) const {
     for (Vertex v : U) {
         std::cout << name(v) << " ";

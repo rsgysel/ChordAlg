@@ -421,19 +421,19 @@ void NexusMRPFR::ReadFileOrDie() {
     // extract matrix from file
     std::vector< std::vector< int > > matrix(row_count,
                                              std::vector< int >(col_count));
-    int i = 0;
+    size_t i = 0;
     while (getline(file_stream_, line)) {
         if (line == std::string(";")) {
             break;
         }
-        AssertFormatOrDie(i < row_count, Nexus_too_many_rows);
+        AssertFormatOrDie(i < (size_t)row_count, Nexus_too_many_rows);
         std::stringstream line_stream;
         line_stream << line;
         line_stream >> taxon_name_[i];
         std::string row;
         line_stream >> row;
-        for (int j = 0; j < row.size(); ++j) {
-            AssertFormatOrDie(j < col_count, Nexus_too_many_cols);
+        for (size_t j = 0; j < row.size(); ++j) {
+            AssertFormatOrDie(j < (size_t)col_count, Nexus_too_many_cols);
             if (row[j] == '?' || row[j] == '*' || row[j] == '-') {
                 matrix[i][j] = kMissingData();
             } else if (row[j] == '1') {

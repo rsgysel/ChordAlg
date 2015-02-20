@@ -10,10 +10,9 @@ SeparatorComponents::SeparatorComponents(Graph const& G) :
     connected_component_(),
     search_queue_(),
     size_(0) {
-    int n = G.order();
-    S_.reserve(n);
-    connected_component_.resize(n);
-    search_queue_.reserve(n);
+    S_.reserve(G.order());
+    connected_component_.resize(G.order());
+    search_queue_.reserve(G.order());
     return;
 }
 
@@ -21,8 +20,7 @@ SeparatorBlocks::SeparatorBlocks(Graph const& G) :
     SeparatorComponents(G),
     blocks_(),
     last_separator_vertex_seen_() {
-    int n = G.order();
-    last_separator_vertex_seen_.resize(n);
+    last_separator_vertex_seen_.resize(G.order());
     return;
 }
 
@@ -172,8 +170,8 @@ void SeparatorBlocks::FindNeighborhoods(FillSet& fill) {
     return;
 }
 
-int SeparatorBlocks::FullComponentCt() const {
-    int count = 0;
+size_t SeparatorBlocks::FullComponentCt() const {
+    size_t count = 0;
     for (Block B : blocks_) {
         if (B.NC().size() == S_.size()) {
             ++count;
@@ -187,7 +185,7 @@ int SeparatorBlocks::FullComponentCt() const {
     return count;
 }
 
-int SeparatorBlocks::NonFullComponentCt() const {
+size_t SeparatorBlocks::NonFullComponentCt() const {
     return size_ - FullComponentCt();
 }
 
