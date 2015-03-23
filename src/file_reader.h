@@ -54,7 +54,7 @@ class FileReader {
 
     AdjacencyLists* neighborhoods_;
     VertexNames* names_;
-    std::ifstream file_stream_;
+    std::stringstream file_stream_;
  private:
     FileReader() {}  // default constructor disabled
 
