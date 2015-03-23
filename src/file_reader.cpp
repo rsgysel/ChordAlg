@@ -49,19 +49,17 @@ const char* Nexus_unknown_symbol = "Format Error: unknown symbol";
 //
 FileReader::FileReader(std::string filename) : neighborhoods_(NULL),
                                                names_(NULL) {
-    std::ifstream file;
-    file.open(filename.c_str());
-    if (!file) {
+    file_stream_.open(filename.c_str());
+    if (!file_stream_) {
         std::cerr << "ChordAlg: Error opening file " << filename << ".";
         std::cerr << std::endl;
         exit(EXIT_FAILURE);
     }
-    file_stream_ << file.rdbuf();
-    file.close();
     return;
 }
 
 FileReader::~FileReader() {
+    file_stream_.close();
     delete neighborhoods_;
     delete names_;
     return;
@@ -183,6 +181,7 @@ void DimacsGraphFR::ReadFileOrDie() {
         }
         std::sort(nbhd->begin(), nbhd->end());
     }
+    file_stream_.close();
     return;
 }
 
@@ -236,6 +235,7 @@ void SortedAdjacencyListFR::ReadFileOrDie() {
         }
         std::sort(nbhd->begin(), nbhd->end());
     }
+    file_stream_.close();
     return;
 }
 
@@ -282,6 +282,7 @@ void MatrixCellIntGraphFR::ReadFileOrDie() {
         line_stream.str("");  // reset line stream
         ++i;
     }
+    file_stream_.close();
     ComputeGraphData(matrix, maxstate);
     return;
 }
@@ -445,6 +446,7 @@ void NexusMRPFR::ReadFileOrDie() {
         }
         ++i;
     }
+    file_stream_.close();
     ComputeGraphData(matrix, 1);
     return;
 }
