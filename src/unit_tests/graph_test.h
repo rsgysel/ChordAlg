@@ -9,9 +9,8 @@
 #include "graph.h"
 #include "intersection_graph.h"
 
-class GraphTest : public ::testing::Test
-{
-protected:
+class GraphTest : public ::testing::Test {
+ protected:
     chordalg::Graph* G;
 
     GraphTest() : G(NULL) {}
@@ -29,9 +28,8 @@ protected:
     virtual void Read( std::string file_name ) = 0;
 };  // GraphTest
 
-class DimacsGraphTest : public GraphTest
-{
-protected:
+class DimacsGraphTest : public GraphTest {
+ protected:
     chordalg::DimacsGraphFR* graph_file;
 
     DimacsGraphTest() : graph_file( NULL ) {}
@@ -50,9 +48,8 @@ protected:
     }
 };  // DimacsGraphTest
 
-class SortedAdjacencyListTest : public GraphTest
-{
-protected:
+class SortedAdjacencyListTest : public GraphTest {
+ protected:
     chordalg::SortedAdjacencyListFR* graph_file;
 
     SortedAdjacencyListTest() : graph_file( NULL ) {}
@@ -71,9 +68,8 @@ protected:
     }
 };  // SortedAdjacencyListTest
 
-class MatrixCellIntGraphTest : public GraphTest
-{
-protected:
+class MatrixCellIntGraphTest : public GraphTest {
+ protected:
     chordalg::ColoredIntersectionGraph* H;
     chordalg::MatrixCellIntGraphFR* graph_file;
 
@@ -94,9 +90,8 @@ protected:
     }
 };  // MatrixCellIntGraphTest
 
-class NexusGraphTest : public MatrixCellIntGraphTest
-{
-protected:
+class NexusGraphTest : public MatrixCellIntGraphTest {
+ protected:
     chordalg::NexusMRPFR* graph_file;
 
     NexusGraphTest() : MatrixCellIntGraphTest(), graph_file( NULL ) {}
