@@ -1,21 +1,22 @@
 #ifndef INCLUDE_FILE_GRAPH_FILE_H_
 #define INCLUDE_FILE_GRAPH_FILE_H_
 
+#include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <string>
 
 namespace chordalg {
 
+// Wrapper to facilitate testing
 class GraphFile {
  public:
+    GraphFile() = delete;
     GraphFile(std::string filename);
     ~GraphFile();
     
     std::istream& GetLine(std::string& str);
 
- protected:
-    GraphFile() {} // for testing
  private:
     std::ifstream file_stream_;
 };
