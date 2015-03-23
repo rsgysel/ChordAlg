@@ -12,6 +12,7 @@ namespace chordalg {
 class GraphFile {
  public:
     GraphFile() = delete;
+    GraphFile(const GraphFile&) = delete;
     GraphFile(std::string filename);
     ~GraphFile();
     

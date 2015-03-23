@@ -30,6 +30,7 @@
 #include <vector>
 
 #include "chordalg_types.h"
+#include "graph_file.h"
 #include "lex_trie.h"
 #include "vertex_utilities.h"
 
@@ -44,20 +45,20 @@ namespace chordalg {
 //          NewFileReader(std::string);
 class FileReader {
  public:
+    FileReader() = delete;
     virtual ~FileReader();
 
     AdjacencyLists* TakeNeighborhoods();
     VertexNames* TakeNames();
  protected:
+    explicit FileReader(GraphFile& file);
     explicit FileReader(std::string filename);
     inline void AssertFormatOrDie(bool, std::string) const;
 
+    GraphFile& file_;
     AdjacencyLists* neighborhoods_;
     VertexNames* names_;
-    std::ifstream file_stream_;
  private:
-    FileReader() {}  // default constructor disabled
-
     // construction and initialization deferred to NewFileReader
     template< class FR > friend FR* NewFileReader(std::string);
     virtual void ReadFileOrDie() = 0;
@@ -69,7 +70,8 @@ class FileReader {
 template< class FR >
 FR* NewFileReader(std::string file_name) {
     // ctor
-    FR* fr_object = new FR(file_name);
+    GraphFile file(file_name);
+    FR* fr_object = new FR(file);
     fr_object->ReadFileOrDie();
 
     // type check FR. voided to prevent compiler warning
@@ -83,7 +85,7 @@ class DimacsGraphFR : public FileReader {
     ~DimacsGraphFR() {}
  private:
     template< class FR > friend FR* NewFileReader(std::string);
-    explicit DimacsGraphFR(std::string file_name) : FileReader(file_name) {}
+    explicit DimacsGraphFR(GraphFile& file) : FileReader(file) {}
     void ReadFileOrDie();
 };  // DimacsGraphFR
 
@@ -97,8 +99,7 @@ class SortedAdjacencyListFR : public FileReader {
 
  private:
     template< class FR > friend FR* NewFileReader(std::string);
-    explicit SortedAdjacencyListFR(std::string file_name) :
-                FileReader(file_name) {}
+    explicit SortedAdjacencyListFR(GraphFile& file) : FileReader(file) {}
     void ReadFileOrDie();
 };  // SortedAdjacencyListFR
 
@@ -121,8 +122,7 @@ class MatrixCellIntGraphFR : public FileReader {
 
     template< class FR > friend FR* NewFileReader(std::string);
 
-    explicit MatrixCellIntGraphFR(std::string file_name) :
-                FileReader(file_name) {}
+    explicit MatrixCellIntGraphFR(GraphFile& file) : FileReader(file) {}
     void ReadFileOrDie();
 
     int kMissingData() {
@@ -142,8 +142,7 @@ class NexusMRPFR : public MatrixCellIntGraphFR {
     std::vector< std::string > taxon_name_;
 
     template< class FR > friend FR* NewFileReader(std::string);
-    explicit NexusMRPFR(std::string file_name) :
-                MatrixCellIntGraphFR(file_name) {}
+    explicit NexusMRPFR(GraphFile& file) : MatrixCellIntGraphFR(file) {}
     void ReadFileOrDie();
 
     std::string ParseParameter(std::string line, std::string parameter) const;
