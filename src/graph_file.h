@@ -14,9 +14,9 @@ class GraphFile {
     GraphFile() = delete;
     GraphFile(const GraphFile&) = delete;
     GraphFile(std::string filename);
-    ~GraphFile();
+    virtual ~GraphFile();
     
-    std::istream& GetLine(std::string& str);
+    virtual std::istream& GetLine(std::string& str);
 
  private:
     std::ifstream file_stream_;
