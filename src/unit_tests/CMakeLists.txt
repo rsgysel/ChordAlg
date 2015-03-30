@@ -24,7 +24,7 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 # Unit Tests
 ################################
 # Add test cpp file
-add_executable( runUnitTests sal_fr_test.cpp )
+add_executable(runUnitTests sal_fr_test.cpp)
 # Link test executable against gtest & gtest_main
 target_link_libraries(runUnitTests gtest gtest_main ChordAlg)
-add_test( runUnitTests runUnitTests )
+add_test(runUnitTests runUnitTests)
