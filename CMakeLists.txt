@@ -2,7 +2,10 @@ cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
 project("ChordAlg")
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
+
 enable_testing()
+include(gmock)
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
     "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
@@ -20,7 +23,7 @@ if (NOT CONFIGURED_ONCE)
 endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-add_subdirectory(src)
+add_subdirectory(ChordAlgSrc)
 
 set(CONFIGURED_ONCE TRUE CACHE INTERNAL
     "A flag showing that CMake has configured at least once.")
