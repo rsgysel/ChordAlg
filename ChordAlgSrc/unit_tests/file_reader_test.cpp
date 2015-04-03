@@ -21,18 +21,37 @@ class MockGraphFile : public chordalg::GraphFile {
     MOCK_METHOD1(GetLine, std::istream&(std::string& str));
 };  // MockGraphFile
 
-TEST(FileReaderTest, GetLines) {
-    MockGraphFile file;
-    std::ifstream line_stream, eof_marker;
-    eof_marker.peek(); eof_marker.peek(); // Twice for end-of-file bit
-    EXPECT_CALL(file, GetLine(_))
-        .Times(4)
-        .WillOnce(DoAll(SetArgReferee<0>("2"), ReturnRef(line_stream)))
-        .WillOnce(DoAll(SetArgReferee<0>("1 2"), ReturnRef(line_stream)))
-        .WillOnce(DoAll(SetArgReferee<0>("2 1"), ReturnRef(line_stream)))
-        .WillOnce(ReturnRef(eof_marker));
-    auto FR = chordalg::NewFileReader< chordalg::SortedAdjacencyListFR >(file);
-    delete FR; 
-}
+template< class FR >
+class FileReadingTest : public ::testing::Test {
+  public:
+    void SetUp() {
+        eof_marker_.peek(); eof_marker_.peek(); // Twice for end-of-file bit
+    }
+    void RunTest() {
+        file_reader_ = chordalg::NewFileReader< FR >(mock_file_);
+    }
+    void TearDown() {
+        delete file_reader_;
+    }
+  protected:
+    MockGraphFile mock_file_;
+    FR* file_reader_;
+    std::ifstream line_stream_, eof_marker_;
+};  // FileReadingTest
 
+typedef ::testing::Types< chordalg::SortedAdjacencyListFR >
+//                          chordalg::MatrixCellIntGraphFR,
+//                          chordalg::NexusMRPFR > 
+                          FileReaderTypes;
+
+TYPED_TEST_CASE(FileReadingTest, FileReaderTypes);
+TYPED_TEST(FileReadingTest, GetLines) {
+    EXPECT_CALL(this->mock_file_, GetLine(_))
+        .Times(4)
+        .WillOnce(DoAll(SetArgReferee<0>("2"), ReturnRef(this->line_stream_)))
+        .WillOnce(DoAll(SetArgReferee<0>("1 2"), ReturnRef(this->line_stream_)))
+        .WillOnce(DoAll(SetArgReferee<0>("2 1"), ReturnRef(this->line_stream_)))
+        .WillOnce(ReturnRef(this->eof_marker_));
+    this->RunTest();
+}
 
