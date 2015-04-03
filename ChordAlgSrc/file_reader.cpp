@@ -443,6 +443,7 @@ void NexusMRPFR::ReadFileOrDie() {
         }
         ++i;
     }
+    while (file_.GetLine(line)) {} // Finish processing input. For clarity of unit tests.
     ComputeGraphData(matrix, 1);
     return;
 }
