@@ -1,15 +1,12 @@
-#include "graph.h"
-
 #include <algorithm>
 #include <map>
 #include <string>
 #include <vector>
 
+#include "graph.h"
+
 namespace chordalg {
 
-////////////// Graph
-////////////// ctor & dtors
-//
 Graph::Graph(Graph& H) :
     neighborhoods_(new AdjacencyLists(*(H.neighborhoods_))),
     vertex_names_(new VertexNames(*(H.vertex_names_))),

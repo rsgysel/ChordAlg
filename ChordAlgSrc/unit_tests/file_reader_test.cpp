@@ -6,8 +6,8 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
-#include "ChordAlgSrc/graph_file.h"
 #include "ChordAlgSrc/file_reader.h"
+#include "ChordAlgSrc/graph_file.h"
 
 using ::testing::_;
 using ::testing::DoAll;

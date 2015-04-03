@@ -20,6 +20,7 @@
 #define INCLUDE_VERTEX_UTILITIES_H_
 
 #include <algorithm>
+#include <initializer_list>
 #include <list>
 #include <set>
 #include <string>
@@ -82,6 +83,9 @@ class Vertices {
         return;
     }
     explicit Vertices(VertexVector V) : V_(new VertexVector(V)) {
+        return;
+    }
+    Vertices(std::initializer_list<Vertex> V) : V_(new VertexVector(V)) {
         return;
     }
     ~Vertices() {
