@@ -50,7 +50,7 @@ class LexTrieIterator {
         return !(*this == other);
     }
 
-    const std::vector< Element >& operator*() const {
+    const Subset& operator*() const {
         return set_;
     }
 
