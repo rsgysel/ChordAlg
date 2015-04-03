@@ -39,8 +39,8 @@ chordalg::AdjacencyLists two_cliques{ {1, 2, 3, 4},
 
 class GraphTest : public ::testing::Test {
   public:
-    GraphTest() : G_(nullptr) {};
     void SetUp() {
+        G_ = nullptr;
     }
     void TearDown() {
         delete G_;
