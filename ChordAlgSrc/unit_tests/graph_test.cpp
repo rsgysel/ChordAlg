@@ -3,7 +3,6 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
-#include "ChordAlgSrc/file_reader.h"
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/vertex_utilities.h"
 
@@ -12,17 +11,6 @@ using ::testing::DoAll;
 using ::testing::Return;
 using ::testing::ReturnRef;
 using ::testing::SetArgReferee;
-
-////////////////////
-// Mock Dependencies
-
-class MockFileReader : public chordalg::FileReader {
- public:
-    MockFileReader() = delete;
-    ~MockFileReader() {}
-    MOCK_METHOD0(TakeNeighborhoods, chordalg::AdjacencyLists*());
-    MOCK_METHOD0(TakeNames, chordalg::VertexNames*());
-};  // MockFileReader
 
 //////////////
 // Test Graphs
@@ -69,7 +57,6 @@ TEST_F(GraphTest, Size) {
 
 TEST_F(GraphTest, NbhdValueRange) {
     Read(two_cliques);
-
     for(chordalg::Vertex v : *G_) {
         for(chordalg::Vertex u : G_->N(v)) {
             EXPECT_GE(u, 0);
@@ -99,18 +86,12 @@ TEST_F(GraphTest, SortedNeighborhoods) {
 
 TEST_F(GraphTest, Cliques) {
     Read(two_cliques);
-    for(chordalg::Vertex v : *G_) {
-        for(chordalg::Vertex u : G_->N(v)) {
-            size_t clique_size = 0;
-            if(v <= 4) { // Vertices 0-4 form a clique
-                clique_size = 5;
-                EXPECT_LE(u, 4);
-            } else {
-                clique_size = 2;
-                EXPECT_GT(u, 4);
-            }
-            EXPECT_EQ(G_->N(v).size(), clique_size - 1);
-        }
-    }
+    chordalg::VertexVector K1{0, 1, 2, 3, 4}, K2{5, 6};
+    EXPECT_EQ(G_->HasClique(K1), true);
+    EXPECT_EQ(G_->HasClique(K2), true);
 }
 
+TEST_F(GraphTest, Automorphism) {
+    Read(two_cliques);
+    EXPECT_EQ(G_->IsIsomorphic(*G_), true);
+}
