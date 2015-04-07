@@ -5,22 +5,13 @@
 
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/vertex_utilities.h"
+#include "test_graphs.h"
 
 using ::testing::_;
 using ::testing::DoAll;
 using ::testing::Return;
 using ::testing::ReturnRef;
 using ::testing::SetArgReferee;
-
-//////////////
-// Test Graphs
-chordalg::AdjacencyLists two_cliques{ {1, 2, 3, 4}, 
-                                      {0, 2, 3, 4},
-                                      {0, 1, 3, 4},
-                                      {0, 1, 2, 4},
-                                      {0, 1, 2, 3},
-                                      {6},
-                                      {5} };
 
 /////////////
 // Frameworks

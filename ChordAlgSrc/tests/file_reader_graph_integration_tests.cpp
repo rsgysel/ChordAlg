@@ -5,26 +5,13 @@
 
 #include "ChordAlgSrc/file_reader.h"
 #include "ChordAlgSrc/graph.h"
+#include "test_graphs.h"
 #include "mock_graph_file.h"
 
 using ::testing::_;
 using ::testing::DoAll;
 using ::testing::ReturnRef;
 using ::testing::SetArgReferee;
-
-//////////////
-// Test Graphs
-chordalg::AdjacencyLists cig_test{ {4, 9},
-                                   {5, 6, 8, 9},
-                                   {7},
-                                   {5, 6, 8, 9},
-                                   {0, 6, 8, 9},
-                                   {1, 3, 6, 8, 9},
-                                   {1, 3, 4, 5, 8, 9},
-                                   {2, 10},
-                                   {1, 3, 4, 5, 6, 9},
-                                   {0, 1, 3, 4, 5, 6, 8},
-                                   {7} };
 
 // Compares the adjacency list to the matrix representation
 TEST(MatrixCellIntGraphFRTest, Integration) {

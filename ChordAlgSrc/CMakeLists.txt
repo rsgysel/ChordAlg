@@ -14,4 +14,4 @@ add_library(ChordAlg
 #                tree_representation.cpp
                 vertex_utilities.cpp)
 
-add_subdirectory(unit_tests)
+add_subdirectory(tests)

@@ -1,3 +1,6 @@
+#ifndef INCLUDE_MOCK_GRAPH_FILE_H_
+#define INCLUDE_MOCK_GRAPH_FILE_H_
+
 #include <iostream>
 #include <string>
 
@@ -16,3 +19,5 @@ class MockGraphFile : public chordalg::GraphFile {
     ~MockGraphFile() {}
     MOCK_METHOD1(GetLine, std::istream&(std::string& str));
 };  // MockGraphFile
+
+#endif  // INCLUDE_MOCK_GRAPH_FILE_H_
