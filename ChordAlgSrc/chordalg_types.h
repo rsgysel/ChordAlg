@@ -26,12 +26,6 @@
 
 namespace chordalg {
 
-// buffers re-used in numerous computations
-typedef std::vector< size_t > ComputationBuffer;
-
-// Requires back(), clear(), pop_back(), push_back(), resize(), and ranged-for
-typedef std::vector< ComputationBuffer > ComputationBufferSet;
-
 // Element of [n-1] = {0, 1, 2, ..., n - 1}
 typedef size_t Element;
 typedef std::vector< Element > Subset;

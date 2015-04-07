@@ -30,7 +30,7 @@
 
 namespace chordalg {
 
-typedef size_t ConnectedComponentID;
+typedef int ConnectedComponentID;
 typedef std::vector< VertexSet > FillSet;
 
 class Block {
@@ -114,8 +114,8 @@ class SeparatorComponents {
 
     Graph const& G_;
     Vertices S_;
-    ComputationBuffer connected_component_;
-    ComputationBuffer search_queue_;
+    std::vector< int > connected_component_;
+    std::vector< int > search_queue_;
     size_t size_;  // # of connected components
 
     inline bool IsUnsearched(Vertex u) const {
@@ -169,7 +169,7 @@ class SeparatorBlocks : public SeparatorComponents {
     void FindNeighborhoods(FillSet&);
 
     std::vector< Block > blocks_;
-    ComputationBuffer last_separator_vertex_seen_;
+    std::vector< int > last_separator_vertex_seen_;
 
     // Disable default constructor, copy constructor, assignment
     SeparatorBlocks();

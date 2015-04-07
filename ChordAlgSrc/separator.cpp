@@ -161,7 +161,7 @@ void SeparatorBlocks::FindNeighborhoods(FillSet& fill) {
             ConnectedComponentID C = connected_component_[u];
             // if u is not a separator vertex, u is in C, and we haven't
             // determined that v is in N(C)
-            if (!IsInSeparator(u) && last_separator_vertex_seen_[C] != v) {
+            if (!IsInSeparator(u) && last_separator_vertex_seen_[C] != (int) v) {
                 blocks_[C].addNC(v);
                 last_separator_vertex_seen_[C] = v;
             }
