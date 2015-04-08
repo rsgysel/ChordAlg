@@ -16,7 +16,7 @@ using ::testing::SetArgReferee;
 // The integration tests in this file are brittle:
 // `isomorphic' means that the graphs are isomorphic as
 // graphs with labeled vertices. This is dependent on
-// how the file reader reads
+// how the file reader parses a graph file.
 
 // Compares the adjacency list to the Dimacs format representation
 TEST(DimacsGraphFRTest, Integration) {

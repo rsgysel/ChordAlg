@@ -101,43 +101,34 @@ template< class GraphType >
 void Atoms< GraphType >::MCSmPlus() {
     int s = -1;  // as in paper: for finding minimal separator generators
     int n = G_.order();
-
     std::vector< int > label;  // as in paper
     label.resize(n);
     for (Vertex v : label) {
         label[v] = 0;
     }
     const int kDeleted = -1;  // for deleted vertices
-
     std::vector< bool > reached;  // as in paper
     reached.resize(n);
-
     F_.resize(n);
     alpha_.resize(n);
     alpha_inverse_.resize(n);
-
     for (int i = n - 1; i >= 0; --i) {
         std::vector< int >::iterator max_itr = std::max_element(label.begin(),
                                                                 label.end());
         int max_label = *max_itr;
         Vertex x = std::distance(label.begin(), max_itr);
-
         if (max_label <= s) {
             minsep_generators_.push_front(i);
         }
         s = max_label;
-
         std::list< int > Y;  // as in paper
-
         label[x] = kDeleted;
         for (Vertex v : G_) {
             reached[v] = false;
         }
         reached[x] = true;
-
         std::vector< std::list< Vertex > > reach;
         reach.resize(n);
-
         for (Vertex y : G_.N(x)) {
             if (label[y] != kDeleted) {
                 reached[y] = true;
@@ -145,7 +136,6 @@ void Atoms< GraphType >::MCSmPlus() {
                 Y.push_back(y);
             }
         }
-
         for (int j = 0; j < n - 1; ++j) {
             while (!reach[j].empty()) {
                 Vertex y = reach[j].back();
@@ -154,7 +144,6 @@ void Atoms< GraphType >::MCSmPlus() {
                     if (label[z] != kDeleted && !reached[z]) {
                         reached[z] = true;
                         reach[ label[z] ].push_back(z);
-
                         if (label[z] > j) {
                             Y.push_back(z);
                             reach[ label[z] ].push_back(z);
@@ -165,7 +154,6 @@ void Atoms< GraphType >::MCSmPlus() {
                 }
             }
         }
-
         for (Vertex y : Y) {
             label[y]++;
             if (!G_.HasEdge(x, y)) {
@@ -173,28 +161,23 @@ void Atoms< GraphType >::MCSmPlus() {
                 F_[y].push_back(x);
             }
         }
-
         alpha_[i] = x;
         alpha_inverse_[x] = i;
     }
-
     return;
 }
 
 template< class GraphType >
 void Atoms< GraphType >::ComputeAtoms() {
-    std::list< Vertices >  vertices_of_atoms;
-    SeparatorComponents  cc(G_);
-    Vertices  deleted_vertices;  // in paper, this is V(G_) - V(G_')
+    std::list< Vertices > vertices_of_atoms;
+    SeparatorComponents cc(G_);
+    Vertices deleted_vertices;  // in paper, this is V(G_) - V(G_')
     std::vector< bool > is_deleted(G_.order(), false);
-    // track index of last deleted vertex, for adding last atom
-    int last_deleted;
 
     // Examine minsep_generators, alpha_-earliest first
     for (int i : minsep_generators_) {
-        // Check to see if minimal separator is a cliques
+        // Check to see if minimal separator is a clique
         Vertex v = alpha_[i];
-
         Vertices S;
         for (Vertex u : G_.N(v)) {
             if (alpha_inverse_[v] < alpha_inverse_[u] && !is_deleted[u]) {
@@ -206,17 +189,13 @@ void Atoms< GraphType >::ComputeAtoms() {
                 S.add(u);
             }
         }
-
         if (G_.HasClique(S)) {
-            last_deleted = i;
             for (Vertex u : deleted_vertices) {
                 S.add(u);
             }
-
             cc.Separate(S);
             Vertices C = cc.ConnectedComponent(v);
             Vertices atom;
-
             for (Vertex u : C) {
                 if (!is_deleted[u]) {
                     deleted_vertices.add(u);
@@ -224,17 +203,14 @@ void Atoms< GraphType >::ComputeAtoms() {
                     atom.add(u);
                 }
             }
-
             for (Vertex u : S) {
                 if (!is_deleted[u]) {
                     atom.add(u);
                 }
             }
-
             vertices_of_atoms.push_back(atom);
         }
     }
-
     // Remaining vertices form an atom
     Vertices C;
     for (Vertex v : G_) {
@@ -242,15 +218,12 @@ void Atoms< GraphType >::ComputeAtoms() {
             C.add(v);
         }
     }
-
     if (!C.empty()) {
         vertices_of_atoms.push_back(C);
     }
-
-    for ( Vertices U : vertices_of_atoms ) {
+    for (Vertices U : vertices_of_atoms) {
         atom_subgraphs_.push_back(new GraphType(G_, U));
     }
-
     return;
 }
 

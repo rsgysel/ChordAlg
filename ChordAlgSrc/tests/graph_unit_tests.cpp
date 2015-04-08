@@ -6,35 +6,13 @@
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/vertex_utilities.h"
 #include "test_graphs.h"
+#include "graph_test_framework.h"
 
 using ::testing::_;
 using ::testing::DoAll;
 using ::testing::Return;
 using ::testing::ReturnRef;
 using ::testing::SetArgReferee;
-
-/////////////
-// Frameworks
-
-class GraphTest : public ::testing::Test {
-  public:
-    void SetUp() {
-        G_ = nullptr;
-    }
-    void TearDown() {
-        delete G_;
-    }
-    void Read(chordalg::AdjacencyLists& A) {
-        if(G_) {
-            FAIL() << "Use Read once in your test.";
-        } else {
-            G_ = new chordalg::Graph(new chordalg::AdjacencyLists(A));
-        }
-        return;
-    }
-  protected:
-    chordalg::Graph* G_;
-};  // GraphTest
 
 TEST_F(GraphTest, Order) {
     Read(two_cliques);

@@ -1,5 +1,45 @@
 #include "test_graphs.h"
 
+// From Figure 1 of Berry, Pogorelcnik, and Simonet
+// `An Introduction to Clique Minimal Separator Decomposition'
+// 0 1 2 3 4 5 6 7 8 9 10
+// a b c d e f g h i j k
+// Atoms:
+// abck = 0 1 2 10 (chordless 4-cycle)
+// cdjk = 2 3 9 10 (clique)
+// defgjk = 3 4 5 6 9 10
+// hijk = 7 8 9 10 (chordless 4-cycle)
+chordalg::AdjacencyLists atom_test{ {1, 10},
+                                    {0, 2},
+                                    {1, 3, 9, 10},
+                                    {2, 4, 5, 9, 10},
+                                    {3, 6},
+                                    {3, 6, 9, 10},
+                                    {4, 5, 9, 10},
+                                    {8, 9},
+                                    {7, 10},
+                                    {2, 3, 5, 6, 7, 10},
+                                    {0, 2, 3, 5, 6, 8, 9} };
+std::vector< chordalg::AdjacencyLists > atom_test_atoms{
+    { {1, 2},
+      {0, 3},
+      {0, 3},
+      {1, 2} },
+    { {1, 2, 4, 5},
+      {0, 3},
+      {0, 3, 4, 5},
+      {1, 2, 4, 5},
+      {0, 2, 3, 5},
+      {0, 2, 3, 4} },
+    { {1, 2, 3},
+      {0, 2, 3},
+      {0, 1, 3},
+      {0, 1, 2} },
+    { {1, 3},
+      {0, 2},
+      {1, 3},
+      {0, 2} } };
+
 chordalg::AdjacencyLists cig_test{ {4, 9},
                                    {5, 6, 8, 9},
                                    {7},

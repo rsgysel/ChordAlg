@@ -8,6 +8,9 @@
 
 #include "ChordAlgSrc/lex_trie.h"
 
+/////////////
+// Frameworks
+
 class LexTrieTest : public ::testing::Test {
   public:
     void SetUp() {
@@ -57,8 +60,8 @@ class LexTrieTest : public ::testing::Test {
     bool new_insert_;
 };  // LexTrieTest
 
-typedef chordalg::Subset::iterator InputIterator;
-#define vector_set(X) (X, X + sizeof(X) / sizeof(int))
+////////
+// Tests
 
 TEST_F(LexTrieTest, Empty) {
     this->InitTrie(10);
@@ -81,7 +84,7 @@ TEST_F(LexTrieTest, SuperfluousInsertion) {
     EXPECT_EQ(T_->Size(), 1);
 }
 
-// Test internal node branching.
+// Test internal node branching
 TEST_F(LexTrieTest, InternalBranch) {
     this->InitTrie(10);
     this->InsertAndSerialize({2, 4, 9});  
@@ -91,7 +94,7 @@ TEST_F(LexTrieTest, InternalBranch) {
     EXPECT_EQ(this->IsTrieSerializedSet(), true);
 }
 
-// Test internal node set indicators.
+// Test internal node set indicators
 TEST_F(LexTrieTest, InternalSet) {
     this->InitTrie(10);
     this->InsertAndSerialize({2, 4});
@@ -104,7 +107,7 @@ TEST_F(LexTrieTest, InternalSet) {
     EXPECT_EQ(T_->Size(), 3);
 }
 
-// Test root branching.
+// Test root branching
 TEST_F(LexTrieTest, RootBranch){
     this->InitTrie(10);
     this->InsertAndSerialize({2, 4, 9});
