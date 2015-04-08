@@ -14,8 +14,6 @@ namespace chordalg {
 // DimacsFileReader
 const char* Dimacs_problem_line_count =
     "Format Error: Only one problem line allowed";
-const char* Dimacs_nm_range =
-    "Format Error: NODES and EDGES must be non-negative integers";
 const char* Dimacs_problem_line_first =
     "Format Error: a problem line must occur before any edge line";
 const char* Dimacs_duplicate_edge =
@@ -40,8 +38,6 @@ const char* Matrix_too_many_rows = "Format Error: Too many rows";
 // NexusMRPFR
 const char* Nexus_too_many_cols = "Format Error: Too many columns";
 const char* Nexus_too_many_rows = "Format Error: Too many rows";
-const char* Nexus_row_col_sanity =
-    "Format Error: ntax and nchar must be positive numbers";
 const char* Nexus_unknown_symbol = "Format Error: unknown symbol";
 
 
@@ -110,7 +106,7 @@ inline void FileReader::AssertFormatOrDie(bool assertion,
 // with e V U. U and V are integers in 1, 2, ..., n
 void DimacsGraphFR::ReadFileOrDie() {
     bool problem_line_seen = false;
-    int n = 0, m = 0;
+    size_t n = 0, m = 0;
     std::string line;
     std::set< std::pair<int, int> > edges;
     while (file_.GetLine(line)) {
@@ -127,10 +123,9 @@ void DimacsGraphFR::ReadFileOrDie() {
             line_stream >> devnull;
             line_stream >> n;
             line_stream >> m;
-            AssertFormatOrDie(n >= 0 && m >= 0, Dimacs_nm_range);
         } else if (start_character == "e") {
             AssertFormatOrDie(problem_line_seen, Dimacs_problem_line_first);
-            int u, v;
+            size_t u, v;
             line_stream << line;
             line_stream >> u;
             line_stream >> v;
@@ -143,7 +138,7 @@ void DimacsGraphFR::ReadFileOrDie() {
             if ( u < v ) {
                 std::swap(u, v);
             }
-            std::pair<int, int> e = std::pair<int, int>(u, v);
+            std::pair<size_t, size_t> e = std::pair<size_t, size_t>(u, v);
             AssertFormatOrDie(edges.find(e) == edges.end(),
                               Dimacs_duplicate_edge);
             edges.insert(e);
@@ -158,25 +153,25 @@ void DimacsGraphFR::ReadFileOrDie() {
     // initialize vertex names
     names_ = new VertexNames;
     names_->resize(n);
-    for (int i = 0; i < n; ++i) {
+    for (size_t i = 0; i < n; ++i) {
         std::stringstream ss;
         ss << i + 1;
         names_->operator[](i) = ss.str();
     }
     // get neighbors from edge set
-    std::vector< std::list< int > > neighbors;
+    std::vector< std::list< size_t > > neighbors;
     neighbors.resize(n);
-    for (std::pair<int, int> e : edges) {
-        int u = e.first;
-        int v = e.second;
+    for (std::pair<size_t, size_t> e : edges) {
+        size_t u = e.first;
+        size_t v = e.second;
         neighbors[u - 1].push_back(v - 1);
         neighbors[v - 1].push_back(u - 1);
     }
 
     // turn string representation into vertex representation
-    for (int i = 0; i < n; ++i) {
+    for (size_t i = 0; i < n; ++i) {
         Vertices* nbhd = &neighborhoods_->operator[](i);
-        for (int v : neighbors[i]) {
+        for (size_t v : neighbors[i]) {
             nbhd->add(v);
         }
         std::sort(nbhd->begin(), nbhd->end());
@@ -395,7 +390,7 @@ std::string NexusMRPFR::ParseParameter(std::string line,
 void NexusMRPFR::ReadFileOrDie() {
     std::string line, state;
     std::stringstream parameter;
-    int row_count = 0, col_count = 0;
+    size_t row_count = 0, col_count = 0;
     std::map< std::string, Vertex > vertex_id;
     std::vector< std::list< std::string > > neighbor_names;
     // skip first two lines
@@ -409,8 +404,6 @@ void NexusMRPFR::ReadFileOrDie() {
     parameter.str("");
     parameter << ParseParameter(line, "nchar");
     parameter >> col_count;
-    AssertFormatOrDie(0 <= row_count, Nexus_row_col_sanity);
-    AssertFormatOrDie(0 <= col_count, Nexus_row_col_sanity);
     // skip next two lines
     file_.GetLine(line);
     file_.GetLine(line);
@@ -423,14 +416,14 @@ void NexusMRPFR::ReadFileOrDie() {
         if (line == std::string(";")) {
             break;
         }
-        AssertFormatOrDie(i < (size_t)row_count, Nexus_too_many_rows);
+        AssertFormatOrDie(i < row_count, Nexus_too_many_rows);
         std::stringstream line_stream;
         line_stream << line;
         line_stream >> taxon_name_[i];
         std::string row;
         line_stream >> row;
         for (size_t j = 0; j < row.size(); ++j) {
-            AssertFormatOrDie(j < (size_t)col_count, Nexus_too_many_cols);
+            AssertFormatOrDie(j < col_count, Nexus_too_many_cols);
             if (row[j] == '?' || row[j] == '*' || row[j] == '-') {
                 matrix[i][j] = kMissingData();
             } else if (row[j] == '1') {

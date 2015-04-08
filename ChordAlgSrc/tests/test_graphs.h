@@ -6,6 +6,9 @@
 //////////////
 // Test Graphs
 extern chordalg::AdjacencyLists cig_test;
+extern chordalg::AdjacencyLists dimacs_test;
+extern chordalg::AdjacencyLists nexus_test;
 extern chordalg::AdjacencyLists two_cliques;
+
 
 #endif  // INCLUDE_TEST_GRAPHS_H_
