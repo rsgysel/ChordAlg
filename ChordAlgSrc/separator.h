@@ -63,7 +63,7 @@ class Block {
 class SeparatorComponents {
  public:
     explicit SeparatorComponents(Graph const&);
-    ~SeparatorComponents() {}
+    virtual ~SeparatorComponents() {}
 
     Vertices GetNeighborhood(Vertex, FillSet&);
     virtual void SeparateNbhd(Vertex);

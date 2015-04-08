@@ -16,24 +16,24 @@ using ::testing::SetArgReferee;
 /////////////
 // Frameworks
 
-template< class FR >
+template< class FileReaderType >
 class FileReadingTest : public ::testing::Test {
   public:
     void SetUp() {
         eof_marker_.peek(); eof_marker_.peek(); // Twice for end-of-file bit
     }
     void RunTest() {
-        file_reader_ = chordalg::NewFileReader< FR >(mock_file_);
+        file_reader_ = chordalg::NewFileReader< FileReaderType >(mock_file_);
     }
     void TearDown() {
         delete file_reader_;
     }
-    bool TypeIs(const std::type_info& RHS_FR_type) const {
-        return typeid(FR) == RHS_FR_type;
+    bool TypeIs(const std::type_info& RHS_Type) const {
+        return typeid(FileReaderType) == RHS_Type;
     }
   protected:
     MockGraphFile mock_file_;
-    FR* file_reader_;
+    FileReaderType* file_reader_;
     std::ifstream line_stream_, eof_marker_;
 };  // FileReadingTest
 

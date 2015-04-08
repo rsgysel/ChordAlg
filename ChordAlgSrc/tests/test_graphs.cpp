@@ -52,6 +52,22 @@ chordalg::AdjacencyLists cig_test{ {4, 9},
                                    {0, 1, 3, 4, 5, 6, 8},
                                    {7} };
 
+chordalg::AdjacencyLists connected_components_test{ {1, 4, 5, 6, 10},
+                                                     {0, 3, 4, 10},
+                                                     {4, 7, 14},
+                                                     {1, 4, 9, 14},
+                                                     {0, 1, 2, 3},
+                                                     {0, 6},
+                                                     {0, 5},
+                                                     {2, 8},
+                                                     {7, 9},
+                                                     {3, 8},
+                                                     {0, 1, 11},
+                                                     {10, 12, 14},
+                                                     {11, 13, 14},
+                                                     {12, 14},
+                                                     {2, 3, 11, 12, 13} };
+
 chordalg::AdjacencyLists dimacs_test{ {1, 3, 6, 8},
                                       {0, 2, 5, 7},
                                       {1, 4, 6, 9},

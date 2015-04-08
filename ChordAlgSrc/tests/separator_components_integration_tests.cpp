@@ -1,0 +1,104 @@
+#include <typeinfo>
+
+#include "gtest/gtest.h"
+
+#include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/separator.h"
+#include "test_graphs.h"
+
+/////////////
+// Frameworks
+
+template< class SeparatorType >
+class SeparatorComponentsTest : public ::testing::Test {
+  public:
+    void SetUp() {
+        G_ = nullptr;
+        S_ = nullptr;
+    }
+    void TearDown() {
+        delete G_;
+        delete S_;
+    }
+    void Read(chordalg::AdjacencyLists& A, chordalg::Vertices X) {
+        if(G_) {
+            FAIL() << "Use Read once in your test.";
+        } else {
+            G_ = new chordalg::Graph(new chordalg::AdjacencyLists(A));
+            S_ = new SeparatorType(*G_);
+            S_->Separate(X);
+        }
+    }
+    bool TypeIs(const std::type_info& RHS_Type) const {
+        return typeid(SeparatorType) == RHS_Type;
+    }
+  protected:
+    chordalg::Graph* G_;
+    SeparatorType* S_;
+};  // SeparatorComponentsTest
+
+/////////////////////
+// DeclaredTypedTests
+
+typedef ::testing::Types< chordalg::SeparatorComponents,
+                          chordalg::SeparatorBlocks >
+                          SeparatorTypes;
+TYPED_TEST_CASE(SeparatorComponentsTest, SeparatorTypes);
+
+//////////////
+// Typed Tests
+
+TYPED_TEST(SeparatorComponentsTest, Connected) {
+    this->Read(connected_components_test, {});
+    EXPECT_EQ(this->S_->size(), 1);
+}
+
+TYPED_TEST(SeparatorComponentsTest, Size) {
+    this->Read(connected_components_test, {0, 1, 2, 3});
+    EXPECT_EQ(this->S_->size(), 4);
+}
+
+TYPED_TEST(SeparatorComponentsTest, Searched) {
+    this->Read(connected_components_test, {});
+    for(auto v : *(this->G_)) {
+        EXPECT_NE(this->S_->ComponentId(v), this->S_->kUnsearched());
+    }
+}
+
+// Compares ComponentId of adjacent vertices not in the separator
+TYPED_TEST(SeparatorComponentsTest, NeighborsConnected) {
+    this->Read(connected_components_test, {0, 1, 2, 3});
+    EXPECT_EQ(this->S_->size(), 4);
+    for(auto v : *(this->G_)) {
+        if(!this->S_->IsInSeparator(v)) {
+            for(auto u : this->G_->N(v)) {
+                if(!this->S_->IsInSeparator(u)) {
+                    EXPECT_EQ(this->S_->ComponentId(u), this->S_->ComponentId(v));
+                }
+            }
+        }
+    }
+}
+
+////////
+// Tests
+
+TEST(BlockTest, EmptySeparatorNeighborhoodSize) {
+    chordalg::Graph G(new chordalg::AdjacencyLists(connected_components_test));
+    chordalg::SeparatorBlocks S(G);
+    S.Separate({});
+    for(auto B : S) {
+        EXPECT_EQ(B.NC().size(), 0);
+    }
+}
+
+TEST(BlockTest, NeighborhoodSizes) {
+    chordalg::Graph G(new chordalg::AdjacencyLists(connected_components_test));
+    chordalg::SeparatorBlocks S(G);
+    S.Separate({0, 1, 2, 3});
+    size_t i = 0, neighborhood_sizes[]{4, 1, 2, 4};
+    for(auto B : S) {
+        EXPECT_EQ(B.NC().size(), neighborhood_sizes[i]);
+        ++i;
+    }
+}
