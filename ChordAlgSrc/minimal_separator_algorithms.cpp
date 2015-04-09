@@ -13,7 +13,7 @@ void PrettyPrintMinimalSeparators(const LexTrie& minseps, const Graph& G) {
 
 // Berry, Bordat, and Cogis' algorithm to generate minimal separators
 // paper: http://www.worldscientific.com/doi/pdf/10.1142/S0129054100000211
-LexTrie* MinimalSeparators(Graph G) {
+LexTrie* MinimalSeparators(const Graph& G) {
     bool new_set;
     int n = G.order();
     LexTrie* minimal_separators = new LexTrie(n);
@@ -41,19 +41,19 @@ LexTrie* MinimalSeparators(Graph G) {
         for (Vertex v : U) {
             V.merge(U, G.N(v));
             S.Separate(V);
-        }
-        for (Block B : S) {
+            for (Block B : S) {
                 minimal_separators->SortedInsert< Vertices >(B.NC(),
                                                              &new_set);
                 if (new_set) {
                     minimal_separator_queue.push_back(B.NC());
                 }
+            }
         }
     }
     return minimal_separators;
 }
 
-LexTrie* MinimalSeparators(Graph G, Vertex a, Vertex b) {
+LexTrie* MinimalSeparators(const Graph& G, Vertex a, Vertex b) {
     bool new_set;
     int n = G.order();
     LexTrie* minimal_separators = new LexTrie(n);

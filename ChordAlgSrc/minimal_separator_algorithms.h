@@ -32,10 +32,10 @@ namespace chordalg {
 void PrettyPrintMinimalSeparators(const LexTrie& minseps, const Graph& G);
 
 // All minimal separators
-LexTrie* MinimalSeparators(Graph G);
+LexTrie* MinimalSeparators(const Graph& G);
 
 // minimal ab-separators
-LexTrie* MinimalSeparators(Graph G, Vertex a, Vertex b);
+LexTrie* MinimalSeparators(const Graph& G, Vertex a, Vertex b);
 
 }  // namespace chordalg
 

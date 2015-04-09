@@ -20,6 +20,7 @@ chordalg::AdjacencyLists atom_test{ {1, 10},
                                     {7, 10},
                                     {2, 3, 5, 6, 7, 10},
                                     {0, 2, 3, 5, 6, 8, 9} };
+
 std::vector< chordalg::AdjacencyLists > atom_test_atoms{
     { {1, 2},
       {0, 3},
@@ -39,6 +40,44 @@ std::vector< chordalg::AdjacencyLists > atom_test_atoms{
       {0, 2},
       {1, 3},
       {0, 2} } };
+
+// Vertices 0-2 and 3-5 define the vertex-bipartition of
+// a bipartite graph. 6 is adjacent to 0-2, 7 is adjacent
+// to 3-5 (so the entire graph is also bipartite).
+chordalg::AdjacencyLists bipartite_reduction{ {3, 4, 6},
+                                              {4, 5, 6},
+                                              {3, 4, 5, 6},
+                                              {0, 2, 7},
+                                              {0, 1, 2, 7},
+                                              {1, 2, 7},
+                                              {0, 1, 2},
+                                              {3, 4, 5} };
+
+chordalg::AdjacencyLists bipartite_reduction_st{ {3, 4, 6},
+                                                 {4, 5, 6},
+                                                 {3, 4, 5, 6},
+                                                 {0, 2, 7},
+                                                 {0, 1, 2, 7},
+                                                 {1, 2, 7},
+                                                 {0, 1, 2, 7, 8},
+                                                 {3, 4, 5, 6, 8},
+                                                 {6, 7} };
+
+chordalg::AdjacencyLists bipartite_reduction_x{ {3, 4, 6},
+                                                {4, 5, 6},
+                                                {3, 4, 5, 6},
+                                                {0, 2, 7},
+                                                {0, 1, 2, 7},
+                                                {1, 2, 7},
+                                                {0, 1, 2, 8},
+                                                {3, 4, 5, 8},
+                                                {6, 7} };
+
+chordalg::AdjacencyLists clique{ {1, 2, 3, 4},
+                                 {0, 2, 3, 4},
+                                 {0, 1, 3, 4},
+                                 {0, 1, 2, 4},
+                                 {0, 1, 2, 3} };
 
 chordalg::AdjacencyLists cig_test{ {4, 9},
                                    {5, 6, 8, 9},
@@ -84,6 +123,21 @@ chordalg::AdjacencyLists nexus_test{ {1, 2},
                                      {0, 3},
                                      {0},
                                      {1} };
+
+chordalg::AdjacencyLists tree{ {8},
+                               {8},
+                               {9},
+                               {9},
+                               {10},
+                               {10},
+                               {11},
+                               {11},
+                               {0, 1, 12},
+                               {2, 3, 12},
+                               {4, 5, 13},
+                               {6, 7, 13},
+                               {8, 9, 13},
+                               {10, 11, 12} };
 
 chordalg::AdjacencyLists two_cliques{ {1, 2, 3, 4},
                                       {0, 2, 3, 4},
