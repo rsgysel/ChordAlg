@@ -4,8 +4,8 @@
 
 namespace chordalg {
 
-MixedElimination::MixedElimination(ColoredIntersectionGraph& H,
-                                   LBCriterion* f) :
+MixedElimination::MixedElimination(const ColoredIntersectionGraph* H,
+                                   const LBCriterion* f) :
                                    LBElimination(H, f),
                                    H_(H),
                                    B_(H) {
@@ -34,7 +34,7 @@ std::pair< Weight, Cost > MixedElimination::WeightOf(Vertex v) {
     Weight wt = 0;
     for (VertexPair p : VertexPairs(MonotoneNbhd(v))) {
         if (!IsEdge(p)) {
-            wt += H_.CommonColorCount(p.first, p.second);
+            wt += H_->CommonColorCount(p.first, p.second);
         }
     }
     // Don't need separation statistics

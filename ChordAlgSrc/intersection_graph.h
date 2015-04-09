@@ -36,9 +36,9 @@ class ColoredIntersectionGraph : public Graph {
     ColoredIntersectionGraph(ColoredIntersectionGraph&, Vertices);
     virtual ~ColoredIntersectionGraph();
 
-    bool IsMonochromatic(Vertex, Vertex);
-    size_t CommonColorCount(Vertex, Vertex);
-    const Multicolor& vertex_color(Vertex v) {
+    bool IsMonochromatic(Vertex, Vertex) const;
+    size_t CommonColorCount(Vertex, Vertex) const;
+    const Multicolor& vertex_color(Vertex v) const {
         return vertex_colors_[v];
     }
 

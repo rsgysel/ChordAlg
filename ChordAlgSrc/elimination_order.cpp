@@ -5,10 +5,10 @@
 
 namespace chordalg {
 
-EliminationOrder::EliminationOrder(Graph& G) :
+EliminationOrder::EliminationOrder(const Graph* const G) :
                                    G_(G),
-                                   alpha_(G.order()),
-                                   alpha_inverse_(G.order()),
+                                   alpha_(G_->order()),
+                                   alpha_inverse_(G_->order()),
                                    fill_count_(kUnfilled()) {
     Init();
     return;
@@ -20,7 +20,7 @@ EliminationOrder::~EliminationOrder() {
 
 void EliminationOrder::Init() {
     int i = 0;
-    for (Vertex v : G_) {
+    for (Vertex v : *G_) {
         alpha_[i] = v;
         alpha_inverse_[v] = i;
         ++i;
@@ -45,16 +45,16 @@ void EliminationOrder::Swap(int i, int j) {
 // form triagnulation neighborhoods
 AdjacencyLists* EliminationOrder::TriangNbhds() const {
     AdjacencyLists* a_lists = new AdjacencyLists();
-    a_lists->resize(G_.order());
+    a_lists->resize(G_->order());
     if (fill_count_ == 0) {
-        for (Vertex v : G_) {
+        for (Vertex v : *G_) {
             a_lists->operator[](v).reserve(triangulation_nbhds_[v].size());
-            for (Vertex u : G_.N(v)) {
+            for (Vertex u : G_->N(v)) {
                 a_lists->operator[](v).add(u);
             }
         }
     } else {
-        for (Vertex v : G_) {
+        for (Vertex v : *G_) {
             a_lists->operator[](v).reserve(triangulation_nbhds_[v].size());
             for (Vertex u : triangulation_nbhds_[v]) {
                 a_lists->operator[](v).add(u);
@@ -67,19 +67,19 @@ AdjacencyLists* EliminationOrder::TriangNbhds() const {
 
 AdjacencyLists* EliminationAlgorithm::TriangNbhds() const {
     AdjacencyLists* a_lists = new AdjacencyLists();
-    a_lists->resize(G_.order());
+    a_lists->resize(G_->order());
     if (fill_count_ == 0) {
-        for (Vertex v : G_) {
-            a_lists->operator[](v).reserve(G_.N(v).size());
-            for (Vertex u : G_.N(v)) {
+        for (Vertex v : *G_) {
+            a_lists->operator[](v).reserve(G_->N(v).size());
+            for (Vertex u : G_->N(v)) {
                 a_lists->operator[](v).add(u);
             }
         }
     } else {
-        for (Vertex v : G_) {
-            a_lists->operator[](v).reserve(G_.N(v).size() +
+        for (Vertex v : *G_) {
+            a_lists->operator[](v).reserve(G_->N(v).size() +
                                            fill_neighbors_[v].size());
-            for (Vertex u : G_.N(v)) {
+            for (Vertex u : G_->N(v)) {
                 a_lists->operator[](v).add(u);
             }
             for (Vertex u : fill_neighbors_[v]) {
@@ -101,12 +101,12 @@ int EliminationOrder::ComputeFill() {
         return fill_count_;
     }
     fill_count_ = 0;
-    triangulation_nbhds_.resize(G_.order());
+    triangulation_nbhds_.resize(G_->order());
     VertexVector follower;
-    follower.resize(G_.order());
+    follower.resize(G_->order());
     VertexVector index;
-    index.resize(G_.order());
-    for (size_t i = 0; i < G_.order(); ++i) {
+    index.resize(G_->order());
+    for (size_t i = 0; i < G_->order(); ++i) {
         Vertex w = VertexAt(i);
         follower[w] = w;
         index[w] = i;
@@ -124,7 +124,7 @@ int EliminationOrder::ComputeFill() {
             }
         }
     }
-    fill_count_ -= G_.size();
+    fill_count_ -= G_->size();
     return fill_count_;
 }
 
@@ -139,10 +139,10 @@ bool EliminationOrder::ZeroFill() const {
         return fill_count_ == 0;
     }
     VertexVector follower;
-    follower.resize(G_.order());
+    follower.resize(G_->order());
     VertexVector index;
-    index.resize(G_.order());
-    for (size_t i = 0; i < G_.order(); ++i) {
+    index.resize(G_->order());
+    for (size_t i = 0; i < G_->order(); ++i) {
         Vertex w = VertexAt(i);
         follower[w] = w;
         index[w] = i;
@@ -163,7 +163,7 @@ bool EliminationOrder::ZeroFill() const {
 
 Vertices EliminationOrder::LNbhd(Vertex v) const {
     Vertices L_N;
-    for (Vertex u : G_.N(v)) {
+    for (Vertex u : G_->N(v)) {
         if (Before(u, v)) {
             L_N.add(u);
         }
@@ -180,7 +180,7 @@ Vertices EliminationOrder::LNbhd(Vertex v) const {
 
 Vertices EliminationOrder::RNbhd(Vertex v) const {
     Vertices R_N;
-    for (Vertex u : G_.N(v)) {
+    for (Vertex u : G_->N(v)) {
         if (Before(v, u)) {
             R_N.add(u);
         }
@@ -196,7 +196,7 @@ Vertices EliminationOrder::RNbhd(Vertex v) const {
 }
 
 void EliminationOrder::SetOrder(VertexVector pi) {
-    if (pi.size() != G_.order()) {
+    if (pi.size() != G_->order()) {
         std::cerr << "Error in SetOrder: elimination order size and graph ";
         std::cerr << "order does not match" << std::endl;
         exit(EXIT_FAILURE);
@@ -210,16 +210,16 @@ void EliminationOrder::SetOrder(VertexVector pi) {
 void EliminationOrder::PrettyPrint() const {
     std::cout << "elimination order:\t";
     for (Vertex v : alpha_) {
-        std::cout << G_.name(v) << " ";
+        std::cout << G_->name(v) << " ";
     }
     std::cout << std::endl;
     return;
 }
 
 // EliminationAlgorithm
-EliminationAlgorithm::EliminationAlgorithm(Graph& G) :
+EliminationAlgorithm::EliminationAlgorithm(const Graph* const G) :
                                            G_(G),
-                                           alpha_(G.order()),
+                                           alpha_(G_->order()),
                                            alpha_inverse_(),
                                            fill_cost_(0),
                                            fill_count_(0),
@@ -236,12 +236,12 @@ EliminationAlgorithm::~EliminationAlgorithm() {
 }
 
 void EliminationAlgorithm::Init() {
-    int n = G_.order();
+    int n = G_->order();
 
     alpha_inverse_.resize(n);
     fill_neighbors_.resize(n);
     tie_count_.resize(n);
-    for (Vertex v : G_) {
+    for (Vertex v : *G_) {
         remaining_vertices_.insert(v);
     }
     Elimination();
@@ -249,7 +249,7 @@ void EliminationAlgorithm::Init() {
 }
 
 void EliminationAlgorithm::Elimination() {
-    for (size_t i = 0; i < G_.order(); ++i) {
+    for (size_t i = 0; i < G_->order(); ++i) {
         VertexCost vc = ArgMin();
         fill_cost_ += vc.second;
         Vertex v = vc.first;
@@ -276,7 +276,7 @@ void EliminationAlgorithm::AddEdge(VertexPair p) {
 }
 
 bool EliminationAlgorithm::IsEdge(VertexPair p) {
-    return G_.HasEdge (p) || IsFillEdge(p);
+    return G_->HasEdge (p) || IsFillEdge(p);
 }
 
 bool EliminationAlgorithm::IsFillEdge(VertexPair p) {
@@ -324,7 +324,7 @@ VertexCost EliminationAlgorithm::TieBreak() {
 
 Vertices EliminationAlgorithm::MonotoneNbhd(Vertex v) {
     Vertices N_alpha;
-    for (Vertex u : G_.N(v)) {
+    for (Vertex u : G_->N(v)) {
         if (!IsRemoved(u)) {
             N_alpha.add(u);
         }
@@ -340,7 +340,7 @@ Vertices EliminationAlgorithm::MonotoneNbhd(Vertex v) {
 void EliminationAlgorithm::PrettyPrint() const {
     std::cout << "elimination order:\t";
     for (Vertex v : alpha_) {
-        std::cout << G_.name(v) << " ";
+        std::cout << G_->name(v) << " ";
     }
     std::cout << std::endl;
     std::cout << "tie distribution:\t";

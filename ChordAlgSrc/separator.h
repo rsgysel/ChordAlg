@@ -62,7 +62,11 @@ class Block {
 // Intended for numerous computations on the same graph.
 class SeparatorComponents {
  public:
-    explicit SeparatorComponents(Graph const&);
+    SeparatorComponents() = delete;
+    SeparatorComponents(const SeparatorComponents&) = delete;
+    void operator=(const SeparatorComponents&) = delete;
+
+    explicit SeparatorComponents(const Graph*);
     virtual ~SeparatorComponents() {}
 
     Vertices GetNeighborhood(Vertex, FillSet&);
@@ -112,7 +116,8 @@ class SeparatorComponents {
     void InitializeS(const Vertices&);
     virtual void FindComponents(FillSet&);
 
-    Graph const& G_;
+    const Graph* const G_;
+
     Vertices S_;
     std::vector< int > connected_component_;
     std::vector< int > search_queue_;
@@ -121,16 +126,15 @@ class SeparatorComponents {
     inline bool IsUnsearched(Vertex u) const {
         return connected_component_[u] == kUnsearched();
     }
-
-    // Disable default constructor, copy constructor, assignment
-    SeparatorComponents();
-    SeparatorComponents(const SeparatorComponents&);
-    void operator=(const SeparatorComponents&);
 };
 
 class SeparatorBlocks : public SeparatorComponents {
  public:
-    explicit SeparatorBlocks(Graph const&);
+    SeparatorBlocks() = delete;
+    SeparatorBlocks(const SeparatorBlocks&) = delete;
+    void operator=(const SeparatorBlocks&) = delete;
+
+    explicit SeparatorBlocks(const Graph*);
     ~SeparatorBlocks() {}
 
     std::vector< Block >::const_iterator begin() {
@@ -170,11 +174,6 @@ class SeparatorBlocks : public SeparatorComponents {
 
     std::vector< Block > blocks_;
     std::vector< int > last_separator_vertex_seen_;
-
-    // Disable default constructor, copy constructor, assignment
-    SeparatorBlocks();
-    SeparatorBlocks(const SeparatorBlocks&);
-    void operator=(const SeparatorBlocks&);
 };
 
 }  // namespace chordalg

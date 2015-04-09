@@ -20,7 +20,7 @@ LexTrie* MinimalSeparators(const Graph& G) {
     // minimal separators not yet processed. entries are sorted
     std::vector< Vertices > minimal_separator_queue;
     // current vertex separator
-    SeparatorBlocks S(G);
+    SeparatorBlocks S(&G);
     // first phase: the neighborhood of each connected component
     // of G - N[v] for each vertex v is a minimal separator
     for (Vertex v : G) {
@@ -61,7 +61,7 @@ LexTrie* MinimalSeparators(const Graph& G, Vertex a, Vertex b) {
     std::vector< Vertices > minimal_separator_queue;
     // current vertex separator
     Vertices U(n);
-    SeparatorBlocks S(G);
+    SeparatorBlocks S(&G);
     // first phase: the neighborhood of the connected component
     // of G - N[a] containing b is a minimal ab-separator
     S.SeparateClosedNbhd(a);

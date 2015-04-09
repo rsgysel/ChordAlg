@@ -37,12 +37,12 @@ namespace chordalg {
 struct ClassicCriterion : public EliminationCriterion {
  public:
     virtual ~ClassicCriterion() {}
-    virtual Weight Calculate(Weight) {
+    virtual Weight Calculate(Weight) const {
         return 0;
     }
 
  private:
-    Weight Calculate(Weight, Weight) {
+    Weight Calculate(Weight, Weight) const {
         return 0;
     }
 };  // ClassicCriterion
@@ -50,22 +50,22 @@ struct ClassicCriterion : public EliminationCriterion {
 struct DeficiencyCriterion : public ClassicCriterion {
  public:
     virtual ~DeficiencyCriterion() {}
-    Weight Calculate(Weight deficiency) {
+    Weight Calculate(Weight deficiency) const {
         return deficiency;
     }
 };  // DeficiencyCriterion
 
 class ClassicElimination : public EliminationAlgorithm {
  public:
-    ClassicElimination(ColoredIntersectionGraph&, ClassicCriterion*);
+    ClassicElimination(const ColoredIntersectionGraph*, const ClassicCriterion*);
     virtual ~ClassicElimination();
 
  private:
     void Eliminate(Vertex);
     std::pair< Weight, Cost > WeightOf(Vertex);
 
-    ColoredIntersectionGraph& H_;
-    ClassicCriterion* f_;
+    const ColoredIntersectionGraph* const H_;
+    const ClassicCriterion* const f_;
 };  // class ClassicElimination
 
 }  // namespace chordalg

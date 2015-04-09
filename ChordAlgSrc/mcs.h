@@ -33,7 +33,7 @@
 
 namespace chordalg {
 
-EliminationOrder MCS(Graph& G);
+EliminationOrder* MCS(Graph& G);
 CliqueTree* MCSCliqueTree(Graph& G);
 
 class MCSQueue {

@@ -53,7 +53,11 @@ struct EliminationCriterion {
 
 class EliminationOrder {
  public:
-    explicit EliminationOrder(Graph&);
+    EliminationOrder() = delete;
+    EliminationOrder(const EliminationOrder&) = delete;
+    void operator=(const EliminationOrder&) = delete;
+
+    explicit EliminationOrder(const Graph* const);
     ~EliminationOrder();
     void Init();
 
@@ -86,7 +90,7 @@ class EliminationOrder {
     int size() const {
         return alpha_.size();
     }
-    const Graph& G() const {
+    const Graph* G() const {
         return G_;
     }
 
@@ -100,7 +104,8 @@ class EliminationOrder {
     }
 
  private:
-    Graph& G_;
+    const Graph* const G_;
+
     Vertices alpha_;  // alpha[i] = ith vertex eliminated
     std::vector< int > alpha_inverse_;
 
@@ -115,7 +120,11 @@ class EliminationOrder {
 
 class EliminationAlgorithm {
  public:
-    explicit EliminationAlgorithm(Graph& G);
+    EliminationAlgorithm() = delete;
+    EliminationAlgorithm(const EliminationAlgorithm&) = delete;
+    void operator=(const EliminationAlgorithm&) = delete;
+
+    explicit EliminationAlgorithm(const Graph* const G);
     virtual ~EliminationAlgorithm();
 
     void PrettyPrint() const;
@@ -154,7 +163,7 @@ class EliminationAlgorithm {
     virtual void Eliminate(Vertex) = 0;
     virtual std::pair< Weight, Cost > WeightOf(Vertex) = 0;
 
-    Graph& G_;
+    const Graph* const G_;
 
     Vertices alpha_;  // alpha[i] = ith vertex eliminated
     std::vector < int > alpha_inverse_;
@@ -175,6 +184,7 @@ void RunAtomHeuristic(std::string filename,
                       int runs = 1) {
     FileReaderType* graph_reader = NewFileReader < FileReaderType >(filename);
     GraphType G(graph_reader);
+    delete graph_reader;
 
     Weight total_weight = 0;
     Atoms A(&G);
@@ -218,6 +228,7 @@ void RunHeuristic(std::string filename,
                   CriterionType* criterion = new CriterionType()) {
     FileReaderType* graph_reader = NewFileReader < FileReaderType >(filename);
     GraphType G(graph_reader);
+    delete graph_reader;
 
     EliminationType eo(G, criterion);
     eo.PrettyPrint();

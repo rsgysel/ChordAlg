@@ -39,14 +39,18 @@ namespace chordalg {
 
 class MixedElimination : public LBElimination {
  public:
-    MixedElimination(ColoredIntersectionGraph&, LBCriterion*);
+    MixedElimination() = delete;
+    MixedElimination(const MixedElimination&) = delete;
+    void operator=(const MixedElimination&) = delete;
+
+    MixedElimination(const ColoredIntersectionGraph*, const LBCriterion*);
     virtual ~MixedElimination();
 
  private:
     void Eliminate(Vertex);
     std::pair< Weight, Cost > WeightOf(Vertex);
 
-    ColoredIntersectionGraph& H_;
+    const ColoredIntersectionGraph* const H_;
     SeparatorBlocks B_;
 };  // MixedElimination
 

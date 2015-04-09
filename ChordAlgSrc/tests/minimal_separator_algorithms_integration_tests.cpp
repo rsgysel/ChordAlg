@@ -76,7 +76,7 @@ TEST_F(MinimalSeparatorAlgorithmsTest, BipartiteReductionPair) {
 TEST_F(MinimalSeparatorAlgorithmsTest, BipartiteReductionPairBlocks) {
     Read(bipartite_reduction, 6, 7);
     for(auto X : *MS_) {
-        chordalg::SeparatorBlocks S(*G_);
+        chordalg::SeparatorBlocks S(G_);
         S.Separate(chordalg::Vertices(X));
         EXPECT_EQ(S.FullComponentCt(), 2);
         EXPECT_EQ(S.NonFullComponentCt(), 0);
@@ -91,7 +91,7 @@ TEST_F(MinimalSeparatorAlgorithmsTest, xBipartiteReduction) {
 TEST_F(MinimalSeparatorAlgorithmsTest, xBipartiteReductionBlocks) {
     Read(bipartite_reduction_x, 6, 7);
     for(auto X : *MS_) {
-        chordalg::SeparatorBlocks S(*G_);
+        chordalg::SeparatorBlocks S(G_);
         S.Separate(chordalg::Vertices(X));
         EXPECT_EQ(S.FullComponentCt(), 2);
         EXPECT_EQ(S.NonFullComponentCt(), 0);
@@ -111,7 +111,7 @@ TEST_F(MinimalSeparatorAlgorithmsTest, stBipartiteReductionPair) {
 TEST_F(MinimalSeparatorAlgorithmsTest, stBipartiteReductionBlocks) {
     Read(bipartite_reduction_st, 6, 7);
     for(auto X : *MS_) {
-        chordalg::SeparatorBlocks S(*G_);
+        chordalg::SeparatorBlocks S(G_);
         S.Separate(chordalg::Vertices(X));
         EXPECT_EQ(S.FullComponentCt(), 2);
         EXPECT_EQ(S.NonFullComponentCt(), 0);

@@ -25,7 +25,7 @@ class SeparatorComponentsTest : public ::testing::Test {
             FAIL() << "Use Read once in your test.";
         } else {
             G_ = new chordalg::Graph(new chordalg::AdjacencyLists(A));
-            S_ = new SeparatorType(*G_);
+            S_ = new SeparatorType(G_);
             S_->Separate(X);
         }
     }
@@ -85,7 +85,7 @@ TYPED_TEST(SeparatorComponentsTest, NeighborsConnected) {
 
 TEST(BlockTest, EmptySeparatorNeighborhoodSize) {
     chordalg::Graph G(new chordalg::AdjacencyLists(connected_components_test));
-    chordalg::SeparatorBlocks S(G);
+    chordalg::SeparatorBlocks S(&G);
     S.Separate({});
     for(auto B : S) {
         EXPECT_EQ(B.NC().size(), 0);
@@ -94,7 +94,7 @@ TEST(BlockTest, EmptySeparatorNeighborhoodSize) {
 
 TEST(BlockTest, NeighborhoodSizes) {
     chordalg::Graph G(new chordalg::AdjacencyLists(connected_components_test));
-    chordalg::SeparatorBlocks S(G);
+    chordalg::SeparatorBlocks S(&G);
     S.Separate({0, 1, 2, 3});
     size_t i = 0, neighborhood_sizes[]{4, 1, 2, 4};
     for(auto B : S) {

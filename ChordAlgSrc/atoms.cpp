@@ -17,7 +17,7 @@ Atoms::~Atoms() {
 
 void Atoms::ComputeAtoms() {
     std::list< Vertices > vertices_of_atoms;
-    SeparatorComponents cc(*G_);
+    SeparatorComponents cc(G_);
     Vertices deleted_vertices;  // in paper, this is V(G_) - V(G_')
     std::vector< bool > is_deleted(G_->order(), false);
 

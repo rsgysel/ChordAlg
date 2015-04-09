@@ -81,11 +81,11 @@ LexTrie* ColoredIntersectionGraph::InduceSubsetFamily(
     return subset_family;
 }
 
-bool ColoredIntersectionGraph::IsMonochromatic(Vertex u, Vertex v) {
+bool ColoredIntersectionGraph::IsMonochromatic(Vertex u, Vertex v) const {
     return CommonColorCount(u, v) > 0;
 }
 
-size_t ColoredIntersectionGraph::CommonColorCount(Vertex u, Vertex v) {
+size_t ColoredIntersectionGraph::CommonColorCount(Vertex u, Vertex v) const {
     Multicolor intersection;
     std::set_intersection(vertex_color(u).begin(), vertex_color(u).end(),
                           vertex_color(v).begin(), vertex_color(v).end(),

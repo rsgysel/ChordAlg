@@ -4,23 +4,23 @@ namespace chordalg {
 
 ////////////// ctor & dtors
 //
-SeparatorComponents::SeparatorComponents(Graph const& G) :
+SeparatorComponents::SeparatorComponents(const Graph* G) :
     G_(G),
-    S_(G.order()),
+    S_(G_->order()),
     connected_component_(),
     search_queue_(),
     size_(0) {
-    S_.reserve(G.order());
-    connected_component_.resize(G.order());
-    search_queue_.reserve(G.order());
+    S_.reserve(G_->order());
+    connected_component_.resize(G_->order());
+    search_queue_.reserve(G_->order());
     return;
 }
 
-SeparatorBlocks::SeparatorBlocks(Graph const& G) :
+SeparatorBlocks::SeparatorBlocks(const Graph* G) :
     SeparatorComponents(G),
     blocks_(),
     last_separator_vertex_seen_() {
-    last_separator_vertex_seen_.resize(G.order());
+    last_separator_vertex_seen_.resize(G_->order());
     return;
 }
 
@@ -28,7 +28,7 @@ SeparatorBlocks::SeparatorBlocks(Graph const& G) :
 
 void SeparatorComponents::SeparateNbhd(Vertex v) {
     FillSet fill;
-    InitializeS(G_.N(v));
+    InitializeS(G_->N(v));
     FindComponents(fill);
     return;
 }
@@ -36,7 +36,7 @@ void SeparatorComponents::SeparateNbhd(Vertex v) {
 void SeparatorComponents::SeparateClosedNbhd(Vertex v) {
     Vertices S;
     S.add(v);
-    for (Vertex u : G_.N(v)) {
+    for (Vertex u : G_->N(v)) {
         S.add(u);
     }
     FillSet fill;
@@ -67,7 +67,7 @@ void SeparatorComponents::InitializeS(const Vertices& S) {
         S_.add(v);
     }
     // initialize connected component of each vertex
-    for (Vertex v : G_) {
+    for (Vertex v : *G_) {
         connected_component_[v] = kUnsearched();
     }
     for (Vertex v : S) {
@@ -79,7 +79,7 @@ void SeparatorComponents::InitializeS(const Vertices& S) {
 // Finds connected components
 void SeparatorComponents::FindComponents(FillSet& fill) {
     ConnectedComponentID current_component = kUnsearched();
-    for (Vertex v : G_) {
+    for (Vertex v : *G_) {
         if (IsUnsearched(v) && !IsInSeparator(v)) {
             search_queue_.push_back(v);
             ++current_component;
@@ -107,7 +107,7 @@ Vertices SeparatorComponents::ConnectedComponent(Vertex v) const {
     if (IsInSeparator(v)) {
         return C;
     }
-    for (Vertex u : G_) {
+    for (Vertex u : *G_) {
         if (AreConnected(u, v)) {
             C.add(u);
         }
@@ -117,10 +117,10 @@ Vertices SeparatorComponents::ConnectedComponent(Vertex v) const {
 
 Vertices SeparatorComponents::GetNeighborhood(Vertex u, FillSet& fill) {
     if (fill.empty()) {
-        return Vertices(G_.N(u));
+        return Vertices(G_->N(u));
     } else {
         Vertices neighborhood;
-        for (Vertex v : G_.N(u)) {
+        for (Vertex v : G_->N(u)) {
             neighborhood.add(v);
         }
         for (Vertex v : fill[u]) {
@@ -134,7 +134,7 @@ void SeparatorBlocks::FindComponents(FillSet& fill) {
     SeparatorComponents::FindComponents(fill);
     blocks_.clear();
     blocks_.resize(size_);
-    for (Vertex v : G_) {
+    for (Vertex v : *G_) {
         if (!IsInSeparator(v)) {
             ConnectedComponentID C = connected_component_[v];
             blocks_[C].addC(v);
@@ -190,8 +190,8 @@ size_t SeparatorBlocks::NonFullComponentCt() const {
 }
 
 void SeparatorComponents::PrettyPrint() const {
-    for (Vertex v : G_) {
-        std::cout << "CC(" << G_.name(v) << "): " << connected_component_[v];
+    for (Vertex v : *G_) {
+        std::cout << "CC(" << G_->name(v) << "): " << connected_component_[v];
         std::cout << std::endl;
     }
     std::cout << std::endl;
@@ -203,7 +203,7 @@ void SeparatorBlocks::PrettyPrint() const {
     ConnectedComponentID cc = 0;
     for (Block B : blocks_) {
         std::cout << "N(C_" << cc << "): ";
-        G_.PrettyPrint(B.NC());
+        G_->PrettyPrint(B.NC());
         ++cc;
     }
     return;

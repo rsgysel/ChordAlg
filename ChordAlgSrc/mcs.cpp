@@ -7,12 +7,12 @@
 
 namespace chordalg {
 
-EliminationOrder MCS(Graph& G) {
+EliminationOrder* MCS(Graph& G) {
     MCSQueue mcs_q(G.order());
-    EliminationOrder eo(G);
+    EliminationOrder* eo = new EliminationOrder(&G);
     for (size_t i = G.order() ; i > 0 ; i--) {
         Vertex v = mcs_q.Pop();
-        eo.Emplace(v, i - 1);
+        eo->Emplace(v, i - 1);
         if (i != 1) {
             for (Vertex u : G.N(v)) {
                 mcs_q.Increment(u);
@@ -24,7 +24,7 @@ EliminationOrder MCS(Graph& G) {
 
 CliqueTree* MCSCliqueTree(Graph& G) {
     MCSQueue mcs_q(G.order());
-    EliminationOrder eo(G);
+    EliminationOrder eo(&G);
     std::list< std::pair<size_t, size_t> > ct_edges;
     size_t s = 0;
     VertexList Ks;

@@ -6,11 +6,11 @@
 
 namespace chordalg {
 
-LBElimination::LBElimination(ColoredIntersectionGraph& H, LBCriterion* f) :
+LBElimination::LBElimination(const ColoredIntersectionGraph* H, const LBCriterion* f) :
     EliminationAlgorithm(H),
     H_(H),
-    B_(H),
-    f_(f) {
+    f_(f),
+    B_(H) {
     LBElimination::Init();
     return;
 }
@@ -22,12 +22,12 @@ LBElimination::~LBElimination() {
 
 void LBElimination::Init() {
     // Monochromatic pair costs
-    for (Vertex v : H_) {
-        for (Vertex u : H_) {
-            if (u != v && H_.IsMonochromatic(u, v)) {
+    for (Vertex v : *H_) {
+        for (Vertex u : *H_) {
+            if (u != v && H_->IsMonochromatic(u, v)) {
                 VertexPair uv = VertexPair(std::min(u, v), std::max(u, v));
                 unseparated_monochromatic_pairs_[uv] =
-                    H_.CommonColorCount(u, v);
+                    H_->CommonColorCount(u, v);
             }
         }
     }
@@ -57,7 +57,7 @@ std::pair< Weight, Cost > LBElimination::WeightOf(Vertex v) {
     std::set< VertexPair > seen_fill_pairs;
     for (Block B : B_) {
         for (VertexPair uw : VertexPairs(B.NC())) {
-            Cost fill_cost = H_.CommonColorCount(uw.first, uw.second);
+            Cost fill_cost = H_->CommonColorCount(uw.first, uw.second);
             if (!IsEdge(uw) && fill_cost > 0 &&
                seen_fill_pairs.find(uw) == seen_fill_pairs.end()) {
                 deficiency_wt += fill_cost;
