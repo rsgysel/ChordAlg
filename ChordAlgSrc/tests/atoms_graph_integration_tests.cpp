@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include "ChordAlgSrc/atom_subgraphs.hpp"
+#include "ChordAlgSrc/atoms.h"
 #include "ChordAlgSrc/graph.h"
 #include "graph_test_framework.h"
 #include "test_graphs.h"
@@ -20,12 +20,12 @@ class AtomsTest : public GraphTest {
             FAIL() << "Use Read once in your test.";
         } else {
             G_ = new chordalg::Graph(new chordalg::AdjacencyLists(A));
-            A_ = new chordalg::Atoms< chordalg::Graph >(*G_);
+            A_ = new chordalg::Atoms(G_);
         }
         return;
     }
  protected:
-    chordalg::Atoms< chordalg::Graph >* A_;
+    chordalg::Atoms* A_;
 };  // AtomsTest
 
 

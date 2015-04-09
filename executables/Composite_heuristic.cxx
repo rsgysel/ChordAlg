@@ -22,7 +22,7 @@
 #include <algorithm>
 #include <string>
 
-#include "atom_subgraphs.hpp"
+#include "atoms.h"
 #include "classic_elimination.h"
 #include "file_reader.h"
 #include "intersection_graph.h"
@@ -57,7 +57,7 @@ int main(int argc, char** argv) {
             NewFileReader<MatrixCellIntGraphFR>(argv[1]);
         ColoredIntersectionGraph G(graph_reader);
         Weight total_weight = 0;
-        Atoms< ColoredIntersectionGraph > A(G);
+        Atoms A(&G);
         int clique_atoms = 0, atom_id = 0, total_count = 0;
         for (ColoredIntersectionGraph* a : A) {
             ++atom_id;

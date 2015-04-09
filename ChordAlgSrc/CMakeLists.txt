@@ -1,4 +1,5 @@
 add_library(ChordAlg
+                atoms.cpp
                 classic_elimination.cpp
                 elimination_order.cpp
                 file_reader.cpp
@@ -8,6 +9,7 @@ add_library(ChordAlg
                 lb_elimination.cpp
                 lex_trie.cpp
                 mcs.cpp
+                mcs_m.cpp
                 minimal_separator_algorithms.cpp
                 mixed_elimination.cpp
                 separator.cpp

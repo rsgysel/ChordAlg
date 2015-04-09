@@ -22,7 +22,6 @@
 
 #include <string>
 
-#include "atom_subgraphs.hpp"
 #include "mixed_elimination.h"
 #include "file_reader.h"
 #include "intersection_graph.h"

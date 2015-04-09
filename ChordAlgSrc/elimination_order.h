@@ -35,7 +35,7 @@
 #include <vector>
 #include <utility>
 
-#include "atom_subgraphs.hpp"
+#include "atoms.h"
 #include "chordalg_types.h"
 #include "file_reader.h"
 #include "graph.h"
@@ -177,7 +177,7 @@ void RunAtomHeuristic(std::string filename,
     GraphType G(graph_reader);
 
     Weight total_weight = 0;
-    Atoms< GraphType > A(G);
+    Atoms A(&G);
     int clique_atoms = 0, atom_id = 0, total_count = 0;
     for (GraphType* a : A) {
         ++atom_id;

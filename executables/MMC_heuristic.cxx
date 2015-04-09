@@ -21,7 +21,6 @@
 
 #include <string>
 
-#include "atom_subgraphs.hpp"
 #include "classic_elimination.h"
 #include "file_reader.h"
 #include "intersection_graph.h"

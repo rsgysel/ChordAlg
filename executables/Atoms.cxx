@@ -21,7 +21,7 @@
 #include <string>
 #include <sstream>
 
-#include "atom_subgraphs.hpp"
+#include "atoms.h"
 #include "file_reader.h"
 #include "intersection_graph.h"
 
@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
             chordalg::NewFileReader<chordalg::MatrixCellIntGraphFR>(
                 std::string(argv[1]));
         chordalg::ColoredIntersectionGraph G(graph_reader);
-        chordalg::Atoms< chordalg::ColoredIntersectionGraph > A(G);
+        chordalg::Atoms A(&G);
         int i = 0;
         for (chordalg::ColoredIntersectionGraph* a : A) {
             std::stringstream ss;

@@ -38,7 +38,7 @@ class Graph {
     explicit Graph(FileReader* F);
     explicit Graph(AdjacencyLists* A);
     Graph(AdjacencyLists*, VertexNames);
-    Graph(Graph&, Vertices);
+    Graph(const Graph&, Vertices);
     virtual ~Graph();
 
     bool IsIsomorphic(Graph&) const;
@@ -95,8 +95,8 @@ class Graph {
     size_t size_;  // #edges
 
     // Induced Subgraph Initialization
-    VertexNames* InducedNames(Graph&, Vertices);
-    AdjacencyLists* InducedVertices(Graph&, Vertices);
+    VertexNames* InducedNames(const Graph&, Vertices);
+    AdjacencyLists* InducedVertices(const Graph&, Vertices);
     VertexNames* DefaultNames(size_t);
 
     template< class InputIterator >

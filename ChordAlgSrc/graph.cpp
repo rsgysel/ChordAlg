@@ -43,7 +43,7 @@ Graph::Graph(AdjacencyLists* a_lists, VertexNames vertex_names) :
     return;
 }
 
-Graph::Graph(Graph& super_graph, Vertices X) :
+Graph::Graph(const Graph& super_graph, Vertices X) :
     neighborhoods_(InducedVertices(super_graph, X)),
     vertex_names_(InducedNames(super_graph, X)),
     order_(X.size()),
@@ -116,7 +116,7 @@ Vertex Graph::vertex(std::string id) const {
     return itr->second;
 }
 
-VertexNames* Graph::InducedNames(Graph& super_graph, Vertices X) {
+VertexNames* Graph::InducedNames(const Graph& super_graph, Vertices X) {
     std::sort(X.begin(), X.end());
     VertexNames* names = new VertexNames;
     names->reserve(X.size());
@@ -126,7 +126,7 @@ VertexNames* Graph::InducedNames(Graph& super_graph, Vertices X) {
     return names;
 }
 
-AdjacencyLists* Graph::InducedVertices(Graph& super_graph, Vertices X) {
+AdjacencyLists* Graph::InducedVertices(const Graph& super_graph, Vertices X) {
     std::sort(X.begin(), X.end());
     AdjacencyLists* a_lists = new AdjacencyLists();
     a_lists->resize(X.size());
