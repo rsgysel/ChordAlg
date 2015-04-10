@@ -116,6 +116,7 @@ void RunAtomHeuristic(std::string filename,
 
     Weight total_weight = 0;
     Atoms A(&G);
+    A.ComputeAtoms();
     int clique_atoms = 0, atom_id = 0, total_count = 0;
     for (GraphType* a : A) {
         ++atom_id;

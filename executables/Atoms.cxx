@@ -34,6 +34,7 @@ int main(int argc, char** argv) {
                 std::string(argv[1]));
         chordalg::ColoredIntersectionGraph G(graph_reader);
         chordalg::Atoms A(&G);
+        A.ComputeAtoms();
         int i = 0;
         for (chordalg::ColoredIntersectionGraph* a : A) {
             std::stringstream ss;

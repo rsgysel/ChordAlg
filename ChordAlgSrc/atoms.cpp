@@ -3,8 +3,6 @@
 namespace chordalg {
 
 Atoms::Atoms(const Graph* G) : G_(G) {
-    MCSmPlus(*G_, alpha_, alpha_inverse_, F_, minsep_generators_);
-    ComputeAtoms();
     return;
 }
 
@@ -16,23 +14,30 @@ Atoms::~Atoms() {
 }
 
 void Atoms::ComputeAtoms() {
+    // Get minimal triangulation 
+    VertexVector alpha;
+    std::vector< size_t > alpha_inverse;
+    std::vector< VertexList > F;
+    VertexList minsep_generators;
+    MCSmPlus(*G_, alpha, alpha_inverse, F, minsep_generators);
+
     std::list< Vertices > vertices_of_atoms;
     SeparatorComponents cc(G_);
     Vertices deleted_vertices;  // in paper, this is V(G_) - V(G_')
     std::vector< bool > is_deleted(G_->order(), false);
 
     // Examine minsep_generators, alpha_-earliest first
-    for (int i : minsep_generators_) {
+    for (int i : minsep_generators) {
         // Check to see if minimal separator is a clique
-        Vertex v = alpha_[i];
+        Vertex v = alpha[i];
         Vertices S;
         for (Vertex u : G_->N(v)) {
-            if (alpha_inverse_[v] < alpha_inverse_[u] && !is_deleted[u]) {
+            if (alpha_inverse[v] < alpha_inverse[u] && !is_deleted[u]) {
                 S.add(u);
             }
         }
-        for (Vertex u : F_[v]) {
-            if (alpha_inverse_[v] < alpha_inverse_[u] && !is_deleted[u]) {
+        for (Vertex u : F[v]) {
+            if (alpha_inverse[v] < alpha_inverse[u] && !is_deleted[u]) {
                 S.add(u);
             }
         }

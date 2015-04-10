@@ -55,16 +55,11 @@ class Atoms {
         return atom_subgraphs_.end();
     }
 
- private:
     void ComputeAtoms();
 
+ private:
     std::vector< Graph* > atom_subgraphs_;
-
     const Graph* const G_;
-    VertexVector alpha_;  // peo. alpha[i] is i^th vertex eliminated
-    std::vector< size_t > alpha_inverse_;
-    std::vector< VertexList > F_;  // as in paper; minimal fill
-    VertexList minsep_generators_;  // 'X' in paper
 };  // Atoms
 
 }  // namespace chordalg

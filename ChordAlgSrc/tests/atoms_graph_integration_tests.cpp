@@ -21,6 +21,7 @@ class AtomsTest : public GraphTest {
         } else {
             G_ = new chordalg::Graph(new chordalg::AdjacencyLists(A));
             A_ = new chordalg::Atoms(G_);
+            A_->ComputeAtoms();
         }
         return;
     }
