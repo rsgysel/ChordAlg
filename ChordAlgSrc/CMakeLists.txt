@@ -1,6 +1,7 @@
 add_library(ChordAlg
                 atoms.cpp
                 classic_elimination.cpp
+                elimination_algorithm.cpp
                 elimination_order.cpp
                 file_reader.cpp
                 graph.cpp

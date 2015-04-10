@@ -24,7 +24,7 @@
 #include <set>
 #include <utility>
 
-#include "elimination_order.h"
+#include "elimination_algorithm.h"
 #include "intersection_graph.h"
 #include "separator.h"
 #include "vertices.h"
