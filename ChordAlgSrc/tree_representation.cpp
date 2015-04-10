@@ -5,7 +5,7 @@
 
 namespace chordalg {
 
-TreeRepresentation::TreeRepresentation(AdjacencyLists* E, Graph& G,
+TreeRepresentation::TreeRepresentation(AdjacencyLists* E, const Graph* G,
                                        std::vector< Vertices > clique_map) :
     G_(G),
     T_(E, NamesFromCliqueMap(clique_map)),
@@ -18,7 +18,7 @@ TreeRepresentation::~TreeRepresentation() {
 std::string TreeRepresentation::SerializeMaxcliqueAsString(Vertices K) const {
     std::string maxclique("{");
     for (Vertex v : K) {
-        maxclique += G_.name(v) + std::string(" ");
+        maxclique += G_->name(v) + std::string(" ");
     }
     maxclique.erase(maxclique.end() - 1, maxclique.end());
     maxclique += std::string("}");
@@ -35,7 +35,7 @@ VertexNames TreeRepresentation::NamesFromCliqueMap(
     return names;
 }
 
-CliqueTree::CliqueTree(AdjacencyLists* E, Graph& G,
+CliqueTree::CliqueTree(AdjacencyLists* E, const Graph* G,
                        std::vector<Vertices> clique_map) :
     TreeRepresentation(E, G, clique_map) {
 }

@@ -1,5 +1,5 @@
 /*
- *  vertex_utilities.h - iterators, pairs, and typedefs
+ *  vertices.h - iterators, pairs, and typedefs
  *  Copyright (C) 2013 Rob Gysel
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,8 +16,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef INCLUDE_VERTEX_UTILITIES_H_
-#define INCLUDE_VERTEX_UTILITIES_H_
+#ifndef INCLUDE_VERTICES_H_
+#define INCLUDE_VERTICES_H_
 
 #include <algorithm>
 #include <initializer_list>
@@ -142,10 +142,10 @@ class Vertices {
     VertexVector* V_;
 };  // Vertices
 
-class GVIterator {
+class GraphVertexIterator {
  public:
-    explicit GVIterator(const Graph* const G) : G_(G), v_(0) {}
-    GVIterator(const Graph* const G, Vertex v) : G_(G), v_(v) {}
+    explicit GraphVertexIterator(const Graph* const G) : G_(G), v_(0) {}
+    GraphVertexIterator(const Graph* const G, Vertex v) : G_(G), v_(v) {}
 
     void operator++() {
         ++v_;
@@ -153,10 +153,10 @@ class GVIterator {
     Vertex operator*() const {
         return v_;
     }
-    bool operator!=(const GVIterator& other) const {
+    bool operator!=(const GraphVertexIterator& other) const {
         return !(*this == other);
     }
-    bool operator==(const GVIterator& other) const {
+    bool operator==(const GraphVertexIterator& other) const {
         return (G_ == other.G_) && (v_ == other.v_);
     }
 
@@ -170,11 +170,11 @@ class GraphVertices : public Vertices {
     GraphVertices(const Graph* const G, int order) : Vertices(), G_(G),
                                                      order_(order) {}
 
-    GVIterator begin() const {
-        return GVIterator(G_);
+    GraphVertexIterator begin() const {
+        return GraphVertexIterator(G_);
     }
-    GVIterator end() const {
-        return GVIterator(G_, order_);
+    GraphVertexIterator end() const {
+        return GraphVertexIterator(G_, order_);
     }
 
  private:
@@ -186,7 +186,7 @@ class VertexPairs;
 
 class VertexPairsIterator {
  public:
-    VertexPairsIterator(const Vertices* const, int, int);
+    VertexPairsIterator(const Vertices*, int, int);
 
     void operator++();
     bool operator==(const VertexPairsIterator& other) const {
@@ -222,4 +222,4 @@ class VertexPairs {
 
 }  // namespace chordalg
 
-#endif  // INCLUDE_VERTEX_UTILITIES_H_
+#endif  // INCLUDE_VERTICES_H_

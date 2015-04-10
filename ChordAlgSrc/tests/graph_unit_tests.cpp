@@ -4,7 +4,7 @@
 #include "gtest/gtest.h"
 
 #include "ChordAlgSrc/graph.h"
-#include "ChordAlgSrc/vertex_utilities.h"
+#include "ChordAlgSrc/vertices.h"
 #include "test_graphs.h"
 #include "graph_test_framework.h"
 

@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "ChordAlgSrc/vertex_utilities.h"
+#include "ChordAlgSrc/vertices.h"
 
 //////////////
 // Test Graphs

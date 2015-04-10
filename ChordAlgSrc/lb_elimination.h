@@ -27,7 +27,7 @@
 #include "elimination_order.h"
 #include "intersection_graph.h"
 #include "separator.h"
-#include "vertex_utilities.h"
+#include "vertices.h"
 
 namespace chordalg {
 
@@ -70,7 +70,7 @@ class LBElimination : public EliminationAlgorithm {
     LBElimination(const LBElimination&) = delete;
     void operator=(const LBElimination&) = delete;
 
-    LBElimination(const ColoredIntersectionGraph*, const LBCriterion*);
+    explicit LBElimination(const ColoredIntersectionGraph*, const LBCriterion*);
     virtual ~LBElimination();
 
  protected:

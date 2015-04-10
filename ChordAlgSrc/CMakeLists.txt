@@ -14,6 +14,6 @@ add_library(ChordAlg
                 mixed_elimination.cpp
                 separator.cpp
                 tree_representation.cpp
-                vertex_utilities.cpp)
+                vertices.cpp)
 
 add_subdirectory(tests)

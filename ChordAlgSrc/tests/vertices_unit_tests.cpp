@@ -1,7 +1,7 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
-#include "ChordAlgSrc/vertex_utilities.h"
+#include "ChordAlgSrc/vertices.h"
 
 using ::testing::_;
 using ::testing::ReturnRef;

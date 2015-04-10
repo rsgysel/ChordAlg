@@ -24,7 +24,7 @@
 #include <vector>
 
 #include "graph.h"
-#include "vertex_utilities.h"
+#include "vertices.h"
 
 namespace chordalg {
 

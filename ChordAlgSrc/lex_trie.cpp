@@ -24,7 +24,7 @@ LexTrie::LexTrie(size_t n) : n_(n), set_count_(0) {
     try {
         this->root_ = new LexTrieNode(false);
     } catch(const std::bad_alloc& e) {
-        std::cerr << "In LexTrie.cpp LexTrie(int): " << e.what() << std::endl;
+        std::cerr << "In LexTrie.cpp LexTrie(size_t): " << e.what() << std::endl;
     }
     return;
 }

@@ -43,15 +43,15 @@ const char* Nexus_unknown_symbol = "Format Error: unknown symbol";
 
 ////////////// ctor & dtors
 //
-FileReader::FileReader(GraphFile& file) : file_(file),
-                                          neighborhoods_(NULL),
-                                          names_(NULL) {
+FileReader::FileReader(GraphFile* file) : file_(file),
+                                          neighborhoods_(nullptr),
+                                          names_(nullptr) {
     return;
 }
 
-FileReader::FileReader(std::string filename) : file_(*(new GraphFile(filename))),
-                                               neighborhoods_(NULL),
-                                               names_(NULL) {
+FileReader::FileReader(std::string filename) : file_(new GraphFile(filename)),
+                                               neighborhoods_(nullptr),
+                                               names_(nullptr) {
     return;
 }
 
@@ -109,7 +109,7 @@ void DimacsGraphFR::ReadFileOrDie() {
     size_t n = 0, m = 0;
     std::string line;
     std::set< std::pair<int, int> > edges;
-    while (file_.GetLine(line)) {
+    while (file_->GetLine(line)) {
         std::stringstream line_stream;
         std::string start_character, devnull;
         line_stream << line;
@@ -190,7 +190,7 @@ void SortedAdjacencyListFR::ReadFileOrDie() {
     std::map< std::string, Vertex > vertex_id;
     std::vector< std::list< std::string > > neighbor_names;
     // process first line, consisting of the graphs order
-    file_.GetLine(line);
+    file_->GetLine(line);
     line_stream << line;  // grab line into stream
     line_stream >> order;  // parse piece up to whitespace
     AssertFormatOrDie(0 <= order, File_first_line_format);
@@ -205,7 +205,7 @@ void SortedAdjacencyListFR::ReadFileOrDie() {
     names_ = new VertexNames;
     names_->resize(order);
     int vertex_count = 0;
-    while (file_.GetLine(line)) {
+    while (file_->GetLine(line)) {
         AssertFormatOrDie(vertex_count < order, File_too_many_lines);
         line_stream << line;
         line_stream >> vertex;
@@ -239,11 +239,11 @@ void MatrixCellIntGraphFR::ReadFileOrDie() {
     std::map< std::string, Vertex > vertex_id;
     std::vector< std::list< std::string > > neighbor_names;
     // skip first line
-    file_.GetLine(line);
+    file_->GetLine(line);
     line_stream.clear();
     line_stream.str("");
     // second line: # of rows and # of columns
-    file_.GetLine(line);
+    file_->GetLine(line);
     line_stream << line;
     line_stream >> row_count;
     line_stream >> col_count;
@@ -256,7 +256,7 @@ void MatrixCellIntGraphFR::ReadFileOrDie() {
     std::vector< std::vector< int > > matrix(row_count,
                                              std::vector< int >(col_count));
     int i = 0, j = 0, maxstate = 0;
-    while (file_.GetLine(line)) {
+    while (file_->GetLine(line)) {
         AssertFormatOrDie(i < row_count, Matrix_too_many_rows);
         j = 0;
         line_stream << line;
@@ -394,10 +394,10 @@ void NexusMRPFR::ReadFileOrDie() {
     std::map< std::string, Vertex > vertex_id;
     std::vector< std::list< std::string > > neighbor_names;
     // skip first two lines
-    file_.GetLine(line);
-    file_.GetLine(line);
+    file_->GetLine(line);
+    file_->GetLine(line);
     // third line: # of rows and # of columns
-    file_.GetLine(line);
+    file_->GetLine(line);
     parameter << ParseParameter(line, "ntax");
     parameter >> row_count;
     parameter.clear();
@@ -405,14 +405,14 @@ void NexusMRPFR::ReadFileOrDie() {
     parameter << ParseParameter(line, "nchar");
     parameter >> col_count;
     // skip next two lines
-    file_.GetLine(line);
-    file_.GetLine(line);
+    file_->GetLine(line);
+    file_->GetLine(line);
     taxon_name_.resize(row_count);
     // extract matrix from file
     std::vector< std::vector< int > > matrix(row_count,
                                              std::vector< int >(col_count));
     size_t i = 0;
-    while (file_.GetLine(line)) {
+    while (file_->GetLine(line)) {
         if (line == std::string(";")) {
             break;
         }
@@ -436,7 +436,7 @@ void NexusMRPFR::ReadFileOrDie() {
         }
         ++i;
     }
-    while (file_.GetLine(line)) {} // Finish processing input. For clarity of unit tests.
+    while (file_->GetLine(line)) {} // Finish processing input. For clarity of unit tests.
     ComputeGraphData(matrix, 1);
     return;
 }

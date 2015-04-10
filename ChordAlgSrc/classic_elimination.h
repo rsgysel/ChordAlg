@@ -30,7 +30,7 @@
 
 #include "elimination_order.h"
 #include "intersection_graph.h"
-#include "vertex_utilities.h"
+#include "vertices.h"
 
 namespace chordalg {
 
@@ -57,7 +57,7 @@ struct DeficiencyCriterion : public ClassicCriterion {
 
 class ClassicElimination : public EliminationAlgorithm {
  public:
-    ClassicElimination(const ColoredIntersectionGraph*, const ClassicCriterion*);
+    explicit ClassicElimination(const ColoredIntersectionGraph*, const ClassicCriterion*);
     virtual ~ClassicElimination();
 
  private:

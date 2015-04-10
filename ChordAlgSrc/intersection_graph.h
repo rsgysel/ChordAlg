@@ -25,7 +25,7 @@
 
 #include "graph.h"
 #include "lex_trie.h"
-#include "vertex_utilities.h"
+#include "vertices.h"
 
 namespace chordalg {
 

@@ -93,11 +93,11 @@ class LexTrieNode {
     }
 
     inline LexTrieNode* GetChild(Element k) {
-        return children_.find(k) != children_.end() ? children_[k] : NULL;
+        return children_.find(k) != children_.end() ? children_[k] : nullptr;
     }
 
     inline const LexTrieNode* GetChild(Element k) const {
-        return children_.find(k) != children_.end() ? children_.at(k) : NULL;
+        return children_.find(k) != children_.end() ? children_.at(k) : nullptr;
     }
 
     // Friend functions
@@ -181,7 +181,7 @@ const LexTrieNode* LexTrie::InsertRange(InputIterator begin, InputIterator end,
     for (InputIterator itr = begin; itr != end; ++itr) {
         if (!node->HasChild(*itr)) {
             LexTrieNode* newChild = new LexTrieNode(false);
-            if (newChild == NULL) {
+            if (newChild == nullptr) {
                 throw std::bad_alloc();
             }
             node->AddChild(newChild, *itr);

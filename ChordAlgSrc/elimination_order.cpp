@@ -5,7 +5,7 @@
 
 namespace chordalg {
 
-EliminationOrder::EliminationOrder(const Graph* const G) :
+EliminationOrder::EliminationOrder(const Graph* G) :
                                    G_(G),
                                    alpha_(G_->order()),
                                    alpha_inverse_(G_->order()),
@@ -217,7 +217,7 @@ void EliminationOrder::PrettyPrint() const {
 }
 
 // EliminationAlgorithm
-EliminationAlgorithm::EliminationAlgorithm(const Graph* const G) :
+EliminationAlgorithm::EliminationAlgorithm(const Graph* G) :
                                            G_(G),
                                            alpha_(G_->order()),
                                            alpha_inverse_(),
@@ -227,7 +227,7 @@ EliminationAlgorithm::EliminationAlgorithm(const Graph* const G) :
                                            remaining_vertices_(),
                                            ties_(),
                                            tie_count_() {
-    srand(time(NULL));
+    srand(time(nullptr));
     return;
 }
 

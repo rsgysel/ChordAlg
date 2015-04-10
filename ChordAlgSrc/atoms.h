@@ -30,7 +30,7 @@
 #include "lex_trie.h"
 #include "mcs_m.h"
 #include "separator.h"
-#include "vertex_utilities.h"
+#include "vertices.h"
 
 namespace chordalg {
 

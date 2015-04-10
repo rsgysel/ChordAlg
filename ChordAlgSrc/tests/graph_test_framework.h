@@ -4,7 +4,7 @@
 #include "gtest/gtest.h"
 
 #include "ChordAlgSrc/graph.h"
-#include "ChordAlgSrc/vertex_utilities.h"
+#include "ChordAlgSrc/vertices.h"
 
 class GraphTest : public ::testing::Test {
   public:

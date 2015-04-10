@@ -29,12 +29,12 @@
 #include "elimination_order.h"
 #include "graph.h"
 #include "tree_representation.h"
-#include "vertex_utilities.h"
+#include "vertices.h"
 
 namespace chordalg {
 
-EliminationOrder* MCS(Graph& G);
-CliqueTree* MCSCliqueTree(Graph& G);
+EliminationOrder* MCS(const Graph& G);
+CliqueTree* MCSCliqueTree(const Graph& G);
 
 class MCSQueue {
  public:

@@ -26,7 +26,7 @@
 
 #include "chordalg_types.h"
 #include "graph.h"
-#include "vertex_utilities.h"
+#include "vertices.h"
 
 namespace chordalg {
 

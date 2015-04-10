@@ -1,4 +1,4 @@
-#include "vertex_utilities.h"
+#include "vertices.h"
 
 namespace chordalg {
 
@@ -15,7 +15,7 @@ void Vertices::merge(Vertices U, Vertices W) {
 ////////////// ctor
 //
 
-VertexPairsIterator::VertexPairsIterator(const Vertices* const V, int begin,
+VertexPairsIterator::VertexPairsIterator(const Vertices* V, int begin,
                                          int end) :
         V_(V),
         v1_(begin),

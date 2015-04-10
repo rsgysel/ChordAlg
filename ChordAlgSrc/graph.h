@@ -28,7 +28,7 @@
 #include "chordalg_types.h"
 #include "file_reader.h"
 #include "lex_trie.h"
-#include "vertex_utilities.h"
+#include "vertices.h"
 
 namespace chordalg {
 
@@ -47,10 +47,10 @@ class Graph {
     void PrettyPrint(const VertexVector& U) const;
     void PrettyPrint(const Vertices& U) const;
 
-    GVIterator begin() const {
+    GraphVertexIterator begin() const {
         return GraphVertices(this, order_).begin();
     }
-    GVIterator end() const {
+    GraphVertexIterator end() const {
         return GraphVertices(this, order_).end();
     }
 

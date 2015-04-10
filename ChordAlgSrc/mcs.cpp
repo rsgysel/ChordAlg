@@ -7,7 +7,7 @@
 
 namespace chordalg {
 
-EliminationOrder* MCS(Graph& G) {
+EliminationOrder* MCS(const Graph& G) {
     MCSQueue mcs_q(G.order());
     EliminationOrder* eo = new EliminationOrder(&G);
     for (size_t i = G.order() ; i > 0 ; i--) {
@@ -22,7 +22,7 @@ EliminationOrder* MCS(Graph& G) {
     return eo;
 }
 
-CliqueTree* MCSCliqueTree(Graph& G) {
+CliqueTree* MCSCliqueTree(const Graph& G) {
     MCSQueue mcs_q(G.order());
     EliminationOrder eo(&G);
     std::list< std::pair<size_t, size_t> > ct_edges;
@@ -76,7 +76,7 @@ CliqueTree* MCSCliqueTree(Graph& G) {
         E->operator[](e.first).add(e.second);
         E->operator[](e.second).add(e.first);
     }
-    CliqueTree* tr = new CliqueTree(E, G, clique_map);
+    CliqueTree* tr = new CliqueTree(E, &G, clique_map);
     return tr;
 }
 

@@ -33,7 +33,7 @@
 #include "intersection_graph.h"
 #include "classic_elimination.h"
 #include "lb_elimination.h"
-#include "vertex_utilities.h"
+#include "vertices.h"
 
 namespace chordalg {
 
@@ -43,7 +43,7 @@ class MixedElimination : public LBElimination {
     MixedElimination(const MixedElimination&) = delete;
     void operator=(const MixedElimination&) = delete;
 
-    MixedElimination(const ColoredIntersectionGraph*, const LBCriterion*);
+    explicit MixedElimination(const ColoredIntersectionGraph*, const LBCriterion*);
     virtual ~MixedElimination();
 
  private:

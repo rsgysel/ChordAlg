@@ -39,7 +39,7 @@
 #include "chordalg_types.h"
 #include "file_reader.h"
 #include "graph.h"
-#include "vertex_utilities.h"
+#include "vertices.h"
 
 namespace chordalg {
 
@@ -57,7 +57,7 @@ class EliminationOrder {
     EliminationOrder(const EliminationOrder&) = delete;
     void operator=(const EliminationOrder&) = delete;
 
-    explicit EliminationOrder(const Graph* const);
+    explicit EliminationOrder(const Graph*);
     ~EliminationOrder();
     void Init();
 
@@ -124,7 +124,7 @@ class EliminationAlgorithm {
     EliminationAlgorithm(const EliminationAlgorithm&) = delete;
     void operator=(const EliminationAlgorithm&) = delete;
 
-    explicit EliminationAlgorithm(const Graph* const G);
+    explicit EliminationAlgorithm(const Graph* G);
     virtual ~EliminationAlgorithm();
 
     void PrettyPrint() const;

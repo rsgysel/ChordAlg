@@ -30,8 +30,8 @@ namespace chordalg {
 
 class TreeRepresentation {
  public:
-    TreeRepresentation(AdjacencyLists* E, Graph& G,
-                       std::vector< Vertices > clique_map);
+    explicit TreeRepresentation(AdjacencyLists* E, const Graph* G,
+                                std::vector< Vertices > clique_map);
     virtual ~TreeRepresentation();
 
     void NewickVisit(VertexSet& visited,
@@ -51,7 +51,7 @@ class TreeRepresentation {
         T_.PrettyPrint();
     }
 
-    const Graph& G() const {
+    const Graph* G() const {
         return G_;
     }
     const Graph& T() const {
@@ -59,7 +59,7 @@ class TreeRepresentation {
     }
 
  protected:
-    Graph& G_;  // underlying chordal graph
+    const Graph* G_;  // represented chordal graph
     Graph T_;  // topology
     std::vector< Vertices > clique_map_;  // maps nodes of T_ to cliques of G_
 
@@ -69,7 +69,7 @@ class TreeRepresentation {
 
 class CliqueTree : public TreeRepresentation {
  public:
-    CliqueTree(AdjacencyLists* E, Graph& G, std::vector< Vertices > clique_map);
+    CliqueTree(AdjacencyLists* E, const Graph* G, std::vector< Vertices > clique_map);
     ~CliqueTree();
 };  // CliqueTree
 
