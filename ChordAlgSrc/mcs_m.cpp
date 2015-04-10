@@ -8,9 +8,8 @@ namespace chordalg {
 //
 //
 // @result: clique minimal separators of G_
-void MCSmPlus(const Graph& G, 
-              VertexVector& alpha, 
-              std::vector< size_t >& alpha_inverse,
+void MCSmPlus(const Graph& G,
+              EliminationOrder& eo, 
               std::vector< VertexList >& F,
               VertexList& minsep_generators) {
     int s = -1;  // as in paper: for finding minimal separator generators
@@ -24,8 +23,6 @@ void MCSmPlus(const Graph& G,
     std::vector< bool > reached;  // as in paper
     reached.resize(n);
     F.resize(n);
-    alpha.resize(n);
-    alpha_inverse.resize(n);
     for (int i = n - 1; i >= 0; --i) {
         auto max_itr = std::max_element(label.begin(), label.end());
         int max_label = *max_itr;
@@ -74,8 +71,7 @@ void MCSmPlus(const Graph& G,
                 F[y].push_back(x);
             }
         }
-        alpha[i] = x;
-        alpha_inverse[x] = i;
+        eo.Emplace(x, i);
     }
     return;
 }

@@ -15,29 +15,28 @@ Atoms::~Atoms() {
 
 void Atoms::ComputeAtoms() {
     // Get minimal triangulation 
-    VertexVector alpha;
-    std::vector< size_t > alpha_inverse;
+    EliminationOrder eo(G_);
     std::vector< VertexList > F;
     VertexList minsep_generators;
-    MCSmPlus(*G_, alpha, alpha_inverse, F, minsep_generators);
+    MCSmPlus(*G_, eo, F, minsep_generators);
 
     std::list< Vertices > vertices_of_atoms;
     SeparatorComponents cc(G_);
     Vertices deleted_vertices;  // in paper, this is V(G_) - V(G_')
     std::vector< bool > is_deleted(G_->order(), false);
 
-    // Examine minsep_generators, alpha_-earliest first
+    // Examine minsep_generators, eo-earliest first
     for (int i : minsep_generators) {
         // Check to see if minimal separator is a clique
-        Vertex v = alpha[i];
+        Vertex v = eo.VertexAt(i);
         Vertices S;
         for (Vertex u : G_->N(v)) {
-            if (alpha_inverse[v] < alpha_inverse[u] && !is_deleted[u]) {
+            if (eo.Before(v, u) && !is_deleted[u]) {
                 S.add(u);
             }
         }
         for (Vertex u : F[v]) {
-            if (alpha_inverse[v] < alpha_inverse[u] && !is_deleted[u]) {
+            if (eo.Before(v, u) && !is_deleted[u]) {
                 S.add(u);
             }
         }

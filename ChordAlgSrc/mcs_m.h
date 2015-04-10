@@ -23,12 +23,13 @@
 #include <list>
 #include <vector>
 
+#include "elimination_order.h"
 #include "graph.h"
 #include "vertices.h"
 
 namespace chordalg {
 
-void MCSmPlus(const Graph&, VertexVector&, std::vector< size_t >&, std::vector< VertexList >&, VertexList&);
+void MCSmPlus(const Graph&, EliminationOrder&, std::vector< VertexList >&, VertexList&);
 
 }  // namespace chordalg
 

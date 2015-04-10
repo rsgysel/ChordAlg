@@ -26,6 +26,7 @@
 #include <vector>
 
 #include "chordalg_types.h"
+#include "elimination_order.h"
 #include "graph.h"
 #include "lex_trie.h"
 #include "mcs_m.h"
