@@ -44,6 +44,17 @@ LexTrieNode::~LexTrieNode() {
 // Member functions //
 //------------------//
 
+void LexTrie::PrettyPrint() const {
+    size_t i = 0;
+    for(const Subset& X : *this) {
+        std::cout << "X" << i << ": ";
+        std::copy(X.begin(), X.end(), std::ostream_iterator<Element>(std::cout<< " "));
+        std::cout << std::endl;
+        ++i;
+    }
+    return;
+}
+
 size_t LexTrie::SizeOf() const {
     return sizeof(*this) + root_->SizeOf(n_);
 }

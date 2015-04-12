@@ -30,7 +30,6 @@
 #include <utility>
 
 #include "atoms.h"
-#include "chordalg_types.h"
 #include "elimination_order.h"
 #include "file_reader.h"
 #include "graph.h"

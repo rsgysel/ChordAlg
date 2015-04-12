@@ -119,6 +119,23 @@ chordalg::AdjacencyLists dimacs_test{ {1, 3, 6, 8},
                                       {2, 3, 10},
                                       {5, 6, 7, 8, 9} };
 
+chordalg::AdjacencyLists independent_set{ {},
+                                          {},
+                                          {},
+                                          {},
+                                          {} };
+
+chordalg::AdjacencyLists many_minseps_four{ {2, 3, 4, 5},
+                                            {6, 7, 8, 9},
+                                            {0, 6},
+                                            {0, 7},
+                                            {0, 8},
+                                            {0, 9},
+                                            {1, 2},
+                                            {1, 3},
+                                            {1, 4},
+                                            {1, 5} };
+
 chordalg::AdjacencyLists nexus_test{ {1, 2},
                                      {0, 3},
                                      {0},

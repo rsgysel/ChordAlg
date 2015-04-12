@@ -25,7 +25,6 @@
 #include <string>
 #include <vector>
 
-#include "chordalg_types.h"
 #include "file_reader.h"
 #include "lex_trie.h"
 #include "vertices.h"
@@ -47,6 +46,13 @@ class Graph {
     void PrettyPrint(const VertexVector& U) const;
     void PrettyPrint(const Vertices& U) const;
 
+    Vertices V() const {
+        Vertices V(order_);
+        for(size_t i = 0; i < V.size(); ++i ) {
+            V[i] = i;
+        }
+        return V;
+    }
     GraphVertexIterator begin() const {
         return GraphVertices(this, order_).begin();
     }

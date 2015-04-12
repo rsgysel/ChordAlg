@@ -27,12 +27,14 @@
 #include <vector>
 #include <utility>
 
-#include "chordalg_types.h"
-
 namespace chordalg {
 
 class LexTrie;
 class LexTrieNode;
+
+// Element of [n-1] = {0, 1, 2, ..., n - 1}
+typedef size_t Element;
+typedef std::vector< Element > Subset;
 
 typedef std::pair< Element, LexTrieNode* > ChildData;
 typedef std::map< Element, LexTrieNode* > ChildDataStructure;
@@ -134,11 +136,12 @@ class LexTrie {
     template< class Container >
     const LexTrieNode* SortedInsert(const Container&, bool* new_set = nullptr);
 
+    void PrettyPrint() const;
+
     size_t SizeOf() const;  // space used by LexTrie
     size_t Size() const {
         return set_count_;  // number of sets in family
     }
-
     size_t n() const {
         return n_;
     }
@@ -189,13 +192,15 @@ const LexTrieNode* LexTrie::InsertRange(InputIterator begin, InputIterator end,
         node = node->GetChild(*itr);
     }
 
-    if (node->has_set_ && (new_set != nullptr)) {
+    if (new_set != nullptr && node->has_set_) {
         *new_set = false;
-    } else {
+    } else if (new_set != nullptr) {
+        *new_set = true;
+    }
+
+    if (!node->has_set_) {
         set_count_++;
         node->has_set_ = true;
-        if (new_set != nullptr)
-            *new_set = true;
     }
 
     return node;

@@ -29,7 +29,6 @@
 #include <string>
 #include <vector>
 
-#include "chordalg_types.h"
 #include "graph_file.h"
 #include "lex_trie.h"
 #include "vertices.h"

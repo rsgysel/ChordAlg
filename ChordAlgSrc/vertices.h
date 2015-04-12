@@ -27,8 +27,6 @@
 #include <vector>
 #include <utility>
 
-#include "chordalg_types.h"
-
 namespace chordalg {
 
 // Forward declarations
@@ -57,37 +55,28 @@ typedef std::vector< Nbhd >             AdjacencyLists;
 typedef std::string                     VertexName;
 typedef std::vector< VertexName >       VertexNames;
 
+typedef size_t                          Color;
+typedef std::list< Color >              Multicolor;
+
 // elimination ordering typedefs
 typedef double                          Weight;         // argument to minimize
 typedef double                          Cost;           // price for fill edge
 typedef std::pair< Vertex, Cost >       VertexCost;
 
-
 class Vertices {
  public:
     typedef VertexVector::const_iterator const_iterator;
 
-    Vertices() : V_(new VertexVector()) {
-        return;
-    }
-    explicit Vertices(int n) : V_(new VertexVector(n, 0)) {
-        return;
-    }
-    Vertices(const Vertices& other) : V_(new VertexVector(*(other.V_))) {
-        return;
-    }
-    explicit Vertices(VertexList V) : V_(new VertexVector(V.begin(), V.end())) {
-        return;
-    }
-    explicit Vertices(VertexSet V) : V_(new VertexVector(V.begin(), V.end())) {
-        return;
-    }
-    explicit Vertices(VertexVector V) : V_(new VertexVector(V)) {
-        return;
-    }
-    Vertices(std::initializer_list<Vertex> V) : V_(new VertexVector(V)) {
-        return;
-    }
+    Vertices() : V_(new VertexVector()) {}
+
+    explicit Vertices(size_t n) : V_(new VertexVector(n, 0)) {}
+    explicit Vertices(VertexList V) : V_(new VertexVector(V.begin(), V.end())) {}
+    explicit Vertices(VertexSet V) : V_(new VertexVector(V.begin(), V.end())) {}
+    explicit Vertices(VertexVector V) : V_(new VertexVector(V)) {}
+
+    Vertices(std::initializer_list<Vertex> V) : V_(new VertexVector(V)) {}
+    Vertices(const Vertices& other) : V_(new VertexVector(*(other.V_))) {}
+
     ~Vertices() {
         delete V_;
         return;
@@ -104,19 +93,19 @@ class Vertices {
     bool empty() const {
         return V_->empty();
     }
-    Vertex& operator[](int i) {
+    Vertex& operator[](size_t i) {
         return V_->operator[](i);
     }
-    const Vertex& operator[](int i) const {
+    const Vertex& operator[](size_t i) const {
         return V_->operator[](i);
     }
     void clear() {
         V_->clear();
     }
-    void reserve(int n) {
+    void reserve(size_t n) {
         V_->reserve(n);
     }
-    int size() const {
+    size_t size() const {
         return V_->size();
     }
     void sort() {
@@ -144,8 +133,8 @@ class Vertices {
 
 class GraphVertexIterator {
  public:
-    explicit GraphVertexIterator(const Graph* const G) : G_(G), v_(0) {}
-    GraphVertexIterator(const Graph* const G, Vertex v) : G_(G), v_(v) {}
+    explicit GraphVertexIterator(const Graph* G) : G_(G), v_(0) {}
+    explicit GraphVertexIterator(const Graph* G, Vertex v) : G_(G), v_(v) {}
 
     void operator++() {
         ++v_;
@@ -167,8 +156,7 @@ class GraphVertexIterator {
 
 class GraphVertices : public Vertices {
  public:
-    GraphVertices(const Graph* const G, int order) : Vertices(), G_(G),
-                                                     order_(order) {}
+    explicit GraphVertices(const Graph* G, size_t order) : Vertices(), G_(G), order_(order) {}
 
     GraphVertexIterator begin() const {
         return GraphVertexIterator(G_);
@@ -179,14 +167,14 @@ class GraphVertices : public Vertices {
 
  private:
     const Graph* const G_;
-    int order_;
+    size_t order_;
 };  // GraphVertices
 
 class VertexPairs;
 
 class VertexPairsIterator {
  public:
-    VertexPairsIterator(const Vertices*, int, int);
+    explicit VertexPairsIterator(const Vertices*, Vertex, Vertex);
 
     void operator++();
     bool operator==(const VertexPairsIterator& other) const {
@@ -201,12 +189,12 @@ class VertexPairsIterator {
 
  private:
     const Vertices* const V_;
-    int v1_, v2_;
+    Vertex v1_, v2_;
 };  // VertexPairsIterator
 
 class VertexPairs {
  public:
-    explicit VertexPairs(Vertices V) : V_(V), begin_(0), end_(V.size()) {}
+    explicit VertexPairs(Vertices V) : V_(V), begin_(0), end_(V_.size()) {}
 
     VertexPairsIterator begin() const {
         return VertexPairsIterator(&V_, begin_, end_);
@@ -217,7 +205,7 @@ class VertexPairs {
 
  private:
     const Vertices V_;
-    int begin_, end_;
+    size_t begin_, end_;
 };  // VertexPairs
 
 }  // namespace chordalg

@@ -35,7 +35,6 @@
 #include <vector>
 #include <utility>
 
-#include "chordalg_types.h"
 #include "file_reader.h"
 #include "graph.h"
 #include "vertices.h"

@@ -16,6 +16,8 @@ extern chordalg::AdjacencyLists cig_test;
 extern chordalg::AdjacencyLists clique;
 extern chordalg::AdjacencyLists connected_components_test;
 extern chordalg::AdjacencyLists dimacs_test;
+extern chordalg::AdjacencyLists independent_set;
+extern chordalg::AdjacencyLists many_minseps_four;
 extern chordalg::AdjacencyLists nexus_test;
 extern chordalg::AdjacencyLists tree;
 extern chordalg::AdjacencyLists two_cliques;

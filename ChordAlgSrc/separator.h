@@ -24,7 +24,6 @@
 #include <set>
 #include <vector>
 
-#include "chordalg_types.h"
 #include "graph.h"
 #include "vertices.h"
 

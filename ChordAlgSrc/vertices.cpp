@@ -15,14 +15,13 @@ void Vertices::merge(Vertices U, Vertices W) {
 ////////////// ctor
 //
 
-VertexPairsIterator::VertexPairsIterator(const Vertices* V, int begin,
-                                         int end) :
+VertexPairsIterator::VertexPairsIterator(const Vertices* V, Vertex v1, Vertex v2) :
         V_(V),
-        v1_(begin),
-        v2_(begin) {
+        v1_(v1),
+        v2_(v1) {
     if (V->size() == 1) {
         v1_ = v2_ = V->size();
-    } else if (begin != end) {
+    } else if (v1 != v2) {
         v2_++;
     }
     return;
@@ -32,8 +31,8 @@ VertexPairsIterator::VertexPairsIterator(const Vertices* V, int begin,
 //
 
 void VertexPairsIterator::operator++() {
-    int n = V_->size();
-    if (v1_ == n) {
+    size_t n = V_->size();
+    if (n == 0 || v1_ == n) {
         return;
     }
     if (v2_ == n - 1) {

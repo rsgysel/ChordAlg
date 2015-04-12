@@ -1,9 +1,9 @@
 #include "gtest/gtest.h"
 
-#include "ChordAlgSrc/chordalg_types.h"
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/lex_trie.h"
 #include "ChordAlgSrc/minimal_separator_algorithms.h"
+#include "ChordAlgSrc/vertices.h"
 #include "test_graphs.h"
 
 /////////////
@@ -118,3 +118,15 @@ TEST_F(MinimalSeparatorAlgorithmsTest, stBipartiteReductionBlocks) {
     }
 }
 
+TEST_F(MinimalSeparatorAlgorithmsTest, AllPairsSanityCheck) {
+    Read(many_minseps_four);
+    chordalg::LexTrie AllPairsMinseps(G_->order());
+    for(auto uv : chordalg::VertexPairs(G_->V()) ) {
+        chordalg::LexTrie* PairMinseps = chordalg::MinimalSeparators(*G_, uv.first, uv.second);
+        for(auto S : *PairMinseps) {
+            AllPairsMinseps.Insert< chordalg::Subset >(S);
+        }
+        delete PairMinseps;
+    }
+    EXPECT_EQ(AllPairsMinseps.Size(), MS_->Size());
+}
