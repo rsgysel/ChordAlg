@@ -100,7 +100,7 @@ bool LexTrieIterator::operator==(const LexTrieIterator& other) const {
 
 LexTrieIterator LexTrieIterator::operator++() {
     // if at end of trie
-    if (nodes_.empty() || T_->Size() == 0) {
+    if (nodes_.empty() || T_->size() == 0) {
         return LexTrieIterator(T_);
     }
     // otherwise Iterator either points to root, leaf, or internal node

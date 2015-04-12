@@ -139,7 +139,7 @@ class LexTrie {
     void PrettyPrint() const;
 
     size_t SizeOf() const;  // space used by LexTrie
-    size_t Size() const {
+    size_t size() const {
         return set_count_;  // number of sets in family
     }
     size_t n() const {

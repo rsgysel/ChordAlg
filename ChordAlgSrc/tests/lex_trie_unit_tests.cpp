@@ -37,7 +37,7 @@ class LexTrieTest : public ::testing::Test {
         return;
     }
     bool IsTrieSerializedSet() const {
-        return IsTrieInSerializedSet() && (T_->Size() == T_Serialization.size());
+        return IsTrieInSerializedSet() && (T_->size() == T_Serialization.size());
     }
     bool IsTrieInSerializedSet() const {
         for(auto X : *T_) {
@@ -65,14 +65,14 @@ class LexTrieTest : public ::testing::Test {
 
 TEST_F(LexTrieTest, Empty) {
     this->InitTrie(10);
-    EXPECT_EQ(T_->Size(), 0);
+    EXPECT_EQ(T_->size(), 0);
 }
 
 TEST_F(LexTrieTest, Insertion) {
     this->InitTrie(10);
     this->Insert({2, 4, 9});
     EXPECT_EQ(new_insert_, true);
-    EXPECT_EQ(T_->Size(), 1);
+    EXPECT_EQ(T_->size(), 1);
 }
 
 TEST_F(LexTrieTest, SuperfluousInsertion) {
@@ -81,7 +81,7 @@ TEST_F(LexTrieTest, SuperfluousInsertion) {
     EXPECT_EQ(new_insert_, true);
     this->Insert({2, 4, 9});
     EXPECT_EQ(new_insert_, false);
-    EXPECT_EQ(T_->Size(), 1);
+    EXPECT_EQ(T_->size(), 1);
 }
 
 // Test internal node branching
@@ -104,7 +104,7 @@ TEST_F(LexTrieTest, InternalSet) {
     this->InsertAndSerialize({2, 4, 9});    // Extend existing branch.
     EXPECT_EQ(new_insert_, true);
     EXPECT_EQ(this->IsTrieSerializedSet(), true);
-    EXPECT_EQ(T_->Size(), 3);
+    EXPECT_EQ(T_->size(), 3);
 }
 
 // Test root branching
@@ -115,6 +115,6 @@ TEST_F(LexTrieTest, RootBranch){
     this->InsertAndSerialize({1, 6, 7, 8});
     EXPECT_EQ(new_insert_, true);
     EXPECT_EQ(this->IsTrieSerializedSet(), true);
-    EXPECT_EQ(T_->Size(), 2);  
+    EXPECT_EQ(T_->size(), 2);  
 }
 
