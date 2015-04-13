@@ -124,7 +124,7 @@ TEST_F(MinimalSeparatorAlgorithmsTest, AllPairsSanityCheck) {
     for(auto uv : chordalg::VertexPairs(G_->V()) ) {
         chordalg::LexTrie* PairMinseps = chordalg::MinimalSeparators(*G_, uv.first, uv.second);
         for(auto S : *PairMinseps) {
-            AllPairsMinseps.Insert< chordalg::Subset >(S);
+            AllPairsMinseps.Insert< chordalg::FiniteSet >(S);
         }
         delete PairMinseps;
     }

@@ -44,12 +44,21 @@ LexTrieNode::~LexTrieNode() {
 // Member functions //
 //------------------//
 
+std::string FiniteSet::str() const {
+    if(empty()) {
+        return std::string();
+    } else {
+        std::ostringstream oss;
+        std::copy(begin(), end() - 1, std::ostream_iterator<size_t>(oss, " "));
+        oss << back();
+        return oss.str();
+    }
+}
+
 void LexTrie::PrettyPrint() const {
     size_t i = 0;
-    for(const Subset& X : *this) {
-        std::cout << "X" << i << ": ";
-        std::copy(X.begin(), X.end(), std::ostream_iterator<Element>(std::cout<< " "));
-        std::cout << std::endl;
+    for(const FiniteSet& X : *this) {
+        std::cout << "X" << i << ": " << X.str() << std::endl;
         ++i;
     }
     return;

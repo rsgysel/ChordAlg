@@ -50,10 +50,10 @@ std::vector<std::string> ColoredIntersectionGraph::DefaultTaxonNames(size_t n) {
     return taxon_name;
 }
 
-std::vector< Subset > ColoredIntersectionGraph::InduceSubsets(
+std::vector< FiniteSet > ColoredIntersectionGraph::InduceSubsets(
     ColoredIntersectionGraph& super_graph, Vertices X) {
     std::sort(X.begin(), X.end());
-    std::vector< Subset > subsets;
+    std::vector< FiniteSet > subsets;
     subsets.reserve(X.size());
     for (Vertex v : X) {
         subsets.push_back(super_graph.subsets_[v]);
@@ -75,8 +75,8 @@ std::vector< Multicolor > ColoredIntersectionGraph::InduceVertexColors(
 LexTrie* ColoredIntersectionGraph::InduceSubsetFamily(
     ColoredIntersectionGraph& super_graph) {
     LexTrie* subset_family = new LexTrie(super_graph.subset_family_->n());
-    for (Subset& S : subsets_) {
-        subset_family->SortedInsert< Subset >(S);
+    for (FiniteSet& S : subsets_) {
+        subset_family->SortedInsert< FiniteSet >(S);
     }
     return subset_family;
 }
@@ -95,7 +95,7 @@ size_t ColoredIntersectionGraph::CommonColorCount(Vertex u, Vertex v) const {
 
 void ColoredIntersectionGraph::PrettyPrintSubsets() {
     for (Vertex v : *this) {
-        std::cout << "Subset(" << name(v) << "): ";
+        std::cout << "Taxa(" << name(v) << "): ";
         std::copy(subsets_[v].begin(), subsets_[v].end(),
                   std::ostream_iterator< Vertex >(std::cout, " "));
         std::cout << std::endl;

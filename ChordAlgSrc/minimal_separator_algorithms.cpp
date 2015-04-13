@@ -5,7 +5,7 @@
 namespace chordalg {
 
 void PrettyPrintMinimalSeparators(const LexTrie& minseps, const Graph& G) {
-    for (Subset S : minseps) {
+    for (FiniteSet S : minseps) {
         G.PrettyPrint(S);
     }
     return;

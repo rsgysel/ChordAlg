@@ -199,7 +199,7 @@ void Graph::PrettyPrint() const {
 }
 
 void Graph::PrettyPrint(const LexTrie& T) const {
-    for (Subset S : T) {
+    for (FiniteSet S : T) {
         PrettyPrint(Vertices(S));
     }
     return;

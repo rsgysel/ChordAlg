@@ -24,20 +24,24 @@
 #include <iostream>
 #include <iterator>
 #include <map>
-#include <vector>
+#include <sstream>
+#include <string>
 #include <utility>
+#include <vector>
 
 namespace chordalg {
 
 class LexTrie;
 class LexTrieNode;
 
-// Element of [n-1] = {0, 1, 2, ..., n - 1}
-typedef size_t Element;
-typedef std::vector< Element > Subset;
+typedef std::pair< size_t, LexTrieNode* > ChildData;
+typedef std::map< size_t, LexTrieNode* > ChildDataStructure;
 
-typedef std::pair< Element, LexTrieNode* > ChildData;
-typedef std::map< Element, LexTrieNode* > ChildDataStructure;
+// Finite set of natural numbers
+class FiniteSet : public std::vector< size_t > {
+ public:
+    std::string str() const;
+};  // FiniteSet
 
 class LexTrieIterator {
  public:
@@ -52,20 +56,20 @@ class LexTrieIterator {
         return !(*this == other);
     }
 
-    const Subset& operator*() const {
+    const FiniteSet& operator*() const {
         return set_;
     }
 
  private:
     size_t n_;
-    std::vector< Element > set_;  // Current set
+    FiniteSet set_;  // Current set
     std::vector< LexTrieNode* > nodes_;  // Path in lex trie to current set
     std::vector< ChildDataStructure::const_iterator > children_itrs_;
     const LexTrie* T_;
 
     void GetNextSetBelow();
-    Element GetNextChild();
-    Element GetNextChildAfter(Element k);
+    size_t GetNextChild();
+    size_t GetNextChildAfter(size_t k);
 
     // Disable default constructor
     LexTrieIterator();
@@ -85,20 +89,20 @@ class LexTrieNode {
 
     size_t SizeOf(size_t n) const;
 
-    inline bool HasChild(Element k) const {
+    inline bool HasChild(size_t k) const {
         return children_.find(k) != children_.end() ? true : false;
     }
 
-    inline void AddChild(LexTrieNode* node, Element k) {
+    inline void AddChild(LexTrieNode* node, size_t k) {
         children_[k] = node;
         return;
     }
 
-    inline LexTrieNode* GetChild(Element k) {
+    inline LexTrieNode* GetChild(size_t k) {
         return children_.find(k) != children_.end() ? children_[k] : nullptr;
     }
 
-    inline const LexTrieNode* GetChild(Element k) const {
+    inline const LexTrieNode* GetChild(size_t k) const {
         return children_.find(k) != children_.end() ? children_.at(k) : nullptr;
     }
 

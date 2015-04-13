@@ -111,7 +111,7 @@ class MatrixCellIntGraphFR : public FileReader {
     ~MatrixCellIntGraphFR();
 
     LexTrie* TakeSubsetFamily();
-    std::vector< Subset > subsets() const {
+    std::vector< FiniteSet > subsets() const {
         return subsets_;
     }
     std::vector< Multicolor > vertex_colors() const {
@@ -120,7 +120,7 @@ class MatrixCellIntGraphFR : public FileReader {
 
  protected:
     LexTrie* subset_family_;
-    std::vector< Subset > subsets_;
+    std::vector< FiniteSet > subsets_;
     std::vector< Multicolor > vertex_colors_;
 
     template< class FR > friend FR* NewFileReader(GraphFile&);

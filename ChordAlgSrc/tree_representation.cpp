@@ -99,7 +99,7 @@ void TreeRepresentation::PhyloNewickPrint(const ColoredIntersectionGraph& cig,
     // DFS info
     std::string newick_tree;
     VertexSet visited;
-    Element root_element;
+    size_t root_element;
     bool init_root_element = false;
     if (rooted) {
         for (size_t i = 0; i < cig.taxa(); ++i) {
@@ -117,8 +117,8 @@ void TreeRepresentation::PhyloNewickPrint(const ColoredIntersectionGraph& cig,
     // Taxon Clique info
     std::vector< size_t > taxon_clique_size(cig.subset_family()->n(), 0);
     for (Vertex v : cig) {
-        Subset S = cig.subset(v);
-        for (Element e : S) {
+        FiniteSet S = cig.subset(v);
+        for (size_t e : S) {
             ++taxon_clique_size[e];
         }
     }
@@ -128,7 +128,7 @@ void TreeRepresentation::PhyloNewickPrint(const ColoredIntersectionGraph& cig,
         for (Vertex u : T_) {
             size_t root_count = 0;
             for (Vertex w : clique_map_[u]) {
-                for (Element e : cig.subset(w)) {
+                for (size_t e : cig.subset(w)) {
                     if (e == root_element) {
                         ++root_count;
                     }
@@ -180,7 +180,7 @@ void TreeRepresentation::PhyloNewickVisit(VertexSet& visited,
     // Calculate candidate-ness of node
     std::vector< size_t > cell_count(taxon_clique_size.size(), 0);
     for (Vertex u : clique_map_[v]) {
-        for (Element e : cig.subset(u)) {
+        for (size_t e : cig.subset(u)) {
             ++cell_count[e];
         }
     }

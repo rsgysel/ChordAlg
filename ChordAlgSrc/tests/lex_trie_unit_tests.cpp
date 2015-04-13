@@ -27,36 +27,36 @@ class LexTrieTest : public ::testing::Test {
             T_ = new chordalg::LexTrie(n);
         }
     }
-    void Insert(chordalg::Subset X) {
-        T_->Insert< chordalg::Subset >(X, &new_insert_);
+    void Insert(std::initializer_list<size_t> X) {
+        T_->SortedInsert< std::initializer_list<size_t> >(X, &new_insert_);
         return;
     }
-    void InsertAndSerialize(chordalg::Subset X) {
+    void InsertSetAndString(std::initializer_list<size_t> X) {
         Insert(X);
-        T_Serialization.insert(Serialize(X));
+        if(X.size() == 0) {
+            T_strings.insert(std::string());
+        } else {
+            std::ostringstream oss;
+            std::copy(X.begin(), X.end() - 1, std::ostream_iterator<size_t>(oss, " "));
+            oss << *(X.end() - 1);
+            T_strings.insert(oss.str());
+        }
         return;
     }
-    bool IsTrieSerializedSet() const {
-        return IsTrieInSerializedSet() && (T_->size() == T_Serialization.size());
+    bool IsTrieStringSet() const {
+        return IsTrieInStringSet() && (T_->size() == T_strings.size());
     }
-    bool IsTrieInSerializedSet() const {
+    bool IsTrieInStringSet() const {
         for(auto X : *T_) {
-            if(T_Serialization.find(Serialize(X)) == T_Serialization.end()) {
+            if(T_strings.find(X.str()) == T_strings.end()) {
                 return false;
             }
         }
         return true;
     }
-    std::string Serialize(chordalg::Subset set) const {
-        std::stringstream ss;
-        for(int x : set) {
-            ss << x << " ";
-        }
-        return ss.str();
-    }
   protected:
     chordalg::LexTrie* T_;
-    std::set< std::string > T_Serialization;
+    std::set< std::string > T_strings;
     bool new_insert_;
 };  // LexTrieTest
 
@@ -87,34 +87,34 @@ TEST_F(LexTrieTest, SuperfluousInsertion) {
 // Test internal node branching
 TEST_F(LexTrieTest, InternalBranch) {
     this->InitTrie(10);
-    this->InsertAndSerialize({2, 4, 9});  
+    this->InsertSetAndString({2, 4, 9});  
     EXPECT_EQ(new_insert_, true);
-    this->InsertAndSerialize({2, 3, 5});
+    this->InsertSetAndString({2, 3, 5});
     EXPECT_EQ(new_insert_, true);
-    EXPECT_EQ(this->IsTrieSerializedSet(), true);
+    EXPECT_EQ(this->IsTrieStringSet(), true);
 }
 
 // Test internal node set indicators
 TEST_F(LexTrieTest, InternalSet) {
     this->InitTrie(10);
-    this->InsertAndSerialize({2, 4});
+    this->InsertSetAndString({2, 4});
     EXPECT_EQ(new_insert_, true);
-    this->InsertAndSerialize({2});          // Internal to existing branch.
+    this->InsertSetAndString({2});          // Internal to existing branch.
     EXPECT_EQ(new_insert_, true);
-    this->InsertAndSerialize({2, 4, 9});    // Extend existing branch.
+    this->InsertSetAndString({2, 4, 9});    // Extend existing branch.
     EXPECT_EQ(new_insert_, true);
-    EXPECT_EQ(this->IsTrieSerializedSet(), true);
+    EXPECT_EQ(this->IsTrieStringSet(), true);
     EXPECT_EQ(T_->size(), 3);
 }
 
 // Test root branching
 TEST_F(LexTrieTest, RootBranch){
     this->InitTrie(10);
-    this->InsertAndSerialize({2, 4, 9});
+    this->InsertSetAndString({2, 4, 9});
     EXPECT_EQ(new_insert_, true);
-    this->InsertAndSerialize({1, 6, 7, 8});
+    this->InsertSetAndString({1, 6, 7, 8});
     EXPECT_EQ(new_insert_, true);
-    EXPECT_EQ(this->IsTrieSerializedSet(), true);
+    EXPECT_EQ(this->IsTrieStringSet(), true);
     EXPECT_EQ(T_->size(), 2);  
 }
 

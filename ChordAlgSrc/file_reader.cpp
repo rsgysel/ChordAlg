@@ -288,23 +288,23 @@ void MatrixCellIntGraphFR::ComputeGraphData(
     std::map< std::string, Vertex> vertex_id;
     // subsets_[v] is the subset of the ground set for vertex v
     for (int j = 0; j < col_count; ++j) {
-        std::vector< Subset > cells(maxstate + 1, Subset());
+        std::vector< FiniteSet > cells(maxstate + 1, FiniteSet());
         for (int i = 0; i < row_count; ++i) {
             int state = matrix[i][j];
             if (state != kMissingData()) {
                 cells[state].push_back(i);
             }
         }
-        for (Subset& C : cells) {
+        for (FiniteSet& C : cells) {
             if (!C.empty()) {
                 bool new_cell;
                 std::sort(C.begin(), C.end());
                 const LexTrieNode* node =
-                        subset_family_->Insert< Subset >(C, &new_cell);
+                        subset_family_->Insert< FiniteSet >(C, &new_cell);
                 if (new_cell) {
                     cell_id[node] = cell_count;
                     ++cell_count;
-                    subsets_.push_back(Subset(C));
+                    subsets_.push_back(FiniteSet(C));
                     vertex_colors_.push_back(Multicolor());
                     int state = matrix[C[0]][j];
                     std::stringstream name;
@@ -328,8 +328,8 @@ void MatrixCellIntGraphFR::ComputeGraphData(
     Vertex v = 0;
 
     std::vector< VertexVector > cells_of_taxon(row_count);
-    for (Subset& C : subsets_) {
-        for (Element t : C) {
+    for (FiniteSet& C : subsets_) {
+        for (size_t t : C) {
             cells_of_taxon[t].push_back(v);
         }
         v++;
