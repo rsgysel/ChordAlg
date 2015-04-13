@@ -52,7 +52,17 @@ Graph::Graph(const Graph& super_graph, Vertices X) :
     return;
 }
 
-Supergraph::Supergraph(Graph& G, AdjacencyLists* a_lists) :
+// Use this constructor in a subclass to defer initialization, adjacency lists,
+// and vertex names to the subclass
+Graph::Graph(size_t n) :
+    neighborhoods_(nullptr),
+    vertex_names_(nullptr),
+    order_(n),
+    size_(0) {
+    return;
+}
+
+Supergraph::Supergraph(const Graph* G, AdjacencyLists* a_lists) :
     Graph(a_lists),
     G_(G) {
     return;

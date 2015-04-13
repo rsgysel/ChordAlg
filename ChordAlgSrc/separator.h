@@ -109,6 +109,8 @@ class SeparatorComponents {
                connected_component_[u] != connected_component_[v];
     }
 
+    bool IsSeparated(Vertices V) const;
+
     virtual void PrettyPrint() const;
 
  protected:

@@ -33,15 +33,20 @@ namespace chordalg {
 
 class Graph {
  public:
-    explicit Graph(Graph& H);
-    explicit Graph(FileReader* F);
-    explicit Graph(AdjacencyLists* A);
+    Graph() = delete;
+    Graph(const Graph&) = delete;
+    void operator=(const Graph&) = delete;
+
+    explicit Graph(Graph&);
+    explicit Graph(FileReader*);
+    explicit Graph(AdjacencyLists*);
     Graph(AdjacencyLists*, VertexNames);
     Graph(const Graph&, Vertices);
+    explicit Graph(size_t);
     virtual ~Graph();
 
     bool IsIsomorphic(Graph&) const;
-    void PrettyPrint() const;
+    virtual void PrettyPrint() const;
     void PrettyPrint(const LexTrie& T) const;
     void PrettyPrint(const VertexVector& U) const;
     void PrettyPrint(const Vertices& U) const;
@@ -72,10 +77,10 @@ class Graph {
         return size_;
     }
 
-    bool HasEdge(Vertex u, Vertex v) const {
+    virtual bool HasEdge(Vertex u, Vertex v) const {
         return is_edge_[u][v];
     }
-    bool HasEdge(VertexPair p) const {
+    virtual bool HasEdge(VertexPair p) const {
         return HasEdge(p.first, p.second);
     }
     template< class Container >
@@ -92,8 +97,8 @@ class Graph {
  protected:
     void Init();
 
-    const AdjacencyLists* neighborhoods_;
-    const VertexNames* vertex_names_;
+    const AdjacencyLists* const neighborhoods_;
+    const VertexNames* const vertex_names_;
     std::map<VertexName, Vertex> vertex_ids_;
     std::vector< std::vector< bool > > is_edge_;
 
@@ -107,34 +112,28 @@ class Graph {
 
     template< class InputIterator >
     bool HasClique(InputIterator begin, InputIterator end) const;
-
-    // Disable default constructor, copy constructor, assignment
-    Graph();
-    Graph(const Graph&);
-    void operator=(const Graph&);
 };  // Graph
 
 class Supergraph : public Graph {
  public:
-    Supergraph(Graph&, AdjacencyLists*);
+    Supergraph() = delete;
+    Supergraph(const Supergraph&) = delete;
+    void operator=(const Supergraph&) = delete;
+
+    Supergraph(const Graph*, AdjacencyLists*);
 
     Vertex vertex(char id) const {
-        return G_.vertex(id);
+        return G_->vertex(id);
     }
     Vertex vertex(std::string id) const {
-        return G_.vertex(id);
+        return G_->vertex(id);
     }
     VertexName name(Vertex v) const {
-        return G_.name(v);
+        return G_->name(v);
     }
 
  protected:
-    Graph&  G_;     // G = (V,E) is triangulated by H = (V,E+F)
-
-    // Disable default constructor, copy constructor, assignment
-    Supergraph();
-    Supergraph(const Supergraph&);
-    void operator=(const Supergraph&);
+    const Graph* const G_;     // G = (V,E) is a subgraph of H = (V,E U F)
 };  // Supergraph
 
 ////////////// Generics

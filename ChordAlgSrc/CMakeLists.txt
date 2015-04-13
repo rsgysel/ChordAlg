@@ -14,6 +14,7 @@ add_library(ChordAlg
                 minimal_separator_algorithms.cpp
                 mixed_elimination.cpp
                 separator.cpp
+                separator_graph.cpp
                 tree_representation.cpp
                 vertices.cpp)
 

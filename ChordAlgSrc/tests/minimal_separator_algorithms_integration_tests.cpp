@@ -1,7 +1,6 @@
 #include "gtest/gtest.h"
 
 #include "ChordAlgSrc/graph.h"
-#include "ChordAlgSrc/lex_trie.h"
 #include "ChordAlgSrc/minimal_separator_algorithms.h"
 #include "ChordAlgSrc/vertices.h"
 #include "test_graphs.h"
@@ -39,7 +38,7 @@ class MinimalSeparatorAlgorithmsTest : public testing::Test {
     }
  protected:
     chordalg::Graph* G_;
-    chordalg::LexTrie* MS_;
+    chordalg::MinsepTrie* MS_;
 };  // MinimalSeparatorAlgorithmsTest
 
 ////////

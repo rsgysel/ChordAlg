@@ -7,6 +7,7 @@ add_gmock_test(ChordAlgUnitTests atoms_graph_integration_tests.cpp
                                  lex_trie_unit_tests.cpp
                                  minimal_separator_algorithms_integration_tests.cpp
                                  separator_components_integration_tests.cpp
+                                 separator_graph_integration_tests.cpp
                                  test_graphs.cpp
                                  vertices_unit_tests.cpp)
 target_link_libraries(ChordAlgUnitTests ChordAlg)

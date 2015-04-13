@@ -16,7 +16,7 @@ class AtomsTest : public GraphTest {
         delete A_;
     }
     void Read(chordalg::AdjacencyLists& A) {
-        if(G_) {
+        if(G_ || A_) {
             FAIL() << "Use Read once in your test.";
         } else {
             G_ = new chordalg::Graph(new chordalg::AdjacencyLists(A));

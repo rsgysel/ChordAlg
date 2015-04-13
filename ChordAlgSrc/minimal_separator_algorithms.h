@@ -20,22 +20,21 @@
 #define INCLUDE_MINIMAL_SEPARATOR_ALGORITHMS_H_
 
 #include <algorithm>
-#include <vector>
 
 #include "graph.h"
-#include "lex_trie.h"
 #include "separator.h"
+#include "separator_graph.h"
 #include "vertices.h"
 
 namespace chordalg {
 
-void PrettyPrintMinimalSeparators(const LexTrie& minseps, const Graph& G);
+void PrettyPrintMinimalSeparators(const MinsepTrie&, const Graph&);
 
 // All minimal separators
-LexTrie* MinimalSeparators(const Graph& G);
+MinsepTrie* MinimalSeparators(const Graph& G);
 
 // minimal ab-separators
-LexTrie* MinimalSeparators(const Graph& G, Vertex a, Vertex b);
+MinsepTrie* MinimalSeparators(const Graph& G, Vertex a, Vertex b);
 
 }  // namespace chordalg
 

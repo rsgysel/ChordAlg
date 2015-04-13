@@ -189,6 +189,15 @@ size_t SeparatorBlocks::NonFullComponentCt() const {
     return size_ - FullComponentCt();
 }
 
+bool SeparatorComponents::IsSeparated(Vertices V) const {
+    for (auto p : VertexPairs(V)) {
+        if(AreSeparated(p.first, p.second)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void SeparatorComponents::PrettyPrint() const {
     for (Vertex v : *G_) {
         std::cout << "CC(" << G_->name(v) << "): " << connected_component_[v];
