@@ -198,24 +198,26 @@ bool SeparatorComponents::IsSeparated(Vertices V) const {
     return false;
 }
 
-void SeparatorComponents::PrettyPrint() const {
+std::string SeparatorComponents::str() const {
+    std::ostringstream oss;
     for (Vertex v : *G_) {
-        std::cout << "CC(" << G_->name(v) << "): " << connected_component_[v];
-        std::cout << std::endl;
+        oss << "CC(" << G_->name(v) << "): " << connected_component_[v];
+        oss << std::endl;
     }
-    std::cout << std::endl;
-    return;
+    oss << std::endl;
+    return oss.str();
 }
 
-void SeparatorBlocks::PrettyPrint() const {
-    SeparatorComponents::PrettyPrint();
+std::string SeparatorBlocks::str() const {
+    std::ostringstream oss;
+    oss << SeparatorComponents::str();
     ConnectedComponentID cc = 0;
     for (Block B : blocks_) {
-        std::cout << "N(C_" << cc << "): ";
-        G_->PrettyPrint(B.NC());
+        oss << "N(C_" << cc << "): ";
+        G_->str(B.NC());
         ++cc;
     }
-    return;
+    return oss.str();
 }
 
 }  // namespace chordalg

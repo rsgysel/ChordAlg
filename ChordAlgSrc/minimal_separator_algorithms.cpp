@@ -1,14 +1,13 @@
 #include "minimal_separator_algorithms.h"
 
-#include <vector>
-
 namespace chordalg {
 
-void PrettyPrintMinimalSeparators(const MinsepTrie& M, const Graph& G) {
+std::string strMinimalSeparators(const MinsepTrie& M, const Graph& G) {
+    std::ostringstream oss;
     for (FiniteSet S : M) {
-        G.PrettyPrint(S);
+        oss << G.str(S) << std::endl;
     }
-    return;
+    return oss.str();
 }
 
 // Berry, Bordat, and Cogis' algorithm to generate minimal separators

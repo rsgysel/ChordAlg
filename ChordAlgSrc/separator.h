@@ -22,6 +22,8 @@
 
 #include <algorithm>
 #include <set>
+#include <sstream>
+#include <string>
 #include <vector>
 
 #include "graph.h"
@@ -111,7 +113,7 @@ class SeparatorComponents {
 
     bool IsSeparated(Vertices V) const;
 
-    virtual void PrettyPrint() const;
+    virtual std::string str() const;
 
  protected:
     void InitializeS(const Vertices&);
@@ -167,7 +169,7 @@ class SeparatorBlocks : public SeparatorComponents {
 
     size_t FullComponentCt() const;
     size_t NonFullComponentCt() const;
-    void PrettyPrint() const;
+    std::string str() const;
 
  private:
     virtual void FindComponents(FillSet&);

@@ -195,36 +195,39 @@ bool Graph::IsIsomorphic(Graph& H) const {
     return true;
 }
 
-void Graph::PrettyPrint() const {
-    std::cout << "Order: " << order_ << std::endl;
-    std::cout << "Size: " << size_ << std::endl;
+std::string Graph::str() const {
+    std::ostringstream oss;
+    oss << "Order: " << order_ << std::endl;
+    oss << "Size: " << size_ << std::endl;
     for (Vertex v : *this) {
-        std::cout << "N(" << name(v) << "): ";
+        oss << "N(" << name(v) << "): ";
         for (Vertex u : N(v)) {
-            std::cout << name(u) << " ";
+            oss << name(u) << " ";
         }
-        std::cout << std::endl;
+        oss << std::endl;
     }
-    return;
+    return oss.str();
 }
 
-void Graph::PrettyPrint(const LexTrie& T) const {
+std::string Graph::str(const LexTrie& T) const {
+    std::ostringstream oss;
     for (FiniteSet S : T) {
-        PrettyPrint(Vertices(S));
+        str(Vertices(S));
     }
-    return;
+    return oss.str();
 }
 
-void Graph::PrettyPrint(const VertexVector& U) const {
-    PrettyPrint(Vertices(U));
+std::string Graph::str(const VertexVector& U) const {
+    return str(Vertices(U));
 }
 
-void Graph::PrettyPrint(const Vertices& U) const {
+std::string Graph::str(const Vertices& U) const {
+    std::ostringstream oss;
     for (Vertex v : U) {
-        std::cout << name(v) << " ";
+        oss << name(v) << " ";
     }
-    std::cout << std::endl;
-    return;
+    oss << std::endl;
+    return oss.str();
 }
 
 }  // namespace chordalg

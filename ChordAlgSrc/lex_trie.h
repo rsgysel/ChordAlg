@@ -140,7 +140,7 @@ class LexTrie {
     template< class Container >
     const LexTrieNode* SortedInsert(const Container&, bool* new_set = nullptr);
 
-    void PrettyPrint() const;
+    std::string str() const;
 
     size_t SizeOf() const;  // space used by LexTrie
     size_t size() const {

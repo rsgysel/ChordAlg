@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
         chordalg::CliqueTree* ct = chordalg::MCSCliqueTree(triangulation);
         ct->PhyloNewickPrint(G, true);
         std::cout << std::endl;
-        eo.PrettyPrint();
+        eo.str();
         std::cout << "fill weight: " << eo.fill_cost() << std::endl;
         std::cout << "fill count: " << eo.fill_count() << std::endl;
         std::cout << "vertices: " << G.order() << std::endl;

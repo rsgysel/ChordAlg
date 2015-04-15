@@ -20,6 +20,7 @@
 #define INCLUDE_INTERSECTION_GRAPH_H_
 
 #include <list>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -48,7 +49,7 @@ class ColoredIntersectionGraph : public Graph {
         return FillCost(p.first, p.second);
     }
 
-    void PrettyPrintSubsets();
+    std::string strSubsets();
 
     const LexTrie* subset_family() const {
         return subset_family_;

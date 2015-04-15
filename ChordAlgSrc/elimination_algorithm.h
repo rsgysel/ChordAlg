@@ -25,6 +25,7 @@
 
 #include <algorithm>
 #include <set>
+#include <sstream>
 #include <string>
 #include <vector>
 #include <utility>
@@ -55,7 +56,7 @@ class EliminationAlgorithm {
     explicit EliminationAlgorithm(const Graph* G);
     virtual ~EliminationAlgorithm();
 
-    void PrettyPrint() const;
+    std::string str() const;
 
     Weight fill_cost() const {
         return fill_cost_;
@@ -239,7 +240,7 @@ void RunAtomHeuristic(std::string filename,
             total_weight += best_eo->fill_cost();
             total_count += best_eo->fill_count();
             std::cout << "atom " << atom_id << std::endl;
-            best_eo->PrettyPrint();
+            std::cout << best_eo->str() << std::endl;
             delete best_eo;
         } else {
             ++clique_atoms;
@@ -265,7 +266,7 @@ void RunHeuristic(std::string filename,
     delete graph_reader;
 
     EliminationType eo(&G, criterion);
-    eo.PrettyPrint();
+    std::cout << eo.str() << std::endl;
 
     std::cout << "fill weight: "    << eo.fill_cost()   << std::endl;
     std::cout << "fill count: "     << eo.fill_count()  << std::endl;

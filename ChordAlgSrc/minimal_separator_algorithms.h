@@ -20,6 +20,8 @@
 #define INCLUDE_MINIMAL_SEPARATOR_ALGORITHMS_H_
 
 #include <algorithm>
+#include <sstream>
+#include <string>
 
 #include "graph.h"
 #include "separator.h"
@@ -28,7 +30,7 @@
 
 namespace chordalg {
 
-void PrettyPrintMinimalSeparators(const MinsepTrie&, const Graph&);
+std::string strMinimalSeparators(const MinsepTrie&, const Graph&);
 
 // All minimal separators
 MinsepTrie* MinimalSeparators(const Graph& G);

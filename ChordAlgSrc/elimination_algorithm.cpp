@@ -209,17 +209,18 @@ AdjacencyLists* EliminationAlgorithm::TriangNbhds() const {
     return a_lists;
 }
 
-void EliminationAlgorithm::PrettyPrint() const {
-    std::cout << "elimination order:\t";
+std::string EliminationAlgorithm::str() const {
+    std::ostringstream oss;
+    oss << "elimination order:\t";
     for (Vertex v : alpha_) {
-        std::cout << G_->name(v) << " ";
+        oss << G_->name(v) << " ";
     }
-    std::cout << std::endl;
-    std::cout << "tie distribution:\t";
+    oss << std::endl;
+    oss << "tie distribution:\t";
     std::copy(tie_count_.begin(), tie_count_.end(),
-              std::ostream_iterator< int >(std::cout, " "));
-    std::cout << std::endl;
-    return;
+              std::ostream_iterator< int >(oss, " "));
+    oss << std::endl;
+    return oss.str();
 }
 
 /////////////////////

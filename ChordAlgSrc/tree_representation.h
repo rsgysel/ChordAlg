@@ -47,8 +47,8 @@ class TreeRepresentation {
     void NewickPrint() const;
     void PhyloNewickPrint(const ColoredIntersectionGraph& cig,
                           bool rooted = false) const;
-    void PrettyPrint() const {
-        T_.PrettyPrint();
+    std::string str() const {
+        return T_.str();
     }
 
     const Graph* G() const {

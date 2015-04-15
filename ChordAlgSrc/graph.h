@@ -46,10 +46,10 @@ class Graph {
     virtual ~Graph();
 
     bool IsIsomorphic(Graph&) const;
-    virtual void PrettyPrint() const;
-    void PrettyPrint(const LexTrie& T) const;
-    void PrettyPrint(const VertexVector& U) const;
-    void PrettyPrint(const Vertices& U) const;
+    virtual std::string str() const;
+    std::string str(const LexTrie& T) const;
+    std::string str(const VertexVector& U) const;
+    std::string str(const Vertices& U) const;
 
     Vertices V() const {
         Vertices V(order_);

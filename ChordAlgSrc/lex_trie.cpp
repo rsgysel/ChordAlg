@@ -55,13 +55,14 @@ std::string FiniteSet::str() const {
     }
 }
 
-void LexTrie::PrettyPrint() const {
+std::string LexTrie::str() const {
+    std::ostringstream oss;
     size_t i = 0;
     for(const FiniteSet& X : *this) {
-        std::cout << "X" << i << ": " << X.str() << std::endl;
+        oss << "X" << i << ": " << X.str() << std::endl;
         ++i;
     }
-    return;
+    return oss.str();
 }
 
 size_t LexTrie::SizeOf() const {

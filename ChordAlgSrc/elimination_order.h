@@ -31,6 +31,7 @@
 
 #include <algorithm>
 #include <set>
+#include <sstream>
 #include <string>
 #include <vector>
 #include <utility>
@@ -59,7 +60,7 @@ class EliminationOrder {
     void Swap(int i, int j);
     AdjacencyLists* TriangNbhds() const;
 
-    void PrettyPrint() const;
+    std::string str() const;
     bool ZeroFill() const;
 
     bool Before(Vertex u, Vertex v) const {

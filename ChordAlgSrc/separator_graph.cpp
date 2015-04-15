@@ -56,21 +56,22 @@ void SeparatorGraph::Init() {
     return;
 }
 
-void SeparatorGraph::PrettyPrint() const {
-    std::cout << "Order: " << order_ << std::endl;
-    std::cout << "Size: " << size_ << std::endl;
+std::string SeparatorGraph::str() const {
+    std::ostringstream oss;
+    oss << "Order: " << order_ << std::endl;
+    oss << "Size: " << size_ << std::endl;
     for (Vertex v : *this) {
-        std::cout << "S" << v << ": " << name(v) << std::endl;
+        oss << "S" << v << ": " << name(v) << std::endl;
     }
-    std::cout << std::endl;
+    oss << std::endl;
     for (Vertex v : *this) {
-        std::cout << "N(S" << v << "): ";
+        oss << "N(S" << v << "): ";
         for (Vertex u : N(v)) {
-            std::cout << "S" << u << " ";
+            oss << "S" << u << " ";
         }
-        std::cout << std::endl;
+        oss << std::endl;
     }
-    return;
+    return oss.str();
 }
 
 VertexName SeparatorGraph::name(Vertex v) const {
