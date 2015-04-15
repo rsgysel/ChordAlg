@@ -57,14 +57,13 @@ struct DeficiencyCriterion : public ClassicCriterion {
 
 class ClassicElimination : public EliminationAlgorithm {
  public:
-    explicit ClassicElimination(const ColoredIntersectionGraph*, const ClassicCriterion*);
+    explicit ClassicElimination(const Graph*, const ClassicCriterion*);
     virtual ~ClassicElimination();
 
  private:
     void Eliminate(Vertex);
     std::pair< Weight, Cost > WeightOf(Vertex);
 
-    const ColoredIntersectionGraph* const H_;
     const ClassicCriterion* const f_;
 };  // class ClassicElimination
 

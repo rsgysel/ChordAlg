@@ -4,11 +4,10 @@
 
 namespace chordalg {
 
-MixedElimination::MixedElimination(const ColoredIntersectionGraph* H,
+MixedElimination::MixedElimination(const Graph* G,
                                    const LBCriterion* f) :
-                                   LBElimination(H, f),
-                                   H_(H),
-                                   B_(H) {
+                                   LBElimination(G, f),
+                                   B_(G) {
     LBElimination::Init();
     return;
 }
@@ -24,21 +23,21 @@ void MixedElimination::Eliminate(Vertex v) {
     for (Block B : B_) {
         for (VertexPair uv : VertexPairs(B.NC())) {
             AddEdge(uv);
-            unseparated_monochromatic_pairs_.erase(uv);
+            unseparated_pairs_.erase(uv);
         }
     }
     return;
 }
 
 std::pair< Weight, Cost > MixedElimination::WeightOf(Vertex v) {
-    Weight wt = 0;
+    Weight c = 0;
     for (VertexPair p : VertexPairs(MonotoneNbhd(v))) {
         if (!IsEdge(p)) {
-            wt += H_->CommonColorCount(p.first, p.second);
+            c += G_->FillCost(p);
         }
     }
     // Don't need separation statistics
-    return std::pair<Weight, Cost>(wt, wt);
+    return std::pair<Weight, Cost>(c, c);
 }
 
 }  // namespace chordalg

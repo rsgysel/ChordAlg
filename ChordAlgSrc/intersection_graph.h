@@ -41,6 +41,12 @@ class ColoredIntersectionGraph : public Graph {
     const Multicolor& vertex_color(Vertex v) const {
         return vertex_colors_[v];
     }
+    Cost FillCost(Vertex u, Vertex v) const {
+        return CommonColorCount(u, v);
+    }
+    Cost FillCost(VertexPair p) const {
+        return FillCost(p.first, p.second);
+    }
 
     void PrettyPrintSubsets();
 

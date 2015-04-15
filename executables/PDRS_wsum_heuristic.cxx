@@ -22,9 +22,9 @@
 
 #include <string>
 
-#include "lb_elimination.h"
-#include "file_reader.h"
-#include "intersection_graph.h"
+#include "ChordAlgSrc/lb_elimination.h"
+#include "ChordAlgSrc/file_reader.h"
+#include "ChordAlgSrc/intersection_graph.h"
 
 using namespace chordalg;
 

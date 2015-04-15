@@ -41,8 +41,8 @@ namespace chordalg {
 #define MAX_WEIGHT DBL_MAX;
 
 struct EliminationCriterion {
-    virtual Weight Calculate(Weight deficiency) = 0;
-    virtual Weight Calculate(Weight deficiency, Weight separated) = 0;
+    virtual Weight Calculate(Weight deficiency) const = 0;
+    virtual Weight Calculate(Weight deficiency, Weight separated) const = 0;
 };  // struct EliminationCriterion
 
 class EliminationAlgorithm {
@@ -117,13 +117,13 @@ void RunAtomHeuristic(std::string filename,
     Atoms A(&G);
     A.ComputeAtoms();
     int clique_atoms = 0, atom_id = 0, total_count = 0;
-    for (GraphType* a : A) {
+    for (auto a : A) {
         ++atom_id;
         if (!a->IsClique()) {
-            EliminationType* best_eo = new EliminationType(*a, criterion);
+            EliminationType* best_eo = new EliminationType(a, criterion);
 
             for (int i = 1; i < runs; ++i) {
-                EliminationType* eo = new EliminationType(*a, criterion);
+                EliminationType* eo = new EliminationType(a, criterion);
                 if (eo->fill_cost() < best_eo->fill_cost()) {
                     delete best_eo;
                     best_eo = eo;
@@ -158,7 +158,7 @@ void RunHeuristic(std::string filename,
     GraphType G(graph_reader);
     delete graph_reader;
 
-    EliminationType eo(G, criterion);
+    EliminationType eo(&G, criterion);
     eo.PrettyPrint();
 
     std::cout << "fill weight: "    << eo.fill_cost()   << std::endl;

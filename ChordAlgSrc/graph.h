@@ -83,6 +83,12 @@ class Graph {
     virtual bool HasEdge(VertexPair p) const {
         return HasEdge(p.first, p.second);
     }
+    virtual Cost FillCost(Vertex u, Vertex v) const {
+        return HasEdge(u, v) ? 0 : 1;
+    }
+    virtual Cost FillCost(VertexPair p) const {
+        return FillCost(p.first, p.second);
+    }
     template< class Container >
     bool HasClique(Container set) const {
         return HasClique(set.begin(), set.end());

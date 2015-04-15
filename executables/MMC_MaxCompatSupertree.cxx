@@ -22,11 +22,11 @@
 
 #include <string>
 
-#include "classic_elimination.h"
-#include "file_reader.h"
-#include "intersection_graph.h"
-#include "mcs.h"
-#include "tree_representation.h"
+#include "ChordAlgSrc/classic_elimination.h"
+#include "ChordAlgSrc/file_reader.h"
+#include "ChordAlgSrc/intersection_graph.h"
+#include "ChordAlgSrc/mcs.h"
+#include "ChordAlgSrc/tree_representation.h"
 
 using namespace chordalg;
 
@@ -43,8 +43,8 @@ int main(int argc, char* argv[]) {
     } else {
         NexusMRPFR* graph_reader = NewFileReader<NexusMRPFR>(argv[1]);
         ColoredIntersectionGraph G(graph_reader);
-        ClassicElimination eo(G, new DeficiencyCriterion());
-        chordalg::Supergraph triangulation(G, eo.TriangNbhds());
+        ClassicElimination eo(&G, new DeficiencyCriterion());
+        chordalg::Supergraph triangulation(&G, eo.TriangNbhds());
         chordalg::CliqueTree* ct = chordalg::MCSCliqueTree(triangulation);
         ct->PhyloNewickPrint(G, true);
         std::cout << std::endl;

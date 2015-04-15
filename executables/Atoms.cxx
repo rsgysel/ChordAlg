@@ -21,9 +21,9 @@
 #include <string>
 #include <sstream>
 
-#include "atoms.h"
-#include "file_reader.h"
-#include "intersection_graph.h"
+#include "ChordAlgSrc/atoms.h"
+#include "ChordAlgSrc/file_reader.h"
+#include "ChordAlgSrc/intersection_graph.h"
 
 int main(int argc, char** argv) {
     if (argc != 2) {
@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
         chordalg::Atoms A(&G);
         A.ComputeAtoms();
         int i = 0;
-        for (chordalg::ColoredIntersectionGraph* a : A) {
+        for (auto a : A) {
             std::stringstream ss;
             ss << i;
             std::string suffix;

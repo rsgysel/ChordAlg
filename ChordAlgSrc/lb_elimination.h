@@ -41,7 +41,7 @@ struct LBCriterion : public EliminationCriterion {
     virtual Weight Calculate(Weight) const {
         return 0;
     }
-};  // DeficiencyCriterion
+};  // LBCriterion
 
 struct RatioCriterion : public LBCriterion {
  public:
@@ -70,7 +70,7 @@ class LBElimination : public EliminationAlgorithm {
     LBElimination(const LBElimination&) = delete;
     void operator=(const LBElimination&) = delete;
 
-    explicit LBElimination(const ColoredIntersectionGraph*, const LBCriterion*);
+    explicit LBElimination(const Graph*, const LBCriterion*);
     virtual ~LBElimination();
 
  protected:
@@ -80,12 +80,11 @@ class LBElimination : public EliminationAlgorithm {
 
     virtual std::pair< Weight, Cost > ObjectiveFunction(Weight, Weight);
 
-    const ColoredIntersectionGraph* const H_;
     const LBCriterion* const f_;
 
     SeparatorBlocks B_;
 
-    std::map< VertexPair, Weight > unseparated_monochromatic_pairs_;
+    std::map< VertexPair, Weight > unseparated_pairs_;
 };  // class LBElimination
 
 }  // namespace chordalg

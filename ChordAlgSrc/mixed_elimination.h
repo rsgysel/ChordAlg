@@ -43,14 +43,13 @@ class MixedElimination : public LBElimination {
     MixedElimination(const MixedElimination&) = delete;
     void operator=(const MixedElimination&) = delete;
 
-    explicit MixedElimination(const ColoredIntersectionGraph*, const LBCriterion*);
+    explicit MixedElimination(const Graph*, const LBCriterion*);
     virtual ~MixedElimination();
 
  private:
     void Eliminate(Vertex);
     std::pair< Weight, Cost > WeightOf(Vertex);
 
-    const ColoredIntersectionGraph* const H_;
     SeparatorBlocks B_;
 };  // MixedElimination
 

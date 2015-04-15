@@ -6,11 +6,10 @@
 
 namespace chordalg {
 
-LBElimination::LBElimination(const ColoredIntersectionGraph* H, const LBCriterion* f) :
-    EliminationAlgorithm(H),
-    H_(H),
+LBElimination::LBElimination(const Graph* G, const LBCriterion* f) :
+    EliminationAlgorithm(G),
     f_(f),
-    B_(H) {
+    B_(G) {
     LBElimination::Init();
     return;
 }
@@ -22,12 +21,12 @@ LBElimination::~LBElimination() {
 
 void LBElimination::Init() {
     // Monochromatic pair costs
-    for (Vertex v : *H_) {
-        for (Vertex u : *H_) {
-            if (u != v && H_->IsMonochromatic(u, v)) {
+    for (Vertex v : *G_) {
+        for (Vertex u : *G_) {
+            Cost c = G_->FillCost(u,v);
+            if (u != v && c > 0) {
                 VertexPair uv = VertexPair(std::min(u, v), std::max(u, v));
-                unseparated_monochromatic_pairs_[uv] =
-                    H_->CommonColorCount(u, v);
+                unseparated_pairs_[uv] = c;
             }
         }
     }
@@ -42,7 +41,7 @@ void LBElimination::Eliminate(Vertex v) {
     for (Block B : B_) {
         for (VertexPair uv : VertexPairs(B.NC())) {
             AddEdge(uv);
-            unseparated_monochromatic_pairs_.erase(uv);
+            unseparated_pairs_.erase(uv);
         }
     }
     return;
@@ -57,7 +56,7 @@ std::pair< Weight, Cost > LBElimination::WeightOf(Vertex v) {
     std::set< VertexPair > seen_fill_pairs;
     for (Block B : B_) {
         for (VertexPair uw : VertexPairs(B.NC())) {
-            Cost fill_cost = H_->CommonColorCount(uw.first, uw.second);
+            Cost fill_cost = G_->FillCost(uw);
             if (!IsEdge(uw) && fill_cost > 0 &&
                seen_fill_pairs.find(uw) == seen_fill_pairs.end()) {
                 deficiency_wt += fill_cost;
@@ -66,7 +65,7 @@ std::pair< Weight, Cost > LBElimination::WeightOf(Vertex v) {
         }
     }
     // new monochromatic separation
-    for (std::pair< VertexPair, Weight > p : unseparated_monochromatic_pairs_) {
+    for (std::pair< VertexPair, Weight > p : unseparated_pairs_) {
         VertexPair uw = p.first;
         Vertex u = uw.first, w = uw.second;
         Weight fill_cost = p.second;

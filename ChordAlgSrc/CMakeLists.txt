@@ -1,4 +1,4 @@
-add_library(ChordAlg
+add_library(ChordAlgLib
                 atoms.cpp
                 classic_elimination.cpp
                 elimination_algorithm.cpp

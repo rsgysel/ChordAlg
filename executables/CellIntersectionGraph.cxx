@@ -17,8 +17,8 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "file_reader.h"
-#include "intersection_graph.h"
+#include "ChordAlgSrc/file_reader.h"
+#include "ChordAlgSrc/intersection_graph.h"
 
 using namespace chordalg;
 

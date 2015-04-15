@@ -22,11 +22,11 @@
 #include <algorithm>
 #include <string>
 
-#include "atoms.h"
-#include "classic_elimination.h"
-#include "file_reader.h"
-#include "intersection_graph.h"
-#include "lb_elimination.h"
+#include "ChordAlgSrc/atoms.h"
+#include "ChordAlgSrc/classic_elimination.h"
+#include "ChordAlgSrc/file_reader.h"
+#include "ChordAlgSrc/intersection_graph.h"
+#include "ChordAlgSrc/lb_elimination.h"
 
 using namespace chordalg;
 
@@ -60,12 +60,12 @@ int main(int argc, char** argv) {
         Atoms A(&G);
         A.ComputeAtoms();
         int clique_atoms = 0, atom_id = 0, total_count = 0;
-        for (ColoredIntersectionGraph* a : A) {
+        for (auto a : A) {
             ++atom_id;
             if (!a->IsClique()) {
-                LBElimination eo1(*a, new RatioCriterion());
-                LBElimination eo2(*a, new WSumCriterion( d, s ));
-                ClassicElimination eo3(*a, new ClassicCriterion());
+                LBElimination eo1(a, new RatioCriterion());
+                LBElimination eo2(a, new WSumCriterion( d, s ));
+                ClassicElimination eo3(a, new ClassicCriterion());
                 Weight min_weight = std::min(eo1.fill_cost(),
                                 std::min(eo2.fill_cost(), eo3.fill_cost()));
                 if (eo1.fill_cost() == min_weight) {
