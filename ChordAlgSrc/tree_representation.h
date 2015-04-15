@@ -20,6 +20,7 @@
 #ifndef INCLUDE_TREE_REPRESENTATION_H_
 #define INCLUDE_TREE_REPRESENTATION_H_
 
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -34,19 +35,9 @@ class TreeRepresentation {
                                 std::vector< Vertices > clique_map);
     virtual ~TreeRepresentation();
 
-    void NewickVisit(VertexSet& visited,
-                     Vertex v,
-                     std::string& newick_tree) const;
-    void PhyloNewickVisit(VertexSet& visited,
-                          Vertex v,
-                          std::string& newick_tree,
-                          const ColoredIntersectionGraph& cig,
-                          std::vector< size_t >& taxon_clique_size) const;
-
-
-    void NewickPrint() const;
-    void PhyloNewickPrint(const ColoredIntersectionGraph& cig,
-                          bool rooted = false) const;
+    std::string strNewick() const;
+    std::string strPhyloNewick(const ColoredIntersectionGraph& cig,
+                               bool rooted = false) const;
     std::string str() const {
         return T_.str();
     }
@@ -63,8 +54,17 @@ class TreeRepresentation {
     Graph T_;  // topology
     std::vector< Vertices > clique_map_;  // maps nodes of T_ to cliques of G_
 
-    std::string SerializeMaxcliqueAsString(Vertices K) const;
+    std::string strMaxClique(Vertices K) const;
     VertexNames NamesFromCliqueMap(std::vector< Vertices > clique_map) const;
+
+    void NewickVisit(VertexSet& visited,
+                     Vertex v,
+                     std::string& newick_tree) const;
+    void PhyloNewickVisit(VertexSet& visited,
+                          Vertex v,
+                          std::string& newick_tree,
+                          const ColoredIntersectionGraph& cig,
+                          std::vector< size_t >& taxon_clique_size) const;
 };  // TreeRepresentation
 
 class CliqueTree : public TreeRepresentation {

@@ -222,12 +222,16 @@ std::string Graph::str(const VertexVector& U) const {
 }
 
 std::string Graph::str(const Vertices& U) const {
-    std::ostringstream oss;
-    for (Vertex v : U) {
-        oss << name(v) << " ";
+    if (U.empty()) {
+        return std::string();
+    } else {
+        std::string Ustr;
+        for (Vertex v : U) {
+            Ustr += name(v) + " ";
+        }
+        Ustr.erase(Ustr.end() - 1, Ustr.end());
+        return Ustr;
     }
-    oss << std::endl;
-    return oss.str();
 }
 
 }  // namespace chordalg

@@ -46,13 +46,13 @@ int main(int argc, char* argv[]) {
         ClassicElimination eo(&G, new DeficiencyCriterion());
         chordalg::Supergraph triangulation(&G, eo.TriangNbhds());
         chordalg::CliqueTree* ct = chordalg::MCSCliqueTree(triangulation);
-        ct->PhyloNewickPrint(G, true);
-        std::cout << std::endl;
-        eo.str();
+        std::cout << ct->strPhyloNewick(G, true) << std::endl << std::endl;
+        std::cout << eo.str() << std::endl;
         std::cout << "fill weight: " << eo.fill_cost() << std::endl;
         std::cout << "fill count: " << eo.fill_count() << std::endl;
         std::cout << "vertices: " << G.order() << std::endl;
         std::cout << "edges: " << G.size() << std::endl;
+        delete ct;
     }
     return EXIT_SUCCESS;
 }

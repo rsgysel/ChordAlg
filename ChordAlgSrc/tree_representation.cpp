@@ -15,12 +15,9 @@ TreeRepresentation::TreeRepresentation(AdjacencyLists* E, const Graph* G,
 TreeRepresentation::~TreeRepresentation() {
 }
 
-std::string TreeRepresentation::SerializeMaxcliqueAsString(Vertices K) const {
+std::string TreeRepresentation::strMaxClique(Vertices K) const {
     std::string maxclique("{");
-    for (Vertex v : K) {
-        maxclique += G_->name(v) + std::string(" ");
-    }
-    maxclique.erase(maxclique.end() - 1, maxclique.end());
+    maxclique += G_->str(K);
     maxclique += std::string("}");
     return maxclique;
 }
@@ -30,7 +27,7 @@ VertexNames TreeRepresentation::NamesFromCliqueMap(
     VertexNames names;
     names.resize(clique_map.size());
     for (Vertex v = 0; v < clique_map.size(); ++v) {
-        names[v] = SerializeMaxcliqueAsString(clique_map[v]);
+        names[v] = strMaxClique(clique_map[v]);
     }
     return names;
 }
@@ -43,7 +40,7 @@ CliqueTree::CliqueTree(AdjacencyLists* E, const Graph* G,
 CliqueTree::~CliqueTree() {
 }
 
-// Prints tree as a Newick notation / New Hampshire tree format.
+// Prints tree in Newick notation / New Hampshire tree format.
 // ``string" may not contain semicolon, parentheses, comma, or colon
 //
 // Newick files are given by the grammar:
@@ -56,19 +53,14 @@ CliqueTree::~CliqueTree() {
 //   Name --> empty | string
 //   Length --> empty | ":" number
 //
-void TreeRepresentation::NewickPrint() const {
+std::string TreeRepresentation::strNewick() const {
     std::string newick_tree;
     VertexSet visited;
     Vertex v = *(T_.begin());
     visited.insert(v);
     NewickVisit(visited, v, newick_tree);
-    if (visited.size() != T_.order()) {
-        std::cerr << "Error in TreeRepresentation::NewickPrint: not all ";
-        std::cerr << "nodes visited" << std::endl;
-        exit(EXIT_FAILURE);
-    }
-    std::cout << newick_tree << ";" << std::endl;
-    return;
+    newick_tree += ";";
+    return newick_tree;
 }
 
 void TreeRepresentation::NewickVisit(VertexSet& visited, Vertex v,
@@ -94,36 +86,28 @@ void TreeRepresentation::NewickVisit(VertexSet& visited, Vertex v,
     return;
 }
 
-void TreeRepresentation::PhyloNewickPrint(const ColoredIntersectionGraph& cig,
-                                          bool rooted) const {
+std::string TreeRepresentation::strPhyloNewick(const ColoredIntersectionGraph& cig,
+                                               bool rooted) const {
     // DFS info
     std::string newick_tree;
     VertexSet visited;
     size_t root_element;
-    bool init_root_element = false;
     if (rooted) {
         for (size_t i = 0; i < cig.taxa(); ++i) {
             if (cig.taxon_name(i) == "roottaxon") {
                 root_element = i;
-                init_root_element = true;
             }
-        }
-        if (!init_root_element) {
-            std::cerr << "Error in TreeRepresentation::PhyloNewickPrint: no ";
-            std::cerr << "roottaxon found" << std::endl;
-            std::exit(EXIT_FAILURE);
         }
     }
     // Taxon Clique info
     std::vector< size_t > taxon_clique_size(cig.subset_family()->n(), 0);
     for (Vertex v : cig) {
         FiniteSet S = cig.subset(v);
-        for (size_t e : S) {
-            ++taxon_clique_size[e];
+        for (size_t t : S) {
+            ++taxon_clique_size[t];
         }
     }
     Vertex v;
-    bool init_v = false;
     if (rooted) {
         for (Vertex u : T_) {
             size_t root_count = 0;
@@ -136,14 +120,8 @@ void TreeRepresentation::PhyloNewickPrint(const ColoredIntersectionGraph& cig,
             }
             if (root_count == taxon_clique_size[root_element]) {
                 v = u;
-                init_v = true;
                 break;
             }
-        }
-        if (!init_v) {
-            std::cerr << "Error in TreeRepresentation::PhyloNewickPrint: ";
-            std::cerr << "no roottaxon clique found" << std::endl;
-            std::exit(EXIT_FAILURE);
         }
     } else {
         v = *(T_.begin());
@@ -151,13 +129,8 @@ void TreeRepresentation::PhyloNewickPrint(const ColoredIntersectionGraph& cig,
     }
     // Start DFS
     PhyloNewickVisit(visited, v, newick_tree, cig, taxon_clique_size);
-    if (visited.size() != T_.order()) {
-        std::cerr << "Error in TreeRepresentation::PhyloNewickPrint: not ";
-        std::cerr << "all nodes visited" << std::endl;
-        exit(EXIT_FAILURE);
-    }
-    std::cout << newick_tree << ";" << std::endl;
-    return;
+    newick_tree += ";";
+    return newick_tree;
 }
 
 void TreeRepresentation::PhyloNewickVisit(VertexSet& visited,

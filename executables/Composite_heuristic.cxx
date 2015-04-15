@@ -72,18 +72,18 @@ int main(int argc, char** argv) {
                     total_weight += eo1.fill_cost();
                     total_count += eo1.fill_count();
                     std::cout << "atom (LB, Ratio)" << atom_id << std::endl;
-                    eo1.str();
+                    std::cout << eo1.str() << std::endl;
                 } else if (eo2.fill_cost() == min_weight) {
                     total_weight += eo2.fill_cost();
                     total_count += eo2.fill_count();
                     std::cout << "atom (LB, Weighted Sum)" << atom_id;
                     std::cout << std::endl;
-                    eo2.str();
+                    std::cout << eo2.str() << std::endl;
                 } else if (eo3.fill_cost() == min_weight) {
                     total_weight +=  eo3.fill_cost();
                     total_count += eo3.fill_count();
                     std::cout << "atom (Classic)" << atom_id << std::endl;
-                    eo3.str();
+                    std::cout << eo3.str() << std::endl;
                 }
             } else {
                 ++clique_atoms;

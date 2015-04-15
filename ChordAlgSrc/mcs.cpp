@@ -57,7 +57,7 @@ CliqueTree* MCSCliqueTree(const Graph& G) {
             }
             if (new_card != 0) {
                 size_t k = *std::min_element(Ks_indices.begin(),
-                                          Ks_indices.end());
+                                             Ks_indices.end());
                 size_t p = clique[eo.VertexAt(k)];
                 ct_edges.push_back(std::make_pair(s, p));
             }
@@ -73,8 +73,8 @@ CliqueTree* MCSCliqueTree(const Graph& G) {
     AdjacencyLists* E = new AdjacencyLists;
     E->resize(s + 1);
     for (std::pair<int, int> e : ct_edges) {
-        E->operator[](e.first).add(e.second);
-        E->operator[](e.second).add(e.first);
+        (*E)[e.first].add(e.second);
+        (*E)[e.second].add(e.first);
     }
     CliqueTree* tr = new CliqueTree(E, &G, clique_map);
     return tr;
