@@ -1,18 +1,15 @@
 add_library(ChordAlgLib
                 atoms.cpp
-                classic_elimination.cpp
                 elimination_algorithm.cpp
                 elimination_order.cpp
                 file_reader.cpp
                 graph.cpp
                 graph_file.cpp
                 intersection_graph.cpp
-                lb_elimination.cpp
                 lex_trie.cpp
                 mcs.cpp
                 mcs_m.cpp
                 minimal_separator_algorithms.cpp
-                mixed_elimination.cpp
                 separator.cpp
                 separator_graph.cpp
                 tree_representation.cpp

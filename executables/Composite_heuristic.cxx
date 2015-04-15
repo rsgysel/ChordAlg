@@ -23,10 +23,10 @@
 #include <string>
 
 #include "ChordAlgSrc/atoms.h"
-#include "ChordAlgSrc/classic_elimination.h"
+#include "ChordAlgSrc/elimination_algorithm.h"
 #include "ChordAlgSrc/file_reader.h"
 #include "ChordAlgSrc/intersection_graph.h"
-#include "ChordAlgSrc/lb_elimination.h"
+#include "ChordAlgSrc/elimination_algorithm.h"
 
 using namespace chordalg;
 

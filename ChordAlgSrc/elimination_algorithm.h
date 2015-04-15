@@ -33,6 +33,7 @@
 #include "elimination_order.h"
 #include "file_reader.h"
 #include "graph.h"
+#include "separator.h"
 #include "vertices.h"
 
 namespace chordalg {
@@ -103,6 +104,111 @@ class EliminationAlgorithm {
     std::vector < VertexCost > ties_;
     std::vector < int > tie_count_;
 };  // EliminationAlgorithm
+
+struct ClassicCriterion : public EliminationCriterion {
+ public:
+    virtual ~ClassicCriterion() {}
+    virtual Weight Calculate(Weight) const {
+        return 0;
+    }
+
+ private:
+    Weight Calculate(Weight, Weight) const {
+        return 0;
+    }
+};  // ClassicCriterion
+
+struct DeficiencyCriterion : public ClassicCriterion {
+ public:
+    virtual ~DeficiencyCriterion() {}
+    Weight Calculate(Weight deficiency) const {
+        return deficiency;
+    }
+};  // DeficiencyCriterion
+
+class ClassicElimination : public EliminationAlgorithm {
+ public:
+    explicit ClassicElimination(const Graph*, const ClassicCriterion*);
+    virtual ~ClassicElimination();
+
+ private:
+    void Eliminate(Vertex);
+    std::pair< Weight, Cost > WeightOf(Vertex);
+
+    const ClassicCriterion* const f_;
+};  // class ClassicEliminationi
+
+struct LBCriterion : public EliminationCriterion {
+ public:
+    virtual ~LBCriterion() {}
+    virtual Weight Calculate(Weight, Weight) const {
+        return 0;
+    }
+ private:
+    virtual Weight Calculate(Weight) const {
+        return 0;
+    }
+};  // LBCriterion
+
+struct RatioCriterion : public LBCriterion {
+ public:
+    virtual ~RatioCriterion() {}
+    Weight Calculate(Weight deficiency, Weight separated) const {
+        return deficiency / (1 + separated);
+    }
+};  // RatioCriterion
+
+struct WSumCriterion : public LBCriterion {
+ public:
+    virtual ~WSumCriterion() {}
+    WSumCriterion() : d_(1), s_(1) {}
+    WSumCriterion(Weight d, Weight s) : d_(d), s_(s) {}
+
+    Weight Calculate(Weight deficiency, Weight separated) const {
+        return d_*deficiency - s_*separated;
+    }
+ private:
+    Weight d_, s_;
+};  // WSumCriterion
+
+class LBElimination : public EliminationAlgorithm {
+ public:
+    LBElimination() = delete;
+    LBElimination(const LBElimination&) = delete;
+    void operator=(const LBElimination&) = delete;
+
+    explicit LBElimination(const Graph*, const LBCriterion*);
+    virtual ~LBElimination();
+
+ protected:
+    void Init();
+    void Eliminate(Vertex);
+    std::pair< Weight, Cost > WeightOf(Vertex);
+
+    virtual std::pair< Weight, Cost > ObjectiveFunction(Weight, Weight);
+
+    const LBCriterion* const f_;
+
+    SeparatorBlocks B_;
+
+    std::map< VertexPair, Weight > unseparated_pairs_;
+};  // class LBElimination
+
+class MixedElimination : public LBElimination {
+ public:
+    MixedElimination() = delete;
+    MixedElimination(const MixedElimination&) = delete;
+    void operator=(const MixedElimination&) = delete;
+
+    explicit MixedElimination(const Graph*, const LBCriterion*);
+    virtual ~MixedElimination();
+
+ private:
+    void Eliminate(Vertex);
+    std::pair< Weight, Cost > WeightOf(Vertex);
+
+    SeparatorBlocks B_;
+};  // MixedElimination
 
 template< class GraphType, class FileReaderType, class EliminationType,
           class CriterionType >
