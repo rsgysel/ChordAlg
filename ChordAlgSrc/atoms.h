@@ -30,6 +30,7 @@
 #include "graph.h"
 #include "lex_trie.h"
 #include "mcs_m.h"
+#include "minimal_separator_algorithms.h"
 #include "separator.h"
 #include "vertices.h"
 
@@ -44,6 +45,9 @@ class Atoms {
     explicit Atoms(const Graph* G);
     ~Atoms();
 
+    const LexTrie& clique_minimal_separators() const {
+        return clique_minimal_separators_;
+    }
     int size() {
         return atom_subgraphs_.size();
     }
@@ -61,6 +65,7 @@ class Atoms {
  private:
     std::vector< InducedSubgraph* > atom_subgraphs_;
     const Graph* const G_;
+    LexTrie clique_minimal_separators_;
 };  // Atoms
 
 }  // namespace chordalg

@@ -29,7 +29,6 @@ int main(int argc, char* argv[]) {
         MatrixCellIntGraphFR* graph_reader =
             NewFileReader<MatrixCellIntGraphFR>(argv[1]);
         ColoredIntersectionGraph G(graph_reader);
-        std::cout << "vertices: " << G.order() << std::endl;
-        std::cout << "edges: " << G.size() << std::endl;
+        std::cout << G.str() << std::endl;
     }
 }

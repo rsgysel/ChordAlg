@@ -1,6 +1,6 @@
 /*
- *  Atoms.cpp - main program that computes and prints the atom subgraphs
- *  of a graph
+ *  AtomsExperiment.cpp - main program that computes and prints the total
+ *  vertices and edges of the atom subgraphs of a graph
  *  Copyright (C) 2013 Rob Gysel
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -25,35 +25,27 @@
 
 #include "ChordAlgSrc/atoms.h"
 #include "ChordAlgSrc/file_reader.h"
-#include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/intersection_graph.h"
 
 int main(int argc, char** argv) {
     if (argc != 2) {
         std::cout << "usage: " << argv[0] << " <filename>" << std::endl;
     } else {
-        chordalg::SortedAdjacencyListFR* graph_reader =
-            chordalg::NewFileReader<chordalg::SortedAdjacencyListFR>(
+        chordalg::MatrixCellIntGraphFR* graph_reader =
+            chordalg::NewFileReader<chordalg::MatrixCellIntGraphFR>(
                 std::string(argv[1]));
         chordalg::Graph G(graph_reader);
         chordalg::Atoms A(&G);
         A.ComputeAtoms();
-        size_t i = 0;
+        size_t vertices = 0, edges = 0;
         for (auto a : A) {
-            std::string suffix;
-            if (a->IsClique()) {
-                suffix = std::string("_cliqueatom");
-            } else {
-                suffix = std::string("_atom");
-            }
-            std::string atom_filename = std::string(argv[1]) + suffix +
-                                        std::to_string(i);
-            std::cout << "Creating file " << atom_filename << std::endl;
-            std::ofstream atom_file;
-            atom_file.open(atom_filename, std::ofstream::out);
-            atom_file << a->str();
-            atom_file.close();
-            ++i;
+            vertices += a->order();
+            edges += a->size();
         }
+        std::cout << "Vertices: " << G.order() << '\n'
+                  << "Edges: " << G.size() << '\n'
+                  << "Total Vertices: " << vertices << '\n'
+                  << "Total Edges: " << edges << std::endl;
     }
     return 0;
 }

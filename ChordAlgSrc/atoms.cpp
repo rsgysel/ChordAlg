@@ -2,7 +2,7 @@
 
 namespace chordalg {
 
-Atoms::Atoms(const Graph* G) : G_(G) {
+Atoms::Atoms(const Graph* G) : G_(G), clique_minimal_separators_(G_->order()) {
     return;
 }
 
@@ -41,6 +41,7 @@ void Atoms::ComputeAtoms() {
             }
         }
         if (G_->HasClique(S)) {
+            clique_minimal_separators_.Insert(S);
             for (Vertex u : deleted_vertices) {
                 S.add(u);
             }

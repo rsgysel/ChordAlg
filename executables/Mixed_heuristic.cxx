@@ -29,8 +29,8 @@
 using namespace chordalg;
 
 void Mixed_heuristic_usage(std::string program) {
-    std::cout << "usage: " << program << " <filename> (--atoms)" << std::endl;
-    std::cout << "use --atoms to run the heuristic on atom subgraphs";
+    std::cout << "usage: " << program << " <filename> [-a]" << std::endl;
+    std::cout << "use -a to run the heuristic on atom subgraphs";
     std::cout << std::endl;
     return;
 }
@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
     if (argc != 2 && argc != 3) {
         Mixed_heuristic_usage(argv[0]);
     } else {
-        if (argc == 3 && strncmp(argv[2], "--atoms", 7) == 0) {
+        if (argc == 3 && strncmp(argv[2], "-a", 7) == 0) {
             RunAtomHeuristic<ColoredIntersectionGraph,
                              MatrixCellIntGraphFR,
                              MixedElimination,
