@@ -108,7 +108,6 @@ class Graph {
     size_t size_;  // #edges
 
     // Induced Subgraph Initialization
-    VertexNames* InducedNames(const Graph&, Vertices);
     AdjacencyLists* InducedVertices(const Graph&, Vertices);
     VertexNames* DefaultNames(size_t);
 
