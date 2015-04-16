@@ -47,7 +47,7 @@ class Atoms {
         return atom_subgraphs_.size();
     }
 
-    typedef typename std::vector< Graph* >::const_iterator AtomIterator;
+    typedef typename std::vector< InducedSubgraph* >::const_iterator AtomIterator;
     AtomIterator begin() {
         return atom_subgraphs_.begin();
     }
@@ -58,7 +58,7 @@ class Atoms {
     void ComputeAtoms();
 
  private:
-    std::vector< Graph* > atom_subgraphs_;
+    std::vector< InducedSubgraph* > atom_subgraphs_;
     const Graph* const G_;
 };  // Atoms
 

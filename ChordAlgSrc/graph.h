@@ -41,7 +41,6 @@ class Graph {
     explicit Graph(FileReader*);
     explicit Graph(AdjacencyLists*);
     Graph(AdjacencyLists*, VertexNames);
-    Graph(const Graph&, Vertices);
     explicit Graph(size_t);
     virtual ~Graph();
 
@@ -65,8 +64,6 @@ class Graph {
         return GraphVertices(this, order_).end();
     }
 
-    virtual Vertex vertex(char id) const;
-    virtual Vertex vertex(std::string id) const;
     virtual VertexName name(Vertex v) const {
         return vertex_names_->operator[](v);
     }
@@ -105,7 +102,6 @@ class Graph {
 
     const AdjacencyLists* const neighborhoods_;
     const VertexNames* const vertex_names_;
-    std::map<VertexName, Vertex> vertex_ids_;
     std::vector< std::vector< bool > > is_edge_;
 
     size_t order_;  // #vertices
@@ -120,6 +116,26 @@ class Graph {
     bool HasClique(InputIterator begin, InputIterator end) const;
 };  // Graph
 
+class InducedSubgraph : public Graph {
+ public:
+    InducedSubgraph() = delete;
+    InducedSubgraph(const InducedSubgraph&) = delete;
+    void operator=(const InducedSubgraph&) = delete;
+
+    InducedSubgraph(const Graph*, Vertices);
+    
+    VertexName name(Vertex v) const {
+        return G_->name(U_[v]);
+    }
+    Cost Fillcost(Vertex u, Vertex v) const {
+        return G_->FillCost(U_[u], U_[v]);
+    }
+
+ protected:
+    const Graph* const G_;
+    const Vertices U_;
+};  // InducedSubgraph
+
 class Supergraph : public Graph {
  public:
     Supergraph() = delete;
@@ -127,13 +143,6 @@ class Supergraph : public Graph {
     void operator=(const Supergraph&) = delete;
 
     Supergraph(const Graph*, AdjacencyLists*);
-
-    Vertex vertex(char id) const {
-        return G_->vertex(id);
-    }
-    Vertex vertex(std::string id) const {
-        return G_->vertex(id);
-    }
     VertexName name(Vertex v) const {
         return G_->name(v);
     }

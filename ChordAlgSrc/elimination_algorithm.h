@@ -70,6 +70,9 @@ class EliminationAlgorithm {
     const std::vector< VertexSet >& fill_neighbors() const {
         return fill_neighbors_;
     }
+    const std::vector< VertexPair >& fill_edges() const {
+        return fill_edges_;
+    }
 
     AdjacencyLists* TriangNbhds() const;
 
@@ -95,15 +98,16 @@ class EliminationAlgorithm {
     const Graph* const G_;
 
     Vertices alpha_;  // alpha[i] = ith vertex eliminated
-    std::vector < int > alpha_inverse_;
+    std::vector< int > alpha_inverse_;
 
     Weight fill_cost_;
     int fill_count_;  // # of fill edges added (monochromatic or not)
-    std::vector < VertexSet > fill_neighbors_;
+    std::vector< VertexSet > fill_neighbors_;
+    std::vector< VertexPair > fill_edges_;
     VertexSet remaining_vertices_;
 
-    std::vector < VertexCost > ties_;
-    std::vector < int > tie_count_;
+    std::vector< VertexCost > ties_;
+    std::vector< int > tie_count_;
 };  // EliminationAlgorithm
 
 struct ClassicCriterion : public EliminationCriterion {
@@ -213,13 +217,14 @@ class MixedElimination : public LBElimination {
 
 template< class GraphType, class FileReaderType, class EliminationType,
           class CriterionType >
-void RunAtomHeuristic(std::string filename,
-                      CriterionType* criterion = new CriterionType(),
-                      int runs = 1) {
+std::vector< VertexPair > RunAtomHeuristic(std::string filename,
+                          CriterionType* criterion = new CriterionType(),
+                          int runs = 1) {
     FileReaderType* graph_reader = NewFileReader < FileReaderType >(filename);
     GraphType G(graph_reader);
     delete graph_reader;
 
+    std::vector< VertexPair > fill_edges;
     Weight total_weight = 0;
     Atoms A(&G);
     A.ComputeAtoms();
@@ -241,6 +246,12 @@ void RunAtomHeuristic(std::string filename,
             total_count += best_eo->fill_count();
             std::cout << "atom " << atom_id << std::endl;
             std::cout << best_eo->str() << std::endl;
+
+            for(auto uv : best_eo->fill_edges()) {
+                if(a->FillCost(uv) > 0) {
+                    fill_edges.push_back(uv);
+                }
+            }
             delete best_eo;
         } else {
             ++clique_atoms;
@@ -254,26 +265,31 @@ void RunAtomHeuristic(std::string filename,
     std::cout << "atoms: "          << A.size()     << std::endl;
     std::cout << "clique atoms: "   << clique_atoms << std::endl;
 
-    return;
+    return fill_edges;
 }
 
 template< class GraphType, class FileReaderType, class EliminationType,
           class CriterionType >
-void RunHeuristic(std::string filename,
-                  CriterionType* criterion = new CriterionType()) {
+std::vector< VertexPair > RunHeuristic(std::string filename,
+                          CriterionType* criterion = new CriterionType()) {
     FileReaderType* graph_reader = NewFileReader < FileReaderType >(filename);
     GraphType G(graph_reader);
     delete graph_reader;
 
     EliminationType eo(&G, criterion);
     std::cout << eo.str() << std::endl;
-
+    std::vector< VertexPair > fill_edges;
+    for(auto uv : eo.fill_edges()) {
+        if(G.FillCost(uv) > 0) {
+            fill_edges.push_back(uv);
+        }
+    }
     std::cout << "fill weight: "    << eo.fill_cost()   << std::endl;
     std::cout << "fill count: "     << eo.fill_count()  << std::endl;
     std::cout << "vertices: "       << G.order()        << std::endl;
     std::cout << "edges: "          << G.size()         << std::endl;
 
-    return;
+    return fill_edges;
 }
 
 }  // namespace chordalg

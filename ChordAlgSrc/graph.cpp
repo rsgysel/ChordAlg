@@ -43,15 +43,6 @@ Graph::Graph(AdjacencyLists* a_lists, VertexNames vertex_names) :
     return;
 }
 
-Graph::Graph(const Graph& super_graph, Vertices X) :
-    neighborhoods_(InducedVertices(super_graph, X)),
-    vertex_names_(InducedNames(super_graph, X)),
-    order_(X.size()),
-    size_(0) {
-    Init();
-    return;
-}
-
 // Use this constructor in a subclass to defer initialization, adjacency lists,
 // and vertex names to the subclass
 Graph::Graph(size_t n) :
@@ -59,6 +50,13 @@ Graph::Graph(size_t n) :
     vertex_names_(nullptr),
     order_(n),
     size_(0) {
+    return;
+}
+
+InducedSubgraph::InducedSubgraph(const Graph* G, Vertices U) :
+    Graph(InducedVertices(*G, U)),
+    G_(G),
+    U_(U) {
     return;
 }
 
@@ -93,7 +91,7 @@ void Graph::Init() {
             is_edge_[x][y] = true;
         }
     }
-    // check consistency of file
+    // edge consistency
     for (Vertex x : *this) {
         for (Vertex y : *this) {
             if (is_edge_[x][y] != is_edge_[y][x]) {
@@ -103,37 +101,7 @@ void Graph::Init() {
             }
         }
     }
-    // construct vertex id map
-    for (Vertex x : *this) {
-        vertex_ids_[vertex_names_->operator[](x)] = x;
-    }
     return;
-}
-
-Vertex Graph::vertex(char id) const {
-    std::stringstream ss;
-    ss << id;
-    return vertex(ss.str());
-}
-
-Vertex Graph::vertex(std::string id) const {
-    auto itr = vertex_ids_.find(id);
-    if (itr == vertex_ids_.end()) {
-        std::cerr << "Error in Graph::vertex: vertex identifier " << id;
-        std::cerr << " not found" << std::endl;
-        exit(EXIT_FAILURE);
-    }
-    return itr->second;
-}
-
-VertexNames* Graph::InducedNames(const Graph& super_graph, Vertices X) {
-    std::sort(X.begin(), X.end());
-    VertexNames* names = new VertexNames;
-    names->reserve(X.size());
-    for (Vertex v : X) {
-        names->push_back(super_graph.name(v));
-    }
-    return names;
 }
 
 AdjacencyLists* Graph::InducedVertices(const Graph& super_graph, Vertices X) {

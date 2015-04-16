@@ -55,7 +55,7 @@ class EliminationOrder {
     ~EliminationOrder();
     void Init();
 
-    int ComputeFill();
+    size_t ComputeFill();
     void Emplace(Vertex v, int i);
     void Swap(int i, int j);
     AdjacencyLists* TriangNbhds() const;

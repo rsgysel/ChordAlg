@@ -15,6 +15,7 @@ EliminationAlgorithm::EliminationAlgorithm(const Graph* G) :
                                            fill_cost_(0),
                                            fill_count_(0),
                                            fill_neighbors_(),
+                                           fill_edges_(),
                                            remaining_vertices_(),
                                            ties_(),
                                            tie_count_() {
@@ -117,6 +118,7 @@ void EliminationAlgorithm::AddEdge(VertexPair p) {
     if (!IsEdge(p)) {
         fill_neighbors_[p.first].insert(p.second);
         fill_neighbors_[p.second].insert(p.first);
+        fill_edges_.push_back(p);
         ++fill_count_;
     }
     return;

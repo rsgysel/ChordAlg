@@ -70,7 +70,7 @@ AdjacencyLists* EliminationOrder::TriangNbhds() const {
 // chordality of graphs, test acyclicity of hypergraphs, and selectively
 // reduce acyclic hypergraphs".
 // SIAM J. Comput., 13:566-579, 1984.
-int EliminationOrder::ComputeFill() {
+size_t EliminationOrder::ComputeFill() {
     if (fill_count_ != kUnfilled()) {
         return fill_count_;
     }

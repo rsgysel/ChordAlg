@@ -24,16 +24,6 @@ ColoredIntersectionGraph::ColoredIntersectionGraph(NexusMRPFR* fr) :
     return;
 }
 
-ColoredIntersectionGraph::ColoredIntersectionGraph(
-    ColoredIntersectionGraph& super_graph, Vertices X) :
-    Graph(super_graph, X),
-    subsets_(InduceSubsets(super_graph, X)),
-    vertex_colors_(InduceVertexColors(super_graph, X)),
-    subset_family_(InduceSubsetFamily(super_graph)),
-    taxon_name_(DefaultTaxonNames(subset_family_->n())) {
-    return;
-}
-
 ColoredIntersectionGraph::~ColoredIntersectionGraph() {
     delete subset_family_;
     return;

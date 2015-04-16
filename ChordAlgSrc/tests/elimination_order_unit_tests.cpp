@@ -14,9 +14,8 @@ class MockGraph : public chordalg::Graph {
     MOCK_METHOD0(order, size_t());
 };  // MockGraph
 
-/////////////
-// Frameworks
-
+////////
+// Tests
 
 TEST(EliminationOrder, Size) {
     MockGraph G;

@@ -32,9 +32,12 @@ namespace chordalg {
 
 class ColoredIntersectionGraph : public Graph {
  public:
+    ColoredIntersectionGraph() = delete;
+    ColoredIntersectionGraph(const ColoredIntersectionGraph&) = delete;
+    void operator=(const ColoredIntersectionGraph&) = delete;
+
     explicit ColoredIntersectionGraph(MatrixCellIntGraphFR* M);
     explicit ColoredIntersectionGraph(NexusMRPFR* M);
-    ColoredIntersectionGraph(ColoredIntersectionGraph&, Vertices);
     virtual ~ColoredIntersectionGraph();
 
     bool IsMonochromatic(Vertex, Vertex) const;

@@ -436,7 +436,7 @@ void NexusMRPFR::ReadFileOrDie() {
         }
         ++i;
     }
-    while (file_->GetLine(line)) {} // Finish processing input. For clarity of unit tests.
+    while (file_->GetLine(line)) {} // Finish processing input. For unit tests.
     ComputeGraphData(matrix, 1);
     return;
 }

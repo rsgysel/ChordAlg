@@ -73,7 +73,7 @@ void Atoms::ComputeAtoms() {
         vertices_of_atoms.push_back(C);
     }
     for (Vertices U : vertices_of_atoms) {
-        atom_subgraphs_.push_back(new Graph(*G_, U));
+        atom_subgraphs_.push_back(new InducedSubgraph(G_, U));
     }
     return;
 }
