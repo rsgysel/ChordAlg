@@ -212,17 +212,18 @@ AdjacencyLists* EliminationAlgorithm::TriangNbhds() const {
 }
 
 std::string EliminationAlgorithm::str() const {
-    std::ostringstream oss;
-    oss << "elimination order:\t";
+    std::string Estr = "elimination order:\t";
     for (Vertex v : alpha_) {
-        oss << G_->name(v) << " ";
+        Estr += G_->name(v) + " ";
     }
-    oss << std::endl;
-    oss << "tie distribution:\t";
-    std::copy(tie_count_.begin(), tie_count_.end(),
+    Estr.erase(Estr.end() - 1, Estr.end());
+    Estr += "\ntie distribution:\t";
+    std::ostringstream oss;
+    std::copy(tie_count_.begin(), tie_count_.end() - 1,
               std::ostream_iterator< int >(oss, " "));
-    oss << std::endl;
-    return oss.str();
+    oss << tie_count_.back();
+    Estr += oss.str() + '\n';
+    return Estr;
 }
 
 /////////////////////

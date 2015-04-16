@@ -21,7 +21,6 @@
 
 #include <algorithm>
 #include <map>
-#include <sstream>
 #include <string>
 #include <vector>
 
@@ -122,7 +121,7 @@ class InducedSubgraph : public Graph {
     void operator=(const InducedSubgraph&) = delete;
 
     InducedSubgraph(const Graph*, Vertices);
-    
+
     VertexName name(Vertex v) const {
         return G_->name(U_[v]);
     }

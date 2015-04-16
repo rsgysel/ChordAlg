@@ -199,25 +199,23 @@ bool SeparatorComponents::IsSeparated(Vertices V) const {
 }
 
 std::string SeparatorComponents::str() const {
-    std::ostringstream oss;
+    std::string SCstr;
     for (Vertex v : *G_) {
-        oss << "CC(" << G_->name(v) << "): " << connected_component_[v];
-        oss << std::endl;
+        SCstr += "CC(" + G_->name(v) + "): "
+                 + std::to_string(connected_component_[v]) + '\n';
     }
-    oss << std::endl;
-    return oss.str();
+    SCstr += '\n';
+    return SCstr;
 }
 
 std::string SeparatorBlocks::str() const {
-    std::ostringstream oss;
-    oss << SeparatorComponents::str();
+    std::string SCstr = SeparatorComponents::str();
     ConnectedComponentID cc = 0;
     for (Block B : blocks_) {
-        oss << "N(C_" << cc << "): ";
-        G_->str(B.NC());
+        SCstr += "N(C_" + std::to_string(cc) + "): " + G_->str(B.NC());
         ++cc;
     }
-    return oss.str();
+    return SCstr;
 }
 
 }  // namespace chordalg

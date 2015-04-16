@@ -3,11 +3,11 @@
 namespace chordalg {
 
 std::string strMinimalSeparators(const MinsepTrie& M, const Graph& G) {
-    std::ostringstream oss;
+    std::string MSstr;
     for (FiniteSet S : M) {
-        oss << G.str(S) << std::endl;
+        MSstr += G.str(S) + '\n';
     }
-    return oss.str();
+    return MSstr;
 }
 
 // Berry, Bordat, and Cogis' algorithm to generate minimal separators

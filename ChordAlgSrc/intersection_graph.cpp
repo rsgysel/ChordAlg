@@ -84,19 +84,21 @@ size_t ColoredIntersectionGraph::CommonColorCount(Vertex u, Vertex v) const {
 }
 
 std::string ColoredIntersectionGraph::strSubsets() {
-    std::ostringstream oss;
+    std::string Sstr;
     for (Vertex v : *this) {
-        oss << "Taxa(" << name(v) << "): ";
-        std::copy(subsets_[v].begin(), subsets_[v].end(),
+        Sstr += "Taxa(" + name(v) + "): ";
+        std::ostringstream oss;
+        std::copy(subsets_[v].begin(), subsets_[v].end() - 1,
                   std::ostream_iterator< Vertex >(oss, " "));
-        oss << std::endl;
-        oss << "Colors: ";
+        oss << subsets_[v].back();
+        Sstr += oss.str() + "\nColors: ";
+        oss.str("");
         std::copy(vertex_colors_[v].begin(), vertex_colors_[v].end(),
                   std::ostream_iterator< Color >(oss, " "));
-        oss << std::endl;
+        Sstr += oss.str() + '\n';
     }
-    oss << std::endl;
-    return oss.str();
+    Sstr += '\n';
+    return Sstr;
 }
 
 }  // namespace chordalg

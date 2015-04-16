@@ -182,13 +182,13 @@ void EliminationOrder::SetOrder(VertexVector pi) {
 }
 
 std::string EliminationOrder::str() const {
-    std::ostringstream oss;
-    oss << "elimination order:\t";
+    std::string Estr = "elimination order:\t";
     for (Vertex v : alpha_) {
-        oss << G_->name(v) << " ";
+        Estr += G_->name(v) + " ";
     }
-    oss << std::endl;
-    return oss.str();
+    Estr.erase(Estr.end() - 1, Estr.end());
+    Estr += '\n';
+    return Estr;
 }
 
 }  // namespace chordalg

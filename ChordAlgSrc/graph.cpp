@@ -139,9 +139,7 @@ VertexNames* Graph::DefaultNames(size_t order) {
     VertexNames* names = new VertexNames();
     names->resize(n);
     for (int i = 0; i < n; ++i) {
-        std::stringstream s_i;
-        s_i << i;
-        names->operator[](i) = s_i.str();
+        names->operator[](i) = std::to_string(i);
     }
     return names;
 }
@@ -164,25 +162,24 @@ bool Graph::IsIsomorphic(Graph& H) const {
 }
 
 std::string Graph::str() const {
-    std::ostringstream oss;
-    oss << "Order: " << order_ << std::endl;
-    oss << "Size: " << size_ << std::endl;
+    std::string Gstr = std::to_string(order_) + '\n';
     for (Vertex v : *this) {
-        oss << "N(" << name(v) << "): ";
+        Gstr += name(v) + ' ';
         for (Vertex u : N(v)) {
-            oss << name(u) << " ";
+            Gstr += name(u) + ' ';
         }
-        oss << std::endl;
+        Gstr.erase(Gstr.end() - 1, Gstr.end());
+        Gstr += '\n';
     }
-    return oss.str();
+    return Gstr;
 }
 
 std::string Graph::str(const LexTrie& T) const {
-    std::ostringstream oss;
+    std::string Tstr;
     for (FiniteSet S : T) {
-        str(Vertices(S));
+        Tstr += str(Vertices(S));
     }
-    return oss.str();
+    return Tstr;
 }
 
 std::string Graph::str(const VertexVector& U) const {
@@ -195,9 +192,10 @@ std::string Graph::str(const Vertices& U) const {
     } else {
         std::string Ustr;
         for (Vertex v : U) {
-            Ustr += name(v) + " ";
+            Ustr += name(v) + ' ';
         }
         Ustr.erase(Ustr.end() - 1, Ustr.end());
+        Ustr += '\n';
         return Ustr;
     }
 }

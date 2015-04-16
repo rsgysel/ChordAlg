@@ -19,6 +19,7 @@
 #ifndef INCLUDE_ATOMS_H_
 #define INCLUDE_ATOMS_H_
 
+#include <algorithm>
 #include <iostream>
 #include <iterator>
 #include <list>

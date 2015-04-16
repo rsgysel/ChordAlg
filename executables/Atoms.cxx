@@ -18,21 +18,23 @@
  */
 
 #include <cstdlib>
+#include <fstream>
+#include <iostream>
 #include <string>
 #include <sstream>
 
 #include "ChordAlgSrc/atoms.h"
 #include "ChordAlgSrc/file_reader.h"
-#include "ChordAlgSrc/intersection_graph.h"
+#include "ChordAlgSrc/graph.h"
 
 int main(int argc, char** argv) {
     if (argc != 2) {
         std::cout << "usage: " << argv[0] << " <filename>" << std::endl;
     } else {
-        chordalg::MatrixCellIntGraphFR* graph_reader =
-            chordalg::NewFileReader<chordalg::MatrixCellIntGraphFR>(
+        chordalg::SortedAdjacencyListFR* graph_reader =
+            chordalg::NewFileReader<chordalg::SortedAdjacencyListFR>(
                 std::string(argv[1]));
-        chordalg::ColoredIntersectionGraph G(graph_reader);
+        chordalg::Graph G(graph_reader);
         chordalg::Atoms A(&G);
         A.ComputeAtoms();
         int i = 0;
@@ -47,8 +49,11 @@ int main(int argc, char** argv) {
             }
             std::string atom_filename = std::string(argv[1]) + suffix +
                                         ss.str();
-            //TODO: write print-to-file function
-            //a->Print(atom_filename);
+            std::cout << "Creating file " << atom_filename << std::endl;
+            std::ofstream atom_file;
+            atom_file.open(atom_filename, std::ofstream::out);
+            atom_file << a->str();
+            atom_file.close();
             ++i;
         }
     }
