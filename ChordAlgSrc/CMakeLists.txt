@@ -13,6 +13,7 @@ add_library(ChordAlgLib
                 separator.cpp
                 separator_graph.cpp
                 tree_representation.cpp
+                triangulation.cpp
                 vertices.cpp)
 
 add_subdirectory(tests)

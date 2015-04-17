@@ -28,21 +28,15 @@
 
 using namespace chordalg;
 
-void SeparatorGraph_usage(std::string program) {
-    std::cout << "usage: " << program << " <filename>";
-    std::cout << std::endl;
-    return;
-}
-
 int main(int argc, char* argv[]) {
-    if (argc < 2 || argc > 4) {
-        SeparatorGraph_usage(argv[0]);
+    if (argc != 2) {
+        std::cerr << "usage: " << argv[0] << " <filename>" << std::endl;
         return EXIT_FAILURE;
     } else {
-        chordalg::MatrixCellIntGraphFR* fr = 
-            chordalg::NewFileReader< chordalg::MatrixCellIntGraphFR >(argv[1]);
-        chordalg::ColoredIntersectionGraph G(fr);
-        chordalg::SeparatorGraph SepG(&G, chordalg::MinimalSeparators(G));
+        MatrixCellIntGraphFR* fr = 
+            NewFileReader< MatrixCellIntGraphFR >(argv[1]);
+        ColoredIntersectionGraph G(fr);
+        SeparatorGraph SepG(&G, MinimalSeparators(G));
         std::cout << "Minimal separators: " << SepG.order() << '\n';
         std::cout << "Crossing relations: " << SepG.size() << '\n';
     }

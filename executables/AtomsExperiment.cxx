@@ -27,15 +27,18 @@
 #include "ChordAlgSrc/file_reader.h"
 #include "ChordAlgSrc/intersection_graph.h"
 
+using namespace chordalg;
+
 int main(int argc, char** argv) {
     if (argc != 2) {
-        std::cout << "usage: " << argv[0] << " <filename>" << std::endl;
+        std::cerr << "usage: " << argv[0] << " <filename>" << std::endl;
+        return EXIT_FAILURE;
     } else {
-        chordalg::MatrixCellIntGraphFR* graph_reader =
-            chordalg::NewFileReader<chordalg::MatrixCellIntGraphFR>(
+        MatrixCellIntGraphFR* graph_reader =
+            NewFileReader<MatrixCellIntGraphFR>(
                 std::string(argv[1]));
-        chordalg::Graph G(graph_reader);
-        chordalg::Atoms A(&G);
+        Graph G(graph_reader);
+        Atoms A(&G);
         A.ComputeAtoms();
         size_t vertices = 0, edges = 0;
         for (auto a : A) {
@@ -46,6 +49,6 @@ int main(int argc, char** argv) {
                   << "Edges: " << G.size() << '\n'
                   << "Total Vertices: " << vertices << '\n'
                   << "Total Edges: " << edges << std::endl;
+        return EXIT_SUCCESS;
     }
-    return 0;
 }

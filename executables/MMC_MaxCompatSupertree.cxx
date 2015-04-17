@@ -31,21 +31,22 @@
 using namespace chordalg;
 
 void MMC_heuristic_usage(std::string program) {
-    std::cout << "usage: " << program << " <filename>" << std::endl;
-    std::cout << "where filename is a MRP matrix file in NEXUS format";
-    std::cout << std::endl;
+    std::cerr << "usage: " << program << " <filename>" << std::endl;
+    std::cerr << "where filename is a MRP matrix file in NEXUS format";
+    std::cerr << std::endl;
     return;
 }
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
         MMC_heuristic_usage(argv[0]);
+        return EXIT_FAILURE;
     } else {
         NexusMRPFR* graph_reader = NewFileReader<NexusMRPFR>(argv[1]);
         ColoredIntersectionGraph G(graph_reader);
         ClassicElimination eo(&G, new DeficiencyCriterion());
-        chordalg::Supergraph triangulation(&G, eo.TriangNbhds());
-        chordalg::CliqueTree* ct = chordalg::MCSCliqueTree(triangulation);
+        Supergraph triangulation(&G, eo.TriangNbhds());
+        CliqueTree* ct = MCSCliqueTree(triangulation);
         std::cout << ct->strPhyloNewick(G, true) << std::endl << std::endl;
         std::cout << eo.str() << std::endl;
         std::cout << "fill weight: " << eo.fill_cost() << std::endl;
@@ -53,7 +54,7 @@ int main(int argc, char* argv[]) {
         std::cout << "vertices: " << G.order() << std::endl;
         std::cout << "edges: " << G.size() << std::endl;
         delete ct;
+        return EXIT_SUCCESS;
     }
-    return EXIT_SUCCESS;
 }
 

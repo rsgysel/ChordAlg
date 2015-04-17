@@ -7,7 +7,7 @@
 #include "ChordAlgSrc/vertices.h"
 
 class GraphTest : public ::testing::Test {
-  public:
+ public:
     void SetUp() {
         G_ = nullptr;
     }
@@ -22,7 +22,7 @@ class GraphTest : public ::testing::Test {
         }
         return;
     }
-  protected:
+ protected:
     chordalg::Graph* G_;
 };  // GraphTest
 

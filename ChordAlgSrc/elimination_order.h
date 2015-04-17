@@ -55,13 +55,13 @@ class EliminationOrder {
     ~EliminationOrder();
     void Init();
 
-    size_t ComputeFill();
     void Emplace(Vertex v, int i);
     void Swap(int i, int j);
     AdjacencyLists* TriangNbhds() const;
+    size_t ComputeFill();
+    bool ZeroFill() const;
 
     std::string str() const;
-    bool ZeroFill() const;
 
     bool Before(Vertex u, Vertex v) const {
         return alpha_inverse_[u] < alpha_inverse_[v];
@@ -105,7 +105,7 @@ class EliminationOrder {
 
     int fill_count_;  // # of fill edges added (monochromatic or not)
 
-    std::vector < VertexSet > triangulation_nbhds_;
+    std::vector< VertexSet > triangulation_nbhds_;
 
     static int kUnfilled() {
         return -1;

@@ -31,16 +31,17 @@
 using namespace chordalg;
 
 void Composite_heuristic_usage(std::string program) {
-    std::cout << "usage: " << program << " <filename> <sep_weight>";
-    std::cout << std::endl;
-    std::cout << "where ``sep_weight'' is a real number or ``inf''";
-    std::cout << std::endl;
+    std::cerr << "usage: " << program << " <filename> <sep_weight>";
+    std::cerr << std::endl;
+    std::cerr << "where ``sep_weight'' is a real number or ``inf''";
+    std::cerr << std::endl;
     return;
 }
 
 int main(int argc, char** argv) {
     if (argc != 3) {
         Composite_heuristic_usage(argv[0]);
+        return EXIT_FAILURE;
     } else {
         Weight d, s;
         if (strncmp(argv[2], "inf", 3) == 0) {
@@ -95,6 +96,6 @@ int main(int argc, char** argv) {
         std::cout << "edges: " << G.size() << std::endl;
         std::cout << "atoms: " << A.size() << std::endl;
         std::cout << "clique atoms: " << clique_atoms << std::endl;
+        return EXIT_SUCCESS;
     }
-    return 0;
 }

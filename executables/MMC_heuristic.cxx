@@ -28,18 +28,19 @@
 using namespace chordalg;
 
 void MMC_heuristic_usage(std::string program) {
-    std::cout << "usage: " << program << " <filename> [-a, runs]";
-    std::cout << std::endl;
-    std::cout << "the optional ``-a'' computes atom subgraphs before ";
-    std::cout << "running the heuristic" << std::endl;
-    std::cout << "the optional ``runs'' indicates # of the times heuristic ";
-    std::cout << "is run on each atom subgraph" << std::endl;
+    std::cerr << "usage: " << program << " <filename> [-a, runs]";
+    std::cerr << std::endl;
+    std::cerr << "the optional ``-a'' computes atom subgraphs before ";
+    std::cerr << "running the heuristic" << std::endl;
+    std::cerr << "the optional ``runs'' indicates # of the times heuristic ";
+    std::cerr << "is run on each atom subgraph" << std::endl;
     return;
 }
 
 int main(int argc, char* argv[]) {
     if (argc < 2 || argc > 4) {
         MMC_heuristic_usage(argv[0]);
+        return EXIT_FAILURE;
     } else {
         if (argc == 2) {
             RunHeuristic<ColoredIntersectionGraph,
@@ -59,6 +60,6 @@ int main(int argc, char* argv[]) {
         } else {
             MMC_heuristic_usage(argv[0]);
         }
+        return EXIT_SUCCESS;
     }
-    return 1;
 }

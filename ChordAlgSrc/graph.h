@@ -63,6 +63,9 @@ class Graph {
         return GraphVertices(this, order_).end();
     }
 
+    const AdjacencyLists& neighbors() const {
+        return *neighborhoods_;
+    }
     virtual VertexName name(Vertex v) const {
         return vertex_names_->operator[](v);
     }
@@ -127,6 +130,9 @@ class InducedSubgraph : public Graph {
     }
     Cost Fillcost(Vertex u, Vertex v) const {
         return G_->FillCost(U_[u], U_[v]);
+    }
+    Cost FillCost(VertexPair p) const {
+        return G_->FillCost(U_[p.first], U_[p.second]);
     }
 
  protected:

@@ -28,15 +28,16 @@
 using namespace chordalg;
 
 void PDRS_ratio_heuristic_usage(std::string program) {
-    std::cout << "usage: " << program << " <filename> [runs]" << std::endl;
-    std::cout << "the optional ``runs'' indicates # of times the heuristic ";
-    std::cout << "is run on each atom subgraph"  << std::endl;
+    std::cerr << "usage: " << program << " <filename> [runs]" << std::endl;
+    std::cerr << "the optional ``runs'' indicates # of times the heuristic ";
+    std::cerr << "is run on each atom subgraph"  << std::endl;
     return;
 }
 
 int main(int argc, char* argv[]) {
     if (argc < 2 ||  argc > 3) {
         PDRS_ratio_heuristic_usage(argv[0]);
+        return EXIT_FAILURE;
     } else {
         int runs = 0;
         if (argc == 3) {
@@ -47,6 +48,6 @@ int main(int argc, char* argv[]) {
                          LBElimination,
                          RatioCriterion >
                          (argv[1], new RatioCriterion(), runs);
+        return EXIT_SUCCESS;
     }
-    return 1;
 }

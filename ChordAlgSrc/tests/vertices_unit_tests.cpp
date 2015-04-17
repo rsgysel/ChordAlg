@@ -10,7 +10,7 @@ using ::testing::ReturnRef;
 // Frameworks
 
 class VertexPairsTest : public ::testing::Test {
-  public:
+ public:
     VertexPairsTest() : V_(6) {}
     void SetUp() {
         for(size_t i = 0; i < 6; ++i) {
@@ -18,7 +18,7 @@ class VertexPairsTest : public ::testing::Test {
         }
     }
     void TearDown() {}
-  protected:
+ protected:
     chordalg::Vertices V_;
 };  // VertexPairsTest
 

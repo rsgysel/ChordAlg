@@ -23,12 +23,14 @@
 using namespace chordalg;
 
 int main(int argc, char* argv[]) {
-    if (argc != 2 && argc != 3) {
-        std::cout << "usage: " << argv[0] << " <filename>" << std::endl;
+    if (argc != 2) {
+        std::cerr << "usage: " << argv[0] << " <filename>" << std::endl;
+        return EXIT_FAILURE;
     } else {
         MatrixCellIntGraphFR* graph_reader =
             NewFileReader<MatrixCellIntGraphFR>(argv[1]);
         ColoredIntersectionGraph G(graph_reader);
-        std::cout << G.str() << std::endl;
+        std::cout << G.str();
+        return EXIT_SUCCESS;
     }
 }

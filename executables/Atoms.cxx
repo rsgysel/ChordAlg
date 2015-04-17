@@ -27,15 +27,18 @@
 #include "ChordAlgSrc/file_reader.h"
 #include "ChordAlgSrc/graph.h"
 
+using namespace chordalg;
+
 int main(int argc, char** argv) {
     if (argc != 2) {
-        std::cout << "usage: " << argv[0] << " <filename>" << std::endl;
+        std::cerr << "usage: " << argv[0] << " <filename>" << std::endl;
+        return EXIT_FAILURE;
     } else {
-        chordalg::SortedAdjacencyListFR* graph_reader =
-            chordalg::NewFileReader<chordalg::SortedAdjacencyListFR>(
+        SortedAdjacencyListFR* graph_reader =
+            NewFileReader<SortedAdjacencyListFR>(
                 std::string(argv[1]));
-        chordalg::Graph G(graph_reader);
-        chordalg::Atoms A(&G);
+        Graph G(graph_reader);
+        Atoms A(&G);
         A.ComputeAtoms();
         size_t i = 0;
         for (auto a : A) {
@@ -54,6 +57,6 @@ int main(int argc, char** argv) {
             atom_file.close();
             ++i;
         }
+        return EXIT_SUCCESS;
     }
-    return 0;
 }

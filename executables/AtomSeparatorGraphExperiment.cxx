@@ -30,32 +30,26 @@
 
 using namespace chordalg;
 
-void SeparatorGraph_usage(std::string program) {
-    std::cout << "usage: " << program << " <filename>";
-    std::cout << std::endl;
-    return;
-}
-
 int main(int argc, char* argv[]) {
-    if (argc < 2 || argc > 4) {
-        SeparatorGraph_usage(argv[0]);
+    if (argc != 2) {
+        std::cerr << "usage: " << argv[0] << " <filename>";
         return EXIT_FAILURE;
     } else {
-        chordalg::MatrixCellIntGraphFR* fr = 
-            chordalg::NewFileReader< chordalg::MatrixCellIntGraphFR >(argv[1]);
-        chordalg::ColoredIntersectionGraph G(fr);
+        MatrixCellIntGraphFR* fr = 
+            NewFileReader< MatrixCellIntGraphFR >(argv[1]);
+        ColoredIntersectionGraph G(fr);
 
-        chordalg::Atoms A(&G);
+        Atoms A(&G);
         A.ComputeAtoms();
         size_t minimal_separators = A.clique_minimal_separators().size(), crossing_relations = 0;
         for (auto a : A) {
-            chordalg::SeparatorGraph SepG(a, chordalg::MinimalSeparators(*a));
+            SeparatorGraph SepG(a, MinimalSeparators(*a));
             minimal_separators += SepG.order();
             crossing_relations += SepG.size();
         }
 
         std::cout << "Minimal separators: " << minimal_separators << '\n';
         std::cout << "Crossing relations: " << crossing_relations << '\n';
+        return EXIT_SUCCESS;
     }
-    return EXIT_SUCCESS;
 }

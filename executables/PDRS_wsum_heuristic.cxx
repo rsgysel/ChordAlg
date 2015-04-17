@@ -29,18 +29,19 @@
 using namespace chordalg;
 
 void PDRS_ratio_heuristic_usage(std::string program) {
-    std::cout << "usage: " << program << " <filename> <sep_weight> [runs]";
-    std::cout << std::endl;
-    std::cout << "where ``sep_weight'' is a positive number or ``inf'' that ";
-    std::cout << "weights" << std::endl;
-    std::cout << "the optional ``runs'' indicates # of times the heuristic ";
-    std::cout << "is run on each atom subgraph" << std::endl;
+    std::cerr << "usage: " << program << " <filename> <sep_weight> [runs]";
+    std::cerr << std::endl;
+    std::cerr << "where ``sep_weight'' is a positive number or ``inf'' that ";
+    std::cerr << "weights" << std::endl;
+    std::cerr << "the optional ``runs'' indicates # of times the heuristic ";
+    std::cerr << "is run on each atom subgraph" << std::endl;
     return;
 }
 
 int main(int argc, char* argv[]) {
     if (argc < 3 || argc > 4) {
         PDRS_ratio_heuristic_usage(argv[0]);
+        return EXIT_FAILURE;
     } else {
         Weight d, s;
         if (strncmp(argv[2], "inf", 3) == 0) {
@@ -61,6 +62,6 @@ int main(int argc, char* argv[]) {
                          LBElimination,
                          WSumCriterion >
                          (argv[1], new WSumCriterion(d, s), runs);
+        return EXIT_SUCCESS;
     }
-    return 1;
 }
