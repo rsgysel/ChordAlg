@@ -215,6 +215,88 @@ class MixedElimination : public LBElimination {
     SeparatorBlocks B_;
 };  // MixedElimination
 
+template< class EliminationType >
+class HeuristicRun {
+ public:
+    HeuristicRun() = delete;
+    HeuristicRun(const HeuristicRun&) = delete;
+    void operator=(const HeuristicRun&) = delete;
+
+    HeuristicRun(const Graph* G, const EliminationCriterion* criterion) :
+        G_(G), criterion_(criterion), atoms_(false), runs_(1) {}
+
+    void atoms() {
+        atoms_ = true;
+    }
+
+    const std::vector< VertexPair >& fill_edges() const {
+        return fill_edges;
+    }
+
+    void runs(size_t n) {
+        runs_ = n;
+    }
+
+    std::string Run() {
+        std::vector< const Graph* > graphs;
+        Atoms* A = atoms_ ? new Atoms(G_) : nullptr;
+        if (atoms_) {
+            A->ComputeAtoms();
+            graphs.resize(A->size());
+            for (auto a : *A) {
+                graphs.push_back(a);
+            }
+        } else {
+            graphs.push_back(G_);
+        }
+        Weight total_fill_weight = 0;
+        size_t clique_atoms = 0, atom_id = 0, total_fill_count = 0;
+        for (auto G : graphs) {
+            ++atom_id;
+            if (!G->IsClique()) {
+                EliminationType* best_eo = new EliminationType(G, criterion_);
+                for(size_t i = 1; i < runs_; ++i) {
+                    EliminationType* eo = new EliminationType(G, criterion_);
+                    if (eo->fill_cost() < best_eo->fill_cost()) {
+                        delete best_eo;
+                        best_eo = eo;
+                    } else {
+                        delete eo;
+                    }
+                }
+                total_fill_weight += best_eo->fill_cost();
+                total_fill_count += best_eo->fill_count();
+                for (auto uv : best_eo->fill_edges()) {
+                    if(G->FillCost(uv) > 0) {
+                        fill_edges_.push_back(uv);
+                    }
+                }               
+                delete best_eo;
+            } else {
+                ++clique_atoms;
+            }
+        }
+        std::string log = "fill weight: " + std::to_string(total_fill_weight) + '\n'
+                          + "fill count: " + std::to_string(total_fill_count) + '\n'
+                          + "vertices: " + std::to_string(G_->order()) + '\n'
+                          + "edges : " + std::to_string(G_->size()) + '\n';
+        if (atoms_) {
+            log += "atoms: " + std::to_string(A->size()) + '\n'
+                   + "clique atoms: " + std::to_string(clique_atoms) + '\n';
+        }
+        delete A;
+        return log;
+    } 
+
+ protected:
+    const Graph* const G_;
+    const EliminationCriterion* const criterion_;
+    bool atoms_;
+    size_t runs_;
+
+    std::vector< VertexPair > fill_edges_;
+};  // HeuristicRun
+
 template< class GraphType, class FileReaderType, class EliminationType,
           class CriterionType >
 std::vector< VertexPair > RunAtomHeuristic(std::string filename,

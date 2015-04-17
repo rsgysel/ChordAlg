@@ -24,6 +24,7 @@
 #include "ChordAlgSrc/elimination_algorithm.h"
 #include "ChordAlgSrc/file_reader.h"
 #include "ChordAlgSrc/intersection_graph.h"
+#include "ChordAlgSrc/vertices.h"
 
 using namespace chordalg;
 
@@ -59,6 +60,7 @@ int main(int argc, char* argv[]) {
                              (argv[1], new DeficiencyCriterion(), runs);
         } else {
             MMC_heuristic_usage(argv[0]);
+            return EXIT_FAILURE;
         }
         return EXIT_SUCCESS;
     }
