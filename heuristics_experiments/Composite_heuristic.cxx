@@ -27,75 +27,25 @@
 #include "ChordAlgSrc/file_reader.h"
 #include "ChordAlgSrc/intersection_graph.h"
 #include "ChordAlgSrc/elimination_algorithm.h"
+#include "heuristic_options.h"
+#include "heuristic_runs.h"
 
 using namespace chordalg;
 
-void Composite_heuristic_usage(std::string program) {
-    std::cerr << "usage: " << program << " <filename> <sep_weight>";
-    std::cerr << std::endl;
-    std::cerr << "where ``sep_weight'' is a real number or ``inf''";
-    std::cerr << std::endl;
-    return;
-}
-
 int main(int argc, char** argv) {
-    if (argc != 3) {
-        Composite_heuristic_usage(argv[0]);
-        return EXIT_FAILURE;
-    } else {
-        Weight d, s;
-        if (strncmp(argv[2], "inf", 3) == 0) {
-            d = 0;
-            s = 1;
-        } else {
-            d = 1;
-            s = std::strtod(argv[2], NULL);
-        }
-
-        std::cout << d << "*Deficiency(v) + " << s << "*Separation(v)";
-        std::cout << std::endl;
-        MatrixCellIntGraphFR* graph_reader =
-            NewFileReader<MatrixCellIntGraphFR>(argv[1]);
-        ColoredIntersectionGraph G(graph_reader);
-        Weight total_weight = 0;
-        Atoms A(&G);
-        A.ComputeAtoms();
-        int clique_atoms = 0, atom_id = 0, total_count = 0;
-        for (auto a : A) {
-            ++atom_id;
-            if (!a->IsClique()) {
-                LBElimination eo1(a, new RatioCriterion());
-                LBElimination eo2(a, new WSumCriterion( d, s ));
-                ClassicElimination eo3(a, new ClassicCriterion());
-                Weight min_weight = std::min(eo1.fill_cost(),
-                                std::min(eo2.fill_cost(), eo3.fill_cost()));
-                if (eo1.fill_cost() == min_weight) {
-                    total_weight += eo1.fill_cost();
-                    total_count += eo1.fill_count();
-                    std::cout << "atom (LB, Ratio)" << atom_id << std::endl;
-                    std::cout << eo1.str() << std::endl;
-                } else if (eo2.fill_cost() == min_weight) {
-                    total_weight += eo2.fill_cost();
-                    total_count += eo2.fill_count();
-                    std::cout << "atom (LB, Weighted Sum)" << atom_id;
-                    std::cout << std::endl;
-                    std::cout << eo2.str() << std::endl;
-                } else if (eo3.fill_cost() == min_weight) {
-                    total_weight +=  eo3.fill_cost();
-                    total_count += eo3.fill_count();
-                    std::cout << "atom (Classic)" << atom_id << std::endl;
-                    std::cout << eo3.str() << std::endl;
-                }
-            } else {
-                ++clique_atoms;
-            }
-        }
-        std::cout << "fill weight: " << total_weight << std::endl;
-        std::cout << "fill count: " << total_count << std::endl;
-        std::cout << "vertices: " << G.order() << std::endl;
-        std::cout << "edges: " << G.size() << std::endl;
-        std::cout << "atoms: " << A.size() << std::endl;
-        std::cout << "clique atoms: " << clique_atoms << std::endl;
-        return EXIT_SUCCESS;
-    }
+    std::string usage = std::string(argv[0]) + preamble + file_opt + run_opt + sep_opt;
+    std::string filename;
+    const bool atoms = true;
+    size_t runs = 1;
+    float def = 1, sep = 1;
+    HeuristicOptions(argc, argv, usage, &filename, &runs, nullptr, &def, &sep);
+    SetupAndRunHeuristic(
+        filename,
+        {"ClassicElimination", "LBElimination", "MixedElimination"},
+        EliminationCriterion::DEFICIENCY, // need to do all criteria...
+        atoms,
+        runs,
+        def,
+        sep);
+    return EXIT_SUCCESS;
 }

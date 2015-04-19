@@ -5,20 +5,52 @@
 
 namespace chordalg {
 
+////////////////////////
+// EliminationParameters
+
+EliminationParameters::EliminationParameters(EliminationCriterion criterion,
+                                             bool atoms,
+                                             size_t runs,
+                                             float deficiency_wt,
+                                             float separation_wt) :
+    criterion_(criterion),
+    atoms_(atoms),
+    runs_(runs),
+    deficiency_wt_(deficiency_wt),
+    separation_wt_(separation_wt) {
+    return;
+}
+
+Weight EliminationParameters::ObjectiveFn(Weight deficiency,
+                                          Weight separated) const {
+    if(criterion_ == EliminationCriterion::RATIO) {
+        return deficiency / (1 + separated);
+    } else if (criterion_ == EliminationCriterion::WSUM) {
+        return deficiency_wt_*deficiency - separation_wt_*separated;
+    } else if (criterion_ == EliminationCriterion::DEFICIENCY) {
+        return deficiency;
+    } else {
+        std::cerr << "Error in EliminationParameters::ObjectiveFn: bad criterion" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+}
+
 //////////////////////////////////
 // Constructors, Destructors, Init
 
-EliminationAlgorithm::EliminationAlgorithm(const Graph* G) :
-                                           G_(G),
-                                           alpha_(G_->order()),
-                                           alpha_inverse_(),
-                                           fill_cost_(0),
-                                           fill_count_(0),
-                                           fill_neighbors_(),
-                                           fill_edges_(),
-                                           remaining_vertices_(),
-                                           ties_(),
-                                           tie_count_() {
+EliminationAlgorithm::EliminationAlgorithm(const Graph* G,
+                                           const EliminationParameters* parameters) :
+    G_(G),
+    parameters_(parameters),
+    alpha_(G_->order()),
+    alpha_inverse_(),
+    fill_weight_(0),
+    fill_count_(0),
+    fill_neighbors_(),
+    fill_edges_(),
+    remaining_vertices_(),
+    ties_(),
+    tie_count_() {
     srand(time(nullptr));
     return;
 }
@@ -41,28 +73,27 @@ void EliminationAlgorithm::Init() {
 }
 
 ClassicElimination::ClassicElimination(const Graph* G,
-                                       const ClassicCriterion* f) :
-                                       EliminationAlgorithm(G),
-                                       f_(f) {
+                                       const EliminationParameters* parameters) :
+    EliminationAlgorithm(G, parameters) {
+std::cout << __PRETTY_FUNCTION__ << '\n';
     EliminationAlgorithm::Init();
     return;
 }
 
 ClassicElimination::~ClassicElimination() {
-    delete f_;
     return;
 }
 
-LBElimination::LBElimination(const Graph* G, const LBCriterion* f) :
-    EliminationAlgorithm(G),
-    f_(f),
+LBElimination::LBElimination(const Graph* G,
+                             const EliminationParameters* parameters) :
+    EliminationAlgorithm(G, parameters),
     B_(G) {
+std::cout << __PRETTY_FUNCTION__ << '\n';
     LBElimination::Init();
     return;
 }
 
 LBElimination::~LBElimination() {
-    delete f_;
     return;
 }
 
@@ -70,10 +101,10 @@ void LBElimination::Init() {
     // Monochromatic pair costs
     for (Vertex v : *G_) {
         for (Vertex u : *G_) {
-            Cost c = G_->FillCost(u,v);
-            if (u != v && c > 0) {
+            Weight wt = G_->FillCount(u,v);
+            if (u != v && wt > 0) {
                 VertexPair uv = VertexPair(std::min(u, v), std::max(u, v));
-                unseparated_pairs_[uv] = c;
+                unseparated_pairs_[uv] = wt;
             }
         }
     }
@@ -82,9 +113,10 @@ void LBElimination::Init() {
 }
 
 MixedElimination::MixedElimination(const Graph* G,
-                                   const LBCriterion* f) :
-                                   LBElimination(G, f),
-                                   B_(G) {
+                                   const EliminationParameters* parameters) :
+    LBElimination(G, parameters),
+    B_(G) {
+std::cout << __PRETTY_FUNCTION__ << '\n';
     LBElimination::Init();
     return;
 }
@@ -98,8 +130,8 @@ MixedElimination::~MixedElimination() {
 
 void EliminationAlgorithm::Elimination() {
     for (size_t i = 0; i < G_->order(); ++i) {
-        VertexCost vc = ArgMin();
-        fill_cost_ += vc.second;
+        VertexWeight vc = ArgMin();
+        fill_weight_ += vc.second;
         Vertex v = vc.first;
 
         alpha_[i] = v;
@@ -148,25 +180,25 @@ void EliminationAlgorithm::Saturate(Vertices U) {
     return;
 }
 
-VertexCost EliminationAlgorithm::ArgMin() {
+VertexWeight EliminationAlgorithm::ArgMin() {
     Weight min = MAX_WEIGHT;
     for (Vertex v : remaining_vertices_) {
-        std::pair< Weight, Cost > wc = WeightOf(v);
+        std::pair< Weight, Weight > wc = WeightOf(v);
         Weight wt = wc.first;
-        Cost c = wc.second;
+        Weight c = wc.second;
 
         if (wt < min) {
             min = wt;
             ties_.clear();
-            ties_.push_back(VertexCost(v, c));
+            ties_.push_back(VertexWeight(v, c));
         } else if (wt == min) {
-            ties_.push_back(VertexCost(v, c));
+            ties_.push_back(VertexWeight(v, c));
         }
     }
     return TieBreak();
 }
 
-VertexCost EliminationAlgorithm::TieBreak() {
+VertexWeight EliminationAlgorithm::TieBreak() {
     int i = rand() % ties_.size();
     return ties_[i];
 }
@@ -191,20 +223,20 @@ AdjacencyLists* EliminationAlgorithm::TriangNbhds() const {
     a_lists->resize(G_->order());
     if (fill_count_ == 0) {
         for (Vertex v : *G_) {
-            a_lists->operator[](v).reserve(G_->N(v).size());
+            (*a_lists)[v].reserve(G_->N(v).size());
             for (Vertex u : G_->N(v)) {
-                a_lists->operator[](v).add(u);
+                (*a_lists)[v].add(u);
             }
         }
     } else {
         for (Vertex v : *G_) {
-            a_lists->operator[](v).reserve(G_->N(v).size() +
+            (*a_lists)[v].reserve(G_->N(v).size() +
                                            fill_neighbors_[v].size());
             for (Vertex u : G_->N(v)) {
-                a_lists->operator[](v).add(u);
+                (*a_lists)[v].add(u);
             }
             for (Vertex u : fill_neighbors_[v]) {
-                a_lists->operator[](v).add(u);
+                (*a_lists)[v].add(u);
             }
         }
     }
@@ -236,16 +268,15 @@ void ClassicElimination::Eliminate(Vertex v) {
     return;
 }
 
-std::pair< Weight, Cost > ClassicElimination::WeightOf(Vertex v) {
-    Cost c = 0;
+std::pair< Weight, Weight > ClassicElimination::WeightOf(Vertex v) {
+    Weight c = 0;
     for (VertexPair p : VertexPairs(MonotoneNbhd(v))) {
         if (!IsEdge(p)) {
-            c += G_->FillCost(p);
+            c += G_->FillCount(p);
         }
     }
-    return std::pair< Weight, Cost >(f_->Calculate(c), c);
+    return std::pair< Weight, Weight >(parameters_->ObjectiveFn(c), c);
 }
-
 
 ////////////////
 // LBElimination
@@ -263,7 +294,7 @@ void LBElimination::Eliminate(Vertex v) {
     return;
 }
 
-std::pair< Weight, Cost > LBElimination::WeightOf(Vertex v) {
+std::pair< Weight, Weight > LBElimination::WeightOf(Vertex v) {
     Weight deficiency_wt = 0, separated_wt = 0;
     Vertices S = MonotoneNbhd(v);
     S.add(v);
@@ -272,10 +303,10 @@ std::pair< Weight, Cost > LBElimination::WeightOf(Vertex v) {
     std::set< VertexPair > seen_fill_pairs;
     for (Block B : B_) {
         for (VertexPair uw : VertexPairs(B.NC())) {
-            Cost fill_cost = G_->FillCost(uw);
-            if (!IsEdge(uw) && fill_cost > 0 &&
-               seen_fill_pairs.find(uw) == seen_fill_pairs.end()) {
-                deficiency_wt += fill_cost;
+            Weight fill_weight = G_->FillCount(uw);
+            if (!IsEdge(uw) && fill_weight > 0 &&
+                seen_fill_pairs.find(uw) == seen_fill_pairs.end()) {
+                deficiency_wt += fill_weight;
                 seen_fill_pairs.insert(uw);
             }
         }
@@ -284,19 +315,13 @@ std::pair< Weight, Cost > LBElimination::WeightOf(Vertex v) {
     for (std::pair< VertexPair, Weight > p : unseparated_pairs_) {
         VertexPair uw = p.first;
         Vertex u = uw.first, w = uw.second;
-        Weight fill_cost = p.second;
+        Weight fill_weight = p.second;
         if (B_.AreSeparated(u, w)) {
-            separated_wt += fill_cost;
+            separated_wt += fill_weight;
         }
     }
-    return std::pair< Weight, Cost>(f_->Calculate(deficiency_wt, separated_wt),
-                                    deficiency_wt);
-}
-
-std::pair< Weight, Cost > LBElimination::ObjectiveFunction(
-    Weight deficiency_wt, Weight separated_wt) {
-    return std::pair< Weight, Cost >(deficiency_wt / ( 1 + separated_wt ),
-                                     deficiency_wt);
+    return std::pair< Weight, Weight>(
+        parameters_->ObjectiveFn(deficiency_wt, separated_wt), deficiency_wt);
 }
 
 ///////////////////
@@ -315,15 +340,15 @@ void MixedElimination::Eliminate(Vertex v) {
     return;
 }
 
-std::pair< Weight, Cost > MixedElimination::WeightOf(Vertex v) {
-    Weight c = 0;
+std::pair< Weight, Weight > MixedElimination::WeightOf(Vertex v) {
+    Weight wt = 0;
     for (VertexPair p : VertexPairs(MonotoneNbhd(v))) {
         if (!IsEdge(p)) {
-            c += G_->FillCost(p);
+            wt += parameters_->ObjectiveFn(G_->FillCount(p));
         }
     }
     // Don't need separation statistics
-    return std::pair<Weight, Cost>(c, c);
+    return std::pair<Weight, Weight>(wt, wt);
 }
 
 }  // namespace chordalg

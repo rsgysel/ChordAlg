@@ -156,7 +156,7 @@ void DimacsGraphFR::ReadFileOrDie() {
     for (size_t i = 0; i < n; ++i) {
         std::stringstream ss;
         ss << i + 1;
-        names_->operator[](i) = ss.str();
+        (*names_)[i] = ss.str();
     }
     // get neighbors from edge set
     std::vector< std::list< size_t > > neighbors;
@@ -170,7 +170,7 @@ void DimacsGraphFR::ReadFileOrDie() {
 
     // turn string representation into vertex representation
     for (size_t i = 0; i < n; ++i) {
-        Vertices* nbhd = &neighborhoods_->operator[](i);
+        Vertices* nbhd = &(*neighborhoods_)[i];
         for (size_t v : neighbors[i]) {
             nbhd->add(v);
         }
@@ -210,7 +210,7 @@ void SortedAdjacencyListFR::ReadFileOrDie() {
         line_stream << line;
         line_stream >> vertex;
         // assign name
-        names_->operator[](vertex_count) = vertex;
+        (*names_)[vertex_count] = vertex;
         vertex_id[vertex] = vertex_count;
         while (line_stream >> neighbor) {
             neighbor_names[vertex_count].push_back(neighbor);
@@ -222,7 +222,7 @@ void SortedAdjacencyListFR::ReadFileOrDie() {
     }
     // turn string representation into vertex representation
     for (int i = 0; i < order; ++i) {
-        Vertices* nbhd = &neighborhoods_->operator[](i);
+        Vertices* nbhd = &(*neighborhoods_)[i];
         for (std::string neighbor : neighbor_names[i]) {
             Vertex v = vertex_id[neighbor];
             nbhd->add(v);
@@ -321,7 +321,7 @@ void MatrixCellIntGraphFR::ComputeGraphData(
     for (auto p : vertex_id) {
         std::string name = p.first;
         Vertex v = p.second;
-        names_->operator[](v - 1) = name;
+        (*names_)[v - 1] = name;
     }
 
     neighborhoods_ = new AdjacencyLists(order);
@@ -347,8 +347,8 @@ void MatrixCellIntGraphFR::ComputeGraphData(
     for (std::pair< VertexPair, bool > p : edges) {
         VertexPair e = p.first;
         Vertex u = e.first, v = e.second;
-        neighborhoods_->operator[](u).add(v);
-        neighborhoods_->operator[](v).add(u);
+        (*neighborhoods_)[u].add(v);
+        (*neighborhoods_)[v].add(u);
     }
     for (Vertices& V : *neighborhoods_) {
         std::sort(V.begin(), V.end());

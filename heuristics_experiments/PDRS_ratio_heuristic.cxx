@@ -24,30 +24,22 @@
 #include "ChordAlgSrc/elimination_algorithm.h"
 #include "ChordAlgSrc/file_reader.h"
 #include "ChordAlgSrc/intersection_graph.h"
+#include "heuristic_options.h"
+#include "heuristic_runs.h"
 
 using namespace chordalg;
 
-void PDRS_ratio_heuristic_usage(std::string program) {
-    std::cerr << "usage: " << program << " <filename> [runs]" << std::endl;
-    std::cerr << "the optional ``runs'' indicates # of times the heuristic ";
-    std::cerr << "is run on each atom subgraph"  << std::endl;
-    return;
-}
-
 int main(int argc, char* argv[]) {
-    if (argc < 2 ||  argc > 3) {
-        PDRS_ratio_heuristic_usage(argv[0]);
-        return EXIT_FAILURE;
-    } else {
-        int runs = 0;
-        if (argc == 3) {
-            runs = std::strtod(argv[2], NULL);
-        }
-        RunAtomHeuristic<ColoredIntersectionGraph,
-                         MatrixCellIntGraphFR,
-                         LBElimination,
-                         RatioCriterion >
-                         (argv[1], new RatioCriterion(), runs);
-        return EXIT_SUCCESS;
-    }
+    std::string usage = std::string(argv[0]) + preamble + file_opt + runs_opt;
+    std::string filename;
+    const bool atoms = true;
+    size_t runs = 1;
+    HeuristicOptions(argc, argv, usage, &filename, &runs);
+    SetupAndRunHeuristic(
+        filename,
+        {"LBElimination"},
+        EliminationCriterion::RATIO,
+        atoms,
+        runs);
+    return EXIT_SUCCESS;
 }

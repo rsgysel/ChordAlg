@@ -97,7 +97,7 @@ void Graph::Init() {
             if (is_edge_[x][y] != is_edge_[y][x]) {
                 std::cerr << "Error: edge relationships not symmetric wrt ";
                 std::cerr << name(x) << " and " << name(y) << std::endl;
-                exit(0);
+                exit(EXIT_FAILURE);
             }
         }
     }
@@ -127,7 +127,7 @@ AdjacencyLists* Graph::InducedVertices(const Graph& super_graph, Vertices X) {
             if (in_subgraph[u]) {
                 Vertex v_induced_id = vertex_order[v];
                 Vertex u_induced_id = vertex_order[u];
-                a_lists->operator[](v_induced_id).add(u_induced_id);
+                (*a_lists)[v_induced_id].add(u_induced_id);
             }
         }
     }
@@ -139,7 +139,7 @@ VertexNames* Graph::DefaultNames(size_t order) {
     VertexNames* names = new VertexNames();
     names->resize(n);
     for (int i = 0; i < n; ++i) {
-        names->operator[](i) = std::to_string(i);
+        (*names)[i] = std::to_string(i);
     }
     return names;
 }

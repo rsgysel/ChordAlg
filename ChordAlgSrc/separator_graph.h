@@ -35,7 +35,7 @@ class SeparatorGraph : public Graph {
     VertexName name(Vertex v) const;
     bool HasEdge(Vertex u, Vertex v) const;
     const Vertices& N(Vertex v) const {
-        return crossing_relations_.operator[](v);
+        return crossing_relations_[v];
     }
 
  protected:

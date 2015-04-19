@@ -25,43 +25,25 @@
 #include "ChordAlgSrc/elimination_algorithm.h"
 #include "ChordAlgSrc/file_reader.h"
 #include "ChordAlgSrc/intersection_graph.h"
+#include "heuristic_options.h"
+#include "heuristic_runs.h"
 
 using namespace chordalg;
 
-void PDRS_ratio_heuristic_usage(std::string program) {
-    std::cerr << "usage: " << program << " <filename> <sep_weight> [runs]";
-    std::cerr << std::endl;
-    std::cerr << "where ``sep_weight'' is a positive number or ``inf'' that ";
-    std::cerr << "weights" << std::endl;
-    std::cerr << "the optional ``runs'' indicates # of times the heuristic ";
-    std::cerr << "is run on each atom subgraph" << std::endl;
-    return;
-}
-
 int main(int argc, char* argv[]) {
-    if (argc < 3 || argc > 4) {
-        PDRS_ratio_heuristic_usage(argv[0]);
-        return EXIT_FAILURE;
-    } else {
-        Weight d, s;
-        if (strncmp(argv[2], "inf", 3) == 0) {
-            d = 0;
-            s = 1;
-        } else {
-            d = 1;
-            s = std::strtod(argv[2], NULL);
-        }
-        int runs = 0;
-        if (argc == 4) {
-            runs = std::strtod(argv[3], NULL);
-        }
-        std::cout << d << "*Deficiency(v) + " << s << "*Separation(v)";
-        std::cout << std::endl;
-        RunAtomHeuristic<ColoredIntersectionGraph,
-                         MatrixCellIntGraphFR,
-                         LBElimination,
-                         WSumCriterion >
-                         (argv[1], new WSumCriterion(d, s), runs);
-        return EXIT_SUCCESS;
-    }
+    std::string usage = std::string(argv[0]) + preamble + file_opt + runs_opt + sep_opt;
+    std::string filename;
+    const bool atoms = true;
+    size_t runs = 1;
+    float def = 1, sep = 1;
+    HeuristicOptions(argc, argv, usage, &filename, &runs, nullptr, &def, &sep);
+    SetupAndRunHeuristic(
+        filename,
+        {"LBElimination"},
+        EliminationCriterion::WSUM,
+        atoms,
+        runs,
+        def, 
+        sep);
+    return EXIT_SUCCESS;
 }

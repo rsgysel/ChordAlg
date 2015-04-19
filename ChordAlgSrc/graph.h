@@ -67,7 +67,7 @@ class Graph {
         return *neighborhoods_;
     }
     virtual VertexName name(Vertex v) const {
-        return vertex_names_->operator[](v);
+        return (*vertex_names_)[v];
     }
     size_t order() const {
         return order_;
@@ -82,11 +82,11 @@ class Graph {
     virtual bool HasEdge(VertexPair p) const {
         return HasEdge(p.first, p.second);
     }
-    virtual Cost FillCost(Vertex u, Vertex v) const {
+    virtual Weight FillCount(Vertex u, Vertex v) const {
         return HasEdge(u, v) ? 0 : 1;
     }
-    virtual Cost FillCost(VertexPair p) const {
-        return FillCost(p.first, p.second);
+    virtual Weight FillCount(VertexPair p) const {
+        return FillCount(p.first, p.second);
     }
     template< class Container >
     bool HasClique(Container set) const {
@@ -96,7 +96,7 @@ class Graph {
         return 2 * size_ == order_ * (order_ - 1);
     }
     const Vertices& N(Vertex v) const {
-        return neighborhoods_->operator[](v);
+        return (*neighborhoods_)[v];
     }
 
  protected:
@@ -128,11 +128,11 @@ class InducedSubgraph : public Graph {
     VertexName name(Vertex v) const {
         return G_->name(U_[v]);
     }
-    Cost Fillcost(Vertex u, Vertex v) const {
-        return G_->FillCost(U_[u], U_[v]);
+    Weight FillCount(Vertex u, Vertex v) const {
+        return G_->FillCount(U_[u], U_[v]);
     }
-    Cost FillCost(VertexPair p) const {
-        return G_->FillCost(U_[p.first], U_[p.second]);
+    Weight FillCount(VertexPair p) const {
+        return G_->FillCount(U_[p.first], U_[p.second]);
     }
 
  protected:

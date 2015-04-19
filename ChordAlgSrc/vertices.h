@@ -59,9 +59,8 @@ typedef size_t                          Color;
 typedef std::list< Color >              Multicolor;
 
 // elimination ordering typedefs
-typedef double                          Weight;         // argument to minimize
-typedef double                          Cost;           // price for fill edge
-typedef std::pair< Vertex, Cost >       VertexCost;
+typedef double                          Weight;         // weight of fill edge
+typedef std::pair< Vertex, Weight >     VertexWeight;
 
 class Vertices {
  public:
@@ -94,10 +93,10 @@ class Vertices {
         return V_->empty();
     }
     Vertex& operator[](size_t i) {
-        return V_->operator[](i);
+        return (*V_)[i];
     }
     const Vertex& operator[](size_t i) const {
-        return V_->operator[](i);
+        return (*V_)[i];
     }
     void clear() {
         V_->clear();
@@ -184,7 +183,7 @@ class VertexPairsIterator {
         return !( *this == other );
     }
     VertexPair operator*() {
-        return VertexPair(V_->operator[](v1_), V_->operator[](v2_));
+        return VertexPair((*V_)[v1_], (*V_)[v2_]);
     }
 
  private:

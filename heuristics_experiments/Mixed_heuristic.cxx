@@ -23,32 +23,22 @@
 #include "ChordAlgSrc/elimination_algorithm.h"
 #include "ChordAlgSrc/file_reader.h"
 #include "ChordAlgSrc/intersection_graph.h"
+#include "heuristic_options.h"
+#include "heuristic_runs.h"
 
 using namespace chordalg;
 
-void Mixed_heuristic_usage(std::string program) {
-    std::cerr << "usage: " << program << " <filename> [-a]" << std::endl;
-    std::cerr << "use -a to run the heuristic on atom subgraphs";
-    std::cerr << std::endl;
-    return;
-}
-
 int main(int argc, char* argv[]) {
-    if (argc != 2 && argc != 3) {
-        Mixed_heuristic_usage(argv[0]);
-        return EXIT_FAILURE;
-    } else {
-        if (argc == 3 && std::string("-a").compare(argv[2]) == 0) {
-            RunAtomHeuristic<ColoredIntersectionGraph,
-                             MatrixCellIntGraphFR,
-                             MixedElimination,
-                             RatioCriterion >(argv[1]);
-        } else {
-            RunHeuristic<ColoredIntersectionGraph,
-                         MatrixCellIntGraphFR,
-                         MixedElimination,
-                         RatioCriterion >(argv[1]);
-        }
-    }
+    std::string usage = std::string(argv[0]) + preamble + file_opt + atoms_opt + runs_opt; 
+    std::string filename;
+    bool atoms = false;
+    size_t runs = 1;
+    HeuristicOptions(argc, argv, usage, &filename, &runs, &atoms);
+    SetupAndRunHeuristic(
+        filename,
+        {"MixedElimination"},
+        EliminationCriterion::RATIO,
+        atoms,
+        runs);
     return EXIT_SUCCESS;
 }
