@@ -3,6 +3,7 @@ add_library(ChordAlgLib
                 elimination_algorithm.cpp
                 elimination_order.cpp
                 file_reader.cpp
+                fill_edges.cpp
                 graph.cpp
                 graph_file.cpp
                 intersection_graph.cpp

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
 add_library(HeuristicsLib heuristic_options.cpp
-                          heuristic_runs.cpp)
+                          heuristic_run.cpp)
 target_link_libraries(HeuristicsLib ChordAlgLib)
 
 function(add_heuristic_experiment arg1)
@@ -10,7 +10,7 @@ function(add_heuristic_experiment arg1)
     target_link_libraries(${arg1} HeuristicsLib)
 endfunction()
 
-#add_heuristic_experiment(Composite_heuristic)
+add_heuristic_experiment(Composite_heuristic)
 add_heuristic_experiment(Mixed_heuristic)
 add_heuristic_experiment(MMC_heuristic)
 add_heuristic_experiment(PDRS_ratio_heuristic)

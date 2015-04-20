@@ -28,12 +28,12 @@
 #include "ChordAlgSrc/intersection_graph.h"
 #include "ChordAlgSrc/elimination_algorithm.h"
 #include "heuristic_options.h"
-#include "heuristic_runs.h"
+#include "heuristic_run.h"
 
 using namespace chordalg;
 
 int main(int argc, char** argv) {
-    std::string usage = std::string(argv[0]) + preamble + file_opt + run_opt + sep_opt;
+    std::string usage = std::string(argv[0]) + preamble + file_opt + runs_opt + sep_opt;
     std::string filename;
     const bool atoms = true;
     size_t runs = 1;
@@ -41,8 +41,12 @@ int main(int argc, char** argv) {
     HeuristicOptions(argc, argv, usage, &filename, &runs, nullptr, &def, &sep);
     SetupAndRunHeuristic(
         filename,
-        {"ClassicElimination", "LBElimination", "MixedElimination"},
-        EliminationCriterion::DEFICIENCY, // need to do all criteria...
+        {   EliminationCriterion::DEFICIENCY, 
+            EliminationCriterion::RATIO,
+            EliminationCriterion::WSUM},
+        {   EliminationMode::CLASSIC,
+            EliminationMode::LBELIMINATION,
+            EliminationMode::MIXED},
         atoms,
         runs,
         def,

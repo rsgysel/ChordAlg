@@ -24,7 +24,7 @@
 #include "ChordAlgSrc/intersection_graph.h"
 #include "ChordAlgSrc/vertices.h"
 #include "heuristic_options.h"
-#include "heuristic_runs.h"
+#include "heuristic_run.h"
 
 using namespace chordalg;
 
@@ -36,8 +36,8 @@ int main(int argc, char* argv[]) {
     HeuristicOptions(argc, argv, usage, &filename, &runs, &atoms);
     SetupAndRunHeuristic(
         filename,
-        {"ClassicElimination"},
-        EliminationCriterion::DEFICIENCY,
+        {EliminationCriterion::DEFICIENCY},
+        {EliminationMode::CLASSIC},
         atoms,
         runs);
     return EXIT_SUCCESS;

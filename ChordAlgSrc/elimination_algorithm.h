@@ -49,33 +49,33 @@ enum class EliminationCriterion {
     WSUM        // #separated pairs - d #deficient pairs
 };  // EliminationCriterion
 
+enum class EliminationMode {
+    CLASSIC,
+    LBELIMINATION,
+    MIXED
+};  // EliminationMode
+
 class EliminationParameters {
  public:
-
     EliminationParameters() = delete;
     EliminationParameters(const EliminationParameters&) = delete;
     void operator=(const EliminationParameters&) = delete;
 
-    explicit EliminationParameters(EliminationCriterion, 
-                                   bool atoms=false, 
-                                   size_t runs=1, 
+    explicit EliminationParameters(EliminationCriterion,
+                                   EliminationMode,
                                    float deficiency_wt=0, 
                                    float separation_wt=0);
 
     Weight ObjectiveFn(Weight deficiency, Weight separation=0) const;
+    bool Classic() const;
+    bool LBElimination() const;
+    bool Mixed() const;
 
-    bool atoms() const {
-        return atoms_;
-    }
-
-    size_t runs() const {
-        return runs_;
-    }
  protected:
     EliminationCriterion criterion_;
-    bool atoms_;
-    size_t runs_;
+    EliminationMode mode_;
     float deficiency_wt_, separation_wt_;
+
 };  // class EliminationParameters
 
 class EliminationAlgorithm {
@@ -86,6 +86,8 @@ class EliminationAlgorithm {
 
     explicit EliminationAlgorithm(const Graph* G, const EliminationParameters*);
     virtual ~EliminationAlgorithm();
+
+    virtual void Run();
 
     std::string str() const;
 
@@ -104,13 +106,15 @@ class EliminationAlgorithm {
     const std::vector< VertexPair >& fill_edges() const {
         return fill_edges_;
     }
+    const EliminationParameters* parameters() const {
+        return parameters_;
+    }
 
     AdjacencyLists* TriangNbhds() const;
 
  protected:
-    virtual void Init();
-
     // Main Methods
+    void Init();
     void Elimination();
     VertexWeight ArgMin();
     virtual VertexWeight TieBreak();  // base method breaks ties uniformly
@@ -123,14 +127,13 @@ class EliminationAlgorithm {
     bool IsRemoved(Vertex);
     void Saturate(Vertices);
 
-    virtual void Eliminate(Vertex) = 0;
-    virtual std::pair< Weight, Weight > WeightOf(Vertex) = 0;
+    virtual void Eliminate(Vertex);
+    virtual std::pair< Weight, Weight > WeightOf(Vertex);
 
     const Graph* const G_;
     const EliminationParameters* const parameters_;
 
-    Vertices alpha_;  // alpha[i] = ith vertex eliminated
-    std::vector< size_t > alpha_inverse_;
+    EliminationOrder eo_;
 
     Weight fill_weight_;
     size_t fill_count_;  // # of fill edges added (monochromatic or not)
@@ -140,51 +143,10 @@ class EliminationAlgorithm {
 
     std::vector< VertexWeight > ties_;
     std::vector< size_t > tie_count_;
-};  // class EliminationAlgorithm
 
-class ClassicElimination : public EliminationAlgorithm {
- public:
-    explicit ClassicElimination(const Graph*, const EliminationParameters*);
-    virtual ~ClassicElimination();
-
- private:
-    void Eliminate(Vertex);
-    std::pair< Weight, Weight > WeightOf(Vertex);
-};  // class ClassicElimination
-
-class LBElimination : public EliminationAlgorithm {
- public:
-    LBElimination() = delete;
-    LBElimination(const LBElimination&) = delete;
-    void operator=(const LBElimination&) = delete;
-
-    explicit LBElimination(const Graph*, const EliminationParameters*);
-    virtual ~LBElimination();
-
- protected:
-    void Init();
-    void Eliminate(Vertex);
-    std::pair< Weight, Weight > WeightOf(Vertex);
-
-    SeparatorBlocks B_;
+    SeparatorBlocks* B_;
     std::map< VertexPair, Weight > unseparated_pairs_;
-};  // class LBElimination
-
-class MixedElimination : public LBElimination {
- public:
-    MixedElimination() = delete;
-    MixedElimination(const MixedElimination&) = delete;
-    void operator=(const MixedElimination&) = delete;
-
-    explicit MixedElimination(const Graph*, const EliminationParameters*);
-    virtual ~MixedElimination();
-
- private:
-    void Eliminate(Vertex);
-    std::pair< Weight, Weight > WeightOf(Vertex);
-
-    SeparatorBlocks B_;
-};  // class MixedElimination
+};  // class EliminationAlgorithm
 
 }  // namespace chordalg
 

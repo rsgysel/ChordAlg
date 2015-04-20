@@ -1,5 +1,5 @@
 /*
- *  elimination_algorithm.h - base class for vertex elimination algorithms
+ *  heuristic_run.h - class that runs a heuristic experiment
  *  Copyright (C) 2013 Rob Gysel
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,6 @@
 #include <cstdlib>
 #include <ctime>
 
-#include <set>
 #include <string>
 #include <vector>
 #include <utility>
@@ -37,8 +36,8 @@
 #include "ChordAlgSrc/vertices.h"
 
 void SetupAndRunHeuristic(std::string filename,
-                          std::set< std::string > elimination_types,
-                          chordalg::EliminationCriterion criterion,
+                          std::vector< chordalg::EliminationCriterion > criterion,
+                          std::vector< chordalg::EliminationMode > modes,
                           bool atoms=false,
                           size_t runs=1,
                           float deficiency_wt=0,
@@ -51,8 +50,10 @@ class HeuristicRun {
     void operator=(const HeuristicRun&) = delete;
 
     HeuristicRun(const chordalg::Graph*, 
-                 const std::set< std::string >*,
-                 const chordalg::EliminationParameters*); 
+                 const std::vector< chordalg::EliminationParameters* >*,
+                 bool,
+                 size_t);
+    virtual ~HeuristicRun() {}
 
     const std::vector< chordalg::VertexPair >& fill_edges() const;
 
@@ -60,15 +61,11 @@ class HeuristicRun {
 
  protected:
     const chordalg::Graph* const G_;
-    const std::set< std::string >* elimination_types_;
-    const chordalg::EliminationParameters* const parameters_;
+    const std::vector< chordalg::EliminationParameters* >* elimination_parameters_;
+    bool atoms_;
+    size_t runs_;
 
     std::vector< chordalg::VertexPair > fill_edges_;
-
-    chordalg::EliminationAlgorithm* SingleEliminationRun(
-        const std::string elimination_type,
-        const chordalg::Graph* G) const;
-
 };  // class HeuristicRun
 
 #endif  // INCLUDE_HEURISTIC_RUNS_H_

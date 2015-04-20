@@ -25,7 +25,7 @@
 #include "ChordAlgSrc/file_reader.h"
 #include "ChordAlgSrc/intersection_graph.h"
 #include "heuristic_options.h"
-#include "heuristic_runs.h"
+#include "heuristic_run.h"
 
 using namespace chordalg;
 
@@ -37,8 +37,8 @@ int main(int argc, char* argv[]) {
     HeuristicOptions(argc, argv, usage, &filename, &runs);
     SetupAndRunHeuristic(
         filename,
-        {"LBElimination"},
-        EliminationCriterion::RATIO,
+        {EliminationCriterion::RATIO},
+        {EliminationMode::LBELIMINATION},
         atoms,
         runs);
     return EXIT_SUCCESS;
