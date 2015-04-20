@@ -28,7 +28,7 @@
 #include "ChordAlgSrc/intersection_graph.h"
 #include "ChordAlgSrc/elimination_algorithm.h"
 #include "heuristic_options.h"
-#include "heuristic_run.h"
+#include "ChordAlgSrc/heuristic_run.h"
 
 using namespace chordalg;
 
