@@ -21,7 +21,7 @@ class LexTrieTest : public ::testing::Test {
         delete T_;
     }
     void InitTrie(size_t n) {
-        if(T_) {
+        if (T_) {
             FAIL() << "Use InitTrie once in your test.";
         } else {
             T_ = new chordalg::LexTrie(n);
@@ -33,7 +33,7 @@ class LexTrieTest : public ::testing::Test {
     }
     void InsertSetAndString(std::initializer_list<size_t> X) {
         Insert(X);
-        if(X.size() == 0) {
+        if (X.size() == 0) {
             T_strings.insert(std::string());
         } else {
             std::ostringstream oss;
@@ -47,8 +47,8 @@ class LexTrieTest : public ::testing::Test {
         return IsTrieInStringSet() && (T_->size() == T_strings.size());
     }
     bool IsTrieInStringSet() const {
-        for(auto X : *T_) {
-            if(T_strings.find(X.str()) == T_strings.end()) {
+        for (auto X : *T_) {
+            if (T_strings.find(X.str()) == T_strings.end()) {
                 return false;
             }
         }

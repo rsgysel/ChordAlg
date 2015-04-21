@@ -19,7 +19,7 @@ class MinimalSeparatorAlgorithmsTest : public testing::Test {
         delete MS_;
     }
     void Read(chordalg::AdjacencyLists& A) {
-        if(G_ || MS_) {
+        if (G_ || MS_) {
             FAIL() << "Use Read once in your test.";
         } else {
             G_ = new chordalg::Graph(new chordalg::AdjacencyLists(A));
@@ -28,7 +28,7 @@ class MinimalSeparatorAlgorithmsTest : public testing::Test {
         return;
     }
     void Read(chordalg::AdjacencyLists& A, chordalg::Vertex u, chordalg::Vertex v) {
-        if(G_ || MS_) {
+        if (G_ || MS_) {
             FAIL() << "Use Read once in your test.";
         } else {
             G_ = new chordalg::Graph(new chordalg::AdjacencyLists(A));
@@ -74,7 +74,7 @@ TEST_F(MinimalSeparatorAlgorithmsTest, BipartiteReductionPair) {
 
 TEST_F(MinimalSeparatorAlgorithmsTest, BipartiteReductionPairBlocks) {
     Read(bipartite_reduction, 6, 7);
-    for(auto X : *MS_) {
+    for (auto X : *MS_) {
         chordalg::SeparatorBlocks S(G_);
         S.Separate(chordalg::Vertices(X));
         EXPECT_EQ(S.FullComponentCt(), 2);
@@ -89,7 +89,7 @@ TEST_F(MinimalSeparatorAlgorithmsTest, xBipartiteReduction) {
 
 TEST_F(MinimalSeparatorAlgorithmsTest, xBipartiteReductionBlocks) {
     Read(bipartite_reduction_x, 6, 7);
-    for(auto X : *MS_) {
+    for (auto X : *MS_) {
         chordalg::SeparatorBlocks S(G_);
         S.Separate(chordalg::Vertices(X));
         EXPECT_EQ(S.FullComponentCt(), 2);
@@ -109,7 +109,7 @@ TEST_F(MinimalSeparatorAlgorithmsTest, stBipartiteReductionPair) {
 
 TEST_F(MinimalSeparatorAlgorithmsTest, stBipartiteReductionBlocks) {
     Read(bipartite_reduction_st, 6, 7);
-    for(auto X : *MS_) {
+    for (auto X : *MS_) {
         chordalg::SeparatorBlocks S(G_);
         S.Separate(chordalg::Vertices(X));
         EXPECT_EQ(S.FullComponentCt(), 2);
@@ -120,9 +120,9 @@ TEST_F(MinimalSeparatorAlgorithmsTest, stBipartiteReductionBlocks) {
 TEST_F(MinimalSeparatorAlgorithmsTest, AllPairsSanityCheck) {
     Read(many_minseps_four);
     chordalg::LexTrie AllPairsMinseps(G_->order());
-    for(auto uv : chordalg::VertexPairs(G_->V()) ) {
+    for (auto uv : chordalg::VertexPairs(G_->V()) ) {
         chordalg::LexTrie* PairMinseps = chordalg::MinimalSeparators(*G_, uv.first, uv.second);
-        for(auto S : *PairMinseps) {
+        for (auto S : *PairMinseps) {
             AllPairsMinseps.Insert< chordalg::FiniteSet >(S);
         }
         delete PairMinseps;

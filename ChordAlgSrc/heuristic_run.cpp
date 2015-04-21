@@ -1,5 +1,7 @@
 #include "heuristic_run.h"
 
+namespace chordalg {
+
 bool Compatible(chordalg::EliminationMode mode, chordalg::EliminationCriterion criterion) {
     if (mode == chordalg::EliminationMode::CLASSIC) {
         if (criterion == chordalg::EliminationCriterion::DEFICIENCY) {
@@ -18,13 +20,14 @@ bool Compatible(chordalg::EliminationMode mode, chordalg::EliminationCriterion c
     return false;
 }
 
-void SetupAndRunHeuristic(std::string filename,
-                          std::vector< chordalg::EliminationCriterion > criteria,
-                          std::vector< chordalg::EliminationMode > modes,
-                          bool atoms,
-                          size_t runs,
-                          float deficiency_wt,
-                          float separation_wt) {
+std::vector< VertexPair > SetupAndRunHeuristic(
+    std::string filename,
+    std::vector< chordalg::EliminationCriterion > criteria,
+    std::vector< chordalg::EliminationMode > modes,
+    bool atoms,
+    size_t runs,
+    float deficiency_wt,
+    float separation_wt) {
     chordalg::MatrixCellIntGraphFR* F =
         chordalg::NewFileReader< chordalg::MatrixCellIntGraphFR >(filename);
     chordalg::ColoredIntersectionGraph G(F);
@@ -42,13 +45,13 @@ void SetupAndRunHeuristic(std::string filename,
             elimination_parameters.push_back(P);
         }
     }    
-    HeuristicRun H(&G, &elimination_parameters, atoms, runs);
-    std::cout << H.Run() << std::endl;
+    HeuristicRun R(&G, &elimination_parameters, atoms, runs);
+    std::cout << R.Run() << std::endl;
     for (auto P : elimination_parameters) {
         delete P;
     }
     delete F;
-    return;
+    return R.fill_edges();
 }
 
 
@@ -65,7 +68,7 @@ HeuristicRun::HeuristicRun(
     return;
 }
 
-const std::vector< chordalg::VertexPair >& HeuristicRun::fill_edges() const {
+std::vector< chordalg::VertexPair > HeuristicRun::fill_edges() const {
     return fill_edges_;
 }
 
@@ -87,9 +90,9 @@ std::string HeuristicRun::Run() {
         if (!G->IsClique()) {
             double best_fill_weight = DBL_MAX, best_fill_count = DBL_MAX;
             std::vector< chordalg::VertexPair > best_fill_edges;
-            for(auto parameters : *elimination_parameters_) {
+            for (auto parameters : *elimination_parameters_) {
                 chordalg::EliminationAlgorithm algorithm(G, parameters);
-                for(size_t i = 0; i < runs_; ++i) {
+                for (size_t i = 0; i < runs_; ++i) {
                     algorithm.Run();
                     if (algorithm.fill_weight() < best_fill_weight) {
                         best_fill_weight = algorithm.fill_weight();
@@ -101,7 +104,7 @@ std::string HeuristicRun::Run() {
             total_fill_weight += best_fill_weight;
             total_fill_count += best_fill_count;
             for (chordalg::VertexPair uv : best_fill_edges) {
-                if(G->FillCount(uv) > 0) {
+                if (G->FillCount(uv) > 0) {
                     fill_edges_.push_back(uv);
                 }
             }
@@ -121,3 +124,13 @@ std::string HeuristicRun::Run() {
     return log;
 }
 
+AdjacencyLists* HeuristicRun::TriangNbhds() const {
+    AdjacencyLists* a_lists = new AdjacencyLists(G_->neighbors());
+    for (VertexPair uv : fill_edges_) {
+        (*a_lists)[uv.first].add(uv.second);
+        (*a_lists)[uv.second].add(uv.first);
+    }
+    return a_lists;
+}
+
+}  // namespace chordalg

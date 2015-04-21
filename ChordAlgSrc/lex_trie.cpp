@@ -45,7 +45,7 @@ LexTrieNode::~LexTrieNode() {
 //------------------//
 
 std::string FiniteSet::str() const {
-    if(empty()) {
+    if (empty()) {
         return std::string();
     } else {
         std::ostringstream oss;
@@ -58,7 +58,7 @@ std::string FiniteSet::str() const {
 std::string LexTrie::str() const {
     std::ostringstream oss;
     size_t i = 0;
-    for(const FiniteSet& X : *this) {
+    for (const FiniteSet& X : *this) {
         oss << "X" << i << ": " << X.str() << std::endl;
         ++i;
     }

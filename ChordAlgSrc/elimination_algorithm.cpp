@@ -21,7 +21,7 @@ EliminationParameters::EliminationParameters(EliminationCriterion criterion,
 
 Weight EliminationParameters::ObjectiveFn(Weight deficiency,
                                           Weight separated) const {
-    if(criterion_ == EliminationCriterion::RATIO) {
+    if (criterion_ == EliminationCriterion::RATIO) {
         return deficiency / (1 + separated);
     } else if (criterion_ == EliminationCriterion::WSUM) {
         return deficiency_wt_*deficiency - separation_wt_*separated;
@@ -221,25 +221,10 @@ Vertices EliminationAlgorithm::MonotoneNbhd(Vertex v) {
 }
 
 AdjacencyLists* EliminationAlgorithm::TriangNbhds() const {
-    AdjacencyLists* a_lists = new AdjacencyLists();
-    a_lists->resize(G_->order());
-    if (fill_count_ == 0) {
-        for (Vertex v : *G_) {
-            (*a_lists)[v].reserve(G_->N(v).size());
-            for (Vertex u : G_->N(v)) {
-                (*a_lists)[v].add(u);
-            }
-        }
-    } else {
-        for (Vertex v : *G_) {
-            (*a_lists)[v].reserve(G_->N(v).size() +
-                                           fill_neighbors_[v].size());
-            for (Vertex u : G_->N(v)) {
-                (*a_lists)[v].add(u);
-            }
-            for (Vertex u : fill_neighbors_[v]) {
-                (*a_lists)[v].add(u);
-            }
+    AdjacencyLists* a_lists = new AdjacencyLists(G_->neighbors());
+    for (Vertex v : *G_) {
+        for (Vertex u : fill_neighbors_[v]) {
+            (*a_lists)[v].add(u);
         }
     }
     return a_lists;

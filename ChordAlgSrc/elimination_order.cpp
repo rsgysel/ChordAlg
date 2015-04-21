@@ -42,7 +42,8 @@ void EliminationOrder::Swap(int i, int j) {
 // form triagnulation neighborhoods
 AdjacencyLists* EliminationOrder::TriangNbhds() const {
     if (fill_count_ == kUnfilled()) {
-        return nullptr;
+        std::cerr << "EliminationOrder::TriangNbhds(): call ComputeFill() first\n";
+        exit(EXIT_FAILURE);
     }
     if (fill_count_ == 0) {
         return new AdjacencyLists(G_->neighbors());

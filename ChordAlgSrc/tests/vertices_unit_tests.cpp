@@ -13,7 +13,7 @@ class VertexPairsTest : public ::testing::Test {
  public:
     VertexPairsTest() : V_(6) {}
     void SetUp() {
-        for(size_t i = 0; i < 6; ++i) {
+        for (size_t i = 0; i < 6; ++i) {
             V_[i] = i;
         }
     }
@@ -27,7 +27,7 @@ class VertexPairsTest : public ::testing::Test {
 
 TEST_F(VertexPairsTest, Count) {
     size_t pairs_count = 0;
-    for(auto pair : chordalg::VertexPairs(V_)) {
+    for (auto pair : chordalg::VertexPairs(V_)) {
         EXPECT_NE(pair.first, pair.second);
         ++pairs_count;
     }
@@ -35,7 +35,7 @@ TEST_F(VertexPairsTest, Count) {
 }
 
 TEST_F(VertexPairsTest, Sorted) {
-    for(auto pair : chordalg::VertexPairs(V_)) {
+    for (auto pair : chordalg::VertexPairs(V_)) {
         EXPECT_LE(0, pair.first);
         EXPECT_LT(pair.first, pair.second);
         EXPECT_LT(pair.second, 6);

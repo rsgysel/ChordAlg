@@ -16,7 +16,7 @@ class AtomsTest : public GraphTest {
         delete A_;
     }
     void Read(chordalg::AdjacencyLists& A) {
-        if(G_ || A_) {
+        if (G_ || A_) {
             FAIL() << "Use Read once in your test.";
         } else {
             G_ = new chordalg::Graph(new chordalg::AdjacencyLists(A));
@@ -38,7 +38,7 @@ class AtomsTest : public GraphTest {
 TEST_F(AtomsTest, PaperFigureIsomorphism) {
     Read(atom_test);
     size_t i = 0;
-    for(auto a : *A_) {
+    for (auto a : *A_) {
         chordalg::Graph G(new chordalg::AdjacencyLists(atom_test_atoms[i]));
         EXPECT_EQ(a->IsIsomorphic(G), true);
         ++i;
@@ -47,7 +47,7 @@ TEST_F(AtomsTest, PaperFigureIsomorphism) {
 
 TEST_F(AtomsTest, IndependentSetIsomorphism) {
     Read(independent_set);
-    for(auto a : *A_) {
+    for (auto a : *A_) {
         EXPECT_EQ(a->order(), 1);
     }
 }

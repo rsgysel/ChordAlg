@@ -191,7 +191,7 @@ size_t SeparatorBlocks::NonFullComponentCt() const {
 
 bool SeparatorComponents::IsSeparated(Vertices V) const {
     for (auto p : VertexPairs(V)) {
-        if(AreSeparated(p.first, p.second)) {
+        if (AreSeparated(p.first, p.second)) {
             return true;
         }
     }

@@ -8,13 +8,9 @@
 #include <algorithm>
 #include <string>
 
-#include "ChordAlgSrc/atoms.h"
 #include "ChordAlgSrc/elimination_algorithm.h"
-#include "ChordAlgSrc/file_reader.h"
-#include "ChordAlgSrc/intersection_graph.h"
-#include "ChordAlgSrc/elimination_algorithm.h"
-#include "heuristic_options.h"
 #include "ChordAlgSrc/heuristic_run.h"
+#include "heuristic_options.h"
 
 using namespace chordalg;
 
@@ -25,7 +21,7 @@ int main(int argc, char** argv) {
     size_t runs = 1;
     float def = 1, sep = 1;
     HeuristicOptions(argc, argv, usage, &filename, &runs, nullptr, &def, &sep);
-    SetupAndRunHeuristic(
+    chordalg::SetupAndRunHeuristic(
         filename,
         {   EliminationCriterion::DEFICIENCY, 
             EliminationCriterion::RATIO,

@@ -23,7 +23,7 @@ class MCSTest : public ::testing::Test {
         delete H2_;
     }
     void Read(chordalg::AdjacencyLists& A) {
-        if(G_ || Geo_ || H1_ || Heo_ || H2_) {
+        if (G_ || Geo_ || H1_ || Heo_ || H2_) {
             FAIL() << "Use Read once in your test.";
         } else {
             G_ = new chordalg::Graph(new chordalg::AdjacencyLists(A));

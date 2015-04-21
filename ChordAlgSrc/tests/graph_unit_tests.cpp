@@ -26,8 +26,8 @@ TEST_F(GraphTest, Size) {
 
 TEST_F(GraphTest, NbhdValueRange) {
     Read(two_cliques);
-    for(chordalg::Vertex v : *G_) {
-        for(chordalg::Vertex u : G_->N(v)) {
+    for (chordalg::Vertex v : *G_) {
+        for (chordalg::Vertex u : G_->N(v)) {
             EXPECT_GE(u, 0);
             EXPECT_LT(u, G_->order());
         }
@@ -36,8 +36,8 @@ TEST_F(GraphTest, NbhdValueRange) {
 
 TEST_F(GraphTest, NoSelfLoops) {
     Read(two_cliques);
-    for(chordalg::Vertex v : *G_) {
-        for(chordalg::Vertex u : G_->N(v)) {
+    for (chordalg::Vertex v : *G_) {
+        for (chordalg::Vertex u : G_->N(v)) {
             EXPECT_NE(u, v);
         }
     }
@@ -45,9 +45,9 @@ TEST_F(GraphTest, NoSelfLoops) {
 
 TEST_F(GraphTest, SortedNeighborhoods) {
     Read(two_cliques);
-    for(chordalg::Vertex v : *G_) {
+    for (chordalg::Vertex v : *G_) {
         chordalg::Vertex w = *(G_->begin());
-        for(chordalg::Vertex u : G_->N(v)) {
+        for (chordalg::Vertex u : G_->N(v)) {
             EXPECT_LE(w, u);
         }
     }

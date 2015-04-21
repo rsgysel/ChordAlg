@@ -23,7 +23,7 @@ class SeparatorGraphTest : public testing::Test {
         delete A_;
     }
     void Read(chordalg::AdjacencyLists& A) {
-        if(G_ || MS_) {
+        if (G_ || MS_) {
             FAIL() << "Use Read once in your test.";
         } else {
             G_ = new chordalg::Graph(new chordalg::AdjacencyLists(A));
@@ -36,7 +36,7 @@ class SeparatorGraphTest : public testing::Test {
     }
     void CompareCrossingRelations() {
         size_t size = 0;
-        for(auto H : *A_) {
+        for (auto H : *A_) {
             chordalg::MinsepTrie* H_MS = chordalg::MinimalSeparators(*H);
             chordalg::SeparatorGraph SepH(H, H_MS);
             size += SepH.size();
@@ -86,7 +86,7 @@ TEST_F(SeparatorGraphTest, DimacsXRel) {
 
 TEST_F(SeparatorGraphTest, CliqueAutomorphism) {
     Read(clique);
-    for(auto H : *A_) {
+    for (auto H : *A_) {
         chordalg::MinsepTrie* H_MS = chordalg::MinimalSeparators(*H);
         chordalg::SeparatorGraph SepH(H, H_MS);
         EXPECT_EQ(SepH.IsIsomorphic(*SepG_), true);

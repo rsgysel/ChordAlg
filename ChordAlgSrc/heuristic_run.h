@@ -21,13 +21,16 @@
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/vertices.h"
 
-void SetupAndRunHeuristic(std::string filename,
-                          std::vector< chordalg::EliminationCriterion > criterion,
-                          std::vector< chordalg::EliminationMode > modes,
-                          bool atoms=false,
-                          size_t runs=1,
-                          float deficiency_wt=0,
-                          float separation_wt=0);
+namespace chordalg {
+
+std::vector< VertexPair > SetupAndRunHeuristic(
+    std::string filename,
+    std::vector< EliminationCriterion > criterion,
+    std::vector< EliminationMode > modes,
+    bool atoms=false,
+    size_t runs=1,
+    float deficiency_wt=0,
+    float separation_wt=0);
 
 class HeuristicRun {
  public:
@@ -35,23 +38,26 @@ class HeuristicRun {
     HeuristicRun(const HeuristicRun&) = delete;
     void operator=(const HeuristicRun&) = delete;
 
-    HeuristicRun(const chordalg::Graph*, 
-                 const std::vector< chordalg::EliminationParameters* >*,
+    HeuristicRun(const Graph*, 
+                 const std::vector< EliminationParameters* >*,
                  bool,
                  size_t);
     virtual ~HeuristicRun() {}
 
-    const std::vector< chordalg::VertexPair >& fill_edges() const;
+    std::vector< VertexPair > fill_edges() const;
 
     std::string Run();
+    AdjacencyLists* TriangNbhds() const;
 
  protected:
-    const chordalg::Graph* const G_;
-    const std::vector< chordalg::EliminationParameters* >* elimination_parameters_;
+    const Graph* const G_;
+    const std::vector< EliminationParameters* >* elimination_parameters_;
     bool atoms_;
     size_t runs_;
 
-    std::vector< chordalg::VertexPair > fill_edges_;
+    std::vector< VertexPair > fill_edges_;
 };  // class HeuristicRun
+
+}  // namespace chordalg
 
 #endif  // INCLUDE_HEURISTIC_RUNS_H_

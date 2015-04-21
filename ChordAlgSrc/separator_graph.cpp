@@ -6,7 +6,7 @@ MinsepVector* MinsepTrieToVector(const MinsepTrie& MT) {
     MinsepVector* MV = new MinsepVector();
     MV->resize(MT.size());
     size_t i = 0;
-    for(auto S : MT) {
+    for (auto S : MT) {
         (*MV)[i] = Vertices(VertexVector(S));
         ++i;
     }
@@ -44,7 +44,7 @@ void SeparatorGraph::Init() {
         S_.Separate(U);
         size_t j = 0;
         for (auto W : *M_) {
-            if(i < j && S_.IsSeparated(W)) {
+            if (i < j && S_.IsSeparated(W)) {
                 crossing_relations_[i].add(j);
                 crossing_relations_[j].add(i);
                 ++size_;
@@ -75,11 +75,11 @@ std::string SeparatorGraph::str() const {
 
 VertexName SeparatorGraph::name(Vertex v) const {
     const Vertices& S_v = (*M_)[v];
-    if(S_v.empty()) {
+    if (S_v.empty()) {
         return std::string();
     } else {
         std::string name;
-        for(auto itr = S_v.begin(); itr != S_v.end() - 1; ++itr) {
+        for (auto itr = S_v.begin(); itr != S_v.end() - 1; ++itr) {
             name += G_->name(*itr) + ' ';
         }
         name += G_->name(*(S_v.end() - 1));
