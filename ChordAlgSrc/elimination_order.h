@@ -1,7 +1,6 @@
 /*
  *  elimination_order.h - data structure representing an elimination
  *  ordering of a graph
- *  Copyright (C) 2013 Rob Gysel
  */
 
 #ifndef INCLUDE_ELIMINATION_ORDER_H_

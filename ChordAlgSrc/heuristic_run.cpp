@@ -2,42 +2,42 @@
 
 namespace chordalg {
 
-bool Compatible(chordalg::EliminationMode mode, chordalg::EliminationCriterion criterion) {
-    if (mode == chordalg::EliminationMode::CLASSIC) {
-        if (criterion == chordalg::EliminationCriterion::DEFICIENCY) {
+bool Compatible(EliminationMode mode, EliminationCriterion criterion) {
+    if (mode == EliminationMode::CLASSIC) {
+        if (criterion == EliminationCriterion::DEFICIENCY) {
             return true;
         }
-    } else if (mode == chordalg::EliminationMode::LBELIMINATION) {
-        if (criterion == chordalg::EliminationCriterion::RATIO ||
-            criterion == chordalg::EliminationCriterion::WSUM) {
+    } else if (mode == EliminationMode::LBELIMINATION) {
+        if (criterion == EliminationCriterion::RATIO ||
+            criterion == EliminationCriterion::WSUM) {
             return true;
         }
-    } else if (mode == chordalg::EliminationMode::MIXED) {
-        if (criterion == chordalg::EliminationCriterion::DEFICIENCY) {
+    } else if (mode == EliminationMode::MIXED) {
+        if (criterion == EliminationCriterion::DEFICIENCY) {
             return true;
         }
     }
     return false;
 }
 
-std::vector< VertexPair > SetupAndRunHeuristic(
+std::string SetupAndRunHeuristic(
     std::string filename,
-    std::vector< chordalg::EliminationCriterion > criteria,
-    std::vector< chordalg::EliminationMode > modes,
+    std::vector< EliminationCriterion > criteria,
+    std::vector< EliminationMode > modes,
     bool atoms,
     size_t runs,
     float deficiency_wt,
     float separation_wt) {
-    chordalg::MatrixCellIntGraphFR* F =
-        chordalg::NewFileReader< chordalg::MatrixCellIntGraphFR >(filename);
-    chordalg::ColoredIntersectionGraph G(F);
-    std::vector< chordalg::EliminationParameters* > elimination_parameters;
+    MatrixCellIntGraphFR* F =
+        NewFileReader< MatrixCellIntGraphFR >(filename);
+    ColoredIntersectionGraph G(F);
+    std::vector< EliminationParameters* > elimination_parameters;
     for (auto mode : modes) {
         for (auto criterion : criteria) {
             if (!Compatible(mode, criterion)) {
                 continue;
             }
-            auto P = new chordalg::EliminationParameters(
+            auto P = new EliminationParameters(
                             criterion,
                             mode,
                             deficiency_wt,
@@ -51,13 +51,24 @@ std::vector< VertexPair > SetupAndRunHeuristic(
         delete P;
     }
     delete F;
-    return R.fill_edges();
+    // Return columns to remove
+    std::set< Color > columns;
+    for (VertexPair uv : R.fill_edges()) {
+        for (Color c : G.CommonColors(uv)) {
+            columns.insert(c);
+        }
+    }
+    std::string columns_str;
+    for (Color c : columns) {
+        columns_str += std::to_string(c) + " ";
+    }
+    return columns_str;
 }
 
 
 HeuristicRun::HeuristicRun(
-    const chordalg::Graph* G,
-    const std::vector< chordalg::EliminationParameters* >* elimination_parameters,
+    const Graph* G,
+    const std::vector< EliminationParameters* >* elimination_parameters,
     bool atoms,
     size_t runs) :
     G_(G),
@@ -68,13 +79,13 @@ HeuristicRun::HeuristicRun(
     return;
 }
 
-std::vector< chordalg::VertexPair > HeuristicRun::fill_edges() const {
+std::vector< VertexPair > HeuristicRun::fill_edges() const {
     return fill_edges_;
 }
 
 std::string HeuristicRun::Run() {
-    std::vector< const chordalg::Graph* > graphs;
-    chordalg::Atoms* A = atoms_ ? new chordalg::Atoms(G_) : nullptr;
+    std::vector< const Graph* > graphs;
+    Atoms* A = atoms_ ? new Atoms(G_) : nullptr;
     if (atoms_) {
         A->ComputeAtoms();
         for (auto a : *A) {
@@ -83,15 +94,15 @@ std::string HeuristicRun::Run() {
     } else {
         graphs.push_back(G_);
     }
-    chordalg::Weight total_fill_weight = 0;
+    Weight total_fill_weight = 0;
     size_t clique_atoms = 0, atom_id = 0, total_fill_count = 0;
-    for (const chordalg::Graph* G : graphs) {
+    for (const Graph* G : graphs) {
         ++atom_id;
         if (!G->IsClique()) {
             double best_fill_weight = DBL_MAX, best_fill_count = DBL_MAX;
-            std::vector< chordalg::VertexPair > best_fill_edges;
+            std::vector< VertexPair > best_fill_edges;
             for (auto parameters : *elimination_parameters_) {
-                chordalg::EliminationAlgorithm algorithm(G, parameters);
+                EliminationAlgorithm algorithm(G, parameters);
                 for (size_t i = 0; i < runs_; ++i) {
                     algorithm.Run();
                     if (algorithm.fill_weight() < best_fill_weight) {
@@ -103,7 +114,7 @@ std::string HeuristicRun::Run() {
             }
             total_fill_weight += best_fill_weight;
             total_fill_count += best_fill_count;
-            for (chordalg::VertexPair uv : best_fill_edges) {
+            for (VertexPair uv : best_fill_edges) {
                 if (G->FillCount(uv) > 0) {
                     fill_edges_.push_back(uv);
                 }

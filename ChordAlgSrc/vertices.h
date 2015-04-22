@@ -1,6 +1,5 @@
 /*
  *  vertices.h - iterators, pairs, and typedefs
- *  Copyright (C) 2013 Rob Gysel
  */
 
 #ifndef INCLUDE_VERTICES_H_

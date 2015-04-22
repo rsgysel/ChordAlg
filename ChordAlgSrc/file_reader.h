@@ -1,6 +1,5 @@
 /*
  *  file_reader.h - graph file parsers
- *  Copyright (C) 2013 Rob Gysel
  */
 
 #ifndef INCLUDE_FILE_READER_H_

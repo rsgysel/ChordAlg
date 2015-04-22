@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
     size_t runs = 1;
     float def = 1, sep = 1;
     HeuristicOptions(argc, argv, usage, &filename, &runs, nullptr, &def, &sep);
-    chordalg::SetupAndRunHeuristic(
+    std::string columns = chordalg::SetupAndRunHeuristic(
         filename,
         {EliminationCriterion::WSUM},
         {EliminationMode::LBELIMINATION},
@@ -29,5 +29,6 @@ int main(int argc, char* argv[]) {
         runs,
         def, 
         sep);
+    std::cout << "Columns removed:\n" << columns << std::endl;
     return EXIT_SUCCESS;
 }

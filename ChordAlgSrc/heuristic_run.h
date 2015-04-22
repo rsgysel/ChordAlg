@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <ctime>
 
+#include <set>
 #include <string>
 #include <vector>
 #include <utility>
@@ -23,7 +24,7 @@
 
 namespace chordalg {
 
-std::vector< VertexPair > SetupAndRunHeuristic(
+std::string SetupAndRunHeuristic(
     std::string filename,
     std::vector< EliminationCriterion > criterion,
     std::vector< EliminationMode > modes,

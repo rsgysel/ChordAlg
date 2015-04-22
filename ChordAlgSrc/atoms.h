@@ -1,6 +1,5 @@
 /*
  *  atoms.h - atom subgraphs
- *  Copyright (C) 2013 Rob Gysel
  */
 
 #ifndef INCLUDE_ATOMS_H_

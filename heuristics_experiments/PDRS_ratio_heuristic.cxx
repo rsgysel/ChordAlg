@@ -19,11 +19,12 @@ int main(int argc, char* argv[]) {
     const bool atoms = true;
     size_t runs = 1;
     HeuristicOptions(argc, argv, usage, &filename, &runs);
-    chordalg::SetupAndRunHeuristic(
+    std::string columns = chordalg::SetupAndRunHeuristic(
         filename,
         {EliminationCriterion::RATIO},
         {EliminationMode::LBELIMINATION},
         atoms,
         runs);
+    std::cout << "Columns removed:\n" << columns << std::endl;
     return EXIT_SUCCESS;
 }

@@ -1,6 +1,5 @@
 /*
  *  elimination_algorithm.h - base class for vertex elimination algorithms
- *  Copyright (C) 2013 Rob Gysel
  */
 
 #ifndef INCLUDE_ELIMINATION_ALGORITHM_H_

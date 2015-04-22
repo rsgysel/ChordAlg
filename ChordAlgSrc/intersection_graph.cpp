@@ -75,12 +75,28 @@ bool ColoredIntersectionGraph::IsMonochromatic(Vertex u, Vertex v) const {
     return CommonColorCount(u, v) > 0;
 }
 
-size_t ColoredIntersectionGraph::CommonColorCount(Vertex u, Vertex v) const {
+bool ColoredIntersectionGraph::IsMonochromatic(VertexPair uv) const {
+    return IsMonochromatic(uv.first, uv.second);
+}
+
+Multicolor ColoredIntersectionGraph::CommonColors(Vertex u, Vertex v) const {
     Multicolor intersection;
     std::set_intersection(vertex_color(u).begin(), vertex_color(u).end(),
                           vertex_color(v).begin(), vertex_color(v).end(),
                           std::inserter(intersection, intersection.begin()));
-    return intersection.size();
+    return intersection;
+}
+
+Multicolor ColoredIntersectionGraph::CommonColors(VertexPair uv) const {
+    return CommonColors(uv.first, uv.second);
+}
+
+size_t ColoredIntersectionGraph::CommonColorCount(Vertex u, Vertex v) const {
+    return CommonColors(u, v).size();
+}
+
+size_t ColoredIntersectionGraph::CommonColorCount(VertexPair uv) const {
+    return CommonColorCount(uv.first, uv.second);
 }
 
 std::string ColoredIntersectionGraph::strSubsets() {

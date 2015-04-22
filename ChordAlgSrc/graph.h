@@ -1,6 +1,5 @@
 /*
  *  graph.h - a graph data structure
- *  Copyright (C) 2013 Rob Gysel
  */
 
 #ifndef INCLUDE_GRAPH_H_
