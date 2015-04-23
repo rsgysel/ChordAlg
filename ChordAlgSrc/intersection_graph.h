@@ -64,11 +64,6 @@ class ColoredIntersectionGraph : public Graph {
     std::vector< std::string > taxon_name_;
 
     std::vector< std::string > DefaultTaxonNames(size_t n);
-    std::vector< FiniteSet > InduceSubsets(ColoredIntersectionGraph&,
-                                        Vertices);
-    std::vector< Multicolor > InduceVertexColors(ColoredIntersectionGraph&,
-                                                 Vertices);
-    LexTrie* InduceSubsetFamily(ColoredIntersectionGraph&);
 };  // ColoredIntersectionGraph
 
 }  // namespace chordalg

@@ -40,37 +40,6 @@ std::vector<std::string> ColoredIntersectionGraph::DefaultTaxonNames(size_t n) {
     return taxon_name;
 }
 
-std::vector< FiniteSet > ColoredIntersectionGraph::InduceSubsets(
-    ColoredIntersectionGraph& super_graph, Vertices X) {
-    std::sort(X.begin(), X.end());
-    std::vector< FiniteSet > subsets;
-    subsets.reserve(X.size());
-    for (Vertex v : X) {
-        subsets.push_back(super_graph.subsets_[v]);
-    }
-    return subsets;
-}
-
-std::vector< Multicolor > ColoredIntersectionGraph::InduceVertexColors(
-    ColoredIntersectionGraph& super_graph, Vertices X) {
-    std::sort(X.begin(), X.end());
-    std::vector< Multicolor > vertex_colors;
-    vertex_colors.reserve(X.size());
-    for (Vertex v : X) {
-        vertex_colors.push_back(super_graph.vertex_colors_[v]);
-    }
-    return vertex_colors;
-}
-
-LexTrie* ColoredIntersectionGraph::InduceSubsetFamily(
-    ColoredIntersectionGraph& super_graph) {
-    LexTrie* subset_family = new LexTrie(super_graph.subset_family_->n());
-    for (FiniteSet& S : subsets_) {
-        subset_family->SortedInsert< FiniteSet >(S);
-    }
-    return subset_family;
-}
-
 bool ColoredIntersectionGraph::IsMonochromatic(Vertex u, Vertex v) const {
     return CommonColorCount(u, v) > 0;
 }

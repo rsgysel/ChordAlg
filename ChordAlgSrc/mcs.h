@@ -44,7 +44,7 @@ class MCSQueue {
     size_t remaining_vertices_;
     std::vector< std::set<Vertex> > queue_;
     std::vector< int > weight_;
-};  // class MCSQueue
+};  // MCSQueue
 
 }  // namespace chordalg
 

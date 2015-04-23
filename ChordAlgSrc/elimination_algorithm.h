@@ -62,7 +62,7 @@ class EliminationParameters {
     EliminationMode mode_;
     float deficiency_wt_, separation_wt_;
 
-};  // class EliminationParameters
+};  // EliminationParameters
 
 class EliminationAlgorithm {
  public:
@@ -132,7 +132,7 @@ class EliminationAlgorithm {
 
     SeparatorBlocks* B_;
     std::map< VertexPair, Weight > unseparated_pairs_;
-};  // class EliminationAlgorithm
+};  // EliminationAlgorithm
 
 }  // namespace chordalg
 

@@ -115,7 +115,7 @@ class SeparatorComponents {
     inline bool IsUnsearched(Vertex u) const {
         return connected_component_[u] == kUnsearched();
     }
-};
+};  // SeparatorComponents
 
 class SeparatorBlocks : public SeparatorComponents {
  public:
@@ -163,7 +163,7 @@ class SeparatorBlocks : public SeparatorComponents {
 
     std::vector< Block > blocks_;
     std::vector< int > last_separator_vertex_seen_;
-};
+};  // SeparatorBlocks
 
 }  // namespace chordalg
 

@@ -60,7 +60,7 @@ class HeuristicRun {
 
     std::vector< VertexPair > fill_edges_;
     Weight fill_weight_;
-};  // class HeuristicRun
+};  // HeuristicRun
 
 }  // namespace chordalg
 

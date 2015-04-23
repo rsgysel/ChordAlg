@@ -59,7 +59,7 @@ class LexTrieIterator {
 
     // Disable default constructor
     LexTrieIterator();
-};
+};  // LexTrieIterator
 
 // Each node may represent a set by its path to the root.
 // A node is a k-child if the largest element in its set is k (equivalently,
@@ -103,7 +103,7 @@ class LexTrieNode {
     LexTrieNode();
     LexTrieNode(const LexTrieNode&);
     void operator=(const LexTrieNode&);
-};
+};  // LexTrieNode
 
 // A tree representing a family of subsets of [0, 1, ..., n-1]
 class LexTrie {
@@ -158,7 +158,7 @@ class LexTrie {
     LexTrie();
     LexTrie(const LexTrie&);
     void operator=(const LexTrie&);
-};
+};  // LexTrie
 
 //--------------------//
 // Lex trie interface //

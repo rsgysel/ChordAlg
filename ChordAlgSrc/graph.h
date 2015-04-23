@@ -140,22 +140,8 @@ class InducedSubgraph : public Graph {
     const Vertices U_;
 };  // InducedSubgraph
 
-class Supergraph : public Graph {
- public:
-    Supergraph() = delete;
-    Supergraph(const Supergraph&) = delete;
-    void operator=(const Supergraph&) = delete;
-
-    Supergraph(const Graph*, AdjacencyLists*);
-    VertexName name(Vertex v) const {
-        return G_->name(v);
-    }
-
- protected:
-    const Graph* const G_;     // G = (V,E) is a subgraph of H = (V,E U F)
-};  // Supergraph
-
-////////////// Generics
+///////////
+// Generics
 
 template< class InputIterator >
 bool Graph::HasClique(InputIterator begin, InputIterator end) const {
