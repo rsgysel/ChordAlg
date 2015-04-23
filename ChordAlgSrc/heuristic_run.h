@@ -49,7 +49,9 @@ class HeuristicRun {
 
     std::string Run();
     AdjacencyLists* TriangNbhds() const;
-
+    Weight fill_weight() const {
+        return fill_weight_;
+    }
  protected:
     const Graph* const G_;
     const std::vector< EliminationParameters* >* elimination_parameters_;
@@ -57,6 +59,7 @@ class HeuristicRun {
     size_t runs_;
 
     std::vector< VertexPair > fill_edges_;
+    Weight fill_weight_;
 };  // class HeuristicRun
 
 }  // namespace chordalg

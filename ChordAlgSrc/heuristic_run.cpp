@@ -94,8 +94,8 @@ std::string HeuristicRun::Run() {
     } else {
         graphs.push_back(G_);
     }
-    Weight total_fill_weight = 0;
-    size_t clique_atoms = 0, atom_id = 0, total_fill_count = 0;
+    fill_weight_ = 0;
+    size_t clique_atoms = 0, atom_id = 0, fill_count = 0;
     for (const Graph* G : graphs) {
         ++atom_id;
         if (!G->IsClique()) {
@@ -112,24 +112,22 @@ std::string HeuristicRun::Run() {
                     }
                 }
             }
-            total_fill_weight += best_fill_weight;
-            total_fill_count += best_fill_count;
+            fill_weight_ += best_fill_weight;
+            fill_count += best_fill_count;
             for (VertexPair uv : best_fill_edges) {
-                if (G->FillCount(uv) > 0) {
-                    fill_edges_.push_back(uv);
-                }
+                fill_edges_.push_back(G->ParentGraph(uv));
             }
         } else {
             ++clique_atoms;
         }
     }
-    std::string log = "fill weight: " + std::to_string(total_fill_weight) + '\n'
-                      + "fill count: " + std::to_string(total_fill_count) + '\n'
+    std::string log = "characters removed: " + std::to_string(fill_weight_) + '\n'
+                      + "fill edges added: " + std::to_string(fill_count) + '\n'
                       + "vertices: " + std::to_string(G_->order()) + '\n'
-                      + "edges : " + std::to_string(G_->size()) + '\n';
+                      + "edges: " + std::to_string(G_->size()) + '\n';
     if (atoms_) {
-        log += "atoms: " + std::to_string(A->size()) + '\n'
-               + "clique atoms: " + std::to_string(clique_atoms) + '\n';
+        log += "atom-subgraphs: " + std::to_string(A->size()) + '\n'
+               + "clique atom-subgraphs: " + std::to_string(clique_atoms) + '\n';
         delete A;
     }
     return log;

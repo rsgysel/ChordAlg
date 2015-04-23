@@ -1,12 +1,12 @@
 #include "heuristic_options.h"
 
 const std::string
-    preamble = " SOURCEFILE [OPTION] ...\nOptions:\n",
+    preamble = " [OPTION] ...\nOptions:\n",
     file_opt = "-f, --file\n\tInput file\n",
     atoms_opt = "-a, --atoms\n\tRun heuristic on atom subgraphs\n",
     runs_opt = "-r, --runs\n\tNumber of times heuristic is run\n"
                "\t\tIf supplied with -a, heuristic is run multiple"
-               "times on each atom subgraph independently",
+               "times on each atom subgraph independently\n",
     sep_opt = "-s, --sep\n\tSeparation weight\n"
               "\t\tIf `inf' supplied, deficiency is ignored\n";
 

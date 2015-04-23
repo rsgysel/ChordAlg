@@ -85,6 +85,14 @@ class Graph {
         return (*neighborhoods_)[v];
     }
 
+    // Use to transform InducedSubgraph vertices to parent graph vertices
+    virtual Vertex ParentGraph(Vertex v) const {
+        return v;
+    }
+    virtual VertexPair ParentGraph(VertexPair uv) const {
+        return uv;
+    }
+
  protected:
     void Init();
 
@@ -119,6 +127,12 @@ class InducedSubgraph : public Graph {
     }
     Weight FillCount(VertexPair p) const {
         return G_->FillCount(U_[p.first], U_[p.second]);
+    }
+    Vertex ParentGraph(Vertex v) const {
+        return U_[v];
+    }
+    VertexPair ParentGraph(VertexPair uv) const {
+        return VertexPair(ParentGraph(uv.first), ParentGraph(uv.second));
     }
 
  protected:
