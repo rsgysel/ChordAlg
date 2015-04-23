@@ -13,9 +13,9 @@ int main(int argc, char* argv[]) {
         std::cerr << "usage: " << argv[0] << " <filename>" << std::endl;
         return EXIT_FAILURE;
     } else {
-        MatrixCellIntGraphFR* graph_reader =
-            NewFileReader<MatrixCellIntGraphFR>(argv[1]);
-        ColoredIntersectionGraph G(graph_reader);
+        CellIntGraphFR* graph_reader =
+            NewFileReader<CellIntGraphFR>(argv[1]);
+        CellIntersectionGraph G(graph_reader);
         std::cout << G.str();
         return EXIT_SUCCESS;
     }

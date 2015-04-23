@@ -22,7 +22,7 @@ class TreeRepresentation {
     virtual ~TreeRepresentation();
 
     std::string strNewick() const;
-    std::string strPhyloNewick(const ColoredIntersectionGraph& cig,
+    std::string strPhyloNewick(const CellIntersectionGraph& cig,
                                bool rooted = false) const;
     std::string str() const {
         return T_.str();
@@ -49,7 +49,7 @@ class TreeRepresentation {
     void PhyloNewickVisit(VertexSet& visited,
                           Vertex v,
                           std::string& newick_tree,
-                          const ColoredIntersectionGraph& cig,
+                          const CellIntersectionGraph& cig,
                           std::vector< size_t >& taxon_clique_size) const;
 };  // TreeRepresentation
 

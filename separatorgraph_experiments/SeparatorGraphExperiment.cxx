@@ -33,9 +33,9 @@ int main(int argc, char* argv[]) {
         std::cerr << "usage: " << argv[0] << " <filename>" << std::endl;
         return EXIT_FAILURE;
     } else {
-        MatrixCellIntGraphFR* fr = 
-            NewFileReader< MatrixCellIntGraphFR >(argv[1]);
-        ColoredIntersectionGraph G(fr);
+        CellIntGraphFR* fr = 
+            NewFileReader< CellIntGraphFR >(argv[1]);
+        CellIntersectionGraph G(fr);
         SeparatorGraph SepG(&G, MinimalSeparators(G));
         std::cout << "Minimal separators: " << SepG.order() << '\n';
         std::cout << "Crossing relations: " << SepG.size() << '\n';

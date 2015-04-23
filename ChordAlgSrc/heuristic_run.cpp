@@ -28,9 +28,9 @@ std::string SetupAndRunHeuristic(
     size_t runs,
     float deficiency_wt,
     float separation_wt) {
-    MatrixCellIntGraphFR* F =
-        NewFileReader< MatrixCellIntGraphFR >(filename);
-    ColoredIntersectionGraph G(F);
+    CellIntGraphFR* F =
+        NewFileReader< CellIntGraphFR >(filename);
+    CellIntersectionGraph G(F);
     std::vector< EliminationParameters* > elimination_parameters;
     for (auto mode : modes) {
         for (auto criterion : criteria) {

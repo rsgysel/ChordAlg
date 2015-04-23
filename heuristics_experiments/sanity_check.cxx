@@ -11,6 +11,7 @@
 
 #include "ChordAlgSrc/elimination_algorithm.h"
 #include "ChordAlgSrc/heuristic_run.h"
+#include "ChordAlgSrc/intersection_graph.h"
 #include "ChordAlgSrc/triangulation.h"
 #include "heuristic_options.h"
 
@@ -49,12 +50,12 @@ void CheckHeuristic(std::string filename,
     const size_t runs = 1;
     const float def = 1, sep = 1;
     // Run Hueristic
-    MatrixCellIntGraphFR* F =
-        NewFileReader< MatrixCellIntGraphFR >(filename);
-    ColoredIntersectionGraph G(F);
-    std::vector< EliminationParameters* > elimination_parameters;
+    CellIntGraphFR* F =
+        NewFileReader< CellIntGraphFR >(filename);
+    CellIntersectionGraph G(F);
+    std::vector< chordalg::EliminationParameters* > elimination_parameters;
     elimination_parameters.push_back(
-        new EliminationParameters(criterion, mode, def, sep));
+        new chordalg::EliminationParameters(criterion, mode, def, sep));
     HeuristicRun R(&G, &elimination_parameters, atoms, runs);
     R.Run();
     // Check Triangulation

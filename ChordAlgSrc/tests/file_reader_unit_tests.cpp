@@ -41,8 +41,8 @@ class FileReadingTest : public ::testing::Test {
 // Declared Typed Tests
 
 typedef ::testing::Types< chordalg::SortedAdjacencyListFR,
-                          chordalg::MatrixCellIntGraphFR,
-                          chordalg::NexusMRPFR > 
+                          chordalg::CellIntGraphFR,
+                          chordalg::CellIntGraphFR > 
                           FileReaderTypes;
 
 TYPED_TEST_CASE(FileReadingTest, FileReaderTypes);
@@ -58,7 +58,7 @@ TYPED_TEST(FileReadingTest, GetLines) {
             .WillOnce(GraphFileInputLine("1 2", this->line_stream_))
             .WillOnce(GraphFileInputLine("2 1", this->line_stream_))
             .WillOnce(ReturnRef(this->eof_marker_));
-    } else if (this->TypeIs(typeid(chordalg::MatrixCellIntGraphFR))) {
+    } else if (this->TypeIs(typeid(chordalg::CellIntGraphFR))) {
         EXPECT_CALL(this->mock_file_, GetLine(_))
             .Times(5)
             .WillOnce(GraphFileInputLine("id", this->line_stream_))
@@ -66,7 +66,7 @@ TYPED_TEST(FileReadingTest, GetLines) {
             .WillOnce(GraphFileInputLine("0 0", this->line_stream_))
             .WillOnce(GraphFileInputLine("0 1", this->line_stream_))
             .WillOnce(ReturnRef(this->eof_marker_));
-    } else if (this->TypeIs(typeid(chordalg::NexusMRPFR))) {
+    } else if (this->TypeIs(typeid(chordalg::CellIntGraphFR))) {
         EXPECT_CALL(this->mock_file_, GetLine(_))
             .Times(10)
             .WillOnce(GraphFileInputLine("#NEXUS", this->line_stream_))

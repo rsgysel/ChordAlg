@@ -34,8 +34,8 @@ int main(int argc, char** argv) {
         std::cerr << "usage: " << argv[0] << " <filename>" << std::endl;
         return EXIT_FAILURE;
     } else {
-        MatrixCellIntGraphFR* graph_reader =
-            NewFileReader<MatrixCellIntGraphFR>(
+        CellIntGraphFR* graph_reader =
+            NewFileReader<CellIntGraphFR>(
                 std::string(argv[1]));
         Graph G(graph_reader);
         Atoms A(&G);

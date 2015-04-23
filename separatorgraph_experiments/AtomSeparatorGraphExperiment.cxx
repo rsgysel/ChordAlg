@@ -35,9 +35,9 @@ int main(int argc, char* argv[]) {
         std::cerr << "usage: " << argv[0] << " <filename>";
         return EXIT_FAILURE;
     } else {
-        MatrixCellIntGraphFR* fr = 
-            NewFileReader< MatrixCellIntGraphFR >(argv[1]);
-        ColoredIntersectionGraph G(fr);
+        CellIntGraphFR* fr = 
+            NewFileReader< CellIntGraphFR >(argv[1]);
+        CellIntersectionGraph G(fr);
 
         Atoms A(&G);
         A.ComputeAtoms();

@@ -58,7 +58,7 @@ TEST(DimacsGraphFRTest, Integration) {
 }
 
 // Compares the adjacency list to the matrix representation
-TEST(MatrixCellIntGraphFRTest, Integration) {
+TEST(CellIntGraphFRTest, MatrixFile) {
     // Construct graph from matrix representation
     MockGraphFile mock_file;
     std::ifstream line_stream, eof_marker;
@@ -76,8 +76,8 @@ TEST(MatrixCellIntGraphFRTest, Integration) {
         .WillOnce(GraphFileInputLine("? 0 1 0 0 0", line_stream))
         .WillOnce(GraphFileInputLine("0 0 0 ? 0 0", line_stream))
         .WillOnce(ReturnRef(eof_marker));
-    chordalg::MatrixCellIntGraphFR* file_reader =
-        chordalg::NewFileReader< chordalg::MatrixCellIntGraphFR >(mock_file);
+    chordalg::CellIntGraphFR* file_reader =
+        chordalg::NewFileReader< chordalg::CellIntGraphFR >(mock_file);
     chordalg::Graph CIG(file_reader);
     delete file_reader;
     // Construct graph from adjacency list
@@ -87,7 +87,7 @@ TEST(MatrixCellIntGraphFRTest, Integration) {
 }
 
 // Compares the adjacency list to the matrix representation
-TEST(NexusMRPFRTest, Integration) {
+TEST(CellIntGraphFRTest, NexusMRPFile) {
     // Construct graph from matrix representation
     MockGraphFile mock_file;
     std::ifstream line_stream, eof_marker;
@@ -105,8 +105,8 @@ TEST(NexusMRPFRTest, Integration) {
         .WillOnce(GraphFileInputLine(";", line_stream))
         .WillOnce(GraphFileInputLine("End;", line_stream))
         .WillOnce(ReturnRef(eof_marker));
-    chordalg::NexusMRPFR* file_reader =
-        chordalg::NewFileReader< chordalg::NexusMRPFR >(mock_file);
+    chordalg::CellIntGraphFR* file_reader =
+        chordalg::NewFileReader< chordalg::CellIntGraphFR >(mock_file);
     chordalg::Graph CIG(file_reader);
     delete file_reader;
     // Construct graph from adjacency list

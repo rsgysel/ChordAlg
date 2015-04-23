@@ -62,7 +62,6 @@ FR* NewFileReader(GraphFile& file) {
     // ctor
     FR* fr_object = new FR(&file);
     fr_object->ReadFileOrDie();
-
     // type check FR. voided to prevent compiler warning
     FileReader* type_check = fr_object;
     (void) type_check;
@@ -92,9 +91,50 @@ class SortedAdjacencyListFR : public FileReader {
     void ReadFileOrDie();
 };  // SortedAdjacencyListFR
 
-class MatrixCellIntGraphFR : public FileReader {
+enum class FileType {
+    DIMACS,
+    MATRIX,
+    NEXUSMRP,       // Nexus Matrix rep w/ Parsimony format
+    SORTEDADJLIST
+};  // FileType
+
+typedef std::vector< std::vector< size_t > > CharacterMatrix;
+
+class CharacterIntGraphFR : public FileReader {
  public:
-    ~MatrixCellIntGraphFR();
+    CharacterIntGraphFR() = delete;
+    CharacterIntGraphFR(const CharacterIntGraphFR&) = delete;
+    void operator=(const CharacterIntGraphFR&) = delete;
+
+    virtual ~CharacterIntGraphFR();
+    std::vector< std::string > taxon_name() const {
+        return taxon_name_;
+    }
+ protected:
+    template< class FR > friend FR* NewFileReader(GraphFile&);
+    explicit CharacterIntGraphFR(GraphFile* file);
+    void ReadFileOrDie();
+    FileType GetFileType();
+    CharacterMatrix* ParseNexusMRP(size_t*);
+    CharacterMatrix* ParseMatrix(size_t*);
+    virtual void ComputeGraphData(const CharacterMatrix*, size_t) = 0;
+
+    int kMissingData() {
+        return -1;
+    }
+
+    std::string ParseNexusParameter(std::string, std::string) const;
+
+    std::vector< std::string > taxon_name_;
+};  // CharacterIntGraphFR
+
+class CellIntGraphFR : public CharacterIntGraphFR {
+ public:
+    CellIntGraphFR() = delete;
+    CellIntGraphFR(const CellIntGraphFR&) = delete;
+    void operator=(const CellIntGraphFR&) = delete;
+
+    virtual ~CellIntGraphFR();
 
     LexTrie* TakeSubsetFamily();
     std::vector< FiniteSet > subsets() const {
@@ -103,39 +143,15 @@ class MatrixCellIntGraphFR : public FileReader {
     std::vector< Multicolor > vertex_colors() const {
         return vertex_colors_;
     }
-
  protected:
+    template< class FR > friend FR* NewFileReader(GraphFile&);
+    explicit CellIntGraphFR(GraphFile* file);
+    void ComputeGraphData(const CharacterMatrix*, size_t);
+
     LexTrie* subset_family_;
     std::vector< FiniteSet > subsets_;
     std::vector< Multicolor > vertex_colors_;
-
-    template< class FR > friend FR* NewFileReader(GraphFile&);
-
-    explicit MatrixCellIntGraphFR(GraphFile* file) : FileReader(file) {}
-    void ReadFileOrDie();
-
-    int kMissingData() {
-        return -1;
-    }
-    void ComputeGraphData(std::vector< std::vector< int > >, int);
-};  // MatrixCellIntGraphFR
-
-class NexusMRPFR : public MatrixCellIntGraphFR {
- public:
-    ~NexusMRPFR() {}
-
-    std::vector< std::string > TaxonName() const {
-        return taxon_name_;
-    }
- private:
-    std::vector< std::string > taxon_name_;
-
-    template< class FR > friend FR* NewFileReader(GraphFile&);
-    explicit NexusMRPFR(GraphFile* file) : MatrixCellIntGraphFR(file) {}
-    void ReadFileOrDie();
-
-    std::string ParseParameter(std::string line, std::string parameter) const;
-};  // NexusMRPFR
+};  // CellIntGraphFR
 
 }  // namespace chordalg
 

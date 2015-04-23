@@ -43,15 +43,17 @@ const char* Nexus_unknown_symbol = "Format Error: unknown symbol";
 
 ////////////// ctor & dtors
 //
-FileReader::FileReader(GraphFile* file) : file_(file),
-                                          neighborhoods_(nullptr),
-                                          names_(nullptr) {
+FileReader::FileReader(GraphFile* file) :
+    file_(file),
+    neighborhoods_(nullptr),
+    names_(nullptr) {
     return;
 }
 
-FileReader::FileReader(std::string filename) : file_(new GraphFile(filename)),
-                                               neighborhoods_(nullptr),
-                                               names_(nullptr) {
+FileReader::FileReader(std::string filename) :
+    file_(new GraphFile(filename)),
+    neighborhoods_(nullptr),
+    names_(nullptr) {
     return;
 }
 
@@ -61,7 +63,22 @@ FileReader::~FileReader() {
     return;
 }
 
-MatrixCellIntGraphFR::~MatrixCellIntGraphFR() {
+CharacterIntGraphFR::CharacterIntGraphFR(GraphFile* file) :
+    FileReader(file) {
+    return;
+}
+
+CharacterIntGraphFR::~CharacterIntGraphFR() {
+    return;
+}
+
+CellIntGraphFR::CellIntGraphFR(GraphFile* file) :
+    CharacterIntGraphFR(file),
+    subset_family_(nullptr) {
+    return;
+}
+
+CellIntGraphFR::~CellIntGraphFR() {
     delete subset_family_;
     return;
 }
@@ -80,7 +97,7 @@ VertexNames* FileReader::TakeNames() {
     return temp;
 }
 
-LexTrie* MatrixCellIntGraphFR::TakeSubsetFamily() {
+LexTrie* CellIntGraphFR::TakeSubsetFamily() {
     LexTrie* temp = nullptr;
     std::swap(temp, subset_family_);
     return temp;
@@ -108,7 +125,7 @@ void DimacsGraphFR::ReadFileOrDie() {
     bool problem_line_seen = false;
     size_t n = 0, m = 0;
     std::string line;
-    std::set< std::pair<int, int> > edges;
+    std::set< std::pair<size_t, size_t> > edges;
     while (file_->GetLine(line)) {
         std::stringstream line_stream;
         std::string start_character, devnull;
@@ -232,16 +249,40 @@ void SortedAdjacencyListFR::ReadFileOrDie() {
     return;
 }
 
-void MatrixCellIntGraphFR::ReadFileOrDie() {
+void CharacterIntGraphFR::ReadFileOrDie() {
+    FileType file_type = GetFileType();
+    CharacterMatrix* M = nullptr;
+    size_t max_state = 0;
+    if (file_type == FileType::NEXUSMRP) {
+        M = ParseNexusMRP(&max_state);
+    } else if (file_type == FileType::MATRIX) {
+        M = ParseMatrix(&max_state);
+    } else {
+        std::cerr << "Unrecognized file type\n";
+        exit(EXIT_FAILURE);
+    }
+    ComputeGraphData(M, max_state);
+    delete M;
+    return;
+}
+
+FileType CharacterIntGraphFR::GetFileType() {
+    std::string line;
+    file_->GetLine(line); // Now check for nexus..
+    if (line.compare("#NEXUS") == 0) {
+        return FileType::NEXUSMRP;
+    } else {
+        return FileType::MATRIX;
+    }
+}
+
+CharacterMatrix* CharacterIntGraphFR::ParseMatrix(size_t* max_state) {
     std::string line, state;
     std::stringstream line_stream;
     int row_count = 0, col_count = 0, line_number = 0;
     std::map< std::string, Vertex > vertex_id;
     std::vector< std::list< std::string > > neighbor_names;
-    // skip first line
-    file_->GetLine(line);
-    line_stream.clear();
-    line_stream.str("");
+    // first line: read in GetFileType
     // second line: # of rows and # of columns
     file_->GetLine(line);
     line_stream << line;
@@ -253,9 +294,9 @@ void MatrixCellIntGraphFR::ReadFileOrDie() {
     line_stream.clear();
     line_stream.str("");  // reset line stream
     // extract matrix from file
-    std::vector< std::vector< int > > matrix(row_count,
-                                             std::vector< int >(col_count));
-    int i = 0, j = 0, maxstate = 0;
+    CharacterMatrix* M = 
+        new CharacterMatrix(row_count, std::vector< size_t >(col_count));
+    int i = 0, j = 0;
     while (file_->GetLine(line)) {
         AssertFormatOrDie(i < row_count, Matrix_too_many_rows);
         j = 0;
@@ -264,10 +305,10 @@ void MatrixCellIntGraphFR::ReadFileOrDie() {
             AssertFormatOrDie(j < col_count, Matrix_too_many_cols);
             if (state.compare("?") == 0 || state.compare("*") == 0 ||
                state.compare("-") == 0) {
-                matrix[i][j] = kMissingData();
+                (*M)[i][j] = kMissingData();
             } else {
-                matrix[i][j] = atoi(state.c_str());
-                maxstate = std::max(matrix[i][j], maxstate);
+                (*M)[i][j] = atoi(state.c_str());
+                *max_state = std::max((*M)[i][j], *max_state);
             }
             ++j;
         }
@@ -275,22 +316,26 @@ void MatrixCellIntGraphFR::ReadFileOrDie() {
         line_stream.str("");  // reset line stream
         ++i;
     }
-    ComputeGraphData(matrix, maxstate);
-    return;
+    // default taxon names
+    taxon_name_.resize(row_count);
+    for (int i = 0; i < row_count; ++i) {
+        taxon_name_[i] = std::to_string(i);
+    }
+    return M;
 }
 
-void MatrixCellIntGraphFR::ComputeGraphData(
-        std::vector< std::vector< int > > matrix, int maxstate) {
-    int row_count = matrix.size();
-    int col_count = matrix[0].size(), cell_count = 0;
+void CellIntGraphFR::ComputeGraphData(const CharacterMatrix* M,
+                                      size_t maxstate) {
+    size_t row_count = M->size();
+    size_t col_count = (*M)[0].size(), cell_count = 0;
     subset_family_ = new LexTrie(row_count);
     std::map< const LexTrieNode*, Vertex > cell_id;
-    std::map< std::string, Vertex> vertex_id;
+    std::map< std::string, Vertex > vertex_id;
     // subsets_[v] is the subset of the ground set for vertex v
-    for (int j = 0; j < col_count; ++j) {
+    for (size_t j = 0; j < col_count; ++j) {
         std::vector< FiniteSet > cells(maxstate + 1, FiniteSet());
-        for (int i = 0; i < row_count; ++i) {
-            int state = matrix[i][j];
+        for (size_t i = 0; i < row_count; ++i) {
+            int state = (*M)[i][j];
             if (state != kMissingData()) {
                 cells[state].push_back(i);
             }
@@ -302,11 +347,12 @@ void MatrixCellIntGraphFR::ComputeGraphData(
                 const LexTrieNode* node =
                         subset_family_->Insert< FiniteSet >(C, &new_cell);
                 if (new_cell) {
+                    // create new vertex
                     cell_id[node] = cell_count;
                     ++cell_count;
                     subsets_.push_back(FiniteSet(C));
                     vertex_colors_.push_back(Multicolor());
-                    int state = matrix[C[0]][j];
+                    size_t state = (*M)[C[0]][j];
                     std::stringstream name;
                     name << j << '#' << state;
                     vertex_id[name.str()] = cell_count;
@@ -316,7 +362,7 @@ void MatrixCellIntGraphFR::ComputeGraphData(
             }
         }
     }
-    int order = cell_count;
+    size_t order = cell_count;
     names_ = new VertexNames(order);
     for (auto p : vertex_id) {
         std::string name = p.first;
@@ -356,8 +402,8 @@ void MatrixCellIntGraphFR::ComputeGraphData(
     return;
 }
 
-std::string NexusMRPFR::ParseParameter(std::string line,
-                                       std::string parameter) const {
+std::string CharacterIntGraphFR::ParseNexusParameter(
+    std::string line, std::string parameter) const {
     std::string result;
     std::string delimeter_nospace = parameter + std::string("=");
     std::string delimeter_space = parameter + std::string(" = ");
@@ -387,30 +433,29 @@ std::string NexusMRPFR::ParseParameter(std::string line,
     return result;
 }
 
-void NexusMRPFR::ReadFileOrDie() {
+CharacterMatrix* CharacterIntGraphFR::ParseNexusMRP(size_t* max_state) {
     std::string line, state;
     std::stringstream parameter;
     size_t row_count = 0, col_count = 0;
     std::map< std::string, Vertex > vertex_id;
     std::vector< std::list< std::string > > neighbor_names;
-    // skip first two lines
-    file_->GetLine(line);
+    // skip second line (first line read in GetFileType)
     file_->GetLine(line);
     // third line: # of rows and # of columns
     file_->GetLine(line);
-    parameter << ParseParameter(line, "ntax");
+    parameter << ParseNexusParameter(line, "ntax");
     parameter >> row_count;
     parameter.clear();
     parameter.str("");
-    parameter << ParseParameter(line, "nchar");
+    parameter << ParseNexusParameter(line, "nchar");
     parameter >> col_count;
     // skip next two lines
     file_->GetLine(line);
     file_->GetLine(line);
     taxon_name_.resize(row_count);
     // extract matrix from file
-    std::vector< std::vector< int > > matrix(row_count,
-                                             std::vector< int >(col_count));
+    CharacterMatrix* M = 
+        new CharacterMatrix(row_count, std::vector< size_t >(col_count));
     size_t i = 0;
     while (file_->GetLine(line)) {
         if (line == std::string(";")) {
@@ -425,20 +470,20 @@ void NexusMRPFR::ReadFileOrDie() {
         for (size_t j = 0; j < row.size(); ++j) {
             AssertFormatOrDie(j < col_count, Nexus_too_many_cols);
             if (row[j] == '?' || row[j] == '*' || row[j] == '-') {
-                matrix[i][j] = kMissingData();
+                (*M)[i][j] = kMissingData();
             } else if (row[j] == '1') {
-                matrix[i][j] = 1;
+                (*M)[i][j] = 1;
             } else if (row[j] == '0') {
-                matrix[i][j] = 0;
+                (*M)[i][j] = 0;
             } else {
                 AssertFormatOrDie(false, Nexus_unknown_symbol);
             }
         }
         ++i;
     }
+    *max_state = 1;
     while (file_->GetLine(line)) {} // Finish processing input. For unit tests.
-    ComputeGraphData(matrix, 1);
-    return;
+    return M;
 }
 
 }  // namespace chordalg

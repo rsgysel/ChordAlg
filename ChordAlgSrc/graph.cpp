@@ -60,12 +60,6 @@ InducedSubgraph::InducedSubgraph(const Graph* G, Vertices U) :
     return;
 }
 
-Supergraph::Supergraph(const Graph* G, AdjacencyLists* a_lists) :
-    Graph(a_lists),
-    G_(G) {
-    return;
-}
-
 Graph::~Graph() {
     delete neighborhoods_;
     delete vertex_names_;

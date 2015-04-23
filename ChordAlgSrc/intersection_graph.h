@@ -16,15 +16,14 @@
 
 namespace chordalg {
 
-class ColoredIntersectionGraph : public Graph {
+class CellIntersectionGraph : public Graph {
  public:
-    ColoredIntersectionGraph() = delete;
-    ColoredIntersectionGraph(const ColoredIntersectionGraph&) = delete;
-    void operator=(const ColoredIntersectionGraph&) = delete;
+    CellIntersectionGraph() = delete;
+    CellIntersectionGraph(const CellIntersectionGraph&) = delete;
+    void operator=(const CellIntersectionGraph&) = delete;
 
-    explicit ColoredIntersectionGraph(MatrixCellIntGraphFR* M);
-    explicit ColoredIntersectionGraph(NexusMRPFR* M);
-    virtual ~ColoredIntersectionGraph();
+    explicit CellIntersectionGraph(CellIntGraphFR* M);
+    virtual ~CellIntersectionGraph();
 
     bool IsMonochromatic(Vertex, Vertex) const;
     bool IsMonochromatic(VertexPair) const;
@@ -62,9 +61,7 @@ class ColoredIntersectionGraph : public Graph {
     std::vector< Multicolor > vertex_colors_;
     LexTrie* subset_family_;
     std::vector< std::string > taxon_name_;
-
-    std::vector< std::string > DefaultTaxonNames(size_t n);
-};  // ColoredIntersectionGraph
+};  // CellIntersectionGraph
 
 }  // namespace chordalg
 

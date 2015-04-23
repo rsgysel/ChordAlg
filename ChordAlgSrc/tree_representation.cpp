@@ -86,7 +86,7 @@ void TreeRepresentation::NewickVisit(VertexSet& visited, Vertex v,
     return;
 }
 
-std::string TreeRepresentation::strPhyloNewick(const ColoredIntersectionGraph& cig,
+std::string TreeRepresentation::strPhyloNewick(const CellIntersectionGraph& cig,
                                                bool rooted) const {
     // DFS info
     std::string newick_tree;
@@ -136,7 +136,7 @@ std::string TreeRepresentation::strPhyloNewick(const ColoredIntersectionGraph& c
 void TreeRepresentation::PhyloNewickVisit(VertexSet& visited,
         Vertex v,
         std::string& newick_tree,
-        const ColoredIntersectionGraph& cig,
+        const CellIntersectionGraph& cig,
         std::vector< size_t >& taxon_clique_size) const {
     visited.insert(v);
     bool is_leaf = true;

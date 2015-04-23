@@ -28,8 +28,8 @@ int main(int argc, char* argv[]) {
         MMC_heuristic_usage(argv[0]);
         return EXIT_FAILURE;
     } else {
-        NexusMRPFR* graph_reader = NewFileReader<NexusMRPFR>(argv[1]);
-        ColoredIntersectionGraph G(graph_reader);
+        CellIntGraphFR* graph_reader = NewFileReader<CellIntGraphFR>(argv[1]);
+        CellIntersectionGraph G(graph_reader);
         ClassicElimination eo(&G, new DeficiencyCriterion());
         Supergraph triangulation(&G, eo.TriangNbhds());
         CliqueTree* ct = MCSCliqueTree(triangulation);
