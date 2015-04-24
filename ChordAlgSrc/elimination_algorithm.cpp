@@ -128,8 +128,8 @@ void EliminationAlgorithm::Elimination() {
 
 void EliminationAlgorithm::Eliminate(Vertex v) {
     if (parameters_->Classic()) {
-        for (VertexPair p : VertexPairs(MonotoneNbhd(v))) {
-            AddEdge(p);
+        for (VertexPair uv : VertexPairs(MonotoneNbhd(v))) {
+            AddEdge(uv);
         }
         return;
     } else {
@@ -149,23 +149,23 @@ void EliminationAlgorithm::Eliminate(Vertex v) {
 //////////////////////////
 // Edge and Fill Functions
 
-void EliminationAlgorithm::AddEdge(VertexPair p) {
-    if (!IsEdge(p)) {
-        fill_neighbors_[p.first].insert(p.second);
-        fill_neighbors_[p.second].insert(p.first);
-        fill_edges_.push_back(p);
+void EliminationAlgorithm::AddEdge(VertexPair uv) {
+    if (!IsEdge(uv)) {
+        fill_neighbors_[uv.first].insert(uv.second);
+        fill_neighbors_[uv.second].insert(uv.first);
+        fill_edges_.push_back(uv);
         ++fill_count_;
     }
     return;
 }
 
-bool EliminationAlgorithm::IsEdge(VertexPair p) {
-    return G_->HasEdge(p) || IsFillEdge(p);
+bool EliminationAlgorithm::IsEdge(VertexPair uv) {
+    return G_->HasEdge(uv) || IsFillEdge(uv);
 }
 
-bool EliminationAlgorithm::IsFillEdge(VertexPair p) {
-    return fill_neighbors_[p.first].find(p.second) !=
-           fill_neighbors_[p.first].end();
+bool EliminationAlgorithm::IsFillEdge(VertexPair uv) {
+    return fill_neighbors_[uv.first].find(uv.second) !=
+           fill_neighbors_[uv.first].end();
 }
 
 bool EliminationAlgorithm::IsRemoved(Vertex v) {
@@ -173,9 +173,9 @@ bool EliminationAlgorithm::IsRemoved(Vertex v) {
 }
 
 void EliminationAlgorithm::Saturate(Vertices U) {
-    for (VertexPair p : VertexPairs(U)) {
-        if (!IsEdge(p)) {
-            Vertex u = p.first, v = p.second;
+    for (VertexPair uv : VertexPairs(U)) {
+        if (!IsEdge(uv)) {
+            Vertex u = uv.first, v = uv.second;
             fill_neighbors_[u].insert(v);
             fill_neighbors_[v].insert(u);
         }
@@ -273,9 +273,9 @@ std::pair< Weight, Weight > EliminationAlgorithm::WeightOf(Vertex v) {
             parameters_->ObjectiveFn(deficiency_wt, separated_wt), deficiency_wt);
     } else {
         Weight wt = 0;
-        for (VertexPair p : VertexPairs(MonotoneNbhd(v))) {
-            if (!IsEdge(p)) {
-                wt += G_->FillCount(p);
+        for (VertexPair uv : VertexPairs(MonotoneNbhd(v))) {
+            if (!IsEdge(uv)) {
+                wt += G_->FillCount(uv);
             }
         }
         return std::pair< Weight, Weight >(parameters_->ObjectiveFn(wt), wt);

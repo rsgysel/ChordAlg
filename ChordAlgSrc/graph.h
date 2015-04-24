@@ -65,14 +65,14 @@ class Graph {
     virtual bool HasEdge(Vertex u, Vertex v) const {
         return is_edge_[u][v];
     }
-    virtual bool HasEdge(VertexPair p) const {
-        return HasEdge(p.first, p.second);
+    virtual bool HasEdge(VertexPair uv) const {
+        return HasEdge(uv.first, uv.second);
     }
     virtual Weight FillCount(Vertex u, Vertex v) const {
         return HasEdge(u, v) ? 0 : 1;
     }
-    virtual Weight FillCount(VertexPair p) const {
-        return FillCount(p.first, p.second);
+    virtual Weight FillCount(VertexPair uv) const {
+        return FillCount(uv.first, uv.second);
     }
     template< class Container >
     bool HasClique(Container set) const {
@@ -125,8 +125,8 @@ class InducedSubgraph : public Graph {
     Weight FillCount(Vertex u, Vertex v) const {
         return G_->FillCount(U_[u], U_[v]);
     }
-    Weight FillCount(VertexPair p) const {
-        return G_->FillCount(U_[p.first], U_[p.second]);
+    Weight FillCount(VertexPair uv) const {
+        return G_->FillCount(U_[uv.first], U_[uv.second]);
     }
     Vertex ParentGraph(Vertex v) const {
         return U_[v];
