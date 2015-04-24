@@ -107,6 +107,9 @@ class CharacterIntGraphFR : public FileReader {
     void operator=(const CharacterIntGraphFR&) = delete;
 
     virtual ~CharacterIntGraphFR();
+    std::vector< FiniteSet > subsets() const {
+        return subsets_;
+    }
     std::vector< std::string > taxon_name() const {
         return taxon_name_;
     }
@@ -117,7 +120,9 @@ class CharacterIntGraphFR : public FileReader {
     FileType GetFileType();
     CharacterMatrix* ParseNexusMRP(size_t*);
     CharacterMatrix* ParseMatrix(size_t*);
-    virtual void ComputeGraphData(const CharacterMatrix*, size_t) = 0;
+    virtual void ComputeGraphData(std::map< std::string, Vertex >);
+    virtual std::map< std::string, Vertex > TieSubsetsToVertices(
+        const CharacterMatrix* M, size_t maxstate) = 0;
 
     int kMissingData() {
         return -1;
@@ -125,8 +130,29 @@ class CharacterIntGraphFR : public FileReader {
 
     std::string ParseNexusParameter(std::string, std::string) const;
 
+    std::vector< FiniteSet > subsets_;
     std::vector< std::string > taxon_name_;
 };  // CharacterIntGraphFR
+
+class PartitionIntGraphFR : public CharacterIntGraphFR {
+ public:
+    PartitionIntGraphFR() = delete;
+    PartitionIntGraphFR(const PartitionIntGraphFR&) = delete;
+    void operator=(const PartitionIntGraphFR&) = delete;
+
+    virtual ~PartitionIntGraphFR();
+
+    std::vector< Color> vertex_color() const {
+        return vertex_color_;
+    }
+ protected:
+    template< class FR > friend FR* NewFileReader(GraphFile&);
+    explicit PartitionIntGraphFR(GraphFile* file);
+    std::map< std::string, Vertex > TieSubsetsToVertices(
+        const CharacterMatrix* M, size_t maxstate);
+
+    std::vector< Color > vertex_color_;
+};  // PartitionIntGraphFR
 
 class CellIntGraphFR : public CharacterIntGraphFR {
  public:
@@ -137,19 +163,16 @@ class CellIntGraphFR : public CharacterIntGraphFR {
     virtual ~CellIntGraphFR();
 
     LexTrie* TakeSubsetFamily();
-    std::vector< FiniteSet > subsets() const {
-        return subsets_;
-    }
     std::vector< Multicolor > vertex_colors() const {
         return vertex_colors_;
     }
  protected:
     template< class FR > friend FR* NewFileReader(GraphFile&);
     explicit CellIntGraphFR(GraphFile* file);
-    void ComputeGraphData(const CharacterMatrix*, size_t);
+    std::map< std::string, Vertex > TieSubsetsToVertices(
+        const CharacterMatrix* M, size_t maxstate);
 
     LexTrie* subset_family_;
-    std::vector< FiniteSet > subsets_;
     std::vector< Multicolor > vertex_colors_;
 };  // CellIntGraphFR
 

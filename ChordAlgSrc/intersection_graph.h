@@ -16,51 +16,68 @@
 
 namespace chordalg {
 
-class CellIntersectionGraph : public Graph {
+class CharacterIntersectionGraph : public Graph {
+ public:
+    CharacterIntersectionGraph() = delete;
+    CharacterIntersectionGraph(const CharacterIntersectionGraph&) = delete;
+    void operator=(const CharacterIntersectionGraph&) = delete;
+    
+    CharacterIntersectionGraph(CharacterIntGraphFR*);
+    virtual ~CharacterIntersectionGraph();
+
+    virtual Weight FillCount(Vertex, Vertex) const = 0;
+    Weight FillCount(VertexPair) const;
+    virtual bool IsMonochromatic(Vertex, Vertex) const = 0;
+    bool IsMonochromatic(VertexPair) const;
+
+    const FiniteSet& subset(Vertex) const;
+    const std::string taxon_name(size_t) const;
+    size_t taxa() const;
+    std::string strSubsets();
+
+ private:
+    std::vector< FiniteSet > subsets_;
+    std::vector< std::string > taxon_name_;
+};  // CharacterIntersectionGraph
+
+class PartitionIntersectionGraph : public CharacterIntersectionGraph {
+ public:
+    PartitionIntersectionGraph() = delete;
+    PartitionIntersectionGraph(const PartitionIntersectionGraph&) = delete;
+    void operator=(const PartitionIntersectionGraph&) = delete;
+
+    explicit PartitionIntersectionGraph(PartitionIntGraphFR*);
+    virtual ~PartitionIntersectionGraph();
+
+    Weight FillCount(Vertex, Vertex) const;
+    bool IsMonochromatic(Vertex, Vertex) const;
+    Color vertex_color(Vertex) const;
+ private:
+    std::vector< Color > vertex_color_;
+};  // PartitionIntersectionGraph
+
+class CellIntersectionGraph : public CharacterIntersectionGraph {
  public:
     CellIntersectionGraph() = delete;
     CellIntersectionGraph(const CellIntersectionGraph&) = delete;
     void operator=(const CellIntersectionGraph&) = delete;
 
-    explicit CellIntersectionGraph(CellIntGraphFR* M);
+    explicit CellIntersectionGraph(CellIntGraphFR*);
     virtual ~CellIntersectionGraph();
 
+    Weight FillCount(Vertex, Vertex) const;
     bool IsMonochromatic(Vertex, Vertex) const;
-    bool IsMonochromatic(VertexPair) const;
+    const Multicolor& vertex_color(Vertex) const;
+
     Multicolor CommonColors(Vertex, Vertex) const;
     Multicolor CommonColors(VertexPair) const;
     size_t CommonColorCount(Vertex, Vertex) const;
     size_t CommonColorCount(VertexPair) const;
-    const Multicolor& vertex_color(Vertex v) const {
-        return vertex_colors_[v];
-    }
-    Weight FillCount(Vertex u, Vertex v) const {
-        return CommonColorCount(u, v);
-    }
-    Weight FillCount(VertexPair p) const {
-        return FillCount(p.first, p.second);
-    }
-
-    std::string strSubsets();
-
-    const LexTrie* subset_family() const {
-        return subset_family_;
-    }
-    const FiniteSet& subset(Vertex v) const {
-        return subsets_[v];
-    }
-    const std::string& taxon_name(size_t e) const {
-        return taxon_name_[e];
-    }
-    size_t taxa() const {
-        return taxon_name_.size();
-    }
-
+    
+    const LexTrie* subset_family() const;
  private:
-    std::vector< FiniteSet > subsets_;
     std::vector< Multicolor > vertex_colors_;
     LexTrie* subset_family_;
-    std::vector< std::string > taxon_name_;
 };  // CellIntersectionGraph
 
 }  // namespace chordalg
