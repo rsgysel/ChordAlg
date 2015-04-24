@@ -115,14 +115,17 @@ class CharacterIntGraphFR : public FileReader {
     }
  protected:
     template< class FR > friend FR* NewFileReader(GraphFile&);
-    explicit CharacterIntGraphFR(GraphFile* file);
+    explicit CharacterIntGraphFR(GraphFile*);
+
     void ReadFileOrDie();
     FileType GetFileType();
+
     CharacterMatrix* ParseNexusMRP(size_t*);
     CharacterMatrix* ParseMatrix(size_t*);
-    virtual void ComputeGraphData(std::map< std::string, Vertex >);
-    virtual std::map< std::string, Vertex > TieSubsetsToVertices(
-        const CharacterMatrix* M, size_t maxstate) = 0;
+
+    virtual void ComputeGraphData();
+    virtual void TieSubsetsToVertices(const CharacterMatrix*, size_t);
+    virtual void AddVertex(FiniteSet, const CharacterMatrix*, size_t) = 0;
 
     int kMissingData() {
         return -1;
@@ -132,6 +135,8 @@ class CharacterIntGraphFR : public FileReader {
 
     std::vector< FiniteSet > subsets_;
     std::vector< std::string > taxon_name_;
+
+    std::map< std::string, Vertex > vertex_id_;
 };  // CharacterIntGraphFR
 
 class PartitionIntGraphFR : public CharacterIntGraphFR {
@@ -147,9 +152,9 @@ class PartitionIntGraphFR : public CharacterIntGraphFR {
     }
  protected:
     template< class FR > friend FR* NewFileReader(GraphFile&);
-    explicit PartitionIntGraphFR(GraphFile* file);
-    std::map< std::string, Vertex > TieSubsetsToVertices(
-        const CharacterMatrix* M, size_t maxstate);
+    explicit PartitionIntGraphFR(GraphFile*);
+
+    void AddVertex(FiniteSet, const CharacterMatrix*, size_t);
 
     std::vector< Color > vertex_color_;
 };  // PartitionIntGraphFR
@@ -168,12 +173,14 @@ class CellIntGraphFR : public CharacterIntGraphFR {
     }
  protected:
     template< class FR > friend FR* NewFileReader(GraphFile&);
-    explicit CellIntGraphFR(GraphFile* file);
-    std::map< std::string, Vertex > TieSubsetsToVertices(
-        const CharacterMatrix* M, size_t maxstate);
+    explicit CellIntGraphFR(GraphFile*);
+
+    void AddVertex(FiniteSet, const CharacterMatrix*, size_t);
 
     LexTrie* subset_family_;
     std::vector< Multicolor > vertex_colors_;
+
+    std::map< const LexTrieNode*, Vertex > cell_id_;
 };  // CellIntGraphFR
 
 }  // namespace chordalg
