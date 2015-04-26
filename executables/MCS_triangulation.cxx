@@ -11,8 +11,7 @@ int main(int argc, char** argv) {
         std::cerr << "usage: " << argv[0] << " <filename>" << std::endl;
         return EXIT_FAILURE;
     } else {
-        SortedAdjacencyListFR* fr =
-            NewFileReader< SortedAdjacencyListFR >(argv[1]);
+        GraphFR* fr = NewFileReader< GraphFR >(argv[1]);
         Graph G(fr);
         EliminationOrder* eo = MCS(G);
         eo->ComputeFill();

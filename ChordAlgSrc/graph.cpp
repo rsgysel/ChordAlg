@@ -16,7 +16,7 @@ Graph::Graph(Graph& H) :
     return;
 }
 
-Graph::Graph(FileReader* fr) :
+Graph::Graph(GraphFR* fr) :
     neighborhoods_(fr->TakeNeighborhoods()),
     vertex_names_(fr->TakeNames()),
     order_(neighborhoods_->size()),
@@ -162,7 +162,7 @@ std::string Graph::str() const {
         for (Vertex u : N(v)) {
             Gstr += name(u) + ' ';
         }
-        Gstr.erase(Gstr.end() - 1, Gstr.end());
+        Gstr.pop_back();
         Gstr += '\n';
     }
     return Gstr;
@@ -188,7 +188,7 @@ std::string Graph::str(const Vertices& U) const {
         for (Vertex v : U) {
             Ustr += name(v) + ' ';
         }
-        Ustr.erase(Ustr.end() - 1, Ustr.end());
+        Ustr.pop_back();
         Ustr += '\n';
         return Ustr;
     }

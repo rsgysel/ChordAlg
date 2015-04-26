@@ -15,11 +15,14 @@
 #include <string>
 #include <vector>
 
+#include "chordalg_string.h"
 #include "graph_file.h"
 #include "lex_trie.h"
 #include "vertices.h"
 
 namespace chordalg {
+
+typedef std::vector< std::list< std::string > > StringAdjLists;
 
 // Abstract class used to read files for graphs.
 // To design a file reader class ClassFR, include the following:
@@ -28,29 +31,38 @@ namespace chordalg {
 //      2) private ReadFileOrDie() method. you must close file_stream_ here
 //      3) friend access to factory method template< class FR > friend FR*
 //          NewFileReader(std::string);
-class FileReader {
+class GraphFR {
  public:
-    FileReader() = delete;
-    virtual ~FileReader();
+    GraphFR() = delete;
+    GraphFR(const GraphFR&) = delete;
+    void operator=(const GraphFR&) = delete;
+    virtual ~GraphFR();
 
     AdjacencyLists* TakeNeighborhoods();
     VertexNames* TakeNames();
  protected:
-    explicit FileReader(GraphFile* file);
-    explicit FileReader(std::string filename);
-    inline void AssertFormatOrDie(bool, std::string) const;
+    // construction and initialization deferred to NewFileReader
+    template< class FR > friend FR* NewFileReader(GraphFile& file);
+    explicit GraphFR(GraphFile* file);
+    explicit GraphFR(std::string filename);
+
+    virtual void ReadFileOrDie();
+    void ComputeGraphData(const StringAdjLists*);
+    void ComputeNames(size_t);
+
+    void ParseDimacs(StringAdjLists*);
+    void ParseAdjList(StringAdjLists*);
 
     GraphFile* file_;
     AdjacencyLists* neighborhoods_;
     VertexNames* names_;
- private:
-    // construction and initialization deferred to NewFileReader
-    template< class FR > friend FR* NewFileReader(GraphFile& file);
-    virtual void ReadFileOrDie() = 0;
-};  // FileReader
 
-// FR must be derived from FileReader
-//
+    std::map< std::string, Vertex > vertex_id_;
+};  // GraphFR
+
+//////////////////////////////////
+// FR must be derived from GraphFR
+
 template< class FR >
 FR* NewFileReader(std::string file_name) {
     GraphFile file(file_name);
@@ -63,44 +75,37 @@ FR* NewFileReader(GraphFile& file) {
     FR* fr_object = new FR(&file);
     fr_object->ReadFileOrDie();
     // type check FR. voided to prevent compiler warning
-    FileReader* type_check = fr_object;
+    GraphFR* type_check = fr_object;
     (void) type_check;
     return fr_object;
 }
 
-class DimacsGraphFR : public FileReader {
+class CharacterMatrix {
  public:
-    ~DimacsGraphFR() {}
+    CharacterMatrix() = delete;
+    CharacterMatrix(const CharacterMatrix&) = delete;
+    void operator=(const CharacterMatrix&) = delete;
+
+    CharacterMatrix(size_t, size_t);
+    CharacterMatrix(size_t, size_t, size_t);
+
+    std::vector< size_t >& operator[](size_t);
+    const std::vector< size_t >& operator[](size_t i) const;
+
+    void set_max_states(size_t);
+    size_t cols() const;
+    size_t rows() const;
+    size_t max_states() const;
+    static size_t kMissingData();
+    std::string str() const;
  private:
-    template< class FR > friend FR* NewFileReader(GraphFile&);
-    explicit DimacsGraphFR(GraphFile* file) : FileReader(file) {}
-    void ReadFileOrDie();
-};  // DimacsGraphFR
+    std::vector< std::vector< size_t > > M_;
+    size_t cols_;
+    size_t rows_;
+    size_t max_states_;
+};  // CharacterMatrix
 
-// FileReader for sorted adjacency list (.sal) files having format:
-//      Line 1: non-negative integer denoting the number of vertices
-//      Line i>1: i-1, representing vertex i-1, followed by its neighbors as
-//          sorted integers delimited by whitespace
-class SortedAdjacencyListFR : public FileReader {
- public:
-    ~SortedAdjacencyListFR() {}
-
- private:
-    template< class FR > friend FR* NewFileReader(GraphFile&);
-    explicit SortedAdjacencyListFR(GraphFile* file) : FileReader(file) {}
-    void ReadFileOrDie();
-};  // SortedAdjacencyListFR
-
-enum class FileType {
-    DIMACS,
-    MATRIX,
-    NEXUSMRP,       // Nexus Matrix rep w/ Parsimony format
-    SORTEDADJLIST
-};  // FileType
-
-typedef std::vector< std::vector< size_t > > CharacterMatrix;
-
-class CharacterIntGraphFR : public FileReader {
+class CharacterIntGraphFR : public GraphFR {
  public:
     CharacterIntGraphFR() = delete;
     CharacterIntGraphFR(const CharacterIntGraphFR&) = delete;
@@ -115,28 +120,23 @@ class CharacterIntGraphFR : public FileReader {
     }
  protected:
     template< class FR > friend FR* NewFileReader(GraphFile&);
+
     explicit CharacterIntGraphFR(GraphFile*);
-
     void ReadFileOrDie();
-    FileType GetFileType();
 
-    CharacterMatrix* ParseNexusMRP(size_t*);
-    CharacterMatrix* ParseMatrix(size_t*);
 
-    virtual void ComputeGraphData();
-    virtual void TieSubsetsToVertices(const CharacterMatrix*, size_t);
+    void ComputeGraphData();
+    void TieSubsetsToVertices(const CharacterMatrix*);
     virtual void AddVertex(FiniteSet, const CharacterMatrix*, size_t) = 0;
 
-    int kMissingData() {
-        return -1;
-    }
+    CharacterMatrix* ParseNexusMRP();
+    CharacterMatrix* ParseMatrix();
 
     std::string ParseNexusParameter(std::string, std::string) const;
 
     std::vector< FiniteSet > subsets_;
     std::vector< std::string > taxon_name_;
 
-    std::map< std::string, Vertex > vertex_id_;
 };  // CharacterIntGraphFR
 
 class PartitionIntGraphFR : public CharacterIntGraphFR {

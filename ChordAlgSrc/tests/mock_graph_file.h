@@ -16,7 +16,13 @@
 class MockGraphFile : public chordalg::GraphFile {
  public:
     MockGraphFile() {}
+    MockGraphFile(chordalg::FileType file_type) : chordalg::GraphFile(file_type) {}
     ~MockGraphFile() {}
+
+    void set_file_type(chordalg::FileType file_type) {
+        file_type_ = file_type;
+    }
+
     MOCK_METHOD1(GetLine, std::istream&(std::string& str));
 };  // MockGraphFile
 

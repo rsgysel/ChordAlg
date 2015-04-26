@@ -10,61 +10,47 @@
 
 namespace chordalg {
 
-// Format error messages
-// DimacsFileReader
-const char* Dimacs_problem_line_count =
-    "Format Error: Only one problem line allowed";
-const char* Dimacs_problem_line_first =
-    "Format Error: a problem line must occur before any edge line";
-const char* Dimacs_duplicate_edge =
-    "Format Error: duplicated edge(s) detected";
-const char* Dimacs_unknown_character =
-    "Format Error: line(s) detected that start with unrecognized format";
-// FileReader
-const char* File_first_line_format =
-    "Format Error: First line must be a non-negative integer denoting the "
-    "number of vertices";
-const char* File_first_int_format =
-    "Format Error: Line i must start with i-2 for i > 1";
-const char* File_too_many_lines =
-    "Format Error: Too many lines; first line specifies number of lines "
-    "(vertices)";
-// MatrixCellIntGraphReder
-const char* Matrix_first_line_format =
-    "Format Error: First line must be two non-negative integer denoting the "
-    "number of rows and columns";
-const char* Matrix_too_many_cols = "Format Error: Too many columns";
-const char* Matrix_too_many_rows = "Format Error: Too many rows";
-// NexusMRPFR
-const char* Nexus_too_many_cols = "Format Error: Too many columns";
-const char* Nexus_too_many_rows = "Format Error: Too many rows";
-const char* Nexus_unknown_symbol = "Format Error: unknown symbol";
-
-
 //////////////////
 // c'tors & d'tors
-FileReader::FileReader(GraphFile* file) :
+
+GraphFR::GraphFR(GraphFile* file) :
     file_(file),
     neighborhoods_(nullptr),
     names_(nullptr) {
     return;
 }
 
-FileReader::FileReader(std::string filename) :
+GraphFR::GraphFR(std::string filename) :
     file_(new GraphFile(filename)),
     neighborhoods_(nullptr),
     names_(nullptr) {
     return;
 }
 
-FileReader::~FileReader() {
+GraphFR::~GraphFR() {
     delete neighborhoods_;
     delete names_;
     return;
 }
 
+CharacterMatrix::CharacterMatrix(size_t rows, size_t cols) :
+    M_(rows, std::vector< size_t >(cols)),
+    cols_(cols),
+    rows_(rows),
+    max_states_(0) {
+    return;
+}
+
+CharacterMatrix::CharacterMatrix(size_t rows, size_t cols, size_t max_states) :
+    M_(rows, std::vector< size_t >(cols)),
+    cols_(cols),
+    rows_(rows),
+    max_states_(max_states) {
+    return;
+}
+
 CharacterIntGraphFR::CharacterIntGraphFR(GraphFile* file) :
-    FileReader(file) {
+    GraphFR(file) {
     return;
 }
 
@@ -93,15 +79,63 @@ CellIntGraphFR::~CellIntGraphFR() {
 }
 
 //////////////////
+// CharacterMatrix
+
+std::vector< size_t >& CharacterMatrix::operator[](size_t i) {
+    return M_[i];
+}
+
+const std::vector< size_t >& CharacterMatrix::operator[](size_t i) const {
+    return M_[i];
+}
+
+size_t CharacterMatrix::cols() const {
+    return cols_;
+}
+
+size_t CharacterMatrix::rows() const {
+    return rows_;
+}
+
+void CharacterMatrix::set_max_states(size_t max_states) {
+    max_states_ = max_states;
+}
+
+size_t CharacterMatrix::max_states() const {
+    return max_states_;
+}
+
+size_t CharacterMatrix::kMissingData() {
+    return SIZE_MAX;
+}
+
+std::string CharacterMatrix::str() const {
+    std::string str = std::to_string(rows_) + " "
+                    + std::to_string(cols_) + "\n";
+    for (auto row : M_) {
+        for (auto val : row) {
+            if (val == kMissingData()) {
+                str += "? ";
+            } else {
+                str += std::to_string(val) + " ";
+            }
+        }
+        str.pop_back();
+        str += "\n";
+    }
+    return str;
+}
+
+//////////////////
 // data for graphs
 
-AdjacencyLists* FileReader::TakeNeighborhoods() {
+AdjacencyLists* GraphFR::TakeNeighborhoods() {
     AdjacencyLists* temp = nullptr;
     std::swap(temp, neighborhoods_);
     return temp;
 }
 
-VertexNames* FileReader::TakeNames() {
+VertexNames* GraphFR::TakeNames() {
     VertexNames* temp = nullptr;
     std::swap(temp, names_);
     return temp;
@@ -116,319 +150,109 @@ LexTrie* CellIntGraphFR::TakeSubsetFamily() {
 //////////////////
 // file processing
 
-// encapsulates assert or die with error msg
-inline void FileReader::AssertFormatOrDie(bool assertion,
-                                          std::string errormsg) const {
-    if (!assertion) {
-        std::cerr << errormsg << std::endl;
-        exit(EXIT_FAILURE);
-    }
-    return;
-}
-
-// FileReader for files in Dimacs Format:
-// c This is a comment line
-// p FORMAT NODES EDGES // we ignore FORMAT, NODES = number of nodes, etc.
-// e U V // edge descriptors: (U,V) = e is an edge of G. not to be duplicated
-// with e V U. U and V are integers in 1, 2, ..., n
-void DimacsGraphFR::ReadFileOrDie() {
-    bool problem_line_seen = false;
-    size_t n = 0, m = 0;
-    std::string line;
-    std::set< std::pair<size_t, size_t> > edges;
-    while (file_->GetLine(line)) {
-        std::stringstream line_stream;
-        std::string start_character, devnull;
-        line_stream << line;
-        line_stream >> start_character;
-        if (start_character == "c") {
-            continue;
-        } else if (start_character == "p") {
-            AssertFormatOrDie(!problem_line_seen, Dimacs_problem_line_count);
-            problem_line_seen = true;
-            line_stream << line;
-            line_stream >> devnull;
-            line_stream >> n;
-            line_stream >> m;
-        } else if (start_character == "e") {
-            AssertFormatOrDie(problem_line_seen, Dimacs_problem_line_first);
-            size_t u, v;
-            line_stream << line;
-            line_stream >> u;
-            line_stream >> v;
-            if (u < 1 || v < 1 || u > n || v > n || u == v) {
-                // Die, invalid range
-                std::cerr << "Dimacs graph file format error: invalid vertex";
-                std::cerr << "range" << std::endl;
-                exit(EXIT_FAILURE);
-            }
-            if ( u < v ) {
-                std::swap(u, v);
-            }
-            std::pair<size_t, size_t> e = std::pair<size_t, size_t>(u, v);
-            AssertFormatOrDie(edges.find(e) == edges.end(),
-                              Dimacs_duplicate_edge);
-            edges.insert(e);
-        } else {
-            AssertFormatOrDie(line.empty(), Dimacs_unknown_character);
-        }
-    }
-    // initialize the adjacency lists for the graph
-    neighborhoods_ = new AdjacencyLists;
-    // create empty neighborhoods
-    neighborhoods_->resize(n);
-    // initialize vertex names
-    names_ = new VertexNames;
-    names_->resize(n);
-    for (size_t i = 0; i < n; ++i) {
-        std::stringstream ss;
-        ss << i + 1;
-        (*names_)[i] = ss.str();
-    }
-    // get neighbors from edge set
-    std::vector< std::list< size_t > > neighbors;
-    neighbors.resize(n);
-    for (std::pair<size_t, size_t> e : edges) {
-        size_t u = e.first;
-        size_t v = e.second;
-        neighbors[u - 1].push_back(v - 1);
-        neighbors[v - 1].push_back(u - 1);
-    }
-
-    // turn string representation into vertex representation
-    for (size_t i = 0; i < n; ++i) {
-        Vertices* nbhd = &(*neighborhoods_)[i];
-        for (size_t v : neighbors[i]) {
-            nbhd->add(v);
-        }
-        std::sort(nbhd->begin(), nbhd->end());
-    }
-    return;
-}
-
-// FileReader for files in the following format:
-// Line 1: non-negative integer denoting the number of vertices
-// Line i>1: i-1, representing vertex i-1, followed by its neighbors as sorted
-// integers delimited by whitespace
-void SortedAdjacencyListFR::ReadFileOrDie() {
-    std::string line, vertex, neighbor;
-    std::stringstream line_stream;
-    int order, line_number = 0;
-    std::map< std::string, Vertex > vertex_id;
-    std::vector< std::list< std::string > > neighbor_names;
-    // process first line, consisting of the graphs order
-    file_->GetLine(line);
-    line_stream << line;  // grab line into stream
-    line_stream >> order;  // parse piece up to whitespace
-    AssertFormatOrDie(0 <= order, File_first_line_format);
-    line_number++;
-    line_stream.clear();
-    line_stream.str("");  // reset line stream
-    neighbor_names.resize(order);
-    // initialize the adjacency lists for the graph
-    neighborhoods_ = new AdjacencyLists;
-    neighborhoods_->resize(order);   // create empty neighborhoods
-    // initialize vertex names
-    names_ = new VertexNames;
-    names_->resize(order);
-    int vertex_count = 0;
-    while (file_->GetLine(line)) {
-        AssertFormatOrDie(vertex_count < order, File_too_many_lines);
-        line_stream << line;
-        line_stream >> vertex;
-        // assign name
-        (*names_)[vertex_count] = vertex;
-        vertex_id[vertex] = vertex_count;
-        while (line_stream >> neighbor) {
-            neighbor_names[vertex_count].push_back(neighbor);
-        }
-        line_number++;
-        vertex_count++;
-        line_stream.clear();
-        line_stream.str("");  // reset line stream
-    }
-    // turn string representation into vertex representation
-    for (int i = 0; i < order; ++i) {
-        Vertices* nbhd = &(*neighborhoods_)[i];
-        for (std::string neighbor : neighbor_names[i]) {
-            Vertex v = vertex_id[neighbor];
-            nbhd->add(v);
-        }
-        std::sort(nbhd->begin(), nbhd->end());
-    }
-    return;
-}
-
-void CharacterIntGraphFR::ReadFileOrDie() {
-    FileType file_type = GetFileType();
-    CharacterMatrix* M = nullptr;
-    size_t max_state = 0;
-    if (file_type == FileType::NEXUSMRP) {
-        M = ParseNexusMRP(&max_state);
-    } else if (file_type == FileType::MATRIX) {
-        M = ParseMatrix(&max_state);
+void GraphFR::ReadFileOrDie() {
+    FileType file_type = file_->file_type();
+    StringAdjLists* adjacency_lists = new StringAdjLists();
+    if (file_type == FileType::ADJLIST) {
+        ParseAdjList(adjacency_lists);
+    } else if (file_type == FileType::DIMACS) {
+        ParseDimacs(adjacency_lists);
     } else {
         std::cerr << "Unrecognized file type\n";
         exit(EXIT_FAILURE);
     }
-    TieSubsetsToVertices(M, max_state);
+    ComputeGraphData(adjacency_lists);
+    delete adjacency_lists;
+    return;
+}
+
+void CharacterIntGraphFR::ReadFileOrDie() {
+    FileType file_type = file_->file_type();
+    CharacterMatrix* M = nullptr;
+    if (file_type == FileType::NEXUSMRP) {
+        M = ParseNexusMRP();
+    } else if (file_type == FileType::CHARACTERMATRIX) {
+        M = ParseMatrix();
+    } else {
+        std::cerr << "Unrecognized file type\n";
+        exit(EXIT_FAILURE);
+    }
+    TieSubsetsToVertices(M);
     ComputeGraphData();
     delete M;
     return;
 }
 
-FileType CharacterIntGraphFR::GetFileType() {
-    std::string line;
-    file_->GetLine(line); // Now check for nexus..
-    if (line.compare("#NEXUS") == 0) {
-        return FileType::NEXUSMRP;
-    } else {
-        return FileType::MATRIX;
+void GraphFR::ComputeGraphData(
+    const StringAdjLists* adjacency_lists) {
+    // String to Vertices
+    neighborhoods_ = new AdjacencyLists;
+    size_t order = adjacency_lists->size();
+    ComputeNames(order);
+    neighborhoods_->resize(order);
+    for (size_t i = 0; i < order; ++i) {
+        Vertices* nbhd = &(*neighborhoods_)[i];
+        for (std::string neighbor : (*adjacency_lists)[i]) {
+            Vertex v = vertex_id_[neighbor];
+            nbhd->add(v);
+        }
+        std::sort(nbhd->begin(), nbhd->end());
     }
 }
 
-CharacterMatrix* CharacterIntGraphFR::ParseMatrix(size_t* max_state) {
-    std::string line, state;
-    std::stringstream line_stream;
-    int row_count = 0, col_count = 0, line_number = 0;
-    std::map< std::string, Vertex > vertex_id;
-    std::vector< std::list< std::string > > neighbor_names;
-    // first line: read in GetFileType
-    // second line: # of rows and # of columns
-    file_->GetLine(line);
-    line_stream << line;
-    line_stream >> row_count;
-    line_stream >> col_count;
-    AssertFormatOrDie(0 <= row_count, Matrix_first_line_format);
-    AssertFormatOrDie(0 <= col_count, Matrix_first_line_format);
-    line_number++;
-    line_stream.clear();
-    line_stream.str("");  // reset line stream
-    // extract matrix from file
-    CharacterMatrix* M = 
-        new CharacterMatrix(row_count, std::vector< size_t >(col_count));
-    int i = 0, j = 0;
-    while (file_->GetLine(line)) {
-        AssertFormatOrDie(i < row_count, Matrix_too_many_rows);
-        j = 0;
-        line_stream << line;
-        while (line_stream >> state) {
-            AssertFormatOrDie(j < col_count, Matrix_too_many_cols);
-            if (state.compare("?") == 0 || state.compare("*") == 0 ||
-               state.compare("-") == 0) {
-                (*M)[i][j] = kMissingData();
-            } else {
-                (*M)[i][j] = atoi(state.c_str());
-                *max_state = std::max((*M)[i][j], *max_state);
-            }
-            ++j;
-        }
-        line_stream.clear();
-        line_stream.str("");  // reset line stream
-        ++i;
+void GraphFR::ComputeNames(size_t order) {
+    names_ = new VertexNames(order);
+    for (auto p : vertex_id_) {
+        std::string name = p.first;
+        Vertex v = p.second;
+        (*names_)[v] = name;
     }
-    // default taxon names
-    taxon_name_.resize(row_count);
-    for (int i = 0; i < row_count; ++i) {
-        taxon_name_[i] = std::to_string(i);
-    }
-    return M;
-}
+    return;
+}   
 
-std::string CharacterIntGraphFR::ParseNexusParameter(
-    std::string line, std::string parameter) const {
-    std::string result;
-    std::string delimeter_nospace = parameter + std::string("=");
-    std::string delimeter_space = parameter + std::string(" = ");
-    std::stringstream ss;
-    if (line.find(delimeter_nospace) != std::string::npos) {
-        std::string right_half = line.substr(line.find(delimeter_nospace) +
-                                             delimeter_nospace.size());
-        if (right_half[right_half.size() - 1] == ';') {
-            right_half.erase(right_half.end() - 1);
+void CharacterIntGraphFR::ComputeGraphData() {
+    size_t order = subsets_.size();
+    ComputeNames(order);
+    neighborhoods_ = new AdjacencyLists(order);
+    Vertex v = 0;
+    size_t rows = taxon_name_.size();
+    std::vector< VertexVector > taxon_clique(rows);
+    for (FiniteSet& C : subsets_) {
+        for (size_t t : C) {
+            taxon_clique[t].push_back(v);
         }
-        ss << right_half;
-        ss >> result;
-    } else if (line.find(delimeter_space) != std::string::npos) {
-        std::string right_half = line.substr(line.find(delimeter_space) +
-                                             delimeter_space.size());
-        if (right_half[right_half.size() - 1] == ';') {
-            right_half.erase(right_half.end() - 1);
-        }
-        ss << right_half;
-        ss >> result;
-    } else {
-        std::cerr << "Error in Nexus file format, cannot find '";
-        std::cerr << delimeter_nospace << "' or '" << delimeter_space << "'";
-        std::cerr << std::endl;
-        exit(EXIT_FAILURE);
+        v++;
     }
-    return result;
-}
-
-CharacterMatrix* CharacterIntGraphFR::ParseNexusMRP(size_t* max_state) {
-    std::string line, state;
-    std::stringstream parameter;
-    size_t row_count = 0, col_count = 0;
-    std::map< std::string, Vertex > vertex_id;
-    std::vector< std::list< std::string > > neighbor_names;
-    // skip second line (first line read in GetFileType)
-    file_->GetLine(line);
-    // third line: # of rows and # of columns
-    file_->GetLine(line);
-    parameter << ParseNexusParameter(line, "ntax");
-    parameter >> row_count;
-    parameter.clear();
-    parameter.str("");
-    parameter << ParseNexusParameter(line, "nchar");
-    parameter >> col_count;
-    // skip next two lines
-    file_->GetLine(line);
-    file_->GetLine(line);
-    taxon_name_.resize(row_count);
-    // extract matrix from file
-    CharacterMatrix* M = 
-        new CharacterMatrix(row_count, std::vector< size_t >(col_count));
-    size_t i = 0;
-    while (file_->GetLine(line)) {
-        if (line == std::string(";")) {
-            break;
-        }
-        AssertFormatOrDie(i < row_count, Nexus_too_many_rows);
-        std::stringstream line_stream;
-        line_stream << line;
-        line_stream >> taxon_name_[i];
-        std::string row;
-        line_stream >> row;
-        for (size_t j = 0; j < row.size(); ++j) {
-            AssertFormatOrDie(j < col_count, Nexus_too_many_cols);
-            if (row[j] == '?' || row[j] == '*' || row[j] == '-') {
-                (*M)[i][j] = kMissingData();
-            } else if (row[j] == '1') {
-                (*M)[i][j] = 1;
-            } else if (row[j] == '0') {
-                (*M)[i][j] = 0;
-            } else {
-                AssertFormatOrDie(false, Nexus_unknown_symbol);
+    std::map< VertexPair, bool > edges;
+    for (VertexVector V : taxon_clique) {
+        for (Vertex v : V) {
+            for (Vertex u : V) {
+                if (u < v) {
+                    edges[VertexPair(u, v)] = true;
+                }
             }
         }
-        ++i;
     }
-    *max_state = 1;
-    while (file_->GetLine(line)) {} // Finish processing input. For unit tests.
-    return M;
+    for (std::pair< VertexPair, bool > p : edges) {
+        VertexPair e = p.first;
+        Vertex u = e.first, v = e.second;
+        (*neighborhoods_)[u].add(v);
+        (*neighborhoods_)[v].add(u);
+    }
+    for (Vertices& V : *neighborhoods_) {
+        std::sort(V.begin(), V.end());
+    }
+    return;
 }
 
-void CharacterIntGraphFR::TieSubsetsToVertices(
-    const CharacterMatrix* M, 
-    size_t maxstate) {
-    size_t row_count = M->size();
-    size_t col_count = (*M)[0].size();
-    for (size_t j = 0; j < col_count; ++j) {
-        std::vector< FiniteSet > cells(maxstate + 1, FiniteSet());
-        for (size_t i = 0; i < row_count; ++i) {
-            int state = (*M)[i][j];
-            if (state != kMissingData()) {
+void CharacterIntGraphFR::TieSubsetsToVertices(const CharacterMatrix* M) { 
+    size_t rows = M->rows();
+    size_t cols = M->cols();
+    for (size_t j = 0; j < cols; ++j) {
+        std::vector< FiniteSet > cells(M->max_states(), FiniteSet());
+        for (size_t i = 0; i < rows; ++i) {
+            size_t state = (*M)[i][j];
+            if (state != M->kMissingData()) {
                 cells[state].push_back(i);
             }
         }
@@ -460,7 +284,7 @@ void CellIntGraphFR::AddVertex(
     size_t col) {
     if (!C.empty()) {
         if(!subset_family_) {
-            subset_family_ = new LexTrie(M->size());
+            subset_family_ = new LexTrie(M->rows());
         }
         bool new_cell;
         std::sort(C.begin(), C.end());
@@ -481,45 +305,167 @@ void CellIntGraphFR::AddVertex(
     return;
 }
 
-void CharacterIntGraphFR::ComputeGraphData() {
-    size_t order = subsets_.size();
-    names_ = new VertexNames(order);
-    for (auto p : vertex_id_) {
-        std::string name = p.first;
-        Vertex v = p.second;
-        (*names_)[v] = name;
-    }
+////////////////////////
+// File-specific Parsers
 
-    neighborhoods_ = new AdjacencyLists(order);
-    Vertex v = 0;
-
-    std::vector< VertexVector > taxon_clique(taxon_name_.size());
-    for (FiniteSet& C : subsets_) {
-        for (size_t t : C) {
-            taxon_clique[t].push_back(v);
-        }
-        v++;
-    }
-    std::map< VertexPair, bool > edges;
-    for (VertexVector V : taxon_clique) {
-        for (Vertex v : V) {
-            for (Vertex u : V) {
-                if (u < v) {
-                    edges[VertexPair(u, v)] = true;
+// Dimacs Format:
+// c This is a comment line
+// p FORMAT NODES EDGES // we ignore FORMAT, NODES = number of nodes, etc.
+// e U V // edge descriptors: (U,V) = e is an edge of G. not to be duplicated
+// with e V U. U and V are integers in 1, 2, ..., n
+void GraphFR::ParseDimacs(
+    StringAdjLists* adjacency_lists) {
+    size_t order;
+    std::string line;
+    while (file_->GetLine(line)) {
+        StringTokens line_tokens = Split(line, " \t");
+        switch (line_tokens[0][0]) {
+            case 'c' : {
+                break;
+            }
+            case 'e' : {
+                if (vertex_id_.find(line_tokens[1]) == vertex_id_.end()) {
+                    size_t new_vertex_id = vertex_id_.size();
+                    vertex_id_[line_tokens[1]] = new_vertex_id;
                 }
+                if (vertex_id_.find(line_tokens[2]) == vertex_id_.end()) {
+                    size_t new_vertex_id = vertex_id_.size();
+                    vertex_id_[line_tokens[2]] = new_vertex_id;
+                }
+                Vertex v1 = vertex_id_[line_tokens[1]], v2 = vertex_id_[line_tokens[2]];
+                (*adjacency_lists)[v1].push_back(line_tokens[2]);
+                (*adjacency_lists)[v2].push_back(line_tokens[1]);
+                break;
+            }
+            case 'p' : {
+                order = std::stoi(line_tokens[2]);
+                adjacency_lists->resize(order);
+                break;
             }
         }
     }
-    for (std::pair< VertexPair, bool > p : edges) {
-        VertexPair e = p.first;
-        Vertex u = e.first, v = e.second;
-        (*neighborhoods_)[u].add(v);
-        (*neighborhoods_)[v].add(u);
-    }
-    for (Vertices& V : *neighborhoods_) {
-        std::sort(V.begin(), V.end());
-    }
     return;
+}
+
+// Adjacency List Format:
+// Line 1: non-negative integer denoting the number of vertices
+// Line i>1: i-1, representing vertex i-1, followed by its neighbors as sorted
+// integers delimited by whitespace
+void GraphFR::ParseAdjList(
+    StringAdjLists* adjacency_lists) {
+    // First line should be number of vertices
+    std::string line;
+    file_->GetLine(line);
+    size_t order = std::stoi(line);
+    adjacency_lists->resize(order);
+    // Next lines should be adjacency lists
+    size_t row = 0;
+    while (file_->GetLine(line)) {
+        StringTokens line_tokens = Split(line, " \t");
+        std::string vertex = line_tokens[0];
+        size_t new_vertex_id = vertex_id_.size();
+        vertex_id_[vertex] = new_vertex_id;
+        for (size_t i = 1; i < line_tokens.size(); ++i) {
+            (*adjacency_lists)[row].push_back(line_tokens[i]);
+        }
+        ++row;
+    }
+    return;    
+}
+
+CharacterMatrix* CharacterIntGraphFR::ParseMatrix() {
+    // First line is the name of the experiment, and is arbitrary
+    std::string line;
+    file_->GetLine(line);
+    // Second line is the number of rows and columns
+    file_->GetLine(line);
+    StringTokens line_tokens = Split(line, " \t");
+    size_t rows = std::stoi(line_tokens[0]), cols = std::stoi(line_tokens[1]);
+    CharacterMatrix* M = new CharacterMatrix(rows, cols);
+    size_t i = 0;
+    while (file_->GetLine(line)) {
+        line_tokens = Split(line, " \t");
+        for (size_t j = 0; j < cols; ++j) {
+            std::string state = line_tokens[j];
+            if (IsNum(state)) {
+                size_t s = std::stoi(state);
+                (*M)[i][j] = s;
+                if (s + 1 > M->max_states()) {
+                    M->set_max_states(s + 1);
+                }
+            } else {
+                (*M)[i][j] = M->kMissingData();
+            }
+        }
+        ++i;
+    }
+    // default taxon names
+    taxon_name_.resize(rows);
+    for (size_t i = 0; i < rows; ++i) {
+        taxon_name_[i] = std::to_string(i);
+    }
+    return M;
+}
+
+CharacterMatrix* CharacterIntGraphFR::ParseNexusMRP() {
+    // Line 1: #NEXUS
+    std::string line;
+    StringTokens line_tokens;
+    file_->GetLine(line);
+    // Line 2: Begin Data;
+    do {
+        file_->GetLine(line);
+        line_tokens = Split(line, " \t");
+    } while (line_tokens.empty());
+    // Line 3: Dimensions ntax = 3, nchar = 3;
+    do {
+        file_->GetLine(line);
+        line_tokens = Split(line, " \t");
+    } while (line_tokens.empty());
+    line_tokens = Split(line, " \t=;");
+    size_t rows = std::stoi(line_tokens[2]);
+    size_t cols = std::stoi(line_tokens[4]);
+    // Line 4: Format datatype=standard symbols="01" Missing=?;
+    do {
+        file_->GetLine(line);
+        line_tokens = Split(line, " \t");
+    } while (line_tokens.empty());
+    // Line 5: Matrix
+    do {
+        file_->GetLine(line);
+        line_tokens = Split(line, " \t");
+    } while (line_tokens.empty());
+    // Matrix lines: taxon_name 0101?
+    CharacterMatrix* M = new CharacterMatrix(rows, cols, 2);
+    taxon_name_.resize(rows);
+    size_t i = 0;
+    while (file_->GetLine(line) &&
+           line.compare(";") != 0) {
+        line_tokens = Split(line, " \t");
+        taxon_name_[i] = line_tokens[0];
+        for (size_t j = 0; j < line_tokens[1].length(); ++j) {
+            switch (line_tokens[1][j]) {
+                case '0' : {
+                    (*M)[i][j] = 0;
+                    break;
+                }
+                case '1' : {
+                    (*M)[i][j] = 1;
+                    break;
+                }
+                default : {
+                    (*M)[i][j] = M->kMissingData();
+                    break;
+                }
+            }            
+        }
+        ++i;
+    }
+    // Last line: end;
+    file_->GetLine(line);
+    // Whitespace
+    while (file_->GetLine(line)) {}
+    return M;
 }
 
 }  // namespace chordalg

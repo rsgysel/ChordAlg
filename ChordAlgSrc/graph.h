@@ -23,7 +23,7 @@ class Graph {
     void operator=(const Graph&) = delete;
 
     explicit Graph(Graph&);
-    explicit Graph(FileReader*);
+    explicit Graph(GraphFR*);
     explicit Graph(AdjacencyLists*);
     Graph(AdjacencyLists*, VertexNames);
     explicit Graph(size_t);

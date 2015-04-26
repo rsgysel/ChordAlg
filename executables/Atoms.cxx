@@ -20,9 +20,7 @@ int main(int argc, char** argv) {
         std::cerr << "usage: " << argv[0] << " <filename>" << std::endl;
         return EXIT_FAILURE;
     } else {
-        SortedAdjacencyListFR* graph_reader =
-            NewFileReader<SortedAdjacencyListFR>(
-                std::string(argv[1]));
+        GraphFR* graph_reader = NewFileReader<GraphFR>(std::string(argv[1]));
         Graph G(graph_reader);
         Atoms A(&G);
         A.ComputeAtoms();

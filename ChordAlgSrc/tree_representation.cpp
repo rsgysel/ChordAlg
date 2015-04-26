@@ -77,10 +77,10 @@ void TreeRepresentation::NewickVisit(VertexSet& visited, Vertex v,
         }
     }
     if (is_leaf) {
-        newick_tree.erase(newick_tree.end() - 1);  // no () for leaf node
+        newick_tree.pop_back();  // no () for leaf node
         newick_tree += subtree + T_.name(v);
     } else {
-        subtree.erase(subtree.end() - 1);  // trailing comma
+        subtree.pop_back();  // trailing comma
         newick_tree += subtree + std::string(")") + T_.name(v);
     }
     return;
@@ -178,7 +178,7 @@ void TreeRepresentation::PhyloNewickVisit(VertexSet& visited,
                 node_name += taxon += ",";
             }
         }
-        node_name.erase(node_name.end() - 1);
+        node_name.pop_back();
         node_name += ")";
     }
     // Leaf or Internal node
@@ -186,7 +186,7 @@ void TreeRepresentation::PhyloNewickVisit(VertexSet& visited,
         if (node_taxa.size() == 1) {
             node_name = node_taxa[0];
         }
-        newick_tree.erase(newick_tree.end() - 1);   // no () for leaf node
+        newick_tree.pop_back();   // no () for leaf node
         newick_tree += subtree + node_name;
     } else {
         subtree.erase(subtree.end() - 1);    // trailing comma

@@ -182,7 +182,7 @@ std::string EliminationOrder::str() const {
     for (Vertex v : alpha_) {
         Estr += G_->name(v) + " ";
     }
-    Estr.erase(Estr.end() - 1, Estr.end());
+    Estr.pop_back();
     Estr += '\n';
     return Estr;
 }

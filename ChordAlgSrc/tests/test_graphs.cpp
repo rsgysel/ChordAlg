@@ -107,17 +107,17 @@ chordalg::AdjacencyLists connected_components_test{ {1, 4, 5, 6, 10},
                                                      {12, 14},
                                                      {2, 3, 11, 12, 13} };
 
-chordalg::AdjacencyLists dimacs_test{ {1, 3, 6, 8},
-                                      {0, 2, 5, 7},
-                                      {1, 4, 6, 9},
-                                      {0, 4, 5, 9},
-                                      {2, 3, 7, 8},
-                                      {1, 3, 10},
-                                      {0, 2, 10},
-                                      {1, 4, 10},
-                                      {0, 4, 10},
-                                      {2, 3, 10},
-                                      {5, 6, 7, 8, 9} };
+chordalg::AdjacencyLists dimacs_test{ {1, 2, 3, 4},
+                                      {0, 5, 6, 7},
+                                      {0, 6, 8, 9},
+                                      {0, 5, 10},
+                                      {0, 8, 10},
+                                      {1, 3, 8, 9},
+                                      {1, 2, 10},
+                                      {1, 8, 10},
+                                      {2, 4, 5, 7},
+                                      {2, 5, 10},
+                                      {3, 4, 6, 7, 9} };
 
 chordalg::AdjacencyLists independent_set{ {},
                                           {},
