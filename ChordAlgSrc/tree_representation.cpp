@@ -91,7 +91,7 @@ std::string TreeRepresentation::strPhyloNewick(const CellIntersectionGraph& cig,
     // DFS info
     std::string newick_tree;
     VertexSet visited;
-    size_t root_element;
+    size_t root_element = SIZE_MAX;
     if (rooted) {
         for (size_t i = 0; i < cig.taxa(); ++i) {
             if (cig.taxon_name(i) == "roottaxon") {

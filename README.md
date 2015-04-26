@@ -1,6 +1,12 @@
 ChordAlg
 ========
+ChordAlg is a library of chordal-graph / minimal-triangulation algorithms,
+geared towards phylogenetic character compatibility analysis.
 
+Requirements
+============
+Google Mock
+    code.google.com/p/googlemock/
 
 Installation
 ============
@@ -12,5 +18,7 @@ Installation
 3) Type
     ChordAlg/build$ make
 
-4) (Optional) Run tests to check your build. 
-
+4) Executables will be in
+    ChordAlg/build/executables
+    ChordAlg/build/heuristic_experiments
+    ChordAlg/build/separatorgraph_experiments
