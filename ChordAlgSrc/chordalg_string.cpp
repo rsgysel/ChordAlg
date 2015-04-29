@@ -17,8 +17,9 @@ StringTokens Split(std::string str, std::string delim) {
     StringTokens tokens;
     char* pch = nullptr;
     char* cstr = new char[str.length() + 1];
+    char* saveptr;
     std::strcpy(cstr, str.c_str());
-    pch = strtok(cstr, delim.c_str());
+    pch = strtok_r(cstr, delim.c_str(), &saveptr);
     while (pch) {
         std::string tok(pch);
         for (size_t i = 0; i < tok.length(); ++i) {
@@ -27,7 +28,7 @@ StringTokens Split(std::string str, std::string delim) {
             }
         }
         tokens.push_back(tok);
-        pch = strtok(nullptr, delim.c_str());
+        pch = strtok_r(nullptr, delim.c_str(), &saveptr);
     }
     delete cstr;
     return tokens;

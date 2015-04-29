@@ -34,7 +34,10 @@ int main(int argc, char** argv) {
         std::cout << "Vertices: " << G.order() << '\n'
                   << "Edges: " << G.size() << '\n'
                   << "Total Vertices: " << vertices << '\n'
-                  << "Total Edges: " << edges << std::endl;
+                  << "Total Edges: " << edges << '\n'
+                  << "Total Atoms: " << A.size() << '\n'
+                  << "Clique Atoms: " << A.clique_minimal_separators().size() << std::endl;
+
         return EXIT_SUCCESS;
     }
 }
