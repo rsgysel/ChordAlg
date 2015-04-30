@@ -1,15 +1,14 @@
-#ifndef SEPARATOR_GRAPH_H_
-#define SEPARATOR_GRAPH_H_
+#ifndef CHORDALGSRC_SEPARATOR_GRAPH_H_
+#define CHORDALGSRC_SEPARATOR_GRAPH_H_
 
-#include <sstream>
 #include <stack>
 #include <string>
 #include <vector>
 
-#include "graph.h"
-#include "lex_trie.h"
-#include "separator.h"
-#include "vertices.h"
+#include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/lex_trie.h"
+#include "ChordAlgSrc/separator.h"
+#include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
 
@@ -49,4 +48,4 @@ class SeparatorGraph : public Graph {
 
 }  // namespace chordalg
 
-#endif  // SEPARATOR_GRAPH_H_
+#endif  // CHORDALGSRC_SEPARATOR_GRAPH_H_

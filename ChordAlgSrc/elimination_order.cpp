@@ -1,12 +1,19 @@
-#include "elimination_order.h"
+#include "ChordAlgSrc/elimination_order.h"
+
+#include <algorithm>
+#include <iostream>
+#include <string>
+
+#include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
 
 EliminationOrder::EliminationOrder(const Graph* G) :
-                                   G_(G),
-                                   alpha_(G_->order()),
-                                   alpha_inverse_(G_->order()),
-                                   fill_count_(kUnfilled()) {
+    G_(G),
+    alpha_(G_->order()),
+    alpha_inverse_(G_->order()),
+    fill_count_(kUnfilled()) {
     Init();
     return;
 }
@@ -42,7 +49,8 @@ void EliminationOrder::Swap(int i, int j) {
 // form triagnulation neighborhoods
 AdjacencyLists* EliminationOrder::TriangNbhds() const {
     if (fill_count_ == kUnfilled()) {
-        std::cerr << "EliminationOrder::TriangNbhds(): call ComputeFill() first\n";
+        std::cerr <<
+            "EliminationOrder::TriangNbhds(): call ComputeFill() first\n";
         exit(EXIT_FAILURE);
     }
     if (fill_count_ == 0) {

@@ -3,19 +3,16 @@
  */
 
 
-#ifndef INCLUDE_MCS_H_
-#define INCLUDE_MCS_H_
+#ifndef CHORDALGSRC_MCS_H_
+#define CHORDALGSRC_MCS_H_
 
-#include <algorithm>
-#include <iostream>
 #include <set>
-#include <utility>
 #include <vector>
 
-#include "elimination_order.h"
-#include "graph.h"
-#include "tree_representation.h"
-#include "vertices.h"
+#include "ChordAlgSrc/elimination_order.h"
+#include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/tree_representation.h"
+#include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
 
@@ -48,4 +45,4 @@ class MCSQueue {
 
 }  // namespace chordalg
 
-#endif  // INCLUDE_MCS_H_
+#endif  // CHORDALGSRC_MCS_H_

@@ -2,8 +2,8 @@
  *  vertices.h - iterators, pairs, and typedefs
  */
 
-#ifndef INCLUDE_VERTICES_H_
-#define INCLUDE_VERTICES_H_
+#ifndef CHORDALGSRC_VERTICES_H_
+#define CHORDALGSRC_VERTICES_H_
 
 #include <algorithm>
 #include <initializer_list>
@@ -55,7 +55,8 @@ class Vertices {
     Vertices() : V_(new VertexVector()) {}
 
     explicit Vertices(size_t n) : V_(new VertexVector(n, 0)) {}
-    explicit Vertices(VertexList V) : V_(new VertexVector(V.begin(), V.end())) {}
+    explicit Vertices(VertexList V) :
+        V_(new VertexVector(V.begin(), V.end())) {}
     explicit Vertices(VertexSet V) : V_(new VertexVector(V.begin(), V.end())) {}
     explicit Vertices(VertexVector V) : V_(new VertexVector(V)) {}
 
@@ -141,7 +142,8 @@ class GraphVertexIterator {
 
 class GraphVertices : public Vertices {
  public:
-    explicit GraphVertices(const Graph* G, size_t order) : Vertices(), G_(G), order_(order) {}
+    explicit GraphVertices(const Graph* G, size_t order) :
+        Vertices(), G_(G), order_(order) {}
 
     GraphVertexIterator begin() const {
         return GraphVertexIterator(G_);
@@ -195,4 +197,4 @@ class VertexPairs {
 
 }  // namespace chordalg
 
-#endif  // INCLUDE_VERTICES_H_
+#endif  // CHORDALGSRC_VERTICES_H_

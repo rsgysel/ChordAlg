@@ -1,9 +1,15 @@
-#include "separator.h"
+#include "ChordAlgSrc/separator.h"
+
+#include <iostream>
+#include <string>
+
+#include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
 
-////////////// ctor & dtors
-//
+//////////////////
+// c'tors & d'tors
 SeparatorComponents::SeparatorComponents(const Graph* G) :
     G_(G),
     S_(G_->order()),
@@ -161,7 +167,8 @@ void SeparatorBlocks::FindNeighborhoods(FillSet& fill) {
             ConnectedComponentID C = connected_component_[u];
             // if u is not a separator vertex, u is in C, and we haven't
             // determined that v is in N(C)
-            if (!IsInSeparator(u) && last_separator_vertex_seen_[C] != (int) v) {
+            if (!IsInSeparator(u) && 
+                last_separator_vertex_seen_[C] != static_cast<int>(v)) {
                 blocks_[C].addNC(v);
                 last_separator_vertex_seen_[C] = v;
             }

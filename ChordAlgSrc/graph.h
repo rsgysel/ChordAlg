@@ -2,17 +2,16 @@
  *  graph.h - a graph data structure
  */
 
-#ifndef INCLUDE_GRAPH_H_
-#define INCLUDE_GRAPH_H_
+#ifndef CHORDALGSRC_GRAPH_H_
+#define CHORDALGSRC_GRAPH_H_
 
-#include <algorithm>
-#include <map>
 #include <string>
 #include <vector>
 
-#include "file_reader.h"
-#include "lex_trie.h"
-#include "vertices.h"
+#include "ChordAlgSrc/file_reader.h"
+#include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/lex_trie.h"
+#include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
 
@@ -31,23 +30,13 @@ class Graph {
 
     bool IsIsomorphic(Graph&) const;
     virtual std::string str() const;
-    std::string str(const LexTrie& T) const;
-    std::string str(const VertexVector& U) const;
-    std::string str(const Vertices& U) const;
+    std::string str(const LexTrie&) const;
+    std::string str(const VertexVector&) const;
+    std::string str(const Vertices&) const;
 
-    Vertices V() const {
-        Vertices V(order_);
-        for(size_t i = 0; i < V.size(); ++i ) {
-            V[i] = i;
-        }
-        return V;
-    }
-    GraphVertexIterator begin() const {
-        return GraphVertices(this, order_).begin();
-    }
-    GraphVertexIterator end() const {
-        return GraphVertices(this, order_).end();
-    }
+    Vertices V() const;
+    GraphVertexIterator begin() const;
+    GraphVertexIterator end() const;
 
     const AdjacencyLists& neighbors() const {
         return *neighborhoods_;
@@ -153,10 +142,9 @@ bool Graph::HasClique(InputIterator begin, InputIterator end) const {
             }
         }
     }
-
     return true;
 }
 
 }  // namespace chordalg
 
-#endif  // INCLUDE_GRAPH_H_
+#endif  // CHORDALGSRC_GRAPH_H_

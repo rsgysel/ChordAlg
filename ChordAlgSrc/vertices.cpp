@@ -1,4 +1,7 @@
-#include "vertices.h"
+#include "ChordAlgSrc/vertices.h"
+
+#include <algorithm>
+#include <iterator>
 
 namespace chordalg {
 
@@ -11,14 +14,16 @@ void Vertices::merge(Vertices U, Vertices W) {
     return;
 }
 
-////////////// VertexPairs
-////////////// ctor
-//
+//////////////
+// VertexPairs
 
-VertexPairsIterator::VertexPairsIterator(const Vertices* V, Vertex v1, Vertex v2) :
-        V_(V),
-        v1_(v1),
-        v2_(v1) {
+VertexPairsIterator::VertexPairsIterator(
+    const Vertices* V,
+    Vertex v1,
+    Vertex v2) :
+    V_(V),
+    v1_(v1),
+    v2_(v1) {
     if (V->size() == 1) {
         v1_ = v2_ = V->size();
     } else if (v1 != v2) {
@@ -27,8 +32,8 @@ VertexPairsIterator::VertexPairsIterator(const Vertices* V, Vertex v1, Vertex v2
     return;
 }
 
-////////////// Iterator
-//
+//////////////////////
+// VertexPairsIterator
 
 void VertexPairsIterator::operator++() {
     size_t n = V_->size();

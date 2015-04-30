@@ -2,63 +2,22 @@
  *  file_reader.h - graph file parsers
  */
 
-#ifndef INCLUDE_FILE_READER_H_
-#define INCLUDE_FILE_READER_H_
+#ifndef CHORDALGSRC_FILE_READER_H_
+#define CHORDALGSRC_FILE_READER_H_
 
-#include <algorithm>
-#include <cstdlib>
-#include <fstream>
-#include <iostream>
 #include <list>
 #include <map>
-#include <sstream>
 #include <string>
 #include <vector>
 
-#include "chordalg_string.h"
-#include "graph_file.h"
-#include "lex_trie.h"
-#include "vertices.h"
+#include "ChordAlgSrc/graph_file.h"
+#include "ChordAlgSrc/lex_trie.h"
+#include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
 
 typedef std::vector< std::list< std::string > > StringAdjLists;
-
-// Abstract class used to read files for graphs.
-// To design a file reader class ClassFR, include the following:
-//      1) private constructor ClassFR(std::string) that initializes FileReader
-//          with input string
-//      2) private ReadFileOrDie() method. you must close file_stream_ here
-//      3) friend access to factory method template< class FR > friend FR*
-//          NewFileReader(std::string);
-class GraphFR {
- public:
-    GraphFR() = delete;
-    GraphFR(const GraphFR&) = delete;
-    void operator=(const GraphFR&) = delete;
-    virtual ~GraphFR();
-
-    AdjacencyLists* TakeNeighborhoods();
-    VertexNames* TakeNames();
- protected:
-    // construction and initialization deferred to NewFileReader
-    template< class FR > friend FR* NewFileReader(GraphFile& file);
-    explicit GraphFR(GraphFile* file);
-    explicit GraphFR(std::string filename);
-
-    virtual void ReadFileOrDie();
-    void ComputeGraphData(const StringAdjLists*);
-    void ComputeNames(size_t);
-
-    void ParseDimacs(StringAdjLists*);
-    void ParseAdjList(StringAdjLists*);
-
-    GraphFile* file_;
-    AdjacencyLists* neighborhoods_;
-    VertexNames* names_;
-
-    std::map< std::string, Vertex > vertex_id_;
-};  // GraphFR
+class GraphFR;
 
 //////////////////////////////////
 // FR must be derived from GraphFR
@@ -79,6 +38,43 @@ FR* NewFileReader(GraphFile& file) {
     (void) type_check;
     return fr_object;
 }
+
+// Abstract class used to read files for graphs.
+// To design a file reader class ClassFR, include the following:
+//      1) private constructor ClassFR(std::string) that initializes FileReader
+//          with input string
+//      2) private ReadFileOrDie() method. you must close file_stream_ here
+//      3) friend access to factory method template< class FR > friend FR*
+//          NewFileReader(std::string);
+class GraphFR {
+ public:
+    GraphFR() = delete;
+    GraphFR(const GraphFR&) = delete;
+    void operator=(const GraphFR&) = delete;
+    virtual ~GraphFR();
+
+    AdjacencyLists* TakeNeighborhoods();
+    VertexNames* TakeNames();
+
+ protected:
+    // construction and initialization deferred to NewFileReader
+    template< class FR > friend FR* NewFileReader(GraphFile&);
+    explicit GraphFR(GraphFile*);
+    explicit GraphFR(std::string);
+
+    virtual void ReadFileOrDie();
+    void ComputeGraphData(const StringAdjLists*);
+    void ComputeNames(size_t);
+
+    void ParseDimacs(StringAdjLists*);
+    void ParseAdjList(StringAdjLists*);
+
+    GraphFile* file_;
+    AdjacencyLists* neighborhoods_;
+    VertexNames* names_;
+
+    std::map< std::string, Vertex > vertex_id_;
+};  // GraphFR
 
 class CharacterMatrix {
  public:
@@ -118,6 +114,7 @@ class CharacterIntGraphFR : public GraphFR {
     std::vector< std::string > taxon_name() const {
         return taxon_name_;
     }
+
  protected:
     template< class FR > friend FR* NewFileReader(GraphFile&);
 
@@ -136,7 +133,6 @@ class CharacterIntGraphFR : public GraphFR {
 
     std::vector< FiniteSet > subsets_;
     std::vector< std::string > taxon_name_;
-
 };  // CharacterIntGraphFR
 
 class PartitionIntGraphFR : public CharacterIntGraphFR {
@@ -147,7 +143,7 @@ class PartitionIntGraphFR : public CharacterIntGraphFR {
 
     virtual ~PartitionIntGraphFR();
 
-    std::vector< Color> vertex_color() const {
+    std::vector< Color > vertex_color() const {
         return vertex_color_;
     }
  protected:
@@ -185,4 +181,4 @@ class CellIntGraphFR : public CharacterIntGraphFR {
 
 }  // namespace chordalg
 
-#endif  // INCLUDE_FILE_READER_H_
+#endif  // CHORDALGSRC_FILE_READER_H_

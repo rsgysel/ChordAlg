@@ -3,17 +3,14 @@
  *  minimal separator computation
  */
 
-#ifndef INCLUDE_MINIMAL_SEPARATOR_ALGORITHMS_H_
-#define INCLUDE_MINIMAL_SEPARATOR_ALGORITHMS_H_
+#ifndef CHORDALGSRC_MINIMAL_SEPARATOR_ALGORITHMS_H_
+#define CHORDALGSRC_MINIMAL_SEPARATOR_ALGORITHMS_H_
 
-#include <algorithm>
-#include <sstream>
 #include <string>
 
-#include "graph.h"
-#include "separator.h"
-#include "separator_graph.h"
-#include "vertices.h"
+#include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/separator_graph.h"
+#include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
 
@@ -27,4 +24,4 @@ MinsepTrie* MinimalSeparators(const Graph& G, Vertex a, Vertex b);
 
 }  // namespace chordalg
 
-#endif  // INCLUDE_MINIMAL_SEPARATOR_ALGORITHMS_H_
+#endif  // CHORDALGSRC_MINIMAL_SEPARATOR_ALGORITHMS_H_

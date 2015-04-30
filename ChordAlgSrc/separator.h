@@ -3,17 +3,14 @@
  *  its connected components and their neighborhoods
  */
 
-#ifndef INCLUDE_SEPARATOR_H_
-#define INCLUDE_SEPARATOR_H_
+#ifndef CHORDALGSRC_SEPARATOR_H_
+#define CHORDALGSRC_SEPARATOR_H_
 
-#include <algorithm>
-#include <set>
-#include <sstream>
-#include <string>
 #include <vector>
+#include <string>
 
-#include "graph.h"
-#include "vertices.h"
+#include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
 
@@ -60,7 +57,7 @@ class SeparatorComponents {
     virtual void SeparateNbhd(Vertex);
     virtual void SeparateClosedNbhd(Vertex);
     virtual void Separate(const Vertices&);
-    virtual void Separate(const Vertices&, FillSet& fill);
+    virtual void Separate(const Vertices&, FillSet&);
     Vertices ConnectedComponent(Vertex) const;
 
     size_t size() const {
@@ -167,4 +164,4 @@ class SeparatorBlocks : public SeparatorComponents {
 
 }  // namespace chordalg
 
-#endif  // INCLUDE_SEPARATOR_H_
+#endif  // CHORDALGSRC_SEPARATOR_H_

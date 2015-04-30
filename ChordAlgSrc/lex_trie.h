@@ -2,18 +2,14 @@
  *  lex_trie.h - A trie data structure to store subsets of {0, 1, ..., n-1}
  */
 
-#ifndef INCLUDE_LEX_TRIE_H_
-#define INCLUDE_LEX_TRIE_H_
+#ifndef CHORDALGSRC_LEX_TRIE_H_
+#define CHORDALGSRC_LEX_TRIE_H_
 
 #include <algorithm>
-#include <fstream>
-#include <iostream>
-#include <iterator>
 #include <map>
-#include <sstream>
 #include <string>
-#include <utility>
 #include <vector>
+#include <utility>
 
 namespace chordalg {
 
@@ -93,7 +89,6 @@ class LexTrieNode {
     }
 
     // Friend functions
-    friend std::ostream& operator <<(std::ostream &os, const LexTrie &obj);
     friend LexTrieIterator LexTrieIterator::operator++();
 
     friend class LexTrie;
@@ -242,5 +237,5 @@ const LexTrieNode* LexTrie::SortedInsert(const Container& set,
 
 }  // namespace chordalg
 
-#endif  // INCLUDE_LEX_TRIE_H_
+#endif  // CHORDALGSRC_LEX_TRIE_H_
 

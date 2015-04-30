@@ -1,4 +1,9 @@
-#include "separator_graph.h"
+#include "ChordAlgSrc/separator_graph.h"
+
+#include <string>
+
+#include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
 
@@ -13,7 +18,7 @@ MinsepVector* MinsepTrieToVector(const MinsepTrie& MT) {
     return MV;
 }
 
-SeparatorGraph::SeparatorGraph(const Graph* G, const MinsepVector* M) : 
+SeparatorGraph::SeparatorGraph(const Graph* G, const MinsepVector* M) :
     Graph(M->size()),
     G_(G),
     M_(M),
@@ -22,7 +27,7 @@ SeparatorGraph::SeparatorGraph(const Graph* G, const MinsepVector* M) :
     Init();
 }
 
-SeparatorGraph::SeparatorGraph(const Graph* G, const MinsepTrie* M) : 
+SeparatorGraph::SeparatorGraph(const Graph* G, const MinsepTrie* M) :
     Graph(M->size()),
     G_(G),
     M_(MinsepTrieToVector(*M)),

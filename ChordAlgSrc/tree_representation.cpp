@@ -1,12 +1,18 @@
-#include "tree_representation.h"
+#include "ChordAlgSrc/tree_representation.h"
 
 #include <string>
 #include <vector>
 
+#include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/intersection_graph.h"
+#include "ChordAlgSrc/vertices.h"
+
 namespace chordalg {
 
-TreeRepresentation::TreeRepresentation(AdjacencyLists* E, const Graph* G,
-                                       std::vector< Vertices > clique_map) :
+TreeRepresentation::TreeRepresentation(
+    AdjacencyLists* E,
+    const Graph* G,
+    std::vector< Vertices > clique_map) :
     G_(G),
     T_(E, NamesFromCliqueMap(clique_map)),
     clique_map_(clique_map) {
@@ -32,8 +38,10 @@ VertexNames TreeRepresentation::NamesFromCliqueMap(
     return names;
 }
 
-CliqueTree::CliqueTree(AdjacencyLists* E, const Graph* G,
-                       std::vector<Vertices> clique_map) :
+CliqueTree::CliqueTree(
+    AdjacencyLists* E,
+    const Graph* G,
+    std::vector<Vertices> clique_map) :
     TreeRepresentation(E, G, clique_map) {
 }
 
@@ -63,8 +71,10 @@ std::string TreeRepresentation::strNewick() const {
     return newick_tree;
 }
 
-void TreeRepresentation::NewickVisit(VertexSet& visited, Vertex v,
-                                     std::string& newick_tree) const {
+void TreeRepresentation::NewickVisit(
+    VertexSet& visited,
+    Vertex v,
+    std::string& newick_tree) const {
     visited.insert(v);
     bool is_leaf = true;
     newick_tree += std::string("(");
@@ -86,8 +96,9 @@ void TreeRepresentation::NewickVisit(VertexSet& visited, Vertex v,
     return;
 }
 
-std::string TreeRepresentation::strPhyloNewick(const CellIntersectionGraph& cig,
-                                               bool rooted) const {
+std::string TreeRepresentation::strPhyloNewick(
+    const CellIntersectionGraph& cig,
+    bool rooted) const {
     // DFS info
     std::string newick_tree;
     VertexSet visited;
@@ -133,11 +144,12 @@ std::string TreeRepresentation::strPhyloNewick(const CellIntersectionGraph& cig,
     return newick_tree;
 }
 
-void TreeRepresentation::PhyloNewickVisit(VertexSet& visited,
-        Vertex v,
-        std::string& newick_tree,
-        const CellIntersectionGraph& cig,
-        std::vector< size_t >& taxon_clique_size) const {
+void TreeRepresentation::PhyloNewickVisit(
+    VertexSet& visited,
+    Vertex v,
+    std::string& newick_tree,
+    const CellIntersectionGraph& cig,
+    std::vector< size_t >& taxon_clique_size) const {
     visited.insert(v);
     bool is_leaf = true;
     newick_tree += std::string("(");

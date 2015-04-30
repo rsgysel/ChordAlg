@@ -3,28 +3,17 @@
  *  ordering of a graph
  */
 
-#ifndef INCLUDE_ELIMINATION_ORDER_H_
-#define INCLUDE_ELIMINATION_ORDER_H_
+#ifndef CHORDALGSRC_ELIMINATION_ORDER_H_
+#define CHORDALGSRC_ELIMINATION_ORDER_H_
 
 #include <cfloat>
-#include <cstdlib>
-#include <ctime>
-
-#include <algorithm>
-#include <set>
-#include <sstream>
 #include <string>
 #include <vector>
-#include <utility>
 
-#include "file_reader.h"
-#include "graph.h"
-#include "vertices.h"
+#include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
-
-#undef MAX_WEIGHT
-#define MAX_WEIGHT DBL_MAX;
 
 class EliminationOrder {
  public:
@@ -36,8 +25,8 @@ class EliminationOrder {
     ~EliminationOrder();
     void Init();
 
-    void Emplace(Vertex v, int i);
-    void Swap(int i, int j);
+    void Emplace(Vertex, int);
+    void Swap(int, int);
     AdjacencyLists* TriangNbhds() const;
     size_t ComputeFill();
     bool ZeroFill() const;
@@ -55,9 +44,9 @@ class EliminationOrder {
     }
 
     // neighbors of v ``left" (before) v. Unsorted.
-    Vertices LNbhd(Vertex v) const;
+    Vertices LNbhd(Vertex) const;
     // neighbors of v ``right" (after) v. Unsorted.
-    Vertices RNbhd(Vertex v) const;
+    Vertices RNbhd(Vertex) const;
 
     int fill_count() const {
         return fill_count_;
@@ -70,7 +59,7 @@ class EliminationOrder {
     }
 
     // Mutators
-    void SetOrder(VertexVector pi);
+    void SetOrder(VertexVector);
     void SetPosition(Vertex v, int i) {
         alpha_inverse_[v] = i;
     }
@@ -95,4 +84,4 @@ class EliminationOrder {
 
 }  // namespace chordalg
 
-#endif  // INCLUDE_ELIMINATION_ORDER_H_
+#endif  // CHORDALGSRC_ELIMINATION_ORDER_H_

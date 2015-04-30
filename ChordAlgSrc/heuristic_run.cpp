@@ -1,4 +1,15 @@
-#include "heuristic_run.h"
+#include "ChordAlgSrc/heuristic_run.h"
+
+#include <iostream>
+#include <set>
+#include <string>
+#include <vector>
+
+#include "ChordAlgSrc/atoms.h"
+#include "ChordAlgSrc/elimination_algorithm.h"
+#include "ChordAlgSrc/file_reader.h"
+#include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/intersection_graph.h"
 
 namespace chordalg {
 
@@ -44,7 +55,7 @@ std::string SetupAndRunHeuristic(
                             separation_wt);
             elimination_parameters.push_back(P);
         }
-    }    
+    }
     HeuristicRun R(&G, &elimination_parameters, atoms, runs);
     std::cout << R.Run() << std::endl;
     for (auto P : elimination_parameters) {
@@ -121,13 +132,15 @@ std::string HeuristicRun::Run() {
             ++clique_atoms;
         }
     }
-    std::string log = "characters removed: " + std::to_string(fill_weight_) + '\n'
-                      + "fill edges added: " + std::to_string(fill_count) + '\n'
-                      + "vertices: " + std::to_string(G_->order()) + '\n'
-                      + "edges: " + std::to_string(G_->size()) + '\n';
+    std::string log =
+        "characters removed: " + std::to_string(fill_weight_) + '\n'
+        + "fill edges added: " + std::to_string(fill_count) + '\n'
+        + "vertices: " + std::to_string(G_->order()) + '\n'
+        + "edges: " + std::to_string(G_->size()) + '\n';
     if (atoms_) {
         log += "atom-subgraphs: " + std::to_string(A->size()) + '\n'
-               + "clique atom-subgraphs: " + std::to_string(clique_atoms) + '\n';
+               + "clique atom-subgraphs: "
+               + std::to_string(clique_atoms) + '\n';
         delete A;
     }
     return log;

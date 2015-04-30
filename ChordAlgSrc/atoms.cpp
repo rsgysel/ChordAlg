@@ -1,8 +1,20 @@
-#include "atoms.h"
+#include "ChordAlgSrc/atoms.h"
+
+#include <algorithm>
+#include <list>
+#include <vector>
+
+#include "ChordAlgSrc/elimination_order.h"
+#include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/mcs_m.h"
+#include "ChordAlgSrc/separator.h"
+#include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
 
-Atoms::Atoms(const Graph* G) : G_(G), clique_minimal_separators_(G_->order()) {
+Atoms::Atoms(const Graph* G) :
+    G_(G),
+    clique_minimal_separators_(G_->order()) {
     return;
 }
 
@@ -14,7 +26,7 @@ Atoms::~Atoms() {
 }
 
 void Atoms::ComputeAtoms() {
-    // Get minimal triangulation 
+    // Get minimal triangulation
     EliminationOrder eo(G_);
     std::vector< VertexList > F;
     VertexList minsep_generators;

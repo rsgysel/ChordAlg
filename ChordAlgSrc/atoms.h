@@ -2,23 +2,13 @@
  *  atoms.h - atom subgraphs
  */
 
-#ifndef INCLUDE_ATOMS_H_
-#define INCLUDE_ATOMS_H_
+#ifndef CHORDALGSRC_ATOMS_H_
+#define CHORDALGSRC_ATOMS_H_
 
-#include <algorithm>
-#include <iostream>
-#include <iterator>
-#include <list>
-#include <map>
 #include <vector>
 
-#include "elimination_order.h"
-#include "graph.h"
-#include "lex_trie.h"
-#include "mcs_m.h"
-#include "minimal_separator_algorithms.h"
-#include "separator.h"
-#include "vertices.h"
+#include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/lex_trie.h"
 
 namespace chordalg {
 
@@ -28,7 +18,7 @@ class Atoms {
     Atoms(const Atoms&) = delete;
     Atoms& operator=(const Atoms&) = delete;
 
-    explicit Atoms(const Graph* G);
+    explicit Atoms(const Graph*);
     ~Atoms();
 
     const LexTrie& clique_minimal_separators() const {
@@ -38,7 +28,8 @@ class Atoms {
         return atom_subgraphs_.size();
     }
 
-    typedef typename std::vector< InducedSubgraph* >::const_iterator AtomIterator;
+    typedef typename std::vector< InducedSubgraph* >::const_iterator
+                     AtomIterator;
     AtomIterator begin() {
         return atom_subgraphs_.begin();
     }
@@ -56,4 +47,4 @@ class Atoms {
 
 }  // namespace chordalg
 
-#endif  // INCLUDE_ATOMS_H_
+#endif  // CHORDALGSRC_ATOMS_H_

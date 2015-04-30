@@ -1,4 +1,10 @@
-#include "triangulation.h"
+#include "ChordAlgSrc/triangulation.h"
+
+#include "ChordAlgSrc/elimination_algorithm.h"
+#include "ChordAlgSrc/elimination_order.h"
+#include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/heuristic_run.h"
+#include "ChordAlgSrc/mcs.h"
 
 namespace chordalg {
 

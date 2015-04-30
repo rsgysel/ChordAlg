@@ -1,4 +1,12 @@
-#include "mcs_m.h"
+#include "ChordAlgSrc/mcs_m.h"
+
+#include <algorithm>
+#include <list>
+#include <vector>
+
+#include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/elimination_order.h"
+#include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
 
@@ -6,10 +14,8 @@ namespace chordalg {
 // Described for atom computation by Berry, Pogorelcnik, and Simonet.
 // paper: http://www.mdpi.com/1999-4893/3/2/197
 //
-//
-// @result: clique minimal separators of G_
 void MCSmPlus(const Graph& G,
-              EliminationOrder& eo, 
+              EliminationOrder& eo,
               std::vector< VertexList >& F,
               VertexList& minsep_generators) {
     int s = -1;  // as in paper: for finding minimal separator generators
@@ -54,7 +60,7 @@ void MCSmPlus(const Graph& G,
                     if (label[z] != kDeleted && !reached[z]) {
                         reached[z] = true;
                         reach[ label[z] ].push_back(z);
-                        if (label[z] > (int) j) {
+                        if (label[z] > static_cast<int>(j)) {
                             Y.push_back(z);
                             reach[ label[z] ].push_back(z);
                         } else {

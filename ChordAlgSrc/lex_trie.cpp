@@ -1,12 +1,20 @@
-#include "lex_trie.h"
+#include "ChordAlgSrc/lex_trie.h"
 
-//----------------------------//
-// Constructors / Destructors //
-//----------------------------//
+#include <algorithm>
+#include <iterator>
+#include <iostream>
+#include <sstream>
+#include <string>
+
+//////////////////
+// c'tors & d'tors
 
 namespace chordalg {
 
-LexTrieIterator::LexTrieIterator(size_t n, LexTrieNode* root, const LexTrie* T) :
+LexTrieIterator::LexTrieIterator(
+    size_t n,
+    LexTrieNode* root,
+    const LexTrie* T) :
     n_(n),
     set_(),
     nodes_(),
@@ -24,7 +32,8 @@ LexTrie::LexTrie(size_t n) : n_(n), set_count_(0) {
     try {
         this->root_ = new LexTrieNode(false);
     } catch(const std::bad_alloc& e) {
-        std::cerr << "In LexTrie.cpp LexTrie(size_t): " << e.what() << std::endl;
+        std::cerr << "In LexTrie.cpp LexTrie(size_t): " << e.what();
+        std::cerr << std::endl;
     }
     return;
 }
@@ -36,13 +45,8 @@ LexTrieNode::~LexTrieNode() {
     return;
 }
 
-//----------------------------//
-// Constructors / Destructors //
-//----------------------------//
-
-//------------------//
-// Member functions //
-//------------------//
+/////////////
+// Member Fns
 
 std::string FiniteSet::str() const {
     if (empty()) {
@@ -79,14 +83,6 @@ size_t LexTrieNode::SizeOf(size_t n) const {
     // + size of fast_array class
     return size + sizeof(*this);
 }
-
-//------------------//
-// Member functions //
-//------------------//
-
-//--------------------//
-// Iterator Functions //
-//--------------------//
 
 LexTrieIterator LexTrie::begin() const {
     if (set_count_ == 0) {
@@ -140,9 +136,5 @@ LexTrieIterator LexTrieIterator::operator++() {
     } while (!nodes_.back()->has_set_);
     return *this;
 }
-
-//--------------------//
-// Iterator Functions //
-//--------------------//
 
 }  // namespace chordalg

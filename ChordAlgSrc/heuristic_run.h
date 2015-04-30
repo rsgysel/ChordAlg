@@ -2,23 +2,13 @@
  *  heuristic_run.h - runs a heuristic experiment
  */
 
-#ifndef INCLUDE_HEURISTIC_RUNS_H_
-#define INCLUDE_HEURISTIC_RUNS_H_
+#ifndef CHORDALGSRC_HEURISTIC_RUN_H_
+#define CHORDALGSRC_HEURISTIC_RUN_H_
 
-#include <cfloat>
-#include <cstdlib>
-#include <ctime>
-
-#include <set>
 #include <string>
 #include <vector>
-#include <utility>
 
-#include "ChordAlgSrc/atoms.h"
 #include "ChordAlgSrc/elimination_algorithm.h"
-#include "ChordAlgSrc/elimination_order.h"
-#include "ChordAlgSrc/file_reader.h"
-#include "ChordAlgSrc/intersection_graph.h"
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/vertices.h"
 
@@ -28,10 +18,10 @@ std::string SetupAndRunHeuristic(
     std::string filename,
     std::vector< EliminationCriterion > criterion,
     std::vector< EliminationMode > modes,
-    bool atoms=false,
-    size_t runs=1,
-    float deficiency_wt=0,
-    float separation_wt=0);
+    bool atoms = false,
+    size_t runs = 1,
+    float deficiency_wt = 0,
+    float separation_wt = 0);
 
 class HeuristicRun {
  public:
@@ -39,10 +29,11 @@ class HeuristicRun {
     HeuristicRun(const HeuristicRun&) = delete;
     void operator=(const HeuristicRun&) = delete;
 
-    HeuristicRun(const Graph*, 
-                 const std::vector< EliminationParameters* >*,
-                 bool,
-                 size_t);
+    HeuristicRun(
+        const Graph*,
+        const std::vector< EliminationParameters* >*,
+        bool,
+        size_t);
     virtual ~HeuristicRun() {}
 
     std::vector< VertexPair > fill_edges() const;
@@ -52,6 +43,7 @@ class HeuristicRun {
     Weight fill_weight() const {
         return fill_weight_;
     }
+
  protected:
     const Graph* const G_;
     const std::vector< EliminationParameters* >* elimination_parameters_;
@@ -64,4 +56,4 @@ class HeuristicRun {
 
 }  // namespace chordalg
 
-#endif  // INCLUDE_HEURISTIC_RUNS_H_
+#endif  // CHORDALGSRC_HEURISTIC_RUN_H_

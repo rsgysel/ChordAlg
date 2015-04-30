@@ -1,13 +1,9 @@
-#ifndef INCLUDE_FILE_GRAPH_FILE_H_
-#define INCLUDE_FILE_GRAPH_FILE_H_
+#ifndef CHORDALGSRC_GRAPH_FILE_H_
+#define CHORDALGSRC_GRAPH_FILE_H_
 
-#include <cstring>
 #include <fstream>
 #include <iostream>
-#include <set>
 #include <string>
-
-#include "chordalg_string.h"
 
 namespace chordalg {
 
@@ -23,17 +19,18 @@ enum class FileType {
 class GraphFile {
  public:
     GraphFile(const GraphFile&) = delete;
-    GraphFile(std::string filename);
+    explicit GraphFile(std::string filename);
     virtual ~GraphFile();
 
     virtual std::istream& GetLine(std::string& str);
     FileType file_type() const {
         return file_type_;
     }
+
  protected:
     // Constructors for Mocking
     GraphFile();
-    GraphFile(FileType);
+    explicit GraphFile(FileType);
 
     std::ifstream file_stream_;
     FileType file_type_;
@@ -49,6 +46,6 @@ class GraphFile {
     bool IsNexusMRPFile(std::string) const;
 };
 
-} // namespace chordalg
+}  // namespace chordalg
 
-#endif // INCLUDE_FILE_READER_H_
+#endif  // CHORDALGSRC_GRAPH_FILE_H_

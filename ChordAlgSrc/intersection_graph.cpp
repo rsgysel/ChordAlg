@@ -1,15 +1,21 @@
-#include "intersection_graph.h"
+#include "ChordAlgSrc/intersection_graph.h"
 
 #include <algorithm>
+#include <iterator>
+#include <sstream>
 #include <string>
-#include <vector>
+
+#include "ChordAlgSrc/file_reader.h"
+#include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/lex_trie.h"
 
 namespace chordalg {
 
 //////////////////
 // ctor's & dtor's
 
-CharacterIntersectionGraph::CharacterIntersectionGraph(CharacterIntGraphFR* fr) :
+CharacterIntersectionGraph::CharacterIntersectionGraph(
+    CharacterIntGraphFR* fr) :
     Graph(fr),
     subsets_(fr->subsets()),
     taxon_name_(fr->taxon_name()) {
@@ -20,7 +26,8 @@ CharacterIntersectionGraph::~CharacterIntersectionGraph() {
     return;
 }
 
-PartitionIntersectionGraph::PartitionIntersectionGraph(PartitionIntGraphFR* fr) :
+PartitionIntersectionGraph::PartitionIntersectionGraph(
+    PartitionIntGraphFR* fr) :
     CharacterIntersectionGraph(fr),
     vertex_color_(fr->vertex_color()) {
     return;

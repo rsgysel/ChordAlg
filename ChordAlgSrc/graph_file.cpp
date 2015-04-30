@@ -1,4 +1,11 @@
-#include "graph_file.h"
+#include "ChordAlgSrc/graph_file.h"
+
+#include <fstream>
+#include <iostream>
+#include <set>
+#include <string>
+
+#include "ChordAlgSrc/chordalg_string.h"
 
 namespace chordalg {
 
@@ -137,7 +144,7 @@ bool GraphFile::IsDimacsFile(std::string filename) const {
                 break;
             }
             case 'e' : {
-                if (!problem_line_seen || 
+                if (!problem_line_seen ||
                     line_tokens.size() != 3 ||
                     !IsNum(line_tokens[1]) ||
                     !IsNum(line_tokens[2])) {
@@ -188,12 +195,12 @@ bool GraphFile::IsMatrixFile(std::string filename) const {
     // First line is the name of the experiment, and is arbitrary
     std::string line;
     getline(file_stream, line);
-    
+
     // Second line is the number of rows and columns
     std::getline(file_stream, line);
     StringTokens line_tokens = Split(line, " \t");
     if (line_tokens.size() != 2 ||
-        !IsNum(line_tokens[0]) || 
+        !IsNum(line_tokens[0]) ||
         !IsNum(line_tokens[1])) {
         return false;
     }
@@ -249,7 +256,7 @@ bool GraphFile::IsNexusMRPFile(std::string filename) const {
         line_tokens[0].compare("begin") != 0 ||
         line_tokens[1].compare("data") != 0) {
         return false;
-    } 
+    }
 
     // Line 3: Dimensions ntax = 3, nchar = 3;
     do {
@@ -331,4 +338,4 @@ bool GraphFile::IsNexusMRPFile(std::string filename) const {
     return true;
 }
 
-} // namespace chordalg
+}  // namespace chordalg

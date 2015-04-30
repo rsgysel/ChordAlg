@@ -1,17 +1,28 @@
-#include "elimination_algorithm.h"
+#include "ChordAlgSrc/elimination_algorithm.h"
 
+#include <cstdlib>
 #include <algorithm>
+#include <iterator>
+#include <set>
+#include <sstream>
+#include <string>
+#include <vector>
 #include <utility>
+
+#include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/separator.h"
+#include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
 
 ////////////////////////
 // EliminationParameters
 
-EliminationParameters::EliminationParameters(EliminationCriterion criterion,
-                                             EliminationMode mode,
-                                             float deficiency_wt,
-                                             float separation_wt) :
+EliminationParameters::EliminationParameters(
+    EliminationCriterion criterion,
+    EliminationMode mode,
+    float deficiency_wt,
+    float separation_wt) :
     criterion_(criterion),
     mode_(mode),
     deficiency_wt_(deficiency_wt),
@@ -19,8 +30,9 @@ EliminationParameters::EliminationParameters(EliminationCriterion criterion,
     return;
 }
 
-Weight EliminationParameters::ObjectiveFn(Weight deficiency,
-                                          Weight separated) const {
+Weight EliminationParameters::ObjectiveFn(
+    Weight deficiency,
+    Weight separated) const {
     if (criterion_ == EliminationCriterion::RATIO) {
         return deficiency / (1 + separated);
     } else if (criterion_ == EliminationCriterion::WSUM) {
@@ -28,7 +40,9 @@ Weight EliminationParameters::ObjectiveFn(Weight deficiency,
     } else if (criterion_ == EliminationCriterion::DEFICIENCY) {
         return deficiency;
     } else {
-        std::cerr << "Error in EliminationParameters::ObjectiveFn: bad criterion" << std::endl;
+        std::cerr <<
+            "Error in EliminationParameters::ObjectiveFn: bad criterion" <<
+            std::endl;
         exit(EXIT_FAILURE);
     }
 }
@@ -48,8 +62,9 @@ bool EliminationParameters::Mixed() const {
 ////////////////////////////
 // Constructors, Destructors
 
-EliminationAlgorithm::EliminationAlgorithm(const Graph* G,
-                                           const EliminationParameters* parameters) :
+EliminationAlgorithm::EliminationAlgorithm(
+    const Graph* G,
+    const EliminationParameters* parameters) :
     G_(G),
     parameters_(parameters),
     eo_(G_),
@@ -97,7 +112,7 @@ void EliminationAlgorithm::Run() {
         // Monochromatic pair costs
         for (Vertex v : *G_) {
             for (Vertex u : *G_) {
-                Weight wt = G_->FillCount(u,v);
+                Weight wt = G_->FillCount(u, v);
                 if (u != v && wt > 0) {
                     VertexPair uv = VertexPair(std::min(u, v), std::max(u, v));
                     unseparated_pairs_[uv] = wt;
@@ -270,7 +285,8 @@ std::pair< Weight, Weight > EliminationAlgorithm::WeightOf(Vertex v) {
             }
         }
         return std::pair< Weight, Weight>(
-            parameters_->ObjectiveFn(deficiency_wt, separated_wt), deficiency_wt);
+            parameters_->ObjectiveFn(deficiency_wt, separated_wt),
+            deficiency_wt);
     } else {
         Weight wt = 0;
         for (VertexPair uv : VertexPairs(MonotoneNbhd(v))) {

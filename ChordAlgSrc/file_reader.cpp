@@ -1,12 +1,16 @@
-#include "file_reader.h"
+#include "ChordAlgSrc/file_reader.h"
 
 #include <algorithm>
-#include <list>
+#include <iostream>
 #include <map>
-#include <set>
 #include <string>
-#include <utility>
 #include <vector>
+#include <utility>
+
+#include "ChordAlgSrc/chordalg_string.h"
+#include "ChordAlgSrc/graph_file.h"
+#include "ChordAlgSrc/lex_trie.h"
+#include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
 
@@ -208,7 +212,7 @@ void GraphFR::ComputeNames(size_t order) {
         (*names_)[v] = name;
     }
     return;
-}   
+}
 
 void CharacterIntGraphFR::ComputeGraphData() {
     size_t order = subsets_.size();
@@ -245,7 +249,7 @@ void CharacterIntGraphFR::ComputeGraphData() {
     return;
 }
 
-void CharacterIntGraphFR::TieSubsetsToVertices(const CharacterMatrix* M) { 
+void CharacterIntGraphFR::TieSubsetsToVertices(const CharacterMatrix* M) {
     size_t rows = M->rows();
     size_t cols = M->cols();
     for (size_t j = 0; j < cols; ++j) {
@@ -264,7 +268,7 @@ void CharacterIntGraphFR::TieSubsetsToVertices(const CharacterMatrix* M) {
 }
 
 void PartitionIntGraphFR::AddVertex(
-    FiniteSet C, 
+    FiniteSet C,
     const CharacterMatrix* M,
     size_t col) {
     if (!C.empty()) {
@@ -283,7 +287,7 @@ void CellIntGraphFR::AddVertex(
     const CharacterMatrix* M,
     size_t col) {
     if (!C.empty()) {
-        if(!subset_family_) {
+        if (!subset_family_) {
             subset_family_ = new LexTrie(M->rows());
         }
         bool new_cell;
@@ -294,7 +298,8 @@ void CellIntGraphFR::AddVertex(
             size_t cell = subsets_.size();
             cell_id_[node] = cell;
             size_t state = (*M)[C[0]][col];
-            std::string name = std::to_string(col) + "#" + std::to_string(state);
+            std::string name = std::to_string(col) + "#"
+                               + std::to_string(state);
             vertex_id_[name] = cell;
             subsets_.push_back(FiniteSet(C));
             vertex_colors_.push_back(Multicolor());
@@ -332,7 +337,8 @@ void GraphFR::ParseDimacs(
                     size_t new_vertex_id = vertex_id_.size();
                     vertex_id_[line_tokens[2]] = new_vertex_id;
                 }
-                Vertex v1 = vertex_id_[line_tokens[1]], v2 = vertex_id_[line_tokens[2]];
+                Vertex v1 = vertex_id_[line_tokens[1]];
+                Vertex v2 = vertex_id_[line_tokens[2]];
                 (*adjacency_lists)[v1].push_back(line_tokens[2]);
                 (*adjacency_lists)[v2].push_back(line_tokens[1]);
                 break;
@@ -370,7 +376,7 @@ void GraphFR::ParseAdjList(
         }
         ++row;
     }
-    return;    
+    return;
 }
 
 CharacterMatrix* CharacterIntGraphFR::ParseMatrix() {
@@ -457,7 +463,7 @@ CharacterMatrix* CharacterIntGraphFR::ParseNexusMRP() {
                     (*M)[i][j] = M->kMissingData();
                     break;
                 }
-            }            
+            }
         }
         ++i;
     }

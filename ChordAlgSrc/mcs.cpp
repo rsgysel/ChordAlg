@@ -1,9 +1,15 @@
-#include "mcs.h"
+#include "ChordAlgSrc/mcs.h"
 
 #include <algorithm>
 #include <list>
-#include <utility>
+#include <iostream>
 #include <vector>
+#include <utility>
+
+#include "ChordAlgSrc/elimination_order.h"
+#include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/tree_representation.h"
+#include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
 

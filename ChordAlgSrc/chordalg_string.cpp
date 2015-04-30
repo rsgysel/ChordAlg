@@ -1,4 +1,7 @@
-#include "chordalg_string.h"
+#include "ChordAlgSrc/chordalg_string.h"
+
+#include <cstring>
+#include <string>
 
 namespace chordalg {
 
@@ -18,7 +21,7 @@ StringTokens Split(std::string str, std::string delim) {
     char* pch = nullptr;
     char* cstr = new char[str.length() + 1];
     char* saveptr;
-    std::strcpy(cstr, str.c_str());
+    std::snprintf(cstr, str.length() + 1, "%s", str.c_str());
     pch = strtok_r(cstr, delim.c_str(), &saveptr);
     while (pch) {
         std::string tok(pch);
@@ -34,4 +37,4 @@ StringTokens Split(std::string str, std::string delim) {
     return tokens;
 }
 
-}  // namespace ChordAlg
+}  // namespace chordalg

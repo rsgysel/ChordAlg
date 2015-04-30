@@ -1,9 +1,13 @@
+#include "ChordAlgSrc/graph.h"
+
 #include <algorithm>
 #include <map>
 #include <string>
 #include <vector>
 
-#include "graph.h"
+#include "ChordAlgSrc/file_reader.h"
+#include "ChordAlgSrc/lex_trie.h"
+#include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
 
@@ -63,6 +67,22 @@ InducedSubgraph::InducedSubgraph(const Graph* G, Vertices U) :
 Graph::~Graph() {
     delete neighborhoods_;
     delete vertex_names_;
+}
+
+Vertices Graph::V() const {
+    Vertices V(order_);
+    for (size_t i = 0; i < V.size(); ++i) {
+        V[i] = i;
+    }
+    return V;
+}
+
+GraphVertexIterator Graph::begin() const {
+    return GraphVertices(this, order_).begin();
+}
+
+GraphVertexIterator Graph::end() const {
+    return GraphVertices(this, order_).end();
 }
 
 void Graph::Init() {

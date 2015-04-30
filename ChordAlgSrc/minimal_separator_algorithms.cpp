@@ -1,4 +1,11 @@
-#include "minimal_separator_algorithms.h"
+#include "ChordAlgSrc/minimal_separator_algorithms.h"
+
+#include <string>
+
+#include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/lex_trie.h"
+#include "ChordAlgSrc/separator.h"
+#include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
 

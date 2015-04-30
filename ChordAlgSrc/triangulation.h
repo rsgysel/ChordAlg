@@ -1,11 +1,10 @@
-#ifndef TRIANGULATION_H_
-#define TRIANGULATION_H_
+#ifndef CHORDALGSRC_TRIANGULATION_H_
+#define CHORDALGSRC_TRIANGULATION_H_
 
-#include "graph.h"
-#include "elimination_algorithm.h"
-#include "elimination_order.h"
-#include "heuristic_run.h"
-#include "mcs.h"
+#include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/elimination_algorithm.h"
+#include "ChordAlgSrc/elimination_order.h"
+#include "ChordAlgSrc/heuristic_run.h"
 
 namespace chordalg {
 
@@ -15,9 +14,9 @@ class Triangulation : public Graph {
     Triangulation(const Triangulation&) = delete;
     void operator=(const Triangulation&) = delete;
 
-    Triangulation(const Graph*, const EliminationAlgorithm*);
-    Triangulation(const Graph*, const EliminationOrder*);
-    Triangulation(const Graph*, const HeuristicRun*);
+    explicit Triangulation(const Graph*, const EliminationAlgorithm*);
+    explicit Triangulation(const Graph*, const EliminationOrder*);
+    explicit Triangulation(const Graph*, const HeuristicRun*);
 
     VertexName name(Vertex v) const {
         return G_->name(v);
@@ -29,4 +28,4 @@ class Triangulation : public Graph {
 
 }  // namespace chordalg
 
-#endif  // TRIANGULATION_H_
+#endif  // CHORDALGSRC_TRIANGULATION_H_

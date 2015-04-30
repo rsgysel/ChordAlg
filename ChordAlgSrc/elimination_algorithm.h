@@ -2,27 +2,18 @@
  *  elimination_algorithm.h - base class for vertex elimination algorithms
  */
 
-#ifndef INCLUDE_ELIMINATION_ALGORITHM_H_
-#define INCLUDE_ELIMINATION_ALGORITHM_H_
+#ifndef CHORDALGSRC_ELIMINATION_ALGORITHM_H_
+#define CHORDALGSRC_ELIMINATION_ALGORITHM_H_
 
-#include <cfloat>
-#include <cstdlib>
-#include <ctime>
-
-#include <algorithm>
-#include <set>
-#include <sstream>
+#include <map>
 #include <string>
 #include <vector>
 #include <utility>
 
-#include "atoms.h"
-#include "elimination_order.h"
-#include "file_reader.h"
-#include "intersection_graph.h"
-#include "graph.h"
-#include "separator.h"
-#include "vertices.h"
+#include "ChordAlgSrc/elimination_order.h"
+#include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/separator.h"
+#include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
 
@@ -30,9 +21,9 @@ namespace chordalg {
 #define MAX_WEIGHT DBL_MAX;
 
 enum class EliminationCriterion {
-    DEFICIENCY, // #deficient pairs needed to saturate nbhd
-    RATIO,      // #separated pairs / #deficient pairs
-    WSUM        // #separated pairs - d #deficient pairs
+    DEFICIENCY,         // #deficient pairs needed to saturate nbhd
+    RATIO,              // #separated pairs / #deficient pairs
+    WSUM                // #separated pairs - d #deficient pairs
 };  // EliminationCriterion
 
 enum class EliminationMode {
@@ -47,12 +38,13 @@ class EliminationParameters {
     EliminationParameters(const EliminationParameters&) = delete;
     void operator=(const EliminationParameters&) = delete;
 
-    explicit EliminationParameters(EliminationCriterion,
-                                   EliminationMode,
-                                   float deficiency_wt=0, 
-                                   float separation_wt=0);
+    explicit EliminationParameters(
+        EliminationCriterion,
+        EliminationMode,
+        float deficiency_wt = 0,
+        float separation_wt = 0);
 
-    Weight ObjectiveFn(Weight deficiency, Weight separation=0) const;
+    Weight ObjectiveFn(Weight, Weight separation = 0) const;
     bool Classic() const;
     bool LBElimination() const;
     bool Mixed() const;
@@ -61,7 +53,6 @@ class EliminationParameters {
     EliminationCriterion criterion_;
     EliminationMode mode_;
     float deficiency_wt_, separation_wt_;
-
 };  // EliminationParameters
 
 class EliminationAlgorithm {
@@ -70,7 +61,7 @@ class EliminationAlgorithm {
     EliminationAlgorithm(const EliminationAlgorithm&) = delete;
     void operator=(const EliminationAlgorithm&) = delete;
 
-    explicit EliminationAlgorithm(const Graph* G, const EliminationParameters*);
+    explicit EliminationAlgorithm(const Graph*, const EliminationParameters*);
     virtual ~EliminationAlgorithm();
 
     virtual void Run();
@@ -136,4 +127,4 @@ class EliminationAlgorithm {
 
 }  // namespace chordalg
 
-#endif  // INCLUDE_ELIMINATION_ALGORITHM_H_
+#endif  // CHORDALGSRC_ELIMINATION_ALGORITHM_H_
