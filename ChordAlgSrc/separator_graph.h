@@ -25,10 +25,9 @@ class SeparatorGraph : public Graph {
     void operator=(const SeparatorGraph&) = delete;
 
     SeparatorGraph(const Graph*, const MinsepVector*);
-    SeparatorGraph(const Graph*, const MinsepTrie*);
     virtual ~SeparatorGraph();
 
-    void Init();
+    static SeparatorGraph* New(const Graph*);
 
     std::string str() const;
     VertexName name(Vertex v) const;
@@ -38,6 +37,9 @@ class SeparatorGraph : public Graph {
     }
 
  protected:
+    SeparatorGraph(const Graph*, const MinsepTrie*);
+    void Init();
+
     const Graph* const G_;                  // Original graph
     const MinsepVector* const M_;
 

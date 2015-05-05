@@ -25,9 +25,10 @@ int main(int argc, char* argv[]) {
         size_t minimal_separators = A->clique_minimal_separators().size();
         size_t crossing_relations = 0;
         for (auto a : *A) {
-            SeparatorGraph SepG(a, MinimalSeparators(*a));
-            minimal_separators += SepG.order();
-            crossing_relations += SepG.size();
+            SeparatorGraph* SepG = SeparatorGraph::New(a);
+            minimal_separators += SepG->order();
+            crossing_relations += SepG->size();
+            delete SepG;
         }
 
         std::cout << "Minimal separators: " << minimal_separators << '\n';

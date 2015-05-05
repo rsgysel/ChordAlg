@@ -3,6 +3,7 @@
 #include <string>
 
 #include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/minimal_separator_algorithms.h"
 #include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
@@ -39,6 +40,11 @@ SeparatorGraph::SeparatorGraph(const Graph* G, const MinsepTrie* M) :
 
 SeparatorGraph::~SeparatorGraph() {
     delete M_;
+}
+
+SeparatorGraph* SeparatorGraph::New(const Graph* G) {
+    SeparatorGraph* SG = new SeparatorGraph(G, MinimalSeparators(*G));
+    return SG;
 }
 
 void SeparatorGraph::Init() {

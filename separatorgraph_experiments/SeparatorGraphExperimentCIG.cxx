@@ -20,9 +20,10 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     } else {
         CellIntersectionGraph* G = CellIntersectionGraph::New(argv[1]);
-        SeparatorGraph SepG(G, MinimalSeparators(*G));
-        std::cout << "Minimal separators: " << SepG.order() << '\n';
-        std::cout << "Crossing relations: " << SepG.size() << '\n';
+        SeparatorGraph* SepG = SeparatorGraph::New(G);
+        std::cout << "Minimal separators: " << SepG->order() << '\n';
+        std::cout << "Crossing relations: " << SepG->size() << '\n';
+        delete SepG;
         delete G;
     }
     return EXIT_SUCCESS;
