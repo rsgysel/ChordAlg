@@ -71,8 +71,10 @@ Graph::~Graph() {
 }
 
 Graph* Graph::New(std::string filename) {
-    GraphFile file(filename);
-    return New(&file);
+    GraphFile* file = GraphFile::New(filename);
+    Graph* G = New(file);
+    delete file;
+    return G;
 }
 
 Graph* Graph::New(GraphFile* file) {

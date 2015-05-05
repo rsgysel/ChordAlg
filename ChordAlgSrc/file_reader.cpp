@@ -25,7 +25,7 @@ GraphFR::GraphFR(GraphFile* file) :
 }
 
 GraphFR::GraphFR(std::string filename) :
-    file_(new GraphFile(filename)),
+    file_(GraphFile::New(filename)),
     neighborhoods_(nullptr),
     names_(nullptr) {
     return;
@@ -83,8 +83,10 @@ CellIntGraphFR::~CellIntGraphFR() {
 }
 
 GraphFR* GraphFR::New(std::string filename) {
-    GraphFile file(filename);
-    return New(&file);
+    GraphFile* file = GraphFile::New(filename);
+    GraphFR* file_reader = New(file);
+    delete file;
+    return file_reader;
 }
 
 GraphFR* GraphFR::New(GraphFile* file) {
@@ -94,8 +96,10 @@ GraphFR* GraphFR::New(GraphFile* file) {
 }
 
 PartitionIntGraphFR* PartitionIntGraphFR::New(std::string filename) {
-    GraphFile file(filename);
-    return New(&file);
+    GraphFile* file = GraphFile::New(filename);
+    PartitionIntGraphFR* file_reader = New(file);
+    delete file;
+    return file_reader;
 }
 
 PartitionIntGraphFR* PartitionIntGraphFR::New(GraphFile* file) {
@@ -105,8 +109,10 @@ PartitionIntGraphFR* PartitionIntGraphFR::New(GraphFile* file) {
 }
 
 CellIntGraphFR* CellIntGraphFR::New(std::string filename) {
-    GraphFile file(filename);
-    return New(&file);
+    GraphFile* file = GraphFile::New(filename);
+    CellIntGraphFR* file_reader = New(file);
+    delete file;
+    return file_reader;
 }
 
 CellIntGraphFR* CellIntGraphFR::New(GraphFile* file) {

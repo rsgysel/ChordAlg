@@ -19,16 +19,16 @@ enum class FileType {
 class GraphFile {
  public:
     GraphFile(const GraphFile&) = delete;
-    explicit GraphFile(std::string filename);
     virtual ~GraphFile();
 
-    virtual std::istream& GetLine(std::string& str);
+    static GraphFile* New(std::string);
+
+    virtual std::istream& GetLine(std::string&);
     FileType file_type() const {
         return file_type_;
     }
 
  protected:
-    // Constructors for Mocking
     GraphFile();
     explicit GraphFile(FileType);
 

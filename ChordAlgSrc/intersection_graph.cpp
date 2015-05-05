@@ -51,8 +51,10 @@ CellIntersectionGraph::~CellIntersectionGraph() {
 }
 
 PartitionIntersectionGraph* PartitionIntersectionGraph::New(std::string filename) {
-    GraphFile file(filename);
-    return New(&file);
+    GraphFile* file = GraphFile::New(filename);
+    PartitionIntersectionGraph* G = New(file);
+    delete file;
+    return G;
 }
 
 PartitionIntersectionGraph* PartitionIntersectionGraph::New(GraphFile* file) {
@@ -63,8 +65,10 @@ PartitionIntersectionGraph* PartitionIntersectionGraph::New(GraphFile* file) {
 }
 
 CellIntersectionGraph* CellIntersectionGraph::New(std::string filename) {
-    GraphFile file(filename);
-    return New(&file);
+    GraphFile* file = GraphFile::New(filename);
+    CellIntersectionGraph* G = New(file);
+    delete file;
+    return G;
 }
 
 CellIntersectionGraph* CellIntersectionGraph::New(GraphFile* file) {

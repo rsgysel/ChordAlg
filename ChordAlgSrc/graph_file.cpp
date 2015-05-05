@@ -9,14 +9,6 @@
 
 namespace chordalg {
 
-GraphFile::GraphFile(std::string filename) :
-    file_type_(FileType::UNKNOWN) {
-    file_stream_.open(filename.c_str());
-    AssertOrDie(file_stream_, "Error: can't open " + filename);
-    GetFileType(filename);
-    return;
-}
-
 GraphFile::GraphFile() :
     file_type_(FileType::UNKNOWN) {
     return;
@@ -30,6 +22,14 @@ GraphFile::GraphFile(FileType file_type) :
 GraphFile::~GraphFile() {
     file_stream_.close();
     return;
+}
+
+GraphFile* GraphFile::New(std::string filename) {
+    GraphFile* file = new GraphFile();
+    file->file_stream_.open(filename.c_str());
+    file->AssertOrDie(file->file_stream_, "Error: can't open " + filename);
+    file->GetFileType(filename);
+    return file;
 }
 
 std::istream& GraphFile::GetLine(std::string& str) {
