@@ -237,7 +237,7 @@ void GraphFR::ComputeGraphData(
         Vertices* nbhd = &(*neighborhoods_)[i];
         for (std::string neighbor : (*adjacency_lists)[i]) {
             Vertex v = vertex_id_[neighbor];
-            nbhd->add(v);
+            nbhd->push_back(v);
         }
         std::sort(nbhd->begin(), nbhd->end());
     }
@@ -279,8 +279,8 @@ void CharacterIntGraphFR::ComputeGraphData() {
     for (std::pair< VertexPair, bool > p : edges) {
         VertexPair e = p.first;
         Vertex u = e.first, v = e.second;
-        (*neighborhoods_)[u].add(v);
-        (*neighborhoods_)[v].add(u);
+        (*neighborhoods_)[u].push_back(v);
+        (*neighborhoods_)[v].push_back(u);
     }
     for (Vertices& V : *neighborhoods_) {
         std::sort(V.begin(), V.end());

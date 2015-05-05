@@ -41,9 +41,9 @@ void SeparatorComponents::SeparateNbhd(Vertex v) {
 
 void SeparatorComponents::SeparateClosedNbhd(Vertex v) {
     Vertices S;
-    S.add(v);
+    S.push_back(v);
     for (Vertex u : G_->N(v)) {
-        S.add(u);
+        S.push_back(u);
     }
     FillSet fill;
     InitializeS(S);
@@ -70,7 +70,7 @@ void SeparatorComponents::InitializeS(const Vertices& S) {
     // intialize separator
     S_.clear();
     for (Vertex v : S) {
-        S_.add(v);
+        S_.push_back(v);
     }
     // initialize connected component of each vertex
     for (Vertex v : *G_) {
@@ -115,7 +115,7 @@ Vertices SeparatorComponents::ConnectedComponent(Vertex v) const {
     }
     for (Vertex u : *G_) {
         if (AreConnected(u, v)) {
-            C.add(u);
+            C.push_back(u);
         }
     }
     return C;
@@ -127,10 +127,10 @@ Vertices SeparatorComponents::GetNeighborhood(Vertex u, FillSet& fill) {
     } else {
         Vertices neighborhood;
         for (Vertex v : G_->N(u)) {
-            neighborhood.add(v);
+            neighborhood.push_back(v);
         }
         for (Vertex v : fill[u]) {
-            neighborhood.add(v);
+            neighborhood.push_back(v);
         }
         return neighborhood;
     }

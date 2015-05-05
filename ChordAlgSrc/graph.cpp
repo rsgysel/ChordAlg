@@ -156,7 +156,7 @@ AdjacencyLists* Graph::InducedVertices(const Graph& super_graph, Vertices X) {
             if (in_subgraph[u]) {
                 Vertex v_induced_id = vertex_order[v];
                 Vertex u_induced_id = vertex_order[u];
-                (*a_lists)[v_induced_id].add(u_induced_id);
+                (*a_lists)[v_induced_id].push_back(u_induced_id);
             }
         }
     }

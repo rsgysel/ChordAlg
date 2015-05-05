@@ -149,7 +149,7 @@ void EliminationAlgorithm::Eliminate(Vertex v) {
         return;
     } else {
         Vertices S = MonotoneNbhd(v);
-        S.add(v);
+        S.push_back(v);
         B_->Separate(S, fill_neighbors_);
         for (Block B : *B_) {
             for (VertexPair uv : VertexPairs(B.NC())) {
@@ -224,12 +224,12 @@ Vertices EliminationAlgorithm::MonotoneNbhd(Vertex v) {
     Vertices N_alpha;
     for (Vertex u : G_->N(v)) {
         if (!IsRemoved(u)) {
-            N_alpha.add(u);
+            N_alpha.push_back(u);
         }
     }
     for (Vertex u : fill_neighbors_[v]) {
         if (!IsRemoved(u)) {
-            N_alpha.add(u);
+            N_alpha.push_back(u);
         }
     }
     return N_alpha;
@@ -239,7 +239,7 @@ AdjacencyLists* EliminationAlgorithm::TriangNbhds() const {
     AdjacencyLists* a_lists = new AdjacencyLists(G_->neighbors());
     for (Vertex v : *G_) {
         for (Vertex u : fill_neighbors_[v]) {
-            (*a_lists)[v].add(u);
+            (*a_lists)[v].push_back(u);
         }
     }
     return a_lists;
@@ -261,7 +261,7 @@ std::pair< Weight, Weight > EliminationAlgorithm::WeightOf(Vertex v) {
     if (parameters_->LBElimination()) {
         Weight deficiency_wt = 0, separated_wt = 0;
         Vertices S = MonotoneNbhd(v);
-        S.add(v);
+        S.push_back(v);
         B_->Separate(S , fill_neighbors_);
         // monochromatic fill pairs
         std::set< VertexPair > seen_fill_pairs;

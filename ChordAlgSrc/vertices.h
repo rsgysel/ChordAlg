@@ -13,6 +13,8 @@
 #include <vector>
 #include <utility>
 
+#include "ChordAlgSrc/lex_trie.h"
+
 namespace chordalg {
 
 // Forward declarations
@@ -28,13 +30,6 @@ typedef std::list   < Vertex >          VertexList;
 typedef std::set    < Vertex >          VertexSet;
 typedef std::vector < Vertex >          VertexVector;
 
-typedef VertexList::iterator            VLIterator;
-typedef VertexList::const_iterator      VLConstItr;
-typedef VertexSet::iterator             VSIterator;
-typedef VertexSet::const_iterator       VSConstItr;
-typedef VertexVector::iterator          VVIterator;
-typedef VertexVector::const_iterator    VVConstItr;
-
 typedef Vertices                        Nbhd;
 typedef std::vector< Nbhd >             AdjacencyLists;
 
@@ -48,92 +43,29 @@ typedef std::list< Color >              Multicolor;
 typedef double                          Weight;         // weight of fill edge
 typedef std::pair< Vertex, Weight >     VertexWeight;
 
-class Vertices {
+class Vertices : public VertexVector {
  public:
-    typedef VertexVector::const_iterator const_iterator;
+    Vertices();
+    explicit Vertices(size_t);
+    explicit Vertices(FiniteSet);
+    explicit Vertices(VertexList);
+    explicit Vertices(VertexSet);
+    explicit Vertices(VertexVector);
+    Vertices(std::initializer_list<Vertex>);
 
-    Vertices() : V_(new VertexVector()) {}
-
-    explicit Vertices(size_t n) : V_(new VertexVector(n, 0)) {}
-    explicit Vertices(VertexList V) :
-        V_(new VertexVector(V.begin(), V.end())) {}
-    explicit Vertices(VertexSet V) : V_(new VertexVector(V.begin(), V.end())) {}
-    explicit Vertices(VertexVector V) : V_(new VertexVector(V)) {}
-
-    Vertices(std::initializer_list<Vertex> V) : V_(new VertexVector(V)) {}
-    Vertices(const Vertices& other) : V_(new VertexVector(*(other.V_))) {}
-
-    ~Vertices() {
-        delete V_;
-        return;
-    }
-
-    Vertices& operator=(Vertices other) {
-        std::swap(V_, other.V_);
-        return *this;
-    }
-
-    void add(Vertex v) {
-        V_->push_back(v);
-    }
-    bool empty() const {
-        return V_->empty();
-    }
-    Vertex& operator[](size_t i) {
-        return (*V_)[i];
-    }
-    const Vertex& operator[](size_t i) const {
-        return (*V_)[i];
-    }
-    void clear() {
-        V_->clear();
-    }
-    void reserve(size_t n) {
-        V_->reserve(n);
-    }
-    size_t size() const {
-        return V_->size();
-    }
-    void sort() {
-        std::sort(begin(), end());
-    }
-
-    void merge(Vertices U, Vertices W);
-
-    VertexVector::iterator begin() {
-        return V_->begin();
-    }
-    VertexVector::const_iterator begin() const {
-        return V_->begin();
-    }
-    VertexVector::iterator end() {
-        return V_->end();
-    }
-    VertexVector::const_iterator end() const {
-        return V_->end();
-    }
-
- private:
-    VertexVector* V_;
+    void sort();
+    void merge(Vertices, Vertices);
 };  // Vertices
 
 class GraphVertexIterator {
  public:
-    explicit GraphVertexIterator(const Graph* G) : G_(G), v_(0) {}
-    explicit GraphVertexIterator(const Graph* G, Vertex v) : G_(G), v_(v) {}
+    explicit GraphVertexIterator(const Graph*);
+    explicit GraphVertexIterator(const Graph*, Vertex);
 
-    void operator++() {
-        ++v_;
-    }
-    Vertex operator*() const {
-        return v_;
-    }
-    bool operator!=(const GraphVertexIterator& other) const {
-        return !(*this == other);
-    }
-    bool operator==(const GraphVertexIterator& other) const {
-        return (G_ == other.G_) && (v_ == other.v_);
-    }
+    void operator++();
+    Vertex operator*() const;
+    bool operator!=(const GraphVertexIterator&) const;
+    bool operator==(const GraphVertexIterator&) const;
 
  private:
     const Graph* const G_;
@@ -142,15 +74,10 @@ class GraphVertexIterator {
 
 class GraphVertices : public Vertices {
  public:
-    explicit GraphVertices(const Graph* G, size_t order) :
-        Vertices(), G_(G), order_(order) {}
+    explicit GraphVertices(const Graph*, size_t);
 
-    GraphVertexIterator begin() const {
-        return GraphVertexIterator(G_);
-    }
-    GraphVertexIterator end() const {
-        return GraphVertexIterator(G_, order_);
-    }
+    GraphVertexIterator begin() const;
+    GraphVertexIterator end() const;
 
  private:
     const Graph* const G_;
@@ -164,15 +91,9 @@ class VertexPairsIterator {
     explicit VertexPairsIterator(const Vertices*, Vertex, Vertex);
 
     void operator++();
-    bool operator==(const VertexPairsIterator& other) const {
-        return (V_ == other.V_) && (v1_ == other.v1_) && (v2_ == other.v2_);
-    }
-    bool operator!=(const VertexPairsIterator& other) const {
-        return !( *this == other );
-    }
-    VertexPair operator*() {
-        return VertexPair((*V_)[v1_], (*V_)[v2_]);
-    }
+    bool operator==(const VertexPairsIterator&) const;
+    bool operator!=(const VertexPairsIterator&) const;
+    VertexPair operator*();
 
  private:
     const Vertices* const V_;
@@ -181,14 +102,10 @@ class VertexPairsIterator {
 
 class VertexPairs {
  public:
-    explicit VertexPairs(Vertices V) : V_(V), begin_(0), end_(V_.size()) {}
+    explicit VertexPairs(Vertices);
 
-    VertexPairsIterator begin() const {
-        return VertexPairsIterator(&V_, begin_, end_);
-    }
-    VertexPairsIterator end() const {
-        return VertexPairsIterator(&V_, end_, end_);
-    }
+    VertexPairsIterator begin() const;
+    VertexPairsIterator end() const;
 
  private:
     const Vertices V_;

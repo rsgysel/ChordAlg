@@ -47,8 +47,8 @@ void SeparatorGraph::ComputeCrossingRelations() {
         size_t j = 0;
         for (auto W : *M_) {
             if (i < j && S_.IsSeparated(W)) {
-                crossing_relations_[i].add(j);
-                crossing_relations_[j].add(i);
+                crossing_relations_[i].push_back(j);
+                crossing_relations_[j].push_back(i);
                 ++size_;
             }
             ++j;

@@ -61,7 +61,7 @@ AdjacencyLists* EliminationOrder::TriangNbhds() const {
         for (Vertex v : *G_) {
             (*a_lists)[v].reserve(triangulation_nbhds_[v].size());
             for (Vertex u : triangulation_nbhds_[v]) {
-                (*a_lists)[v].add(u);
+                (*a_lists)[v].push_back(u);
             }
         }
         return a_lists;
@@ -143,13 +143,13 @@ Vertices EliminationOrder::LNbhd(Vertex v) const {
     Vertices L_N;
     for (Vertex u : G_->N(v)) {
         if (Before(u, v)) {
-            L_N.add(u);
+            L_N.push_back(u);
         }
     }
     if (!triangulation_nbhds_.empty()) {
         for (Vertex u : triangulation_nbhds_[v]) {
             if (Before(u, v)) {
-                L_N.add(u);
+                L_N.push_back(u);
             }
         }
     }
@@ -160,13 +160,13 @@ Vertices EliminationOrder::RNbhd(Vertex v) const {
     Vertices R_N;
     for (Vertex u : G_->N(v)) {
         if (Before(v, u)) {
-            R_N.add(u);
+            R_N.push_back(u);
         }
     }
     if (!triangulation_nbhds_.empty()) {
         for (Vertex u : triangulation_nbhds_[v]) {
             if (Before(v, u)) {
-                R_N.add(u);
+                R_N.push_back(u);
             }
         }
     }

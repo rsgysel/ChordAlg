@@ -32,10 +32,10 @@ class Block {
     }
 
     void addC(Vertex v) {
-        C_.add(v);
+        C_.push_back(v);
     }
     void addNC(Vertex v) {
-        NC_.add(v);
+        NC_.push_back(v);
     }
 
  private:

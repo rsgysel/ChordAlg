@@ -50,32 +50,32 @@ void Atoms::ComputeAtoms() {
         Vertices S;
         for (Vertex u : G_->N(v)) {
             if (eo.Before(v, u) && !is_deleted[u]) {
-                S.add(u);
+                S.push_back(u);
             }
         }
         for (Vertex u : F[v]) {
             if (eo.Before(v, u) && !is_deleted[u]) {
-                S.add(u);
+                S.push_back(u);
             }
         }
         if (G_->HasClique(S)) {
             clique_minimal_separators_.Insert(S);
             for (Vertex u : deleted_vertices) {
-                S.add(u);
+                S.push_back(u);
             }
             cc.Separate(S);
             Vertices C = cc.ConnectedComponent(v);
             Vertices atom;
             for (Vertex u : C) {
                 if (!is_deleted[u]) {
-                    deleted_vertices.add(u);
+                    deleted_vertices.push_back(u);
                     is_deleted[u] = true;
-                    atom.add(u);
+                    atom.push_back(u);
                 }
             }
             for (Vertex u : S) {
                 if (!is_deleted[u]) {
-                    atom.add(u);
+                    atom.push_back(u);
                 }
             }
             vertices_of_atoms.push_back(atom);
@@ -85,7 +85,7 @@ void Atoms::ComputeAtoms() {
     Vertices C;
     for (Vertex v : *G_) {
         if (!is_deleted[v]) {
-            C.add(v);
+            C.push_back(v);
         }
     }
     if (!C.empty()) {

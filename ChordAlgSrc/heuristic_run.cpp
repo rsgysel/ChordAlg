@@ -146,8 +146,8 @@ std::string HeuristicRun::Run() {
 AdjacencyLists* HeuristicRun::TriangNbhds() const {
     AdjacencyLists* a_lists = new AdjacencyLists(G_->neighbors());
     for (VertexPair uv : fill_edges_) {
-        (*a_lists)[uv.first].add(uv.second);
-        (*a_lists)[uv.second].add(uv.first);
+        (*a_lists)[uv.first].push_back(uv.second);
+        (*a_lists)[uv.second].push_back(uv.first);
     }
     return a_lists;
 }

@@ -79,8 +79,8 @@ CliqueTree* MCSCliqueTree(const Graph& G) {
     AdjacencyLists* E = new AdjacencyLists;
     E->resize(s + 1);
     for (std::pair<int, int> e : ct_edges) {
-        (*E)[e.first].add(e.second);
-        (*E)[e.second].add(e.first);
+        (*E)[e.first].push_back(e.second);
+        (*E)[e.second].push_back(e.first);
     }
     CliqueTree* tr = new CliqueTree(E, &G, clique_map);
     return tr;
