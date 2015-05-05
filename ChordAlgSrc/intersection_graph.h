@@ -10,6 +10,7 @@
 
 #include "ChordAlgSrc/file_reader.h"
 #include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/graph_file.h"
 #include "ChordAlgSrc/lex_trie.h"
 #include "ChordAlgSrc/vertices.h"
 
@@ -48,6 +49,9 @@ class PartitionIntersectionGraph : public CharacterIntersectionGraph {
     explicit PartitionIntersectionGraph(PartitionIntGraphFR*);
     virtual ~PartitionIntersectionGraph();
 
+    static PartitionIntersectionGraph* New(std::string);
+    static PartitionIntersectionGraph* New(GraphFile*);
+
     Weight FillCount(Vertex, Vertex) const;
     bool IsMonochromatic(Vertex, Vertex) const;
     Color vertex_color(Vertex) const;
@@ -61,6 +65,9 @@ class CellIntersectionGraph : public CharacterIntersectionGraph {
     CellIntersectionGraph() = delete;
     CellIntersectionGraph(const CellIntersectionGraph&) = delete;
     void operator=(const CellIntersectionGraph&) = delete;
+
+    static CellIntersectionGraph* New(std::string);
+    static CellIntersectionGraph* New(GraphFile*);
 
     explicit CellIntersectionGraph(CellIntGraphFR*);
     virtual ~CellIntersectionGraph();

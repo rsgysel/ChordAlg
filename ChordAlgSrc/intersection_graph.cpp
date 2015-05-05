@@ -7,6 +7,7 @@
 
 #include "ChordAlgSrc/file_reader.h"
 #include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/graph_file.h"
 #include "ChordAlgSrc/lex_trie.h"
 
 namespace chordalg {
@@ -47,6 +48,30 @@ CellIntersectionGraph::CellIntersectionGraph(CellIntGraphFR* fr) :
 CellIntersectionGraph::~CellIntersectionGraph() {
     delete subset_family_;
     return;
+}
+
+PartitionIntersectionGraph* PartitionIntersectionGraph::New(std::string filename) {
+    GraphFile file(filename);
+    return New(&file);
+}
+
+PartitionIntersectionGraph* PartitionIntersectionGraph::New(GraphFile* file) {
+    PartitionIntGraphFR* file_reader = PartitionIntGraphFR::New(file);
+    PartitionIntersectionGraph* G = new PartitionIntersectionGraph(file_reader);
+    delete file_reader;
+    return G;
+}
+
+CellIntersectionGraph* CellIntersectionGraph::New(std::string filename) {
+    GraphFile file(filename);
+    return New(&file);
+}
+
+CellIntersectionGraph* CellIntersectionGraph::New(GraphFile* file) {
+    CellIntGraphFR* file_reader = CellIntGraphFR::New(file);
+    CellIntersectionGraph* G = new CellIntersectionGraph(file_reader);
+    delete file_reader;
+    return G;
 }
 
 /////////////////

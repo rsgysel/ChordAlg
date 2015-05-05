@@ -13,10 +13,9 @@ int main(int argc, char* argv[]) {
         std::cerr << "usage: " << argv[0] << " <filename>" << std::endl;
         return EXIT_FAILURE;
     } else {
-        PartitionIntGraphFR* graph_reader =
-            NewFileReader<PartitionIntGraphFR>(argv[1]);
-        PartitionIntersectionGraph G(graph_reader);
-        std::cout << G.str();
+        PartitionIntersectionGraph* G = PartitionIntersectionGraph::New(argv[1]);
+        std::cout << G->str();
+        delete G;
         return EXIT_SUCCESS;
     }
 }

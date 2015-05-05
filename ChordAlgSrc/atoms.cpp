@@ -25,6 +25,12 @@ Atoms::~Atoms() {
     return;
 }
 
+Atoms* Atoms::New(const Graph* G) {
+    Atoms* A = new Atoms(G);
+    A->ComputeAtoms();
+    return A;
+}
+
 void Atoms::ComputeAtoms() {
     // Get minimal triangulation
     EliminationOrder eo(G_);

@@ -20,8 +20,7 @@ class AtomsTest : public GraphTest {
             FAIL() << "Use Read once in your test.";
         } else {
             G_ = new chordalg::Graph(new chordalg::AdjacencyLists(A));
-            A_ = new chordalg::Atoms(G_);
-            A_->ComputeAtoms();
+            A_ = chordalg::Atoms::New(G_);
         }
         return;
     }

@@ -50,23 +50,21 @@ void CheckHeuristic(std::string filename,
     const size_t runs = 1;
     const float def = 1, sep = 1;
     // Run Hueristic
-    CellIntGraphFR* F =
-        NewFileReader< CellIntGraphFR >(filename);
-    CellIntersectionGraph G(F);
+    CellIntersectionGraph* G = CellIntersectionGraph::New(filename);
     std::vector< chordalg::EliminationParameters* > elimination_parameters;
     elimination_parameters.push_back(
         new chordalg::EliminationParameters(criterion, mode, def, sep));
-    HeuristicRun R(&G, &elimination_parameters, atoms, runs);
+    HeuristicRun R(G, &elimination_parameters, atoms, runs);
     R.Run();
     // Check Triangulation
-    Triangulation H(&G, &R);
+    Triangulation H(G, &R);
     assert(H.IsChordal());
     // Check Columns to remove
     size_t columns = 0;
     for (VertexPair uv : R.fill_edges()) {
-        columns += G.CommonColorCount(uv);
+        columns += G->CommonColorCount(uv);
     }
     assert(R.fill_weight() == columns);
-    delete F;
+    delete G;
     delete elimination_parameters[0];
 }

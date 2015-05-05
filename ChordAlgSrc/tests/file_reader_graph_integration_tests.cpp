@@ -42,10 +42,10 @@ class GetLinesTest : public FileReadingTest {
         mock_file_->set_file_type(file_type);
         if (file_type == chordalg::FileType::DIMACS ||
             file_type == chordalg::FileType::ADJLIST) {
-            file_reader_ = chordalg::NewFileReader< chordalg::GraphFR >(*mock_file_);
+            file_reader_ = chordalg::GraphFR::New(mock_file_);
         } else if (file_type == chordalg::FileType::CHARACTERMATRIX ||
                    file_type == chordalg::FileType::NEXUSMRP) {
-            file_reader_ = chordalg::NewFileReader< chordalg::CellIntGraphFR >(*mock_file_);
+            file_reader_ = chordalg::CellIntGraphFR::New(mock_file_);
         }
     }
     void TearDown() {
@@ -59,26 +59,24 @@ class GetLinesTest : public FileReadingTest {
 class IsomorphismTest : public FileReadingTest {
  public:
     void SetUp() {
-        G_ = nullptr;
         FileReadingTest::SetUp();
+        G_ = nullptr;
     }
     void RunTest(chordalg::FileType file_type, chordalg::AdjacencyLists graph) {
         mock_file_->set_file_type(file_type);
         if (file_type == chordalg::FileType::DIMACS ||
             file_type == chordalg::FileType::ADJLIST) {
-            G_ = new chordalg::Graph(
-                    chordalg::NewFileReader< chordalg::GraphFR >(*mock_file_));
+            G_ = chordalg::Graph::New(mock_file_);
         } else if (file_type == chordalg::FileType::CHARACTERMATRIX ||
                    file_type == chordalg::FileType::NEXUSMRP) {
-            G_ = new chordalg::CellIntersectionGraph(
-                    chordalg::NewFileReader< chordalg::CellIntGraphFR >(*mock_file_));
+            G_ = chordalg::CellIntersectionGraph::New(mock_file_);
         }
         chordalg::Graph H(new chordalg::AdjacencyLists(graph));
         EXPECT_EQ(G_->IsIsomorphic(H), true);
     }
     void TearDown() {
-        delete G_;
         FileReadingTest::TearDown();
+        delete G_;
     }
  protected:
     chordalg::Graph* G_;

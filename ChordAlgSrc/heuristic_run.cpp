@@ -39,9 +39,7 @@ std::string SetupAndRunHeuristic(
     size_t runs,
     float deficiency_wt,
     float separation_wt) {
-    CellIntGraphFR* F =
-        NewFileReader< CellIntGraphFR >(filename);
-    CellIntersectionGraph G(F);
+    CellIntersectionGraph* G = CellIntersectionGraph::New(filename);
     std::vector< EliminationParameters* > elimination_parameters;
     for (auto mode : modes) {
         for (auto criterion : criteria) {
@@ -56,16 +54,15 @@ std::string SetupAndRunHeuristic(
             elimination_parameters.push_back(P);
         }
     }
-    HeuristicRun R(&G, &elimination_parameters, atoms, runs);
+    HeuristicRun R(G, &elimination_parameters, atoms, runs);
     std::cout << R.Run() << std::endl;
     for (auto P : elimination_parameters) {
         delete P;
     }
-    delete F;
     // Return columns to remove
     std::set< Color > columns;
     for (VertexPair uv : R.fill_edges()) {
-        for (Color c : G.CommonColors(uv)) {
+        for (Color c : G->CommonColors(uv)) {
             columns.insert(c);
         }
     }
@@ -73,6 +70,7 @@ std::string SetupAndRunHeuristic(
     for (Color c : columns) {
         columns_str += std::to_string(c) + " ";
     }
+    delete G;
     return columns_str;
 }
 
@@ -96,9 +94,8 @@ std::vector< VertexPair > HeuristicRun::fill_edges() const {
 
 std::string HeuristicRun::Run() {
     std::vector< const Graph* > graphs;
-    Atoms* A = atoms_ ? new Atoms(G_) : nullptr;
+    Atoms* A = atoms_ ? Atoms::New(G_) : nullptr;
     if (atoms_) {
-        A->ComputeAtoms();
         for (auto a : *A) {
             graphs.push_back(a);
         }

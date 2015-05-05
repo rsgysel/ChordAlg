@@ -28,18 +28,18 @@ int main(int argc, char* argv[]) {
         MMC_heuristic_usage(argv[0]);
         return EXIT_FAILURE;
     } else {
-        CellIntGraphFR* graph_reader = NewFileReader<CellIntGraphFR>(argv[1]);
-        CellIntersectionGraph G(graph_reader);
-        ClassicElimination eo(&G, new DeficiencyCriterion());
-        Supergraph triangulation(&G, eo.TriangNbhds());
+        CellIntersectionGraph* G = CellIntersectionGraph::New(argv[1]);
+        ClassicElimination eo(G, new DeficiencyCriterion());
+        Supergraph triangulation(G, eo.TriangNbhds());
         CliqueTree* ct = MCSCliqueTree(triangulation);
-        std::cout << ct->strPhyloNewick(G, true) << std::endl << std::endl;
+        std::cout << ct->strPhyloNewick(*G, true) << std::endl << std::endl;
         std::cout << eo.str() << std::endl;
         std::cout << "fill weight: " << eo.fill_cost() << std::endl;
         std::cout << "fill count: " << eo.fill_count() << std::endl;
-        std::cout << "vertices: " << G.order() << std::endl;
-        std::cout << "edges: " << G.size() << std::endl;
+        std::cout << "vertices: " << G->order() << std::endl;
+        std::cout << "edges: " << G->size() << std::endl;
         delete ct;
+	delete G;
         return EXIT_SUCCESS;
     }
 }

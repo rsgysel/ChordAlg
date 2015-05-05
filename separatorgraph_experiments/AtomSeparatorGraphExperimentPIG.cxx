@@ -20,15 +20,11 @@ int main(int argc, char* argv[]) {
         std::cerr << "usage: " << argv[0] << " <filename>";
         return EXIT_FAILURE;
     } else {
-        PartitionIntGraphFR* fr = 
-            NewFileReader< PartitionIntGraphFR >(argv[1]);
-        PartitionIntersectionGraph G(fr);
-
-        Atoms A(&G);
-        A.ComputeAtoms();
-        size_t minimal_separators = A.clique_minimal_separators().size();
+        PartitionIntersectionGraph* G = PartitionIntersectionGraph::New(argv[1]);
+        Atoms* A = Atoms::New(G);
+        size_t minimal_separators = A->clique_minimal_separators().size();
         size_t crossing_relations = 0;
-        for (auto a : A) {
+        for (auto a : *A) {
             SeparatorGraph SepG(a, MinimalSeparators(*a));
             minimal_separators += SepG.order();
             crossing_relations += SepG.size();
@@ -36,6 +32,8 @@ int main(int argc, char* argv[]) {
 
         std::cout << "Minimal separators: " << minimal_separators << '\n';
         std::cout << "Crossing relations: " << crossing_relations << '\n';
+        delete A;
+        delete G;
         return EXIT_SUCCESS;
     }
 }

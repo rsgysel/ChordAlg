@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "ChordAlgSrc/file_reader.h"
-#include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/graph_file.h"
 #include "ChordAlgSrc/lex_trie.h"
 #include "ChordAlgSrc/vertices.h"
 
@@ -27,6 +27,9 @@ class Graph {
     Graph(AdjacencyLists*, VertexNames);
     explicit Graph(size_t);
     virtual ~Graph();
+
+    static Graph* New(std::string);
+    static Graph* New(GraphFile*);
 
     bool IsIsomorphic(Graph&) const;
     virtual std::string str() const;

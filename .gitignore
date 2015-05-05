@@ -9,8 +9,9 @@ build*/
 *.o
 *.exe
 
-# VIM
+# Text Editors
 *.swp
+*~
 
 # Code::Blocks
 *.stackdump

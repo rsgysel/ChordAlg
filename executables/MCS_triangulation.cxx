@@ -11,12 +11,13 @@ int main(int argc, char** argv) {
         std::cerr << "usage: " << argv[0] << " <filename>" << std::endl;
         return EXIT_FAILURE;
     } else {
-        GraphFR* fr = NewFileReader< GraphFR >(argv[1]);
-        Graph G(fr);
-        EliminationOrder* eo = MCS(G);
+        Graph* G = Graph::New(argv[1]);
+        EliminationOrder* eo = MCS(*G);
         eo->ComputeFill();
-        Triangulation H(&G, eo);
+        Triangulation H(G, eo);
         std::cout << H.str();
+	delete eo;
+        delete G;
         return EXIT_SUCCESS;
     }
 }

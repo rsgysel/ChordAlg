@@ -82,6 +82,39 @@ CellIntGraphFR::~CellIntGraphFR() {
     return;
 }
 
+GraphFR* GraphFR::New(std::string filename) {
+    GraphFile file(filename);
+    return New(&file);
+}
+
+GraphFR* GraphFR::New(GraphFile* file) {
+    GraphFR* file_reader = new GraphFR(file);
+    file_reader->ReadFileOrDie();
+    return file_reader;
+}
+
+PartitionIntGraphFR* PartitionIntGraphFR::New(std::string filename) {
+    GraphFile file(filename);
+    return New(&file);
+}
+
+PartitionIntGraphFR* PartitionIntGraphFR::New(GraphFile* file) {
+    PartitionIntGraphFR* file_reader = new PartitionIntGraphFR(file);
+    file_reader->ReadFileOrDie();
+    return file_reader;
+}
+
+CellIntGraphFR* CellIntGraphFR::New(std::string filename) {
+    GraphFile file(filename);
+    return New(&file);
+}
+
+CellIntGraphFR* CellIntGraphFR::New(GraphFile* file) {
+    CellIntGraphFR* file_reader = new CellIntGraphFR(file);
+    file_reader->ReadFileOrDie();
+    return file_reader;
+}
+
 //////////////////
 // CharacterMatrix
 

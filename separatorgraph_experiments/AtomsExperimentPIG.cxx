@@ -20,24 +20,21 @@ int main(int argc, char** argv) {
         std::cerr << "usage: " << argv[0] << " <filename>" << std::endl;
         return EXIT_FAILURE;
     } else {
-        PartitionIntGraphFR* graph_reader =
-            NewFileReader<PartitionIntGraphFR>(
-                std::string(argv[1]));
-        Graph G(graph_reader);
-        Atoms A(&G);
-        A.ComputeAtoms();
+        Graph* G = Graph::New(std::string(argv[1]));
+        Atoms* A = Atoms::New(G);
         size_t vertices = 0, edges = 0;
-        for (auto a : A) {
+        for (auto a : *A) {
             vertices += a->order();
             edges += a->size();
         }
-        std::cout << "Vertices: " << G.order() << '\n'
-                  << "Edges: " << G.size() << '\n'
+        std::cout << "Vertices: " << G->order() << '\n'
+                  << "Edges: " << G->size() << '\n'
                   << "Total Vertices: " << vertices << '\n'
                   << "Total Edges: " << edges << '\n'
-                  << "Total Atoms: " << A.size() << '\n'
-                  << "Clique Atoms: " << A.clique_minimal_separators().size() << std::endl;
-
+                  << "Total Atoms: " << A->size() << '\n'
+                  << "Clique Atoms: " << A->clique_minimal_separators().size() << std::endl;
+        delete A;
+        delete G;
         return EXIT_SUCCESS;
     }
 }

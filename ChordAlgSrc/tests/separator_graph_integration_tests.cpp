@@ -29,8 +29,7 @@ class SeparatorGraphTest : public testing::Test {
             G_ = new chordalg::Graph(new chordalg::AdjacencyLists(A));
             MS_ = chordalg::MinimalSeparators(*G_);
             SepG_ = new chordalg::SeparatorGraph(G_, MS_);
-            A_ = new chordalg::Atoms(G_);
-            A_->ComputeAtoms();
+            A_ = chordalg::Atoms::New(G_);
         }
         return;
     }

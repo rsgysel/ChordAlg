@@ -18,8 +18,9 @@ class Atoms {
     Atoms(const Atoms&) = delete;
     Atoms& operator=(const Atoms&) = delete;
 
-    explicit Atoms(const Graph*);
     ~Atoms();
+
+    static Atoms* New(const Graph*);
 
     const LexTrie& clique_minimal_separators() const {
         return clique_minimal_separators_;
@@ -37,9 +38,10 @@ class Atoms {
         return atom_subgraphs_.end();
     }
 
+ private:
+    explicit Atoms(const Graph*);
     void ComputeAtoms();
 
- private:
     std::vector< InducedSubgraph* > atom_subgraphs_;
     const Graph* const G_;
     LexTrie clique_minimal_separators_;

@@ -19,12 +19,11 @@ int main(int argc, char* argv[]) {
         std::cerr << "usage: " << argv[0] << " <filename>" << std::endl;
         return EXIT_FAILURE;
     } else {
-        PartitionIntGraphFR* fr = 
-            NewFileReader< PartitionIntGraphFR >(argv[1]);
-        PartitionIntersectionGraph G(fr);
-        SeparatorGraph SepG(&G, MinimalSeparators(G));
+        PartitionIntersectionGraph* G = PartitionIntersectionGraph::New(argv[1]);
+        SeparatorGraph SepG(G, MinimalSeparators(*G));
         std::cout << "Minimal separators: " << SepG.order() << '\n';
         std::cout << "Crossing relations: " << SepG.size() << '\n';
+        delete G;
     }
     return EXIT_SUCCESS;
 }

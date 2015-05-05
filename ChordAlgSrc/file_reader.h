@@ -17,35 +17,7 @@
 namespace chordalg {
 
 typedef std::vector< std::list< std::string > > StringAdjLists;
-class GraphFR;
 
-//////////////////////////////////
-// FR must be derived from GraphFR
-
-template< class FR >
-FR* NewFileReader(std::string file_name) {
-    GraphFile file(file_name);
-    return NewFileReader< FR >(file);
-}
-
-template< class FR >
-FR* NewFileReader(GraphFile& file) {
-    // ctor
-    FR* fr_object = new FR(&file);
-    fr_object->ReadFileOrDie();
-    // type check FR. voided to prevent compiler warning
-    GraphFR* type_check = fr_object;
-    (void) type_check;
-    return fr_object;
-}
-
-// Abstract class used to read files for graphs.
-// To design a file reader class ClassFR, include the following:
-//      1) private constructor ClassFR(std::string) that initializes FileReader
-//          with input string
-//      2) private ReadFileOrDie() method. you must close file_stream_ here
-//      3) friend access to factory method template< class FR > friend FR*
-//          NewFileReader(std::string);
 class GraphFR {
  public:
     GraphFR() = delete;
@@ -56,9 +28,10 @@ class GraphFR {
     AdjacencyLists* TakeNeighborhoods();
     VertexNames* TakeNames();
 
+    static GraphFR* New(std::string);
+    static GraphFR* New(GraphFile*);
+
  protected:
-    // construction and initialization deferred to NewFileReader
-    template< class FR > friend FR* NewFileReader(GraphFile&);
     explicit GraphFR(GraphFile*);
     explicit GraphFR(std::string);
 
@@ -116,11 +89,8 @@ class CharacterIntGraphFR : public GraphFR {
     }
 
  protected:
-    template< class FR > friend FR* NewFileReader(GraphFile&);
-
     explicit CharacterIntGraphFR(GraphFile*);
     void ReadFileOrDie();
-
 
     void ComputeGraphData();
     void TieSubsetsToVertices(const CharacterMatrix*);
@@ -146,8 +116,11 @@ class PartitionIntGraphFR : public CharacterIntGraphFR {
     std::vector< Color > vertex_color() const {
         return vertex_color_;
     }
+
+    static PartitionIntGraphFR* New(std::string);
+    static PartitionIntGraphFR* New(GraphFile*);
+
  protected:
-    template< class FR > friend FR* NewFileReader(GraphFile&);
     explicit PartitionIntGraphFR(GraphFile*);
 
     void AddVertex(FiniteSet, const CharacterMatrix*, size_t);
@@ -167,8 +140,11 @@ class CellIntGraphFR : public CharacterIntGraphFR {
     std::vector< Multicolor > vertex_colors() const {
         return vertex_colors_;
     }
+
+    static CellIntGraphFR* New(std::string);
+    static CellIntGraphFR* New(GraphFile*);
+
  protected:
-    template< class FR > friend FR* NewFileReader(GraphFile&);
     explicit CellIntGraphFR(GraphFile*);
 
     void AddVertex(FiniteSet, const CharacterMatrix*, size_t);

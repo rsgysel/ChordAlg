@@ -20,12 +20,10 @@ int main(int argc, char** argv) {
         std::cerr << "usage: " << argv[0] << " <filename>" << std::endl;
         return EXIT_FAILURE;
     } else {
-        GraphFR* graph_reader = NewFileReader<GraphFR>(std::string(argv[1]));
-        Graph G(graph_reader);
-        Atoms A(&G);
-        A.ComputeAtoms();
+        Graph* G = Graph::New(std::string(argv[1]));
+        Atoms* A = Atoms::New(G);
         size_t i = 0;
-        for (auto a : A) {
+        for (auto a : *A) {
             std::string suffix;
             if (a->IsClique()) {
                 suffix = std::string("_cliqueatom");
@@ -41,6 +39,8 @@ int main(int argc, char** argv) {
             atom_file.close();
             ++i;
         }
+	delete A;
+        delete G;
         return EXIT_SUCCESS;
     }
 }

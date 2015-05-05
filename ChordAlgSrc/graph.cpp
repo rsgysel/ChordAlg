@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "ChordAlgSrc/file_reader.h"
+#include "ChordAlgSrc/graph_file.h"
 #include "ChordAlgSrc/lex_trie.h"
 #include "ChordAlgSrc/vertices.h"
 
@@ -67,6 +68,18 @@ InducedSubgraph::InducedSubgraph(const Graph* G, Vertices U) :
 Graph::~Graph() {
     delete neighborhoods_;
     delete vertex_names_;
+}
+
+Graph* Graph::New(std::string filename) {
+    GraphFile file(filename);
+    return New(&file);
+}
+
+Graph* Graph::New(GraphFile* file) {
+    GraphFR* file_reader = GraphFR::New(file);
+    Graph* G = new Graph(file_reader);
+    delete file_reader;
+    return G;
 }
 
 Vertices Graph::V() const {
