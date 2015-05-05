@@ -19,15 +19,6 @@ MinsepVector* MinsepTrieToVector(const MinsepTrie& MT) {
     return MV;
 }
 
-SeparatorGraph::SeparatorGraph(const Graph* G, const MinsepVector* M) :
-    Graph(M->size()),
-    G_(G),
-    M_(M),
-    crossing_relations_(),
-    S_(G_) {
-    Init();
-}
-
 SeparatorGraph::SeparatorGraph(const Graph* G, const MinsepTrie* M) :
     Graph(M->size()),
     G_(G),
@@ -35,7 +26,6 @@ SeparatorGraph::SeparatorGraph(const Graph* G, const MinsepTrie* M) :
     crossing_relations_(),
     S_(G_) {
     delete M;
-    Init();
 }
 
 SeparatorGraph::~SeparatorGraph() {
@@ -44,10 +34,11 @@ SeparatorGraph::~SeparatorGraph() {
 
 SeparatorGraph* SeparatorGraph::New(const Graph* G) {
     SeparatorGraph* SG = new SeparatorGraph(G, MinimalSeparators(*G));
+    SG->ComputeCrossingRelations();
     return SG;
 }
 
-void SeparatorGraph::Init() {
+void SeparatorGraph::ComputeCrossingRelations() {
     size_t i = 0;
     crossing_relations_.resize(M_->size());
     // Compute crossing relations

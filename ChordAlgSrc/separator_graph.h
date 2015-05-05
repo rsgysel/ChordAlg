@@ -24,7 +24,6 @@ class SeparatorGraph : public Graph {
     SeparatorGraph(const SeparatorGraph&) = delete;
     void operator=(const SeparatorGraph&) = delete;
 
-    SeparatorGraph(const Graph*, const MinsepVector*);
     virtual ~SeparatorGraph();
 
     static SeparatorGraph* New(const Graph*);
@@ -38,7 +37,7 @@ class SeparatorGraph : public Graph {
 
  protected:
     SeparatorGraph(const Graph*, const MinsepTrie*);
-    void Init();
+    void ComputeCrossingRelations();
 
     const Graph* const G_;                  // Original graph
     const MinsepVector* const M_;
