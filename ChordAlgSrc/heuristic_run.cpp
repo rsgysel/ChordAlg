@@ -74,6 +74,8 @@ std::string SetupAndRunHeuristic(
     return columns_str;
 }
 
+//////////////////
+// c'tors & d'tors
 
 HeuristicRun::HeuristicRun(
     const Graph* G,
@@ -87,6 +89,9 @@ HeuristicRun::HeuristicRun(
     fill_edges_() {
     return;
 }
+
+///////////////
+// HeuristicRun
 
 std::vector< VertexPair > HeuristicRun::fill_edges() const {
     return fill_edges_;
@@ -150,6 +155,10 @@ AdjacencyLists* HeuristicRun::TriangNbhds() const {
         (*a_lists)[uv.second].push_back(uv.first);
     }
     return a_lists;
+}
+
+Weight HeuristicRun::fill_weight() const {
+    return fill_weight_;
 }
 
 }  // namespace chordalg

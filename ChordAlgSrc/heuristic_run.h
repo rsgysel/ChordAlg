@@ -34,15 +34,11 @@ class HeuristicRun {
         const std::vector< EliminationParameters* >*,
         bool,
         size_t);
-    virtual ~HeuristicRun() {}
 
     std::vector< VertexPair > fill_edges() const;
-
     std::string Run();
     AdjacencyLists* TriangNbhds() const;
-    Weight fill_weight() const {
-        return fill_weight_;
-    }
+    Weight fill_weight() const;
 
  protected:
     const Graph* const G_;
