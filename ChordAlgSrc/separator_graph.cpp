@@ -19,6 +19,9 @@ MinsepVector* MinsepTrieToVector(const MinsepTrie& MT) {
     return MV;
 }
 
+//////////////////
+// c'tors & d'tors
+
 SeparatorGraph::SeparatorGraph(const Graph* G, const MinsepTrie* M) :
     Graph(M->size()),
     G_(G),
@@ -32,30 +35,13 @@ SeparatorGraph::~SeparatorGraph() {
     delete M_;
 }
 
+/////////////////
+// SeparatorGraph
+
 SeparatorGraph* SeparatorGraph::New(const Graph* G) {
     SeparatorGraph* SG = new SeparatorGraph(G, MinimalSeparators(*G));
     SG->ComputeCrossingRelations();
     return SG;
-}
-
-void SeparatorGraph::ComputeCrossingRelations() {
-    size_t i = 0;
-    crossing_relations_.resize(M_->size());
-    // Compute crossing relations
-    for (auto U : *M_) {
-        S_.Separate(U);
-        size_t j = 0;
-        for (auto W : *M_) {
-            if (i < j && S_.IsSeparated(W)) {
-                crossing_relations_[i].push_back(j);
-                crossing_relations_[j].push_back(i);
-                ++size_;
-            }
-            ++j;
-        }
-        ++i;
-    }
-    return;
 }
 
 std::string SeparatorGraph::str() const {
@@ -94,6 +80,30 @@ bool SeparatorGraph::HasEdge(Vertex u, Vertex v) const {
     SeparatorComponents S(G_);
     S.Separate((*M_)[u]);
     return S.IsSeparated((*M_)[v]);
+}
+
+const Vertices& SeparatorGraph::N(Vertex v) const {
+    return crossing_relations_[v];
+}
+
+void SeparatorGraph::ComputeCrossingRelations() {
+    size_t i = 0;
+    crossing_relations_.resize(M_->size());
+    // Compute crossing relations
+    for (auto U : *M_) {
+        S_.Separate(U);
+        size_t j = 0;
+        for (auto W : *M_) {
+            if (i < j && S_.IsSeparated(W)) {
+                crossing_relations_[i].push_back(j);
+                crossing_relations_[j].push_back(i);
+                ++size_;
+            }
+            ++j;
+        }
+        ++i;
+    }
+    return;
 }
 
 }  // namespace chordalg
