@@ -24,9 +24,7 @@ class GraphFile {
     static GraphFile* New(std::string);
 
     virtual std::istream& GetLine(std::string&);
-    FileType file_type() const {
-        return file_type_;
-    }
+    FileType file_type() const;
 
  protected:
     GraphFile();

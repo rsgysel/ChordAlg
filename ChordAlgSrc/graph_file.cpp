@@ -9,13 +9,14 @@
 
 namespace chordalg {
 
-GraphFile::GraphFile() :
-    file_type_(FileType::UNKNOWN) {
+//////////////////
+// c'tors & d'tors
+
+GraphFile::GraphFile() : file_type_(FileType::UNKNOWN) {
     return;
 }
 
-GraphFile::GraphFile(FileType file_type) :
-    file_type_(file_type) {
+GraphFile::GraphFile(FileType file_type) : file_type_(file_type) {
     return;
 }
 
@@ -23,6 +24,9 @@ GraphFile::~GraphFile() {
     file_stream_.close();
     return;
 }
+
+////////////
+// GraphFile
 
 GraphFile* GraphFile::New(std::string filename) {
     GraphFile* file = new GraphFile();
@@ -34,6 +38,10 @@ GraphFile* GraphFile::New(std::string filename) {
 
 std::istream& GraphFile::GetLine(std::string& str) {
     return std::getline(file_stream_, str);
+}
+
+FileType GraphFile::file_type() const {
+    return file_type_;
 }
 
 void GraphFile::AssertOrDie(bool assertion, std::string error) {
