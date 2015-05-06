@@ -12,6 +12,9 @@
 
 namespace chordalg {
 
+//////////////////
+// c'tors & d'tors
+
 Graph::Graph(Graph& H) :
     neighborhoods_(new AdjacencyLists(*(H.neighborhoods_))),
     vertex_names_(new VertexNames(*(H.vertex_names_))),
@@ -58,6 +61,11 @@ Graph::Graph(size_t n) :
     return;
 }
 
+Graph::~Graph() {
+    delete neighborhoods_;
+    delete vertex_names_;
+}
+
 InducedSubgraph::InducedSubgraph(const Graph* G, Vertices U) :
     Graph(InducedVertices(*G, U)),
     G_(G),
@@ -65,10 +73,8 @@ InducedSubgraph::InducedSubgraph(const Graph* G, Vertices U) :
     return;
 }
 
-Graph::~Graph() {
-    delete neighborhoods_;
-    delete vertex_names_;
-}
+////////
+// Graph
 
 Graph* Graph::New(std::string filename) {
     GraphFile* file = GraphFile::New(filename);
@@ -82,6 +88,62 @@ Graph* Graph::New(GraphFile* file) {
     Graph* G = new Graph(file_reader);
     delete file_reader;
     return G;
+}
+
+// Determines if H is isomorphic to G with respect to their fixed orderings
+bool Graph::IsIsomorphic(Graph& H) const {
+    const Graph& G = *this;
+    if (G.order() != H.order() || G.size() != H.size()) {
+        return false;
+    }
+    for (Vertex v : G) {
+        if (G.N(v).size() != H.N(v).size()) {
+            return false;
+        }
+        if (!std::equal(G.N(v).begin(), G.N(v).end(), H.N(v).begin())) {
+            return false;
+        }
+    }
+    return true;
+}
+
+std::string Graph::str() const {
+    std::string Gstr = std::to_string(order_) + '\n';
+    for (Vertex v : *this) {
+        Gstr += name(v) + ' ';
+        for (Vertex u : N(v)) {
+            Gstr += name(u) + ' ';
+        }
+        Gstr.pop_back();
+        Gstr += '\n';
+    }
+    return Gstr;
+}
+
+std::string Graph::str(const LexTrie& T) const {
+    std::string Tstr;
+    for (FiniteSet S : T) {
+        Tstr += str(Vertices(S));
+    }
+    return Tstr;
+}
+
+std::string Graph::str(const VertexVector& U) const {
+    return str(Vertices(U));
+}
+
+std::string Graph::str(const Vertices& U) const {
+    if (U.empty()) {
+        return std::string();
+    } else {
+        std::string Ustr;
+        for (Vertex v : U) {
+            Ustr += name(v) + ' ';
+        }
+        Ustr.pop_back();
+        Ustr += '\n';
+        return Ustr;
+    }
 }
 
 Vertices Graph::V() const {
@@ -98,6 +160,52 @@ GraphVertexIterator Graph::begin() const {
 
 GraphVertexIterator Graph::end() const {
     return GraphVertices(this, order_).end();
+}
+
+const AdjacencyLists& Graph::neighbors() const {
+    return *neighborhoods_;
+}
+VertexName Graph::name(Vertex v) const {
+    return (*vertex_names_)[v];
+}
+size_t Graph::order() const {
+    return order_;
+}
+size_t Graph::size() const {
+    return size_;
+}
+
+bool Graph::HasEdge(Vertex u, Vertex v) const {
+    return is_edge_[u][v];
+}
+
+bool Graph::HasEdge(VertexPair uv) const {
+    return HasEdge(uv.first, uv.second);
+}
+
+Weight Graph::FillCount(Vertex u, Vertex v) const {
+    return HasEdge(u, v) ? 0 : 1;
+}
+
+Weight Graph::FillCount(VertexPair uv) const {
+    return FillCount(uv.first, uv.second);
+}
+
+bool Graph::IsClique() const {
+    return 2 * size_ == order_ * (order_ - 1);
+}
+
+const Vertices& Graph::N(Vertex v) const {
+    return (*neighborhoods_)[v];
+}
+
+// Use to transform InducedSubgraph vertices to parent graph vertices
+Vertex Graph::ParentGraph(Vertex v) const {
+    return v;
+}
+
+VertexPair Graph::ParentGraph(VertexPair uv) const {
+    return uv;
 }
 
 void Graph::Init() {
@@ -173,60 +281,23 @@ VertexNames* Graph::DefaultNames(size_t order) {
     return names;
 }
 
-// Determines if H is isomorphic to G with respect to their fixed orderings
-bool Graph::IsIsomorphic(Graph& H) const {
-    const Graph& G = *this;
-    if (G.order() != H.order() || G.size() != H.size()) {
-        return false;
-    }
-    for (Vertex v : G) {
-        if (G.N(v).size() != H.N(v).size()) {
-            return false;
-        }
-        if (!std::equal(G.N(v).begin(), G.N(v).end(), H.N(v).begin())) {
-            return false;
-        }
-    }
-    return true;
-}
+//////////////////
+// InducedSubgraph
 
-std::string Graph::str() const {
-    std::string Gstr = std::to_string(order_) + '\n';
-    for (Vertex v : *this) {
-        Gstr += name(v) + ' ';
-        for (Vertex u : N(v)) {
-            Gstr += name(u) + ' ';
-        }
-        Gstr.pop_back();
-        Gstr += '\n';
-    }
-    return Gstr;
+VertexName InducedSubgraph::name(Vertex v) const {
+    return G_->name(U_[v]);
 }
-
-std::string Graph::str(const LexTrie& T) const {
-    std::string Tstr;
-    for (FiniteSet S : T) {
-        Tstr += str(Vertices(S));
-    }
-    return Tstr;
+Weight InducedSubgraph::FillCount(Vertex u, Vertex v) const {
+    return G_->FillCount(U_[u], U_[v]);
 }
-
-std::string Graph::str(const VertexVector& U) const {
-    return str(Vertices(U));
+Weight InducedSubgraph::FillCount(VertexPair uv) const {
+    return G_->FillCount(U_[uv.first], U_[uv.second]);
 }
-
-std::string Graph::str(const Vertices& U) const {
-    if (U.empty()) {
-        return std::string();
-    } else {
-        std::string Ustr;
-        for (Vertex v : U) {
-            Ustr += name(v) + ' ';
-        }
-        Ustr.pop_back();
-        Ustr += '\n';
-        return Ustr;
-    }
+Vertex InducedSubgraph::ParentGraph(Vertex v) const {
+    return U_[v];
+}
+VertexPair InducedSubgraph::ParentGraph(VertexPair uv) const {
+    return VertexPair(ParentGraph(uv.first), ParentGraph(uv.second));
 }
 
 }  // namespace chordalg

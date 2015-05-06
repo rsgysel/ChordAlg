@@ -104,8 +104,8 @@ class LexTrie {
     LexTrieNode* root_;
 };  // LexTrie
 
-////////////////////
-// Templated Inserts
+///////////
+// Generics
 
 template< class InputIterator >
 const LexTrieNode* LexTrie::InsertRange(

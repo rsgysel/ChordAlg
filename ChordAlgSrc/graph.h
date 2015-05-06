@@ -41,63 +41,34 @@ class Graph {
     GraphVertexIterator begin() const;
     GraphVertexIterator end() const;
 
-    const AdjacencyLists& neighbors() const {
-        return *neighborhoods_;
-    }
-    virtual VertexName name(Vertex v) const {
-        return (*vertex_names_)[v];
-    }
-    size_t order() const {
-        return order_;
-    }
-    size_t size() const {
-        return size_;
-    }
-
-    virtual bool HasEdge(Vertex u, Vertex v) const {
-        return is_edge_[u][v];
-    }
-    virtual bool HasEdge(VertexPair uv) const {
-        return HasEdge(uv.first, uv.second);
-    }
-    virtual Weight FillCount(Vertex u, Vertex v) const {
-        return HasEdge(u, v) ? 0 : 1;
-    }
-    virtual Weight FillCount(VertexPair uv) const {
-        return FillCount(uv.first, uv.second);
-    }
-    template< class Container >
-    bool HasClique(Container set) const {
-        return HasClique(set.begin(), set.end());
-    }
-    bool IsClique() const {
-        return 2 * size_ == order_ * (order_ - 1);
-    }
-    const Vertices& N(Vertex v) const {
-        return (*neighborhoods_)[v];
-    }
+    const AdjacencyLists& neighbors() const;
+    virtual VertexName name(Vertex v) const;
+    size_t order() const;
+    size_t size() const;
+    virtual bool HasEdge(Vertex u, Vertex v) const;
+    virtual bool HasEdge(VertexPair uv) const;
+    virtual Weight FillCount(Vertex u, Vertex v) const;
+    virtual Weight FillCount(VertexPair uv) const;
+    bool IsClique() const;
+    const Vertices& N(Vertex v) const;
 
     // Use to transform InducedSubgraph vertices to parent graph vertices
-    virtual Vertex ParentGraph(Vertex v) const {
-        return v;
-    }
-    virtual VertexPair ParentGraph(VertexPair uv) const {
-        return uv;
-    }
+    virtual Vertex ParentGraph(Vertex v) const;
+    virtual VertexPair ParentGraph(VertexPair uv) const;
 
+    template< class Container >
+    bool HasClique(Container set) const;
  protected:
     void Init();
+    // Induced Subgraph Initialization
+    AdjacencyLists* InducedVertices(const Graph&, Vertices);
+    VertexNames* DefaultNames(size_t);
 
     const AdjacencyLists* const neighborhoods_;
     const VertexNames* const vertex_names_;
     std::vector< std::vector< bool > > is_edge_;
-
     size_t order_;  // #vertices
     size_t size_;  // #edges
-
-    // Induced Subgraph Initialization
-    AdjacencyLists* InducedVertices(const Graph&, Vertices);
-    VertexNames* DefaultNames(size_t);
 
     template< class InputIterator >
     bool HasClique(InputIterator begin, InputIterator end) const;
@@ -111,21 +82,11 @@ class InducedSubgraph : public Graph {
 
     InducedSubgraph(const Graph*, Vertices);
 
-    VertexName name(Vertex v) const {
-        return G_->name(U_[v]);
-    }
-    Weight FillCount(Vertex u, Vertex v) const {
-        return G_->FillCount(U_[u], U_[v]);
-    }
-    Weight FillCount(VertexPair uv) const {
-        return G_->FillCount(U_[uv.first], U_[uv.second]);
-    }
-    Vertex ParentGraph(Vertex v) const {
-        return U_[v];
-    }
-    VertexPair ParentGraph(VertexPair uv) const {
-        return VertexPair(ParentGraph(uv.first), ParentGraph(uv.second));
-    }
+    VertexName name(Vertex v) const;
+    Weight FillCount(Vertex u, Vertex v) const;
+    Weight FillCount(VertexPair uv) const;
+    Vertex ParentGraph(Vertex v) const;
+    VertexPair ParentGraph(VertexPair uv) const;
 
  protected:
     const Graph* const G_;
@@ -134,6 +95,11 @@ class InducedSubgraph : public Graph {
 
 ///////////
 // Generics
+
+template< class Container >
+bool Graph::HasClique(Container set) const {
+    return HasClique(set.begin(), set.end());
+}
 
 template< class InputIterator >
 bool Graph::HasClique(InputIterator begin, InputIterator end) const {
