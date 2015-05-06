@@ -27,7 +27,6 @@ class GraphFR {
 
     AdjacencyLists* TakeNeighborhoods();
     VertexNames* TakeNames();
-
     static GraphFR* New(std::string);
     static GraphFR* New(GraphFile*);
 
@@ -38,7 +37,6 @@ class GraphFR {
     virtual void ReadFileOrDie();
     void ComputeGraphData(const StringAdjLists*);
     void ComputeNames(size_t);
-
     void ParseDimacs(StringAdjLists*);
     void ParseAdjList(StringAdjLists*);
 
@@ -60,13 +58,13 @@ class CharacterMatrix {
 
     std::vector< size_t >& operator[](size_t);
     const std::vector< size_t >& operator[](size_t i) const;
-
     void set_max_states(size_t);
     size_t cols() const;
     size_t rows() const;
     size_t max_states() const;
     static size_t kMissingData();
     std::string str() const;
+
  private:
     std::vector< std::vector< size_t > > M_;
     size_t cols_;
@@ -81,25 +79,18 @@ class CharacterIntGraphFR : public GraphFR {
     void operator=(const CharacterIntGraphFR&) = delete;
 
     virtual ~CharacterIntGraphFR();
-    std::vector< FiniteSet > subsets() const {
-        return subsets_;
-    }
-    std::vector< std::string > taxon_name() const {
-        return taxon_name_;
-    }
+    std::vector< FiniteSet > subsets() const;
+    std::vector< std::string > taxon_name() const;
 
  protected:
     explicit CharacterIntGraphFR(GraphFile*);
-    void ReadFileOrDie();
 
+    void ReadFileOrDie();
     void ComputeGraphData();
     void TieSubsetsToVertices(const CharacterMatrix*);
     virtual void AddVertex(FiniteSet, const CharacterMatrix*, size_t) = 0;
-
-    CharacterMatrix* ParseNexusMRP();
     CharacterMatrix* ParseMatrix();
-
-    std::string ParseNexusParameter(std::string, std::string) const;
+    CharacterMatrix* ParseNexusMRP();
 
     std::vector< FiniteSet > subsets_;
     std::vector< std::string > taxon_name_;
@@ -113,10 +104,7 @@ class PartitionIntGraphFR : public CharacterIntGraphFR {
 
     virtual ~PartitionIntGraphFR();
 
-    std::vector< Color > vertex_color() const {
-        return vertex_color_;
-    }
-
+    std::vector< Color > vertex_color() const;
     static PartitionIntGraphFR* New(std::string);
     static PartitionIntGraphFR* New(GraphFile*);
 
@@ -137,9 +125,7 @@ class CellIntGraphFR : public CharacterIntGraphFR {
     virtual ~CellIntGraphFR();
 
     LexTrie* TakeSubsetFamily();
-    std::vector< Multicolor > vertex_colors() const {
-        return vertex_colors_;
-    }
+    std::vector< Multicolor > vertex_colors() const;
 
     static CellIntGraphFR* New(std::string);
     static CellIntGraphFR* New(GraphFile*);
