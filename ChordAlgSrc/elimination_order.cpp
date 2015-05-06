@@ -9,11 +9,15 @@
 
 namespace chordalg {
 
+//////////////////
+// c'tors & d'tors
+
 EliminationOrder::EliminationOrder(const Graph* G) :
     G_(G),
     alpha_(G_->order()),
     alpha_inverse_(G_->order()),
-    fill_count_(kUnfilled()) {
+    fill_count_(0),
+    filled_(false) {
     Init();
     return;
 }
@@ -21,6 +25,9 @@ EliminationOrder::EliminationOrder(const Graph* G) :
 EliminationOrder::~EliminationOrder() {
     return;
 }
+
+///////////////////
+// EliminationOrder
 
 void EliminationOrder::Init() {
     int i = 0;
@@ -47,11 +54,9 @@ void EliminationOrder::Swap(int i, int j) {
 
 // Produces (and passes ownership of) adjacency lists
 // form triagnulation neighborhoods
-AdjacencyLists* EliminationOrder::TriangNbhds() const {
-    if (fill_count_ == kUnfilled()) {
-        std::cerr <<
-            "EliminationOrder::TriangNbhds(): call ComputeFill() first\n";
-        exit(EXIT_FAILURE);
+AdjacencyLists* EliminationOrder::TriangNbhds() {
+    if (!filled_) {
+        ComputeFill();
     }
     if (fill_count_ == 0) {
         return new AdjacencyLists(G_->neighbors());
@@ -75,10 +80,9 @@ AdjacencyLists* EliminationOrder::TriangNbhds() const {
 // reduce acyclic hypergraphs".
 // SIAM J. Comput., 13:566-579, 1984.
 size_t EliminationOrder::ComputeFill() {
-    if (fill_count_ != kUnfilled()) {
+    if (filled_) {
         return fill_count_;
     }
-    fill_count_ = 0;
     triangulation_nbhds_.resize(G_->order());
     VertexVector follower;
     follower.resize(G_->order());
@@ -103,6 +107,7 @@ size_t EliminationOrder::ComputeFill() {
         }
     }
     fill_count_ -= G_->size();
+    filled_ = true;
     return fill_count_;
 }
 
@@ -112,8 +117,8 @@ size_t EliminationOrder::ComputeFill() {
 // chordality of graphs, test acyclicity of hypergraphs, and selectively
 // reduce acyclic hypergraphs".
 // SIAM J. Comput., 13:566-579, 1984.
-bool EliminationOrder::ZeroFill() const {
-    if (fill_count_ != kUnfilled()) {
+bool EliminationOrder::IsPerfect() const {
+    if (filled_) {
         return fill_count_ == 0;
     }
     VertexVector follower;
@@ -137,6 +142,16 @@ bool EliminationOrder::ZeroFill() const {
         }
     }
     return true;
+}
+
+bool EliminationOrder::Before(Vertex u, Vertex v) const {
+    return alpha_inverse_[u] < alpha_inverse_[v];
+}
+int EliminationOrder::PositionOf(Vertex v) const {
+    return alpha_inverse_[v];
+}
+Vertex EliminationOrder::VertexAt(int i) const {
+    return alpha_[i];
 }
 
 Vertices EliminationOrder::LNbhd(Vertex v) const {
@@ -173,6 +188,17 @@ Vertices EliminationOrder::RNbhd(Vertex v) const {
     return R_N;
 }
 
+int EliminationOrder::fill_count() const {
+    return fill_count_;
+}
+int EliminationOrder::size() const {
+    return alpha_.size();
+}
+const Graph* EliminationOrder::G() const {
+    return G_;
+}
+
+
 void EliminationOrder::SetOrder(VertexVector pi) {
     if (pi.size() != G_->order()) {
         std::cerr << "Error in SetOrder: elimination order size and graph ";
@@ -183,6 +209,14 @@ void EliminationOrder::SetOrder(VertexVector pi) {
         Emplace(pi[i], i);
     }
     return;
+}
+
+void EliminationOrder::SetPosition(Vertex v, int i) {
+    alpha_inverse_[v] = i;
+}
+
+void EliminationOrder::SetVertex(int i, Vertex v) {
+    alpha_[i] = v;
 }
 
 std::string EliminationOrder::str() const {

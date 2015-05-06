@@ -37,7 +37,7 @@ Atoms* Atoms::New(const Graph* G) {
     return A;
 }
 
-const Atoms::LexTrie& clique_minimal_separators() const {
+const LexTrie& Atoms::clique_minimal_separators() const {
     return clique_minimal_separators_;
 }
 int Atoms::size() {

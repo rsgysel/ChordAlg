@@ -14,7 +14,7 @@ Triangulation::Triangulation(const Graph* G, const EliminationAlgorithm* ea) :
     return;
 }
 
-Triangulation::Triangulation(const Graph* G, const EliminationOrder* eo) :
+Triangulation::Triangulation(const Graph* G, EliminationOrder* eo) :
     Graph(eo->TriangNbhds()),
     G_(G) {
     return;
@@ -28,7 +28,6 @@ Triangulation::Triangulation(const Graph* G, const HeuristicRun* R) :
 
 bool Triangulation::IsChordal() const {
     chordalg::EliminationOrder* eo = MCS(*this);
-    eo->ComputeFill();
     Triangulation H(this, eo);
     delete eo;
     return IsIsomorphic(H);

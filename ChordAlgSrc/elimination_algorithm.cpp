@@ -15,8 +15,8 @@
 
 namespace chordalg {
 
-////////////////////////
-// EliminationParameters
+//////////////////
+// c'tors & d'tors
 
 EliminationParameters::EliminationParameters(
     EliminationCriterion criterion,
@@ -29,6 +29,34 @@ EliminationParameters::EliminationParameters(
     separation_wt_(separation_wt) {
     return;
 }
+
+EliminationAlgorithm::EliminationAlgorithm(
+    const Graph* G,
+    const EliminationParameters* parameters) :
+    G_(G),
+    parameters_(parameters),
+    eo_(G_),
+    fill_weight_(),
+    fill_count_(),
+    fill_neighbors_(),
+    fill_edges_(),
+    remaining_vertices_(),
+    ties_(),
+    tie_count_(),
+    B_(nullptr),
+    unseparated_pairs_() {
+    srand(time(nullptr));
+    Init();
+    return;
+}
+
+EliminationAlgorithm::~EliminationAlgorithm() {
+    delete B_;
+    return;
+}
+
+////////////////////////
+// EliminationParameters
 
 Weight EliminationParameters::ObjectiveFn(
     Weight deficiency,
@@ -59,46 +87,8 @@ bool EliminationParameters::Mixed() const {
     return mode_ == EliminationMode::MIXED;
 }
 
-////////////////////////////
-// Constructors, Destructors
-
-EliminationAlgorithm::EliminationAlgorithm(
-    const Graph* G,
-    const EliminationParameters* parameters) :
-    G_(G),
-    parameters_(parameters),
-    eo_(G_),
-    fill_weight_(),
-    fill_count_(),
-    fill_neighbors_(),
-    fill_edges_(),
-    remaining_vertices_(),
-    ties_(),
-    tie_count_(),
-    B_(nullptr),
-    unseparated_pairs_() {
-    srand(time(nullptr));
-    Init();
-    return;
-}
-
-EliminationAlgorithm::~EliminationAlgorithm() {
-    delete B_;
-    return;
-}
-
-////////////
-// Init, Run
-
-void EliminationAlgorithm::Init() {
-    int n = G_->order();
-    fill_neighbors_.resize(n);
-    tie_count_.resize(n);
-    if (!parameters_->Classic()) {
-        B_ = new SeparatorBlocks(G_);
-    }
-    return;
-}
+///////////////////////
+// EliminationAlgorithm
 
 void EliminationAlgorithm::Run() {
     fill_weight_ = fill_count_ = 0;
@@ -124,8 +114,61 @@ void EliminationAlgorithm::Run() {
     return;
 }
 
-//////////////
-// Elimination
+std::string EliminationAlgorithm::str() const {
+    std::string Estr = "elimination order:\t";
+    Estr += eo_.str();
+    Estr += "\ntie distribution:\t";
+    std::ostringstream oss;
+    std::copy(tie_count_.begin(), tie_count_.end() - 1,
+              std::ostream_iterator< int >(oss, " "));
+    oss << tie_count_.back();
+    Estr += oss.str() + '\n';
+    return Estr;
+}
+
+Weight EliminationAlgorithm::fill_weight() const {
+    return fill_weight_;
+}
+
+size_t EliminationAlgorithm::fill_count() const {
+    return fill_count_;
+}
+
+const std::vector< size_t >& EliminationAlgorithm::tie_count() const {
+    return tie_count_;
+}
+
+const std::vector< VertexSet >& EliminationAlgorithm::fill_neighbors() const {
+    return fill_neighbors_;
+}
+
+const std::vector< VertexPair >& EliminationAlgorithm::fill_edges() const {
+    return fill_edges_;
+}
+
+const EliminationParameters* EliminationAlgorithm::parameters() const {
+    return parameters_;
+}
+
+AdjacencyLists* EliminationAlgorithm::TriangNbhds() const {
+    AdjacencyLists* a_lists = new AdjacencyLists(G_->neighbors());
+    for (Vertex v : *G_) {
+        for (Vertex u : fill_neighbors_[v]) {
+            (*a_lists)[v].push_back(u);
+        }
+    }
+    return a_lists;
+}
+
+void EliminationAlgorithm::Init() {
+    int n = G_->order();
+    fill_neighbors_.resize(n);
+    tie_count_.resize(n);
+    if (!parameters_->Classic()) {
+        B_ = new SeparatorBlocks(G_);
+    }
+    return;
+}
 
 void EliminationAlgorithm::Elimination() {
     for (size_t i = 0; i < G_->order(); ++i) {
@@ -159,43 +202,6 @@ void EliminationAlgorithm::Eliminate(Vertex v) {
         }
         return;
     }
-}
-
-//////////////////////////
-// Edge and Fill Functions
-
-void EliminationAlgorithm::AddEdge(VertexPair uv) {
-    if (!IsEdge(uv)) {
-        fill_neighbors_[uv.first].insert(uv.second);
-        fill_neighbors_[uv.second].insert(uv.first);
-        fill_edges_.push_back(uv);
-        ++fill_count_;
-    }
-    return;
-}
-
-bool EliminationAlgorithm::IsEdge(VertexPair uv) {
-    return G_->HasEdge(uv) || IsFillEdge(uv);
-}
-
-bool EliminationAlgorithm::IsFillEdge(VertexPair uv) {
-    return fill_neighbors_[uv.first].find(uv.second) !=
-           fill_neighbors_[uv.first].end();
-}
-
-bool EliminationAlgorithm::IsRemoved(Vertex v) {
-    return remaining_vertices_.find(v) == remaining_vertices_.end();
-}
-
-void EliminationAlgorithm::Saturate(Vertices U) {
-    for (VertexPair uv : VertexPairs(U)) {
-        if (!IsEdge(uv)) {
-            Vertex u = uv.first, v = uv.second;
-            fill_neighbors_[u].insert(v);
-            fill_neighbors_[v].insert(u);
-        }
-    }
-    return;
 }
 
 VertexWeight EliminationAlgorithm::ArgMin() {
@@ -235,26 +241,38 @@ Vertices EliminationAlgorithm::MonotoneNbhd(Vertex v) {
     return N_alpha;
 }
 
-AdjacencyLists* EliminationAlgorithm::TriangNbhds() const {
-    AdjacencyLists* a_lists = new AdjacencyLists(G_->neighbors());
-    for (Vertex v : *G_) {
-        for (Vertex u : fill_neighbors_[v]) {
-            (*a_lists)[v].push_back(u);
-        }
+void EliminationAlgorithm::AddEdge(VertexPair uv) {
+    if (!IsEdge(uv)) {
+        fill_neighbors_[uv.first].insert(uv.second);
+        fill_neighbors_[uv.second].insert(uv.first);
+        fill_edges_.push_back(uv);
+        ++fill_count_;
     }
-    return a_lists;
+    return;
 }
 
-std::string EliminationAlgorithm::str() const {
-    std::string Estr = "elimination order:\t";
-    Estr += eo_.str();
-    Estr += "\ntie distribution:\t";
-    std::ostringstream oss;
-    std::copy(tie_count_.begin(), tie_count_.end() - 1,
-              std::ostream_iterator< int >(oss, " "));
-    oss << tie_count_.back();
-    Estr += oss.str() + '\n';
-    return Estr;
+bool EliminationAlgorithm::IsEdge(VertexPair uv) {
+    return G_->HasEdge(uv) || IsFillEdge(uv);
+}
+
+bool EliminationAlgorithm::IsFillEdge(VertexPair uv) {
+    return fill_neighbors_[uv.first].find(uv.second) !=
+           fill_neighbors_[uv.first].end();
+}
+
+bool EliminationAlgorithm::IsRemoved(Vertex v) {
+    return remaining_vertices_.find(v) == remaining_vertices_.end();
+}
+
+void EliminationAlgorithm::Saturate(Vertices U) {
+    for (VertexPair uv : VertexPairs(U)) {
+        if (!IsEdge(uv)) {
+            Vertex u = uv.first, v = uv.second;
+            fill_neighbors_[u].insert(v);
+            fill_neighbors_[v].insert(u);
+        }
+    }
+    return;
 }
 
 std::pair< Weight, Weight > EliminationAlgorithm::WeightOf(Vertex v) {

@@ -68,52 +68,39 @@ class EliminationAlgorithm {
 
     std::string str() const;
 
-    Weight fill_weight() const {
-        return fill_weight_;
-    }
-    size_t fill_count() const {
-        return fill_count_;
-    }
-    const std::vector< size_t >& tie_count() const {
-        return tie_count_;
-    }
-    const std::vector< VertexSet >& fill_neighbors() const {
-        return fill_neighbors_;
-    }
-    const std::vector< VertexPair >& fill_edges() const {
-        return fill_edges_;
-    }
-    const EliminationParameters* parameters() const {
-        return parameters_;
-    }
-
+    Weight fill_weight() const;
+    size_t fill_count() const;
+    const std::vector< size_t >& tie_count() const;
+    const std::vector< VertexSet >& fill_neighbors() const;
+    const std::vector< VertexPair >& fill_edges() const;
+    const EliminationParameters* parameters() const;
     AdjacencyLists* TriangNbhds() const;
 
  protected:
-    // Main Methods
     void Init();
     void Elimination();
+    void Eliminate(Vertex);
     VertexWeight ArgMin();
-    virtual VertexWeight TieBreak();  // base method breaks ties uniformly
+    VertexWeight TieBreak();
     Vertices MonotoneNbhd(Vertex);
 
-    // Helpers
+    // Edge and Fill functions
     void AddEdge(VertexPair);
     bool IsEdge(VertexPair);
     bool IsFillEdge(VertexPair);
-    bool IsRemoved(Vertex);
+    bool IsRemoved(Vertex);     // Check if vertex has been eliminated
     void Saturate(Vertices);
 
-    virtual void Eliminate(Vertex);
-    virtual std::pair< Weight, Weight > WeightOf(Vertex);
+    // Returns < fill_weight, separation_weight >
+    std::pair< Weight, Weight > WeightOf(Vertex);
 
     const Graph* const G_;
     const EliminationParameters* const parameters_;
 
     EliminationOrder eo_;
 
-    Weight fill_weight_;
-    size_t fill_count_;  // # of fill edges added (monochromatic or not)
+    Weight fill_weight_;        // weight of fill edges added
+    size_t fill_count_;         // # of fill edges added (monochromatic or not)
     std::vector< VertexSet > fill_neighbors_;
     std::vector< VertexPair > fill_edges_;
     VertexSet remaining_vertices_;

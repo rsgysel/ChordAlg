@@ -15,7 +15,7 @@ class Triangulation : public Graph {
     void operator=(const Triangulation&) = delete;
 
     explicit Triangulation(const Graph*, const EliminationAlgorithm*);
-    explicit Triangulation(const Graph*, const EliminationOrder*);
+    explicit Triangulation(const Graph*, EliminationOrder*);
     explicit Triangulation(const Graph*, const HeuristicRun*);
 
     VertexName name(Vertex v) const {

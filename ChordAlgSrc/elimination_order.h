@@ -23,63 +23,41 @@ class EliminationOrder {
 
     explicit EliminationOrder(const Graph*);
     ~EliminationOrder();
-    void Init();
 
+    void Init();
     void Emplace(Vertex, int);
     void Swap(int, int);
-    AdjacencyLists* TriangNbhds() const;
+    AdjacencyLists* TriangNbhds();
     size_t ComputeFill();
-    bool ZeroFill() const;
+    bool IsPerfect() const;
 
-    std::string str() const;
-
-    bool Before(Vertex u, Vertex v) const {
-        return alpha_inverse_[u] < alpha_inverse_[v];
-    }
-    int PositionOf(Vertex v) const {
-        return alpha_inverse_[v];
-    }
-    Vertex VertexAt(int i) const {
-        return alpha_[i];
-    }
+    bool Before(Vertex u, Vertex v) const;
+    int PositionOf(Vertex v) const;
+    Vertex VertexAt(int i) const;
 
     // neighbors of v ``left" (before) v. Unsorted.
     Vertices LNbhd(Vertex) const;
     // neighbors of v ``right" (after) v. Unsorted.
     Vertices RNbhd(Vertex) const;
 
-    int fill_count() const {
-        return fill_count_;
-    }
-    int size() const {
-        return alpha_.size();
-    }
-    const Graph* G() const {
-        return G_;
-    }
+    int fill_count() const;
+    int size() const;
+    const Graph* G() const;
 
-    // Mutators
     void SetOrder(VertexVector);
-    void SetPosition(Vertex v, int i) {
-        alpha_inverse_[v] = i;
-    }
-    void SetVertex(int i, Vertex v) {
-        alpha_[i] = v;
-    }
+    void SetPosition(Vertex v, int i);
+    void SetVertex(int i, Vertex v);
+
+    std::string str() const;
 
  private:
     const Graph* const G_;
 
     Vertices alpha_;  // alpha[i] = ith vertex eliminated
     std::vector< int > alpha_inverse_;
-
-    int fill_count_;  // # of fill edges added (monochromatic or not)
-
+    size_t fill_count_;  // # of fill edges added (monochromatic or not)
+    bool filled_;
     std::vector< VertexSet > triangulation_nbhds_;
-
-    static int kUnfilled() {
-        return -1;
-    }
 };  // class EliminationOrder
 
 }  // namespace chordalg

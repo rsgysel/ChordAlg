@@ -28,10 +28,8 @@ class MCSTest : public ::testing::Test {
         } else {
             G_ = new chordalg::Graph(new chordalg::AdjacencyLists(A));
             Geo_ = MCS(*G_);
-            Geo_->ComputeFill();
             H1_ = new chordalg::Triangulation(G_, Geo_);
             Heo_ = MCS(*H1_);
-            Heo_->ComputeFill();
             H2_ = new chordalg::Triangulation(H1_, Heo_);
         }
     }
@@ -64,17 +62,17 @@ TEST_F(MCSTest, TreeTriangulation) {
     EXPECT_EQ(H1_->IsIsomorphic(*H2_), true);
 }
 
-TEST_F(MCSTest, BipartiteReductionZeroFill) {
+TEST_F(MCSTest, BipartiteReductionIsPerfect) {
     Read(bipartite_reduction);
-    EXPECT_EQ(Heo_->ZeroFill(), true);
+    EXPECT_EQ(Heo_->IsPerfect(), true);
 }
 
-TEST_F(MCSTest, ManyMinsepsFourZeroFill) {
+TEST_F(MCSTest, ManyMinsepsFourIsPerfect) {
     Read(many_minseps_four);
-    EXPECT_EQ(Heo_->ZeroFill(), true);
+    EXPECT_EQ(Heo_->IsPerfect(), true);
 }
 
-TEST_F(MCSTest, TreeZeroFill) {
+TEST_F(MCSTest, TreeIsPerfect) {
     Read(tree);
-    EXPECT_EQ(Heo_->ZeroFill(), true);
+    EXPECT_EQ(Heo_->IsPerfect(), true);
 }
