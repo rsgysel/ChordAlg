@@ -1,9 +1,7 @@
 #include "ChordAlgSrc/triangulation.h"
 
-#include "ChordAlgSrc/elimination_algorithm.h"
-#include "ChordAlgSrc/elimination_order.h"
+#include "ChordAlgSrc/fill_edges.h"
 #include "ChordAlgSrc/graph.h"
-#include "ChordAlgSrc/heuristic_run.h"
 #include "ChordAlgSrc/mcs.h"
 
 namespace chordalg {
@@ -11,20 +9,8 @@ namespace chordalg {
 //////////////////
 // c'tors & d'tors
 
-Triangulation::Triangulation(const Graph* G, const EliminationAlgorithm* ea) :
-    Graph(ea->TriangNbhds()),
-    G_(G) {
-    return;
-}
-
-Triangulation::Triangulation(const Graph* G, EliminationOrder* eo) :
-    Graph(eo->TriangNbhds()),
-    G_(G) {
-    return;
-}
-
-Triangulation::Triangulation(const Graph* G, const HeuristicRun* R) :
-    Graph(R->TriangNbhds()),
+Triangulation::Triangulation(const Graph* G, const FillEdges* F) :
+    Graph(F->TriangulationNbhds()),
     G_(G) {
     return;
 }
@@ -32,15 +18,29 @@ Triangulation::Triangulation(const Graph* G, const HeuristicRun* R) :
 ////////////////
 // Triangulation
 
+Triangulation* Triangulation::New(const Graph* G, const EliminationOrder* eo) {
+    FillEdges* F = eo->ComputeFill();
+    Triangulation* H = new Triangulation(G, F);
+    delete F;
+    return H;
+}
+
+Triangulation* Triangulation::New(const Graph* G, const HeuristicRun* R) {
+    Triangulation* H = new Triangulation(G, R->fill_edges());
+    return H;
+}
+
 VertexName Triangulation::name(Vertex v) const {
     return G_->name(v);
 }
 
 bool Triangulation::IsChordal() const {
     chordalg::EliminationOrder* eo = MCS(*this);
-    Triangulation H(this, eo);
+    Triangulation* H = Triangulation::New(this, eo);
+    bool result = IsIsomorphic(*H);
+    delete H;
     delete eo;
-    return IsIsomorphic(H);
+    return result;
 }
 
 }  // namespace chordalg

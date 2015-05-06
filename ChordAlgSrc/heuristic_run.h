@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "ChordAlgSrc/elimination_algorithm.h"
+#include "ChordAlgSrc/fill_edges.h"
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/vertices.h"
 
@@ -34,11 +35,10 @@ class HeuristicRun {
         const std::vector< EliminationParameters* >*,
         bool,
         size_t);
+    ~HeuristicRun();
 
-    std::vector< VertexPair > fill_edges() const;
+    const FillEdges* fill_edges() const;
     std::string Run();
-    AdjacencyLists* TriangNbhds() const;
-    Weight fill_weight() const;
 
  protected:
     const Graph* const G_;
@@ -46,8 +46,7 @@ class HeuristicRun {
     bool atoms_;
     size_t runs_;
 
-    std::vector< VertexPair > fill_edges_;
-    Weight fill_weight_;
+    FillEdges* fill_edges_;
 };  // HeuristicRun
 
 }  // namespace chordalg

@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 
+#include "ChordAlgSrc/fill_edges.h"
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/vertices.h"
 
@@ -27,8 +28,7 @@ class EliminationOrder {
     void Init();
     void Emplace(Vertex, int);
     void Swap(int, int);
-    AdjacencyLists* TriangNbhds();
-    size_t ComputeFill();
+    FillEdges* ComputeFill() const;
     bool IsPerfect() const;
 
     bool Before(Vertex u, Vertex v) const;
@@ -36,11 +36,10 @@ class EliminationOrder {
     Vertex VertexAt(int i) const;
 
     // neighbors of v ``left" (before) v. Unsorted.
-    Vertices LNbhd(Vertex) const;
+    Vertices LNbhd(Vertex, const FillEdges* F = nullptr) const;
     // neighbors of v ``right" (after) v. Unsorted.
-    Vertices RNbhd(Vertex) const;
+    Vertices RNbhd(Vertex, const FillEdges* F = nullptr) const;
 
-    int fill_count() const;
     int size() const;
     const Graph* G() const;
 
@@ -55,9 +54,7 @@ class EliminationOrder {
 
     Vertices alpha_;  // alpha[i] = ith vertex eliminated
     std::vector< int > alpha_inverse_;
-    size_t fill_count_;  // # of fill edges added (monochromatic or not)
     bool filled_;
-    std::vector< VertexSet > triangulation_nbhds_;
 };  // class EliminationOrder
 
 }  // namespace chordalg

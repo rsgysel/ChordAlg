@@ -35,7 +35,7 @@ class HeuristicRunTest : public ::testing::Test {
                 criterion, mode, deficiency_wt, separation_wt));
             R_ = new chordalg::HeuristicRun(G_, &EP_, atoms, runs);
             R_->Run();
-            H_ = new chordalg::Triangulation(G_, R_);
+            H_ = chordalg::Triangulation::New(G_, R_);
         }
     }   
  protected:

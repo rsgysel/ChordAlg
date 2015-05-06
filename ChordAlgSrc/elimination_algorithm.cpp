@@ -36,10 +36,7 @@ EliminationAlgorithm::EliminationAlgorithm(
     G_(G),
     parameters_(parameters),
     eo_(G_),
-    fill_weight_(),
-    fill_count_(),
-    fill_neighbors_(),
-    fill_edges_(),
+    fill_edges_(nullptr),
     remaining_vertices_(),
     ties_(),
     tie_count_(),
@@ -91,11 +88,10 @@ bool EliminationParameters::Mixed() const {
 // EliminationAlgorithm
 
 void EliminationAlgorithm::Run() {
-    fill_weight_ = fill_count_ = 0;
-    fill_edges_.clear();
+    delete fill_edges_;
+    fill_edges_ = new FillEdges(G_);
     for (Vertex v : *G_) {
         remaining_vertices_.insert(v);
-        fill_neighbors_[v].clear();
     }
     tie_count_.clear();
     if (!parameters_->Classic()) {
@@ -126,43 +122,26 @@ std::string EliminationAlgorithm::str() const {
     return Estr;
 }
 
-Weight EliminationAlgorithm::fill_weight() const {
-    return fill_weight_;
-}
-
-size_t EliminationAlgorithm::fill_count() const {
-    return fill_count_;
-}
-
 const std::vector< size_t >& EliminationAlgorithm::tie_count() const {
     return tie_count_;
 }
 
-const std::vector< VertexSet >& EliminationAlgorithm::fill_neighbors() const {
-    return fill_neighbors_;
+const FillEdges* EliminationAlgorithm::fill_edges() const {
+    return fill_edges_;
 }
 
-const std::vector< VertexPair >& EliminationAlgorithm::fill_edges() const {
-    return fill_edges_;
+FillEdges* EliminationAlgorithm::TakeFillEdges() {
+    FillEdges* temp = nullptr;
+    std::swap(temp, fill_edges_);
+    return temp;
 }
 
 const EliminationParameters* EliminationAlgorithm::parameters() const {
     return parameters_;
 }
 
-AdjacencyLists* EliminationAlgorithm::TriangNbhds() const {
-    AdjacencyLists* a_lists = new AdjacencyLists(G_->neighbors());
-    for (Vertex v : *G_) {
-        for (Vertex u : fill_neighbors_[v]) {
-            (*a_lists)[v].push_back(u);
-        }
-    }
-    return a_lists;
-}
-
 void EliminationAlgorithm::Init() {
     int n = G_->order();
-    fill_neighbors_.resize(n);
     tie_count_.resize(n);
     if (!parameters_->Classic()) {
         B_ = new SeparatorBlocks(G_);
@@ -173,7 +152,6 @@ void EliminationAlgorithm::Init() {
 void EliminationAlgorithm::Elimination() {
     for (size_t i = 0; i < G_->order(); ++i) {
         VertexWeight vc = ArgMin();
-        fill_weight_ += vc.second;
         Vertex v = vc.first;
         eo_.Emplace(v, i);
         tie_count_[i] = ties_.size();
@@ -186,17 +164,15 @@ void EliminationAlgorithm::Elimination() {
 
 void EliminationAlgorithm::Eliminate(Vertex v) {
     if (parameters_->Classic()) {
-        for (VertexPair uv : VertexPairs(MonotoneNbhd(v))) {
-            AddEdge(uv);
-        }
+        fill_edges_->Saturate(MonotoneNbhd(v));
         return;
     } else {
         Vertices S = MonotoneNbhd(v);
         S.push_back(v);
-        B_->Separate(S, fill_neighbors_);
+        B_->Separate(S, fill_edges_);
         for (Block B : *B_) {
             for (VertexPair uv : VertexPairs(B.NC())) {
-                AddEdge(uv);
+                fill_edges_->AddEdge(uv);
                 unseparated_pairs_.erase(uv);
             }
         }
@@ -233,7 +209,7 @@ Vertices EliminationAlgorithm::MonotoneNbhd(Vertex v) {
             N_alpha.push_back(u);
         }
     }
-    for (Vertex u : fill_neighbors_[v]) {
+    for (Vertex u : (*fill_edges_)[v]) {
         if (!IsRemoved(u)) {
             N_alpha.push_back(u);
         }
@@ -241,38 +217,8 @@ Vertices EliminationAlgorithm::MonotoneNbhd(Vertex v) {
     return N_alpha;
 }
 
-void EliminationAlgorithm::AddEdge(VertexPair uv) {
-    if (!IsEdge(uv)) {
-        fill_neighbors_[uv.first].insert(uv.second);
-        fill_neighbors_[uv.second].insert(uv.first);
-        fill_edges_.push_back(uv);
-        ++fill_count_;
-    }
-    return;
-}
-
-bool EliminationAlgorithm::IsEdge(VertexPair uv) {
-    return G_->HasEdge(uv) || IsFillEdge(uv);
-}
-
-bool EliminationAlgorithm::IsFillEdge(VertexPair uv) {
-    return fill_neighbors_[uv.first].find(uv.second) !=
-           fill_neighbors_[uv.first].end();
-}
-
 bool EliminationAlgorithm::IsRemoved(Vertex v) {
     return remaining_vertices_.find(v) == remaining_vertices_.end();
-}
-
-void EliminationAlgorithm::Saturate(Vertices U) {
-    for (VertexPair uv : VertexPairs(U)) {
-        if (!IsEdge(uv)) {
-            Vertex u = uv.first, v = uv.second;
-            fill_neighbors_[u].insert(v);
-            fill_neighbors_[v].insert(u);
-        }
-    }
-    return;
 }
 
 std::pair< Weight, Weight > EliminationAlgorithm::WeightOf(Vertex v) {
@@ -280,13 +226,13 @@ std::pair< Weight, Weight > EliminationAlgorithm::WeightOf(Vertex v) {
         Weight deficiency_wt = 0, separated_wt = 0;
         Vertices S = MonotoneNbhd(v);
         S.push_back(v);
-        B_->Separate(S , fill_neighbors_);
+        B_->Separate(S, fill_edges_);
         // monochromatic fill pairs
         std::set< VertexPair > seen_fill_pairs;
         for (Block B : *B_) {
             for (VertexPair uw : VertexPairs(B.NC())) {
                 Weight fill_weight = G_->FillCount(uw);
-                if (!IsEdge(uw) && fill_weight > 0 &&
+                if (!fill_edges_->IsEdge(uw) && fill_weight > 0 &&
                     seen_fill_pairs.find(uw) == seen_fill_pairs.end()) {
                     deficiency_wt += fill_weight;
                     seen_fill_pairs.insert(uw);
@@ -302,13 +248,13 @@ std::pair< Weight, Weight > EliminationAlgorithm::WeightOf(Vertex v) {
                 separated_wt += fill_weight;
             }
         }
-        return std::pair< Weight, Weight>(
+        return std::pair< Weight, Weight >(
             parameters_->ObjectiveFn(deficiency_wt, separated_wt),
             deficiency_wt);
     } else {
         Weight wt = 0;
         for (VertexPair uv : VertexPairs(MonotoneNbhd(v))) {
-            if (!IsEdge(uv)) {
+            if (!fill_edges_->IsEdge(uv)) {
                 wt += G_->FillCount(uv);
             }
         }

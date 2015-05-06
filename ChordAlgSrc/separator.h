@@ -9,13 +9,13 @@
 #include <vector>
 #include <string>
 
+#include "ChordAlgSrc/fill_edges.h"
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
 
 typedef int ConnectedComponentID;
-typedef std::vector< VertexSet > FillSet;
 
 class Block {
  public:
@@ -43,11 +43,10 @@ class SeparatorComponents {
     explicit SeparatorComponents(const Graph*);
     virtual ~SeparatorComponents();
 
-    Vertices GetNeighborhood(Vertex, FillSet&);
+    Vertices GetNeighborhood(Vertex, const FillEdges* fill = nullptr);
     virtual void SeparateNbhd(Vertex);
     virtual void SeparateClosedNbhd(Vertex);
-    virtual void Separate(const Vertices&);
-    virtual void Separate(const Vertices&, FillSet&);
+    virtual void Separate(const Vertices&, const FillEdges* fill = nullptr);
     Vertices ConnectedComponent(Vertex) const;
 
     size_t size() const;
@@ -65,7 +64,7 @@ class SeparatorComponents {
 
  protected:
     void InitializeS(const Vertices&);
-    virtual void FindComponents(FillSet&);
+    virtual void FindComponents(const FillEdges* fill = nullptr);
     bool IsUnsearched(Vertex u) const;
 
     const Graph* const G_;
@@ -99,8 +98,8 @@ class SeparatorBlocks : public SeparatorComponents {
     std::string str() const;
 
  private:
-    virtual void FindComponents(FillSet&);
-    void FindNeighborhoods(FillSet&);
+    virtual void FindComponents(const FillEdges*);
+    void FindNeighborhoods(const FillEdges*);
 
     std::vector< Block > blocks_;
     std::vector< int > last_separator_vertex_seen_;

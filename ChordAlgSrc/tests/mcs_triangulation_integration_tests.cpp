@@ -28,9 +28,13 @@ class MCSTest : public ::testing::Test {
         } else {
             G_ = new chordalg::Graph(new chordalg::AdjacencyLists(A));
             Geo_ = MCS(*G_);
-            H1_ = new chordalg::Triangulation(G_, Geo_);
+std::cout << __LINE__ << ":" << __PRETTY_FUNCTION__;
+std::cout << Geo_->ComputeFill()->fill_count() << "\n";
+            H1_ = chordalg::Triangulation::New(G_, Geo_);
+std::cout << __LINE__ << ":" << __PRETTY_FUNCTION__;
+std::cout << G_->size() << " " << H1_->size() << "\n";
             Heo_ = MCS(*H1_);
-            H2_ = new chordalg::Triangulation(H1_, Heo_);
+            H2_ = chordalg::Triangulation::New(H1_, Heo_);
         }
     }
  protected:

@@ -13,8 +13,9 @@ int main(int argc, char** argv) {
     } else {
         Graph* G = Graph::New(argv[1]);
         EliminationOrder* eo = MCS(*G);
-        Triangulation H(G, eo);
-        std::cout << H.str();
+        Triangulation* H = Triangulation::New(G, eo);
+        std::cout << H->str();
+        delete H;
 	delete eo;
         delete G;
         return EXIT_SUCCESS;

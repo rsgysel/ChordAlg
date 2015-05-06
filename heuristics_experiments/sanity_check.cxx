@@ -57,14 +57,18 @@ void CheckHeuristic(std::string filename,
     HeuristicRun R(G, &elimination_parameters, atoms, runs);
     R.Run();
     // Check Triangulation
-    Triangulation H(G, &R);
+    Triangulation H(G, R.fill_edges());
     assert(H.IsChordal());
     // Check Columns to remove
     size_t columns = 0;
-    for (VertexPair uv : R.fill_edges()) {
-        columns += G->CommonColorCount(uv);
+    for (Vertex v : *G) {
+        for (Vertex u : (*R.fill_edges())[v]) {
+            if (u < v) {
+                columns += G->CommonColorCount(u, v);
+            }
+        }
     }
-    assert(R.fill_weight() == columns);
+    assert(R.fill_edges()->fill_weight() == columns);
     delete G;
     delete elimination_parameters[0];
 }

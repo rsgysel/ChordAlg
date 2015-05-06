@@ -15,9 +15,7 @@ namespace chordalg {
 EliminationOrder::EliminationOrder(const Graph* G) :
     G_(G),
     alpha_(G_->order()),
-    alpha_inverse_(G_->order()),
-    fill_count_(0),
-    filled_(false) {
+    alpha_inverse_(G_->order()) {
     Init();
     return;
 }
@@ -52,38 +50,14 @@ void EliminationOrder::Swap(int i, int j) {
     return;
 }
 
-// Produces (and passes ownership of) adjacency lists
-// form triagnulation neighborhoods
-AdjacencyLists* EliminationOrder::TriangNbhds() {
-    if (!filled_) {
-        ComputeFill();
-    }
-    if (fill_count_ == 0) {
-        return new AdjacencyLists(G_->neighbors());
-    } else {
-        AdjacencyLists* a_lists = new AdjacencyLists();
-        a_lists->resize(G_->order());
-        for (Vertex v : *G_) {
-            (*a_lists)[v].reserve(triangulation_nbhds_[v].size());
-            for (Vertex u : triangulation_nbhds_[v]) {
-                (*a_lists)[v].push_back(u);
-            }
-        }
-        return a_lists;
-    }
-}
-
 // Tarjan and Yannakakis' algorithm to compute fill edges from an elimination
 // order, from:
 // R.E. Tarjan and M. Yannakakis. "Simple linear-time algorithms to test
 // chordality of graphs, test acyclicity of hypergraphs, and selectively
 // reduce acyclic hypergraphs".
 // SIAM J. Comput., 13:566-579, 1984.
-size_t EliminationOrder::ComputeFill() {
-    if (filled_) {
-        return fill_count_;
-    }
-    triangulation_nbhds_.resize(G_->order());
+FillEdges* EliminationOrder::ComputeFill() const {
+    FillEdges* F = new FillEdges(G_);
     VertexVector follower;
     follower.resize(G_->order());
     VertexVector index;
@@ -92,13 +66,11 @@ size_t EliminationOrder::ComputeFill() {
         Vertex w = VertexAt(i);
         follower[w] = w;
         index[w] = i;
-        for (Vertex v : LNbhd(w)) {
+        for (Vertex v : LNbhd(w, F)) {
             Vertex x = v;
             while (index[x] < i) {
                 index[x] = i;
-                ++fill_count_;
-                triangulation_nbhds_[x].insert(w);
-                triangulation_nbhds_[w].insert(x);
+                F->AddEdge(x, w);
                 x = follower[x];
             }
             if (follower[x] == x) {
@@ -106,9 +78,7 @@ size_t EliminationOrder::ComputeFill() {
             }
         }
     }
-    fill_count_ -= G_->size();
-    filled_ = true;
-    return fill_count_;
+    return F;
 }
 
 // Tarjan and Yannakakis' algorithm to check if an elimination order is
@@ -118,9 +88,6 @@ size_t EliminationOrder::ComputeFill() {
 // reduce acyclic hypergraphs".
 // SIAM J. Comput., 13:566-579, 1984.
 bool EliminationOrder::IsPerfect() const {
-    if (filled_) {
-        return fill_count_ == 0;
-    }
     VertexVector follower;
     follower.resize(G_->order());
     VertexVector index;
@@ -154,15 +121,15 @@ Vertex EliminationOrder::VertexAt(int i) const {
     return alpha_[i];
 }
 
-Vertices EliminationOrder::LNbhd(Vertex v) const {
+Vertices EliminationOrder::LNbhd(Vertex v, const FillEdges* F) const {
     Vertices L_N;
     for (Vertex u : G_->N(v)) {
         if (Before(u, v)) {
             L_N.push_back(u);
         }
     }
-    if (!triangulation_nbhds_.empty()) {
-        for (Vertex u : triangulation_nbhds_[v]) {
+    if (F) {
+        for (Vertex u : (*F)[v]) {
             if (Before(u, v)) {
                 L_N.push_back(u);
             }
@@ -171,16 +138,16 @@ Vertices EliminationOrder::LNbhd(Vertex v) const {
     return L_N;
 }
 
-Vertices EliminationOrder::RNbhd(Vertex v) const {
+Vertices EliminationOrder::RNbhd(Vertex v, const FillEdges* F) const {
     Vertices R_N;
     for (Vertex u : G_->N(v)) {
         if (Before(v, u)) {
             R_N.push_back(u);
         }
     }
-    if (!triangulation_nbhds_.empty()) {
-        for (Vertex u : triangulation_nbhds_[v]) {
-            if (Before(v, u)) {
+    if (F) {
+        for (Vertex u : (*F)[v]) {
+            if (Before(v,u)) {
                 R_N.push_back(u);
             }
         }
@@ -188,9 +155,6 @@ Vertices EliminationOrder::RNbhd(Vertex v) const {
     return R_N;
 }
 
-int EliminationOrder::fill_count() const {
-    return fill_count_;
-}
 int EliminationOrder::size() const {
     return alpha_.size();
 }

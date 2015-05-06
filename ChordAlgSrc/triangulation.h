@@ -1,9 +1,9 @@
 #ifndef CHORDALGSRC_TRIANGULATION_H_
 #define CHORDALGSRC_TRIANGULATION_H_
 
-#include "ChordAlgSrc/graph.h"
-#include "ChordAlgSrc/elimination_algorithm.h"
 #include "ChordAlgSrc/elimination_order.h"
+#include "ChordAlgSrc/fill_edges.h"
+#include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/heuristic_run.h"
 
 namespace chordalg {
@@ -14,10 +14,10 @@ class Triangulation : public Graph {
     Triangulation(const Triangulation&) = delete;
     void operator=(const Triangulation&) = delete;
 
-    explicit Triangulation(const Graph*, const EliminationAlgorithm*);
-    explicit Triangulation(const Graph*, EliminationOrder*);
-    explicit Triangulation(const Graph*, const HeuristicRun*);
+    explicit Triangulation(const Graph*, const FillEdges*);
 
+    static Triangulation* New(const Graph*, const EliminationOrder*);
+    static Triangulation* New(const Graph*, const HeuristicRun*);
     VertexName name(Vertex v) const;
     bool IsChordal() const;
  protected:

@@ -75,25 +75,26 @@ void Block::addNC(Vertex v) {
 //////////////////////
 // SeparatorComponents
 
-Vertices SeparatorComponents::GetNeighborhood(Vertex u, FillSet& fill) {
-    if (fill.empty()) {
+Vertices SeparatorComponents::GetNeighborhood(Vertex u, const FillEdges* fill) {
+    if (fill && fill->empty()) {
         return Vertices(G_->N(u));
     } else {
         Vertices neighborhood;
         for (Vertex v : G_->N(u)) {
             neighborhood.push_back(v);
         }
-        for (Vertex v : fill[u]) {
-            neighborhood.push_back(v);
+        if (fill) {
+            for (Vertex v : (*fill)[u]) {
+                neighborhood.push_back(v);
+            }
         }
         return neighborhood;
     }
 }
 
 void SeparatorComponents::SeparateNbhd(Vertex v) {
-    FillSet fill;
     InitializeS(G_->N(v));
-    FindComponents(fill);
+    FindComponents();
     return;
 }
 
@@ -103,21 +104,13 @@ void SeparatorComponents::SeparateClosedNbhd(Vertex v) {
     for (Vertex u : G_->N(v)) {
         S.push_back(u);
     }
-    FillSet fill;
     InitializeS(S);
-    FindComponents(fill);
-    return;
-}
-
-void SeparatorComponents::Separate(const Vertices& S) {
-    FillSet fill;
-    InitializeS(S);
-    FindComponents(fill);
+    FindComponents();
     return;
 }
 
 // Main computation
-void SeparatorComponents::Separate(const Vertices& S, FillSet& fill) {
+void SeparatorComponents::Separate(const Vertices& S, const FillEdges* fill) {
     InitializeS(S);
     FindComponents(fill);
     return;
@@ -208,7 +201,7 @@ void SeparatorComponents::InitializeS(const Vertices& S) {
 }
 
 // Finds connected components
-void SeparatorComponents::FindComponents(FillSet& fill) {
+void SeparatorComponents::FindComponents(const FillEdges* fill) {
     ConnectedComponentID current_component = kUnsearched();
     for (Vertex v : *G_) {
         if (IsUnsearched(v) && !IsInSeparator(v)) {
@@ -238,6 +231,7 @@ bool SeparatorComponents::IsUnsearched(Vertex u) const {
 
 //////////////////
 // SeparatorBlocks
+
 std::vector< Block >::const_iterator SeparatorBlocks::begin() {
     return blocks_.begin();
 }
@@ -299,7 +293,7 @@ std::string SeparatorBlocks::str() const {
     return SCstr;
 }
 
-void SeparatorBlocks::FindComponents(FillSet& fill) {
+void SeparatorBlocks::FindComponents(const FillEdges* fill) {
     SeparatorComponents::FindComponents(fill);
     blocks_.clear();
     blocks_.resize(size_);
@@ -317,7 +311,7 @@ void SeparatorBlocks::FindComponents(FillSet& fill) {
 // Finds the neighborhoods of connected components.
 // Our implementation is an extension of the algorithm found on p.50 in:
 // paper: http://www.sciencedirect.com/science/article/pii/S0196677404001142
-void SeparatorBlocks::FindNeighborhoods(FillSet& fill) {
+void SeparatorBlocks::FindNeighborhoods(const FillEdges* fill) {
     // used to ensure each element of N(C) appears once
     last_separator_vertex_seen_.resize(size_);
     for (ConnectedComponentID &C : last_separator_vertex_seen_) {

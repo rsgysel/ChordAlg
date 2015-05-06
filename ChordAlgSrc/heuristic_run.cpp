@@ -61,9 +61,13 @@ std::string SetupAndRunHeuristic(
     }
     // Return columns to remove
     std::set< Color > columns;
-    for (VertexPair uv : R.fill_edges()) {
-        for (Color c : G->CommonColors(uv)) {
-            columns.insert(c);
+    for (Vertex v : *G) {
+        for (Vertex u : (*R.fill_edges())[v]) {
+            if (u < v) {
+                for (Color c : G->CommonColors(u,v)) {
+                    columns.insert(c);
+                }
+            }
         }
     }
     std::string columns_str;
@@ -86,14 +90,19 @@ HeuristicRun::HeuristicRun(
     elimination_parameters_(elimination_parameters),
     atoms_(atoms),
     runs_(runs),
-    fill_edges_() {
+    fill_edges_(new FillEdges(G)) {
     return;
+}
+
+HeuristicRun::~HeuristicRun() {
+    delete fill_edges_;
 }
 
 ///////////////
 // HeuristicRun
 
-std::vector< VertexPair > HeuristicRun::fill_edges() const {
+//td::vector< VertexPair > HeuristicRun::fill_edges() const {
+const FillEdges* HeuristicRun::fill_edges() const {
     return fill_edges_;
 }
 
@@ -107,35 +116,37 @@ std::string HeuristicRun::Run() {
     } else {
         graphs.push_back(G_);
     }
-    fill_weight_ = 0;
     size_t clique_atoms = 0, atom_id = 0, fill_count = 0;
     for (const Graph* G : graphs) {
         ++atom_id;
         if (!G->IsClique()) {
-            double best_fill_weight = DBL_MAX, best_fill_count = DBL_MAX;
-            std::vector< VertexPair > best_fill_edges;
+            double best_fill_weight = DBL_MAX;
+            FillEdges* best_fill_edges = nullptr;
             for (auto parameters : *elimination_parameters_) {
                 EliminationAlgorithm algorithm(G, parameters);
                 for (size_t i = 0; i < runs_; ++i) {
                     algorithm.Run();
-                    if (algorithm.fill_weight() < best_fill_weight) {
-                        best_fill_weight = algorithm.fill_weight();
-                        best_fill_count = algorithm.fill_count();
-                        best_fill_edges = algorithm.fill_edges();
+                    const FillEdges* fill_edges = algorithm.fill_edges();
+                    if (!best_fill_edges ||
+                        fill_edges->fill_weight() < best_fill_weight) {
+                        delete best_fill_edges;
+                        best_fill_weight = fill_edges->fill_weight();
+                        best_fill_edges = algorithm.TakeFillEdges();
                     }
                 }
             }
-            fill_weight_ += best_fill_weight;
-            fill_count += best_fill_count;
-            for (VertexPair uv : best_fill_edges) {
-                fill_edges_.push_back(G->ParentGraph(uv));
+            fill_count += best_fill_edges->fill_count();
+            for (Vertex v : *G) {
+                for (Vertex u : (*best_fill_edges)[v]) {
+                    fill_edges_->AddEdge(G->ParentGraph(VertexPair(u, v)));
+                }
             }
         } else {
             ++clique_atoms;
         }
     }
     std::string log =
-        "characters removed: " + std::to_string(fill_weight_) + '\n'
+        "characters removed: " + std::to_string(fill_edges_->fill_weight()) + '\n'
         + "fill edges added: " + std::to_string(fill_count) + '\n'
         + "vertices: " + std::to_string(G_->order()) + '\n'
         + "edges: " + std::to_string(G_->size()) + '\n';
@@ -146,19 +157,6 @@ std::string HeuristicRun::Run() {
         delete A;
     }
     return log;
-}
-
-AdjacencyLists* HeuristicRun::TriangNbhds() const {
-    AdjacencyLists* a_lists = new AdjacencyLists(G_->neighbors());
-    for (VertexPair uv : fill_edges_) {
-        (*a_lists)[uv.first].push_back(uv.second);
-        (*a_lists)[uv.second].push_back(uv.first);
-    }
-    return a_lists;
-}
-
-Weight HeuristicRun::fill_weight() const {
-    return fill_weight_;
 }
 
 }  // namespace chordalg

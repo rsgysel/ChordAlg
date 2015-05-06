@@ -68,13 +68,10 @@ class EliminationAlgorithm {
 
     std::string str() const;
 
-    Weight fill_weight() const;
-    size_t fill_count() const;
     const std::vector< size_t >& tie_count() const;
-    const std::vector< VertexSet >& fill_neighbors() const;
-    const std::vector< VertexPair >& fill_edges() const;
+    const FillEdges* fill_edges() const;
+    FillEdges* TakeFillEdges();
     const EliminationParameters* parameters() const;
-    AdjacencyLists* TriangNbhds() const;
 
  protected:
     void Init();
@@ -83,13 +80,7 @@ class EliminationAlgorithm {
     VertexWeight ArgMin();
     VertexWeight TieBreak();
     Vertices MonotoneNbhd(Vertex);
-
-    // Edge and Fill functions
-    void AddEdge(VertexPair);
-    bool IsEdge(VertexPair);
-    bool IsFillEdge(VertexPair);
     bool IsRemoved(Vertex);     // Check if vertex has been eliminated
-    void Saturate(Vertices);
 
     // Returns < fill_weight, separation_weight >
     std::pair< Weight, Weight > WeightOf(Vertex);
@@ -99,10 +90,7 @@ class EliminationAlgorithm {
 
     EliminationOrder eo_;
 
-    Weight fill_weight_;        // weight of fill edges added
-    size_t fill_count_;         // # of fill edges added (monochromatic or not)
-    std::vector< VertexSet > fill_neighbors_;
-    std::vector< VertexPair > fill_edges_;
+    FillEdges* fill_edges_;
     VertexSet remaining_vertices_;
 
     std::vector< VertexWeight > ties_;
