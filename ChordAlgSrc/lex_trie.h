@@ -16,8 +16,7 @@ namespace chordalg {
 class LexTrie;
 class LexTrieNode;
 
-typedef std::pair< size_t, LexTrieNode* > ChildData;
-typedef std::map< size_t, LexTrieNode* > ChildDataStructure;
+typedef std::map< size_t, LexTrieNode* > LexTrieNodeChildren;
 
 // Finite set of natural numbers
 class FiniteSet : public std::vector< size_t > {
@@ -27,34 +26,24 @@ class FiniteSet : public std::vector< size_t > {
 
 class LexTrieIterator {
  public:
-    explicit LexTrieIterator(const LexTrie* T) : n_(0), set_(), nodes_(),
-                                                 children_itrs_(), T_(T) {}
-    LexTrieIterator(size_t n, LexTrieNode* root, const LexTrie* T);
+    LexTrieIterator() = delete;
+
+    explicit LexTrieIterator(const LexTrie*);
+    LexTrieIterator(size_t, LexTrieNode*, const LexTrie*);
+    LexTrieIterator(const LexTrieIterator&);
 
     LexTrieIterator operator++();
-    bool operator==(const LexTrieIterator& other) const;
-
-    bool operator!=(const LexTrieIterator& other) const {
-        return !(*this == other);
-    }
-
-    const FiniteSet& operator*() const {
-        return set_;
-    }
+    bool operator==(const LexTrieIterator&) const;
+    bool operator!=(const LexTrieIterator&) const;
+    void operator=(const LexTrieIterator&);
+    const FiniteSet& operator*() const;
 
  private:
     size_t n_;
     FiniteSet set_;  // Current set
     std::vector< LexTrieNode* > nodes_;  // Path in lex trie to current set
-    std::vector< ChildDataStructure::const_iterator > children_itrs_;
+    std::vector< LexTrieNodeChildren::const_iterator > children_itrs_;
     const LexTrie* T_;
-
-    void GetNextSetBelow();
-    size_t GetNextChild();
-    size_t GetNextChildAfter(size_t k);
-
-    // Disable default constructor
-    LexTrieIterator();
 };  // LexTrieIterator
 
 // Each node may represent a set by its path to the root.
@@ -62,84 +51,49 @@ class LexTrieIterator {
 // traversing an edge from any node to a k-child is "adding" k to the set
 // we're inserting/checking).
 class LexTrieNode {
+ public:
+    LexTrieNode() = delete;
+    LexTrieNode(const LexTrieNode&) = delete;
+    void operator=(const LexTrieNode&) = delete;
+
  private:
-    explicit LexTrieNode(bool has_set) : has_set_(has_set), children_() {}
+    explicit LexTrieNode(bool);
     ~LexTrieNode();
 
     bool has_set_;  // true if node represents a set
-    ChildDataStructure children_;
+    LexTrieNodeChildren children_;
 
-    size_t SizeOf(size_t n) const;
+    bool HasChild(size_t) const;
+    void AddChild(LexTrieNode*, size_t);
+    LexTrieNode* GetChild(size_t);
+    const LexTrieNode* GetChild(size_t) const;
 
-    inline bool HasChild(size_t k) const {
-        return children_.find(k) != children_.end() ? true : false;
-    }
-
-    inline void AddChild(LexTrieNode* node, size_t k) {
-        children_[k] = node;
-        return;
-    }
-
-    inline LexTrieNode* GetChild(size_t k) {
-        return children_.find(k) != children_.end() ? children_[k] : nullptr;
-    }
-
-    inline const LexTrieNode* GetChild(size_t k) const {
-        return children_.find(k) != children_.end() ? children_.at(k) : nullptr;
-    }
-
-    // Friend functions
     friend LexTrieIterator LexTrieIterator::operator++();
-
     friend class LexTrie;
     friend class LexTrieIterator;
-
-    // Disable default constructor, copy constructor, assignment
-    LexTrieNode();
-    LexTrieNode(const LexTrieNode&);
-    void operator=(const LexTrieNode&);
 };  // LexTrieNode
 
 // A tree representing a family of subsets of [0, 1, ..., n-1]
 class LexTrie {
  public:
-    explicit LexTrie(size_t n);
-    ~LexTrie() {
-        delete this->root_;
-        return;
-    }
+    LexTrie() = delete;
+    LexTrie(const LexTrie&) = delete;
+    void operator=(const LexTrie&) = delete;
 
-    template< class Container >
-    bool Contains(Container&) const;
-
-    template< class Container >
-    bool SortedContains(const Container&) const;
+    explicit LexTrie(size_t);
+    ~LexTrie();
 
     template< class Container >
     const LexTrieNode* Insert(Container&, bool* new_set = nullptr);
-
     template< class Container >
     const LexTrieNode* SortedInsert(const Container&, bool* new_set = nullptr);
-
     std::string str() const;
-
-    size_t SizeOf() const;  // space used by LexTrie
-    size_t size() const {
-        return set_count_;  // number of sets in family
-    }
-    size_t n() const {
-        return n_;
-    }
-
+    size_t size() const;        // number of sets in family
+    size_t n() const;
     LexTrieIterator begin() const;
-    LexTrieIterator end() const {
-        return LexTrieIterator(this);
-    }
+    LexTrieIterator end() const;
 
  protected:
-    template< class InputIterator >
-    bool ContainsRange(InputIterator, InputIterator) const;
-
     template< class InputIterator >
     const LexTrieNode* InsertRange(InputIterator, InputIterator,
                                    bool* new_set = nullptr);
@@ -148,21 +102,16 @@ class LexTrie {
     size_t n_;  // size of original set
     size_t set_count_;  // number of sets in family
     LexTrieNode* root_;
-
-    // Disable default constructor, copy constructor, assignment
-    LexTrie();
-    LexTrie(const LexTrie&);
-    void operator=(const LexTrie&);
 };  // LexTrie
 
-//--------------------//
-// Lex trie interface //
-//--------------------//
+////////////////////
+// Templated Inserts
 
-// Inserts new subset into the trie
 template< class InputIterator >
-const LexTrieNode* LexTrie::InsertRange(InputIterator begin, InputIterator end,
-                                        bool* new_set) {
+const LexTrieNode* LexTrie::InsertRange(
+    InputIterator begin,
+    InputIterator end,
+    bool* new_set) {
     LexTrieNode* node = root_;
 
     // Traverse trie, creating nodes if they don't exist
@@ -176,44 +125,16 @@ const LexTrieNode* LexTrie::InsertRange(InputIterator begin, InputIterator end,
         }
         node = node->GetChild(*itr);
     }
-
     if (new_set != nullptr && node->has_set_) {
         *new_set = false;
     } else if (new_set != nullptr) {
         *new_set = true;
     }
-
     if (!node->has_set_) {
         set_count_++;
         node->has_set_ = true;
     }
-
     return node;
-}
-
-template< class InputIterator >
-bool LexTrie::ContainsRange(InputIterator begin, InputIterator end) const {
-    const LexTrieNode* node = root_;
-    for (InputIterator itr = begin; itr != end; ++itr) {
-        if (!node->HasChild(*itr)) {
-            return false;
-        }
-        node = node->GetChild(*itr);
-    }
-    return node->has_set_;
-}
-
-template< class Container >
-bool LexTrie::Contains(Container& set) const {
-    std::sort(set.begin(), set.end());
-    return ContainsRange< typename Container::const_iterator >(
-                set.begin(), set.end());
-}
-
-template< class Container >
-bool LexTrie::SortedContains(const Container& set) const {
-    return ContainsRange< typename Container::const_iterator >(
-                set.begin(), set.end());
 }
 
 template< class Container >
@@ -229,11 +150,6 @@ const LexTrieNode* LexTrie::SortedInsert(const Container& set,
     return InsertRange< typename Container::const_iterator >(
                 set.begin(), set.end(), new_set);
 }
-
-
-//--------------------//
-// Lex trie interface //
-//--------------------//
 
 }  // namespace chordalg
 
