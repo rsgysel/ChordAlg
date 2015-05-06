@@ -12,6 +12,9 @@
 
 namespace chordalg {
 
+//////////////////
+// c'tors & d'tors
+
 Atoms::Atoms(const Graph* G) :
     G_(G),
     clique_minimal_separators_(G_->order()) {
@@ -25,10 +28,27 @@ Atoms::~Atoms() {
     return;
 }
 
+////////
+// Atoms
+
 Atoms* Atoms::New(const Graph* G) {
     Atoms* A = new Atoms(G);
     A->ComputeAtoms();
     return A;
+}
+
+const Atoms::LexTrie& clique_minimal_separators() const {
+    return clique_minimal_separators_;
+}
+int Atoms::size() {
+    return atom_subgraphs_.size();
+}
+
+AtomIterator Atoms::begin() {
+    return atom_subgraphs_.begin();
+}
+AtomIterator Atoms::end() {
+    return atom_subgraphs_.end();
 }
 
 void Atoms::ComputeAtoms() {

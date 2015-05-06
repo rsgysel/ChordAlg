@@ -12,6 +12,8 @@
 
 namespace chordalg {
 
+typedef typename std::vector< InducedSubgraph* >::const_iterator AtomIterator;
+
 class Atoms {
  public:
     Atoms() = delete;
@@ -21,22 +23,10 @@ class Atoms {
     ~Atoms();
 
     static Atoms* New(const Graph*);
-
-    const LexTrie& clique_minimal_separators() const {
-        return clique_minimal_separators_;
-    }
-    int size() {
-        return atom_subgraphs_.size();
-    }
-
-    typedef typename std::vector< InducedSubgraph* >::const_iterator
-                     AtomIterator;
-    AtomIterator begin() {
-        return atom_subgraphs_.begin();
-    }
-    AtomIterator end() {
-        return atom_subgraphs_.end();
-    }
+    const LexTrie& clique_minimal_separators() const;
+    int size();
+    AtomIterator begin();
+    AtomIterator end();
 
  private:
     explicit Atoms(const Graph*);
