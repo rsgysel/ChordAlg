@@ -23,26 +23,15 @@ class TreeRepresentation {
         std::vector< Vertices >);
     virtual ~TreeRepresentation();
 
+    std::string str() const;
+    const Graph* G() const;
+    const Graph& T() const;
     std::string strNewick() const;
     std::string strPhyloNewick(
         const CellIntersectionGraph&,
         bool rooted = false) const;
-    std::string str() const {
-        return T_.str();
-    }
-
-    const Graph* G() const {
-        return G_;
-    }
-    const Graph& T() const {
-        return T_;
-    }
 
  protected:
-    const Graph* G_;  // represented chordal graph
-    Graph T_;  // tree representation topology
-    std::vector< Vertices > clique_map_;  // maps nodes of T_ to cliques of G_
-
     std::string strMaxClique(Vertices K) const;
     VertexNames NamesFromCliqueMap(std::vector< Vertices > clique_map) const;
 
@@ -56,6 +45,10 @@ class TreeRepresentation {
         std::string& newick_tree,
         const CellIntersectionGraph& cig,
         std::vector< size_t >& taxon_clique_size) const;
+
+    const Graph* G_;  // represented chordal graph
+    Graph T_;  // tree representation topology
+    std::vector< Vertices > clique_map_;  // maps nodes of T_ to cliques of G_
 };  // TreeRepresentation
 
 class CliqueTree : public TreeRepresentation {

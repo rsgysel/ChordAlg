@@ -9,6 +9,9 @@
 
 namespace chordalg {
 
+//////////////////
+// c'tors & d'tors
+
 TreeRepresentation::TreeRepresentation(
     AdjacencyLists* E,
     const Graph* G,
@@ -21,23 +24,6 @@ TreeRepresentation::TreeRepresentation(
 TreeRepresentation::~TreeRepresentation() {
 }
 
-std::string TreeRepresentation::strMaxClique(Vertices K) const {
-    std::string maxclique("{");
-    maxclique += G_->str(K);
-    maxclique += std::string("}");
-    return maxclique;
-}
-
-VertexNames TreeRepresentation::NamesFromCliqueMap(
-    std::vector< Vertices > clique_map) const {
-    VertexNames names;
-    names.resize(clique_map.size());
-    for (Vertex v = 0; v < clique_map.size(); ++v) {
-        names[v] = strMaxClique(clique_map[v]);
-    }
-    return names;
-}
-
 CliqueTree::CliqueTree(
     AdjacencyLists* E,
     const Graph* G,
@@ -46,6 +32,21 @@ CliqueTree::CliqueTree(
 }
 
 CliqueTree::~CliqueTree() {
+}
+
+/////////////////////
+// TreeRepresentation
+
+std::string TreeRepresentation::str() const {
+    return T_.str();
+}
+
+const Graph* TreeRepresentation::G() const {
+    return G_;
+}
+
+const Graph& TreeRepresentation::T() const {
+    return T_;
 }
 
 // Prints tree in Newick notation / New Hampshire tree format.
@@ -69,31 +70,6 @@ std::string TreeRepresentation::strNewick() const {
     NewickVisit(visited, v, newick_tree);
     newick_tree += ";";
     return newick_tree;
-}
-
-void TreeRepresentation::NewickVisit(
-    VertexSet& visited,
-    Vertex v,
-    std::string& newick_tree) const {
-    visited.insert(v);
-    bool is_leaf = true;
-    newick_tree += std::string("(");
-    std::string subtree;
-    for (Vertex u : T_.N(v)) {
-        if (visited.find(u) == visited.end()) {
-            is_leaf = false;
-            NewickVisit(visited, u, subtree);
-            subtree += std::string(",");
-        }
-    }
-    if (is_leaf) {
-        newick_tree.pop_back();  // no () for leaf node
-        newick_tree += subtree + T_.name(v);
-    } else {
-        subtree.pop_back();  // trailing comma
-        newick_tree += subtree + std::string(")") + T_.name(v);
-    }
-    return;
 }
 
 std::string TreeRepresentation::strPhyloNewick(
@@ -142,6 +118,48 @@ std::string TreeRepresentation::strPhyloNewick(
     PhyloNewickVisit(visited, v, newick_tree, cig, taxon_clique_size);
     newick_tree += ";";
     return newick_tree;
+}
+
+std::string TreeRepresentation::strMaxClique(Vertices K) const {
+    std::string maxclique("{");
+    maxclique += G_->str(K);
+    maxclique += std::string("}");
+    return maxclique;
+}
+
+VertexNames TreeRepresentation::NamesFromCliqueMap(
+    std::vector< Vertices > clique_map) const {
+    VertexNames names;
+    names.resize(clique_map.size());
+    for (Vertex v = 0; v < clique_map.size(); ++v) {
+        names[v] = strMaxClique(clique_map[v]);
+    }
+    return names;
+}
+
+void TreeRepresentation::NewickVisit(
+    VertexSet& visited,
+    Vertex v,
+    std::string& newick_tree) const {
+    visited.insert(v);
+    bool is_leaf = true;
+    newick_tree += std::string("(");
+    std::string subtree;
+    for (Vertex u : T_.N(v)) {
+        if (visited.find(u) == visited.end()) {
+            is_leaf = false;
+            NewickVisit(visited, u, subtree);
+            subtree += std::string(",");
+        }
+    }
+    if (is_leaf) {
+        newick_tree.pop_back();  // no () for leaf node
+        newick_tree += subtree + T_.name(v);
+    } else {
+        subtree.pop_back();  // trailing comma
+        newick_tree += subtree + std::string(")") + T_.name(v);
+    }
+    return;
 }
 
 void TreeRepresentation::PhyloNewickVisit(
