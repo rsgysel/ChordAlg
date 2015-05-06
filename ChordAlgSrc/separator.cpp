@@ -10,6 +10,21 @@ namespace chordalg {
 
 //////////////////
 // c'tors & d'tors
+
+Block::Block() : C_(), NC_() {
+    return;
+}
+
+Block::Block(const Vertices& C) : C_(C), NC_() {
+    return;
+}
+
+Block::Block(const Vertices& C, const Vertices& NC) :
+    C_(C),
+    NC_(NC) {
+    return;
+}
+
 SeparatorComponents::SeparatorComponents(const Graph* G) :
     G_(G),
     S_(G_->order()),
@@ -22,6 +37,10 @@ SeparatorComponents::SeparatorComponents(const Graph* G) :
     return;
 }
 
+SeparatorComponents::~SeparatorComponents() {
+    return;
+}
+
 SeparatorBlocks::SeparatorBlocks(const Graph* G) :
     SeparatorComponents(G),
     blocks_(),
@@ -30,7 +49,46 @@ SeparatorBlocks::SeparatorBlocks(const Graph* G) :
     return;
 }
 
-////////////// Methods
+SeparatorBlocks::~SeparatorBlocks() {
+    return;
+}
+
+////////
+// Block
+
+const Vertices& Block::C() const {
+    return C_;
+}
+
+const Vertices& Block::NC() const {
+    return NC_;
+}
+
+void Block::addC(Vertex v) {
+    C_.push_back(v);
+}
+
+void Block::addNC(Vertex v) {
+    NC_.push_back(v);
+}
+
+//////////////////////
+// SeparatorComponents
+
+Vertices SeparatorComponents::GetNeighborhood(Vertex u, FillSet& fill) {
+    if (fill.empty()) {
+        return Vertices(G_->N(u));
+    } else {
+        Vertices neighborhood;
+        for (Vertex v : G_->N(u)) {
+            neighborhood.push_back(v);
+        }
+        for (Vertex v : fill[u]) {
+            neighborhood.push_back(v);
+        }
+        return neighborhood;
+    }
+}
 
 void SeparatorComponents::SeparateNbhd(Vertex v) {
     FillSet fill;
@@ -47,7 +105,7 @@ void SeparatorComponents::SeparateClosedNbhd(Vertex v) {
     }
     FillSet fill;
     InitializeS(S);
-    this->FindComponents(fill);
+    FindComponents(fill);
     return;
 }
 
@@ -63,6 +121,73 @@ void SeparatorComponents::Separate(const Vertices& S, FillSet& fill) {
     InitializeS(S);
     FindComponents(fill);
     return;
+}
+
+// Connected component containing v
+Vertices SeparatorComponents::ConnectedComponent(Vertex v) const {
+    Vertices C;
+    if (IsInSeparator(v)) {
+        return C;
+    }
+    for (Vertex u : *G_) {
+        if (AreConnected(u, v)) {
+            C.push_back(u);
+        }
+    }
+    return C;
+}
+
+size_t SeparatorComponents::size() const {
+    return size_;
+}
+
+ConnectedComponentID SeparatorComponents::ComponentId(Vertex v) const {
+    return connected_component_[v];
+}
+
+ConnectedComponentID SeparatorComponents::kInSeparator() const {
+    return -2;
+}
+ConnectedComponentID SeparatorComponents::kUnsearched() const {
+    return -1;
+}
+ConnectedComponentID SeparatorComponents::kRemoved() const {
+    return -3;
+}
+
+inline bool SeparatorComponents::IsInSeparator(Vertex u) const {
+    return connected_component_[u] == kInSeparator();
+}
+
+inline bool SeparatorComponents::AreConnected(Vertex u, Vertex v) const {
+    return IsInSeparator(u) || IsInSeparator(v) ? false :
+           connected_component_[u] == connected_component_[v];
+}
+
+// AreSeparated is not the complement of AreConnected, because vertices in
+// S_ are neither connected or separated
+inline bool SeparatorComponents::AreSeparated(Vertex u, Vertex v) const {
+    return IsInSeparator(u) || IsInSeparator(v) ? false :
+           connected_component_[u] != connected_component_[v];
+}
+
+bool SeparatorComponents::IsSeparated(Vertices V) const {
+    for (auto p : VertexPairs(V)) {
+        if (AreSeparated(p.first, p.second)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+std::string SeparatorComponents::str() const {
+    std::string SCstr;
+    for (Vertex v : *G_) {
+        SCstr += "CC(" + G_->name(v) + "): "
+                 + std::to_string(connected_component_[v]) + '\n';
+    }
+    SCstr += '\n';
+    return SCstr;
 }
 
 void SeparatorComponents::InitializeS(const Vertices& S) {
@@ -107,33 +232,71 @@ void SeparatorComponents::FindComponents(FillSet& fill) {
     return;
 }
 
-// Finds connected component containing v
-Vertices SeparatorComponents::ConnectedComponent(Vertex v) const {
-    Vertices C;
-    if (IsInSeparator(v)) {
-        return C;
-    }
-    for (Vertex u : *G_) {
-        if (AreConnected(u, v)) {
-            C.push_back(u);
-        }
-    }
-    return C;
+bool SeparatorComponents::IsUnsearched(Vertex u) const {
+    return connected_component_[u] == kUnsearched();
 }
 
-Vertices SeparatorComponents::GetNeighborhood(Vertex u, FillSet& fill) {
-    if (fill.empty()) {
-        return Vertices(G_->N(u));
-    } else {
-        Vertices neighborhood;
-        for (Vertex v : G_->N(u)) {
-            neighborhood.push_back(v);
+//////////////////
+// SeparatorBlocks
+std::vector< Block >::const_iterator SeparatorBlocks::begin() {
+    return blocks_.begin();
+}
+
+std::vector< Block >::const_iterator SeparatorBlocks::end() {
+    return blocks_.end();
+}
+
+bool SeparatorBlocks::IsFull(ConnectedComponentID C) const {
+    return S_.size() == NComponent(C).size();
+}
+
+const Vertices& SeparatorBlocks::Component(ConnectedComponentID C) const {
+    return blocks_[C].C();
+}
+
+const Vertices& SeparatorBlocks::NComponent(ConnectedComponentID C) const {
+    return blocks_[C].NC();
+}
+
+const Block& SeparatorBlocks::BlockOf(Vertex v) const {
+    return blocks_[ComponentId(v)];
+}
+
+const Vertices& SeparatorBlocks::ComponentOf(Vertex v) const {
+    return blocks_[ComponentId(v)].C();
+}
+
+const Vertices& SeparatorBlocks::NComponentOf(Vertex v) const {
+    return blocks_[ComponentId(v)].NC();
+}
+
+size_t SeparatorBlocks::FullComponentCt() const {
+    size_t count = 0;
+    for (Block B : blocks_) {
+        if (B.NC().size() == S_.size()) {
+            ++count;
+        } else if (B.NC().size() > S_.size()) {
+            std::cerr << "Error in SeparatorBlocks::FullComponentCt: Full ";
+            std::cerr << "component neighborhood larger than separator size.";
+            std::cerr << std::endl;
+            exit(EXIT_FAILURE);
         }
-        for (Vertex v : fill[u]) {
-            neighborhood.push_back(v);
-        }
-        return neighborhood;
     }
+    return count;
+}
+
+size_t SeparatorBlocks::NonFullComponentCt() const {
+    return size_ - FullComponentCt();
+}
+
+std::string SeparatorBlocks::str() const {
+    std::string SCstr = SeparatorComponents::str();
+    ConnectedComponentID cc = 0;
+    for (Block B : blocks_) {
+        SCstr += "N(C_" + std::to_string(cc) + "): " + G_->str(B.NC());
+        ++cc;
+    }
+    return SCstr;
 }
 
 void SeparatorBlocks::FindComponents(FillSet& fill) {
@@ -175,54 +338,6 @@ void SeparatorBlocks::FindNeighborhoods(FillSet& fill) {
         }
     }
     return;
-}
-
-size_t SeparatorBlocks::FullComponentCt() const {
-    size_t count = 0;
-    for (Block B : blocks_) {
-        if (B.NC().size() == S_.size()) {
-            ++count;
-        } else if (B.NC().size() > S_.size()) {
-            std::cerr << "Error in SeparatorBlocks::FullComponentCt: Full ";
-            std::cerr << "component neighborhood larger than separator size.";
-            std::cerr << std::endl;
-            exit(EXIT_FAILURE);
-        }
-    }
-    return count;
-}
-
-size_t SeparatorBlocks::NonFullComponentCt() const {
-    return size_ - FullComponentCt();
-}
-
-bool SeparatorComponents::IsSeparated(Vertices V) const {
-    for (auto p : VertexPairs(V)) {
-        if (AreSeparated(p.first, p.second)) {
-            return true;
-        }
-    }
-    return false;
-}
-
-std::string SeparatorComponents::str() const {
-    std::string SCstr;
-    for (Vertex v : *G_) {
-        SCstr += "CC(" + G_->name(v) + "): "
-                 + std::to_string(connected_component_[v]) + '\n';
-    }
-    SCstr += '\n';
-    return SCstr;
-}
-
-std::string SeparatorBlocks::str() const {
-    std::string SCstr = SeparatorComponents::str();
-    ConnectedComponentID cc = 0;
-    for (Block B : blocks_) {
-        SCstr += "N(C_" + std::to_string(cc) + "): " + G_->str(B.NC());
-        ++cc;
-    }
-    return SCstr;
 }
 
 }  // namespace chordalg

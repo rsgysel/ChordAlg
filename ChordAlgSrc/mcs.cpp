@@ -86,6 +86,9 @@ CliqueTree* MCSCliqueTree(const Graph& G) {
     return tr;
 }
 
+//////////////////
+// c'tors & d'tors
+
 MCSQueue::MCSQueue(size_t order) :
     order_(order),
     max_weight_(0),
@@ -96,6 +99,13 @@ MCSQueue::MCSQueue(size_t order) :
         queue_[0].insert(v);
         weight_[v] = 0;
     }
+}
+
+///////////
+// MCSQueue
+
+size_t MCSQueue::max_weight() const {
+    return max_weight_;
 }
 
 Vertex MCSQueue::Pop() {
@@ -119,11 +129,15 @@ void MCSQueue::Increment(Vertex v) {
         queue_[weight_[v]].erase(v);
         weight_[v]++;
         queue_[weight_[v]].insert(v);
-        if (weight_[v] > max_weight_) {
+        if (weight_[v] > static_cast<int>(max_weight_)) {
             max_weight_++;
         }
     }
     return;
+}
+
+int MCSQueue::kDeletedVertex() {
+    return -1;
 }
 
 }  // namespace chordalg

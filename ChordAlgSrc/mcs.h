@@ -22,22 +22,16 @@ CliqueTree* MCSCliqueTree(const Graph& G);
 class MCSQueue {
  public:
     explicit MCSQueue(size_t order);
-    ~MCSQueue() {}
 
-    int max_weight() {
-        return max_weight_;
-    }
-
+    size_t max_weight() const;
     Vertex Pop();
     void Increment(Vertex v);
 
  private:
-    static int kDeletedVertex() {
-        return -1;
-    }
+    static int kDeletedVertex();
 
     size_t order_;
-    int max_weight_;
+    size_t max_weight_;
     size_t remaining_vertices_;
     std::vector< std::set<Vertex> > queue_;
     std::vector< int > weight_;
