@@ -8,6 +8,9 @@
 
 namespace chordalg {
 
+//////////////////
+// c'tors & d'tors
+
 Triangulation::Triangulation(const Graph* G, const EliminationAlgorithm* ea) :
     Graph(ea->TriangNbhds()),
     G_(G) {
@@ -24,6 +27,13 @@ Triangulation::Triangulation(const Graph* G, const HeuristicRun* R) :
     Graph(R->TriangNbhds()),
     G_(G) {
     return;
+}
+
+////////////////
+// Triangulation
+
+VertexName Triangulation::name(Vertex v) const {
+    return G_->name(v);
 }
 
 bool Triangulation::IsChordal() const {

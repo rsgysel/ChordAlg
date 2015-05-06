@@ -18,9 +18,7 @@ class Triangulation : public Graph {
     explicit Triangulation(const Graph*, EliminationOrder*);
     explicit Triangulation(const Graph*, const HeuristicRun*);
 
-    VertexName name(Vertex v) const {
-        return G_->name(v);
-    }
+    VertexName name(Vertex v) const;
     bool IsChordal() const;
  protected:
     const Graph* const G_;
