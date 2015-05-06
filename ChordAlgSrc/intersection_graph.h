@@ -82,6 +82,7 @@ class CellIntersectionGraph : public CharacterIntersectionGraph {
     size_t CommonColorCount(VertexPair) const;
 
     const LexTrie* subset_family() const;
+
  protected:
     std::vector< Multicolor > vertex_colors_;
     LexTrie* subset_family_;

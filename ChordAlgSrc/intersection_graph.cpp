@@ -50,71 +50,16 @@ CellIntersectionGraph::~CellIntersectionGraph() {
     return;
 }
 
-PartitionIntersectionGraph* PartitionIntersectionGraph::New(std::string filename) {
-    GraphFile* file = GraphFile::New(filename);
-    PartitionIntersectionGraph* G = New(file);
-    delete file;
-    return G;
-}
-
-PartitionIntersectionGraph* PartitionIntersectionGraph::New(GraphFile* file) {
-    PartitionIntGraphFR* file_reader = PartitionIntGraphFR::New(file);
-    PartitionIntersectionGraph* G = new PartitionIntersectionGraph(file_reader);
-    delete file_reader;
-    return G;
-}
-
-CellIntersectionGraph* CellIntersectionGraph::New(std::string filename) {
-    GraphFile* file = GraphFile::New(filename);
-    CellIntersectionGraph* G = New(file);
-    delete file;
-    return G;
-}
-
-CellIntersectionGraph* CellIntersectionGraph::New(GraphFile* file) {
-    CellIntGraphFR* file_reader = CellIntGraphFR::New(file);
-    CellIntersectionGraph* G = new CellIntersectionGraph(file_reader);
-    delete file_reader;
-    return G;
-}
-
-/////////////////
-// Common methods
+/////////////////////////////
+// CharacterIntersectionGraph
 
 Weight CharacterIntersectionGraph::FillCount(VertexPair uv) const {
     return FillCount(uv.first, uv.second);
 }
 
-Weight PartitionIntersectionGraph::FillCount(Vertex u, Vertex v) const {
-    return IsMonochromatic(u, v) ? 1 : 0;
-}
-
-Weight CellIntersectionGraph::FillCount(Vertex u, Vertex v) const {
-    return CommonColorCount(u, v);
-}
-
 bool CharacterIntersectionGraph::IsMonochromatic(VertexPair uv) const {
     return IsMonochromatic(uv.first, uv.second);
 }
-
-bool PartitionIntersectionGraph::IsMonochromatic(Vertex u, Vertex v) const {
-    return vertex_color_[u] == vertex_color_[v];
-}
-
-bool CellIntersectionGraph::IsMonochromatic(Vertex u, Vertex v) const {
-    return CommonColorCount(u, v) > 0;
-}
-
-Color PartitionIntersectionGraph::vertex_color(Vertex v) const {
-    return vertex_color_[v];
-}
-
-const Multicolor& CellIntersectionGraph::vertex_color(Vertex v) const {
-    return vertex_colors_[v];
-}
-
-//////////
-// Methods
 
 const FiniteSet& CharacterIntersectionGraph::subset(Vertex v) const {
     return subsets_[v];
@@ -140,6 +85,64 @@ std::string CharacterIntersectionGraph::strSubsets() {
     }
     Sstr += '\n';
     return Sstr;
+}
+
+/////////////////////////////
+// PartitionIntersectionGraph
+
+PartitionIntersectionGraph* PartitionIntersectionGraph::New(std::string filename) {
+    GraphFile* file = GraphFile::New(filename);
+    PartitionIntersectionGraph* G = New(file);
+    delete file;
+    return G;
+}
+
+PartitionIntersectionGraph* PartitionIntersectionGraph::New(GraphFile* file) {
+    PartitionIntGraphFR* file_reader = PartitionIntGraphFR::New(file);
+    PartitionIntersectionGraph* G = new PartitionIntersectionGraph(file_reader);
+    delete file_reader;
+    return G;
+}
+
+Weight PartitionIntersectionGraph::FillCount(Vertex u, Vertex v) const {
+    return IsMonochromatic(u, v) ? 1 : 0;
+}
+
+bool PartitionIntersectionGraph::IsMonochromatic(Vertex u, Vertex v) const {
+    return vertex_color_[u] == vertex_color_[v];
+}
+
+Color PartitionIntersectionGraph::vertex_color(Vertex v) const {
+    return vertex_color_[v];
+}
+
+////////////////////////
+// CellIntersectionGraph
+
+CellIntersectionGraph* CellIntersectionGraph::New(std::string filename) {
+    GraphFile* file = GraphFile::New(filename);
+    CellIntersectionGraph* G = New(file);
+    delete file;
+    return G;
+}
+
+CellIntersectionGraph* CellIntersectionGraph::New(GraphFile* file) {
+    CellIntGraphFR* file_reader = CellIntGraphFR::New(file);
+    CellIntersectionGraph* G = new CellIntersectionGraph(file_reader);
+    delete file_reader;
+    return G;
+}
+
+Weight CellIntersectionGraph::FillCount(Vertex u, Vertex v) const {
+    return CommonColorCount(u, v);
+}
+
+bool CellIntersectionGraph::IsMonochromatic(Vertex u, Vertex v) const {
+    return CommonColorCount(u, v) > 0;
+}
+
+const Multicolor& CellIntersectionGraph::vertex_color(Vertex v) const {
+    return vertex_colors_[v];
 }
 
 Multicolor CellIntersectionGraph::CommonColors(Vertex u, Vertex v) const {
