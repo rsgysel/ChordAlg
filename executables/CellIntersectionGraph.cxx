@@ -1,5 +1,5 @@
 /*
- *  CellIntersectionGraph.cpp - main program that computes and prints
+ *  CellIntersectionGraph - main program that computes and prints
  *  the cell intersection graph for a set of phylogenetic characters
  */
 

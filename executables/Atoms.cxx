@@ -1,5 +1,5 @@
 /*
- *  Atoms.cpp - main program that computes and prints the atom subgraphs
+ *  Atoms - main program that computes and prints the atom subgraphs
  *  of a graph
  */
 
