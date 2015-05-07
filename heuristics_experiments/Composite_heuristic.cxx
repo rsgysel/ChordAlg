@@ -1,5 +1,5 @@
 /*
- *  Composite_herusitic.cpp - main program that implements classic and
+ *  Composite_herusitic - main program that implements classic and
  *  lb-elimination heuristics for maximum character compatibility
  */
 

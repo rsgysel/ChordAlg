@@ -84,9 +84,18 @@ Graph* Graph::New(std::string filename) {
 }
 
 Graph* Graph::New(GraphFile* file) {
-    GraphFR* file_reader = GraphFR::New(file);
-    Graph* G = new Graph(file_reader);
-    delete file_reader;
+    Graph* G = nullptr;
+    if (file->file_type() == FileType::ADJLIST ||
+        file->file_type() == FileType::DIMACS) {
+        GraphFR* file_reader = GraphFR::New(file);
+        G = new Graph(file_reader);
+        delete file_reader;
+    } else if (file->file_type() == FileType::CHARACTERMATRIX ||
+               file->file_type() == FileType::NEXUSMRP) {
+        CellIntGraphFR* file_reader = CellIntGraphFR::New(file);
+        G = new Graph(file_reader);
+        delete file_reader;
+    }
     return G;
 }
 

@@ -44,8 +44,7 @@ class SeparatorComponents {
     virtual ~SeparatorComponents();
 
     Vertices GetNeighborhood(Vertex, const FillEdges* fill = nullptr);
-    virtual void SeparateNbhd(Vertex);
-    virtual void SeparateClosedNbhd(Vertex);
+    virtual void SeparateClosedNbhd(Vertex, const FillEdges* fill = nullptr);
     virtual void Separate(const Vertices&, const FillEdges* fill = nullptr);
     Vertices ConnectedComponent(Vertex) const;
 

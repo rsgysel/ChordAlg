@@ -51,6 +51,17 @@ bool FillEdges::AddEdge(Vertex u, Vertex v) {
     }
 }
 
+void FillEdges::RemoveEdge(VertexPair uv) {
+    RemoveEdge(uv.first, uv.second);
+    return;
+}
+
+void FillEdges::RemoveEdge(Vertex u, Vertex v) {
+    (*this)[u].erase(v);
+    (*this)[v].erase(u);
+    return;
+}
+
 void FillEdges::Saturate(Vertices U) {
     for (VertexPair uv : VertexPairs(U)) {
         AddEdge(uv);

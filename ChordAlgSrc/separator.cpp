@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 
+#include "ChordAlgSrc/fill_edges.h"
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/vertices.h"
 
@@ -75,35 +76,23 @@ void Block::addNC(Vertex v) {
 //////////////////////
 // SeparatorComponents
 
-Vertices SeparatorComponents::GetNeighborhood(Vertex u, const FillEdges* fill) {
-    if (fill && fill->empty()) {
-        return Vertices(G_->N(u));
+Vertices SeparatorComponents::GetNeighborhood(Vertex v, const FillEdges* fill) {
+    Vertices Nv(G_->N(v));
+    if (!fill || fill->empty()) {
+        return Nv;
     } else {
-        Vertices neighborhood;
-        for (Vertex v : G_->N(u)) {
-            neighborhood.push_back(v);
-        }
         if (fill) {
-            for (Vertex v : (*fill)[u]) {
-                neighborhood.push_back(v);
+            for (Vertex u : (*fill)[v]) {
+                Nv.push_back(u);
             }
         }
-        return neighborhood;
+        return Nv;
     }
 }
 
-void SeparatorComponents::SeparateNbhd(Vertex v) {
-    InitializeS(G_->N(v));
-    FindComponents();
-    return;
-}
-
-void SeparatorComponents::SeparateClosedNbhd(Vertex v) {
-    Vertices S;
+void SeparatorComponents::SeparateClosedNbhd(Vertex v, const FillEdges* fill) {
+    Vertices S = GetNeighborhood(v, fill);
     S.push_back(v);
-    for (Vertex u : G_->N(v)) {
-        S.push_back(u);
-    }
     InitializeS(S);
     FindComponents();
     return;
@@ -269,11 +258,6 @@ size_t SeparatorBlocks::FullComponentCt() const {
     for (Block B : blocks_) {
         if (B.NC().size() == S_.size()) {
             ++count;
-        } else if (B.NC().size() > S_.size()) {
-            std::cerr << "Error in SeparatorBlocks::FullComponentCt: Full ";
-            std::cerr << "component neighborhood larger than separator size.";
-            std::cerr << std::endl;
-            exit(EXIT_FAILURE);
         }
     }
     return count;

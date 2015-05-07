@@ -19,7 +19,13 @@ class Triangulation : public Graph {
     static Triangulation* New(const Graph*, const EliminationOrder*);
     static Triangulation* New(const Graph*, const HeuristicRun*);
     VertexName name(Vertex v) const;
+    bool IsFillEdge(Vertex, Vertex) const;
+    bool IsFillEdge(VertexPair) const;
     bool IsChordal() const;
+    static bool IsChordal(const Graph*);
+    bool IsMinimalTriangulation() const;
+    FillEdges* CopyFill() const;
+
  protected:
     const Graph* const G_;
 };  // Triangulation

@@ -7,6 +7,7 @@ endfunction()
 
 add_chordalg_executable(Atoms)
 add_chordalg_executable(CellIntersectionGraph)
+add_chordalg_executable(ChordalGraph)
 add_chordalg_executable(MCS_triangulation)
 #add_chordalg_executable(MaxCompatSupertree)
 add_chordalg_executable(PartitionIntersectionGraph)

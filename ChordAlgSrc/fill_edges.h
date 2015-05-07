@@ -14,7 +14,7 @@ class FillEdges : public std::vector< VertexSet > {
     FillEdges(const FillEdges&) = delete;
     void operator=(const FillEdges&) = delete;
 
-    FillEdges(const Graph*);
+    explicit FillEdges(const Graph*);
 
     bool IsEdge(VertexPair) const;      // is in V(G_) or F_
     bool IsEdge(Vertex, Vertex) const;
@@ -22,6 +22,8 @@ class FillEdges : public std::vector< VertexSet > {
     bool IsFillEdge(Vertex, Vertex) const;
     bool AddEdge(VertexPair);           // new edge?
     bool AddEdge(Vertex, Vertex);
+    void RemoveEdge(VertexPair);
+    void RemoveEdge(Vertex, Vertex);
     void Saturate(Vertices);
 
     size_t fill_count() const;

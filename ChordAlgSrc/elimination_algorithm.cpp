@@ -167,9 +167,7 @@ void EliminationAlgorithm::Eliminate(Vertex v) {
         fill_edges_->Saturate(MonotoneNbhd(v));
         return;
     } else {
-        Vertices S = MonotoneNbhd(v);
-        S.push_back(v);
-        B_->Separate(S, fill_edges_);
+        B_->SeparateClosedNbhd(v, fill_edges_);
         for (Block B : *B_) {
             for (VertexPair uv : VertexPairs(B.NC())) {
                 fill_edges_->AddEdge(uv);
@@ -224,20 +222,18 @@ bool EliminationAlgorithm::IsRemoved(Vertex v) {
 std::pair< Weight, Weight > EliminationAlgorithm::WeightOf(Vertex v) {
     if (parameters_->LBElimination()) {
         Weight deficiency_wt = 0, separated_wt = 0;
-        Vertices S = MonotoneNbhd(v);
-        S.push_back(v);
-        B_->Separate(S, fill_edges_);
+        B_->SeparateClosedNbhd(v, fill_edges_);
         // monochromatic fill pairs
-        std::set< VertexPair > seen_fill_pairs;
+        std::set< VertexPair > new_fill_edges;
         for (Block B : *B_) {
             for (VertexPair uw : VertexPairs(B.NC())) {
-                Weight fill_weight = G_->FillCount(uw);
-                if (!fill_edges_->IsEdge(uw) && fill_weight > 0 &&
-                    seen_fill_pairs.find(uw) == seen_fill_pairs.end()) {
-                    deficiency_wt += fill_weight;
-                    seen_fill_pairs.insert(uw);
+                if (!fill_edges_->IsEdge(uw)) {
+                    new_fill_edges.insert(uw);
                 }
             }
+        }
+        for (VertexPair uw : new_fill_edges) {
+            deficiency_wt += G_->FillCount(uw);
         }
         // new monochromatic separation
         for (std::pair< VertexPair, Weight > p : unseparated_pairs_) {

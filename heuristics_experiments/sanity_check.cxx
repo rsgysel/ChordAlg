@@ -1,6 +1,6 @@
 /*
- *  Composite_herusitic.cpp - main program that implements classic and
- *  lb-elimination heuristics for maximum character compatibility
+ *  sanity_check - some sanity checks for each heuristic
+ *  WARNING: Running this check can be time consuming.
  */
 
 #include <cassert>
@@ -49,16 +49,24 @@ void CheckHeuristic(std::string filename,
     const bool atoms = true;
     const size_t runs = 1;
     const float def = 1, sep = 1;
-    // Run Hueristic
+
+    // Run Heuristic
     CellIntersectionGraph* G = CellIntersectionGraph::New(filename);
     std::vector< chordalg::EliminationParameters* > elimination_parameters;
     elimination_parameters.push_back(
         new chordalg::EliminationParameters(criterion, mode, def, sep));
     HeuristicRun R(G, &elimination_parameters, atoms, runs);
     R.Run();
+
     // Check Triangulation
     Triangulation H(G, R.fill_edges());
     assert(H.IsChordal());
+
+    // Check Minimality of Triangulation
+    if (mode == EliminationMode::LBELIMINATION) {
+        assert(H.IsMinimalTriangulation());
+    }
+
     // Check Columns to remove
     size_t columns = 0;
     for (Vertex v : *G) {
