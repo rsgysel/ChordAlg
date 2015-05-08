@@ -43,32 +43,33 @@ class SeparatorComponents {
     explicit SeparatorComponents(const Graph*);
     virtual ~SeparatorComponents();
 
-    Vertices GetNeighborhood(Vertex, const FillEdges* fill = nullptr);
-    virtual void SeparateClosedNbhd(Vertex, const FillEdges* fill = nullptr);
-    virtual void Separate(const Vertices&, const FillEdges* fill = nullptr);
+    const Vertices* GetNeighborhood(Vertex, const FillEdges* fill = nullptr);
+    void SeparateClosedNbhd(Vertex, const FillEdges* fill = nullptr);
+    virtual void Separate(const Vertices*,
+                          const FillEdges* fill = nullptr,
+                          const Vertex* v = nullptr);
     Vertices ConnectedComponent(Vertex) const;
 
     size_t size() const;
-    ConnectedComponentID ComponentId(Vertex v) const;
+    ConnectedComponentID ComponentId(Vertex) const;
     ConnectedComponentID kInSeparator() const;
     ConnectedComponentID kUnsearched() const;
     ConnectedComponentID kRemoved() const;
-    bool IsInSeparator(Vertex u) const;
-    bool AreConnected(Vertex u, Vertex v) const;
+    bool IsInSeparator(Vertex) const;
+    bool AreConnected(Vertex, Vertex) const;
     // AreSeparated is not the complement of AreConnected, because vertices in
     // S_ are neither connected or separated
-    bool AreSeparated(Vertex u, Vertex v) const;
-    bool IsSeparated(Vertices V) const;
+    bool AreSeparated(Vertex, Vertex) const;
+    bool IsSeparated(Vertices) const;
     virtual std::string str() const;
 
  protected:
-    void InitializeS(const Vertices&);
+    void InitializeSeparator(const Vertices*, const Vertex* v = nullptr);
     virtual void FindComponents(const FillEdges* fill = nullptr);
-    bool IsUnsearched(Vertex u) const;
+    bool IsUnsearched(Vertex) const;
 
     const Graph* const G_;
 
-    Vertices S_;
     std::vector< int > connected_component_;
     std::vector< int > search_queue_;
     size_t size_;  // # of connected components
@@ -83,6 +84,9 @@ class SeparatorBlocks : public SeparatorComponents {
     explicit SeparatorBlocks(const Graph*);
     ~SeparatorBlocks();
 
+    void Separate(const Vertices*,
+                  const FillEdges* fill = nullptr,
+                  const Vertex* v = nullptr);
     std::vector< Block >::const_iterator begin();
     std::vector< Block >::const_iterator end();
     bool IsFull(ConnectedComponentID C) const;
@@ -98,10 +102,11 @@ class SeparatorBlocks : public SeparatorComponents {
 
  private:
     virtual void FindComponents(const FillEdges*);
-    void FindNeighborhoods(const FillEdges*);
+    void FindNeighborhoods(const Vertices*, const FillEdges*);
 
     std::vector< Block > blocks_;
     std::vector< int > last_separator_vertex_seen_;
+    size_t separator_size_;
 };  // SeparatorBlocks
 
 }  // namespace chordalg

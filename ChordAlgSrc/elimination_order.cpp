@@ -147,7 +147,7 @@ Vertices EliminationOrder::RNbhd(Vertex v, const FillEdges* F) const {
     }
     if (F) {
         for (Vertex u : (*F)[v]) {
-            if (Before(v,u)) {
+            if (Before(v, u)) {
                 R_N.push_back(u);
             }
         }

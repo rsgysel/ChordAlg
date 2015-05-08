@@ -64,7 +64,7 @@ std::string SetupAndRunHeuristic(
     for (Vertex v : *G) {
         for (Vertex u : (*R.fill_edges())[v]) {
             if (u < v) {
-                for (Color c : G->CommonColors(u,v)) {
+                for (Color c : G->CommonColors(u, v)) {
                     columns.insert(c);
                 }
             }
@@ -101,7 +101,6 @@ HeuristicRun::~HeuristicRun() {
 ///////////////
 // HeuristicRun
 
-//td::vector< VertexPair > HeuristicRun::fill_edges() const {
 const FillEdges* HeuristicRun::fill_edges() const {
     return fill_edges_;
 }
@@ -145,8 +144,8 @@ std::string HeuristicRun::Run() {
             ++clique_atoms;
         }
     }
-    std::string log =
-        "characters removed: " + std::to_string(fill_edges_->fill_weight()) + '\n'
+    std::string log = "characters removed: "
+        + std::to_string(fill_edges_->fill_weight()) + '\n'
         + "fill edges added: " + std::to_string(fill_count) + '\n'
         + "vertices: " + std::to_string(G_->order()) + '\n'
         + "edges: " + std::to_string(G_->size()) + '\n';

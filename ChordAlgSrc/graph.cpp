@@ -171,7 +171,7 @@ GraphVertexIterator Graph::end() const {
     return GraphVertices(this, order_).end();
 }
 
-const AdjacencyLists& Graph::neighbors() const {
+const AdjacencyLists& Graph::neighborhoods() const {
     return *neighborhoods_;
 }
 VertexName Graph::name(Vertex v) const {
@@ -235,16 +235,6 @@ void Graph::Init() {
     for (Vertex x : *this) {
         for (Vertex y : this->N(x)) {
             is_edge_[x][y] = true;
-        }
-    }
-    // edge consistency
-    for (Vertex x : *this) {
-        for (Vertex y : *this) {
-            if (is_edge_[x][y] != is_edge_[y][x]) {
-                std::cerr << "Error: edge relationships not symmetric wrt ";
-                std::cerr << name(x) << " and " << name(y) << std::endl;
-                exit(EXIT_FAILURE);
-            }
         }
     }
     return;

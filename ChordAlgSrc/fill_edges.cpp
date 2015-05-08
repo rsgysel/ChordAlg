@@ -1,5 +1,7 @@
 #include "ChordAlgSrc/fill_edges.h"
 
+#include <vector>
+
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/vertices.h"
 
@@ -12,12 +14,17 @@ FillEdges::FillEdges(const Graph* G) :
     std::vector< VertexSet >(G->order(), VertexSet()),
     G_(G),
     fill_count_(0),
-    fill_weight_(0) {
+    fill_weight_(0),
+    neighborhoods_(new AdjacencyLists(G_->neighborhoods())) {
     return;
 }
 
 ////////////
 // FillEdges
+
+const Vertices& FillEdges::N(Vertex v) const {
+    return (*neighborhoods_)[v];
+}
 
 bool FillEdges::IsEdge(VertexPair uv) const {
     return IsEdge(uv.first, uv.second);
@@ -44,7 +51,9 @@ bool FillEdges::AddEdge(Vertex u, Vertex v) {
         return false;
     } else {
         (*this)[u].insert(v);
+        (*neighborhoods_)[u].push_back(v);
         (*this)[v].insert(u);
+        (*neighborhoods_)[v].push_back(u);
         fill_count_++;
         fill_weight_ += G_->FillCount(u, v);
         return true;
@@ -78,8 +87,8 @@ Weight FillEdges::fill_weight() const {
 }
 
 AdjacencyLists* FillEdges::TriangulationNbhds() const {
-    AdjacencyLists* a_lists = new AdjacencyLists(G_->neighbors());
-    for (Vertex v: *G_) {
+    AdjacencyLists* a_lists = new AdjacencyLists(G_->neighborhoods());
+    for (Vertex v : *G_) {
         for (Vertex u : (*this)[v]) {
             (*a_lists)[v].push_back(u);
         }

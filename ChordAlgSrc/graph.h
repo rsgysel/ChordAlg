@@ -41,7 +41,7 @@ class Graph {
     GraphVertexIterator begin() const;
     GraphVertexIterator end() const;
 
-    const AdjacencyLists& neighbors() const;
+    const AdjacencyLists& neighborhoods() const;
     virtual VertexName name(Vertex v) const;
     size_t order() const;
     size_t size() const;
@@ -58,6 +58,7 @@ class Graph {
 
     template< class Container >
     bool HasClique(Container set) const;
+
  protected:
     void Init();
     // Induced Subgraph Initialization
@@ -103,7 +104,9 @@ bool Graph::HasClique(Container set) const {
 
 template< class InputIterator >
 bool Graph::HasClique(InputIterator begin_itr, InputIterator end_itr) const {
-    for (InputIterator vertex_itr = begin_itr; vertex_itr != end_itr; ++vertex_itr) {
+    for (InputIterator vertex_itr = begin_itr;
+         vertex_itr != end_itr;
+         ++vertex_itr) {
         InputIterator neighbor_itr = vertex_itr;
         for (++neighbor_itr; neighbor_itr != end_itr; ++neighbor_itr) {
             if (!HasEdge(*vertex_itr, *neighbor_itr)) {

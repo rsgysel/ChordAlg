@@ -90,7 +90,8 @@ std::string CharacterIntersectionGraph::strSubsets() {
 /////////////////////////////
 // PartitionIntersectionGraph
 
-PartitionIntersectionGraph* PartitionIntersectionGraph::New(std::string filename) {
+PartitionIntersectionGraph* PartitionIntersectionGraph::New(
+    std::string filename) {
     GraphFile* file = GraphFile::New(filename);
     PartitionIntersectionGraph* G = New(file);
     delete file;

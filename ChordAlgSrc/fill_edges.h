@@ -16,6 +16,7 @@ class FillEdges : public std::vector< VertexSet > {
 
     explicit FillEdges(const Graph*);
 
+    const Vertices& N(Vertex) const;
     bool IsEdge(VertexPair) const;      // is in V(G_) or F_
     bool IsEdge(Vertex, Vertex) const;
     bool IsFillEdge(VertexPair) const;  // is in F_
@@ -36,6 +37,7 @@ class FillEdges : public std::vector< VertexSet > {
 
     size_t fill_count_;
     Weight fill_weight_;
+    AdjacencyLists* neighborhoods_;
 };  // FillEdges
 
 }  // namespace chordalg
