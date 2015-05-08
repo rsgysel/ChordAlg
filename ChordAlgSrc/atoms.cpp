@@ -53,9 +53,9 @@ AtomIterator Atoms::end() {
 
 void Atoms::ComputeAtoms() {
     // Get minimal triangulation
-    EliminationOrder eo(G_);
-    std::vector< VertexList > F;
-    VertexList minsep_generators;
+    EliminationOrder* eo = new EliminationOrder(G_);
+    FillEdges* F = new FillEdges(G_);
+    VertexList* minsep_generators = new VertexList();
     MCSmPlus(*G_, eo, F, minsep_generators);
 
     std::list< Vertices > vertices_of_atoms;
@@ -64,17 +64,17 @@ void Atoms::ComputeAtoms() {
     std::vector< bool > is_deleted(G_->order(), false);
 
     // Examine minsep_generators, eo-earliest first
-    for (int i : minsep_generators) {
+    for (int i : *minsep_generators) {
         // Check to see if minimal separator is a clique
-        Vertex v = eo.VertexAt(i);
+        Vertex v = eo->VertexAt(i);
         Vertices S;
         for (Vertex u : G_->N(v)) {
-            if (eo.Before(v, u) && !is_deleted[u]) {
+            if (eo->Before(v, u) && !is_deleted[u]) {
                 S.push_back(u);
             }
         }
-        for (Vertex u : F[v]) {
-            if (eo.Before(v, u) && !is_deleted[u]) {
+        for (Vertex u : (*F)[v]) {
+            if (eo->Before(v, u) && !is_deleted[u]) {
                 S.push_back(u);
             }
         }
@@ -115,6 +115,9 @@ void Atoms::ComputeAtoms() {
         std::sort(U.begin(), U.end());
         atom_subgraphs_.push_back(new InducedSubgraph(G_, U));
     }
+    delete eo;
+    delete F;
+    delete minsep_generators;
     return;
 }
 

@@ -4,6 +4,7 @@
 #include <list>
 #include <vector>
 
+#include "ChordAlgSrc/fill_edges.h"
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/elimination_order.h"
 #include "ChordAlgSrc/vertices.h"
@@ -15,9 +16,9 @@ namespace chordalg {
 // paper: http://www.mdpi.com/1999-4893/3/2/197
 //
 void MCSmPlus(const Graph& G,
-              EliminationOrder& eo,
-              std::vector< VertexList >& F,
-              VertexList& minsep_generators) {
+              EliminationOrder* eo,
+              FillEdges* F,
+              VertexList* minsep_generators) {
     int s = -1;  // as in paper: for finding minimal separator generators
     size_t n = G.order();
     std::vector< int > label;  // as in paper
@@ -28,13 +29,12 @@ void MCSmPlus(const Graph& G,
     const int kDeleted = -1;  // for deleted vertices
     std::vector< bool > reached;  // as in paper
     reached.resize(n);
-    F.resize(n);
     for (int i = n - 1; i >= 0; --i) {
         auto max_itr = std::max_element(label.begin(), label.end());
         int max_label = *max_itr;
         Vertex x = std::distance(label.begin(), max_itr);
-        if (max_label <= s) {
-            minsep_generators.push_front(i);
+        if (max_label <= s && minsep_generators) {
+            minsep_generators->push_front(i);
         }
         s = max_label;
         std::list< int > Y;  // as in paper
@@ -72,12 +72,9 @@ void MCSmPlus(const Graph& G,
         }
         for (Vertex y : Y) {
             label[y]++;
-            if (!G.HasEdge(x, y)) {
-                F[x].push_back(y);
-                F[y].push_back(x);
-            }
+            F->AddEdge(x, y);
         }
-        eo.Emplace(x, i);
+        eo->Emplace(x, i);
     }
     return;
 }

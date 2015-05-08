@@ -10,69 +10,61 @@ class MCSTest : public ::testing::Test {
  public:
     void SetUp() {
         G_ = nullptr;
-        Geo_ = nullptr;
-        H1_ = nullptr;
-        Heo_ = nullptr;
-        H2_ = nullptr;
+        eo_ = nullptr;
+        H_ = nullptr;
     }
     void TearDown() {
         delete G_;
-        delete Geo_;
-        delete H1_;
-        delete Heo_;
-        delete H2_;
+        delete eo_;
+        delete H_;
     }
     void Read(chordalg::AdjacencyLists& A) {
-        if (G_ || Geo_ || H1_ || Heo_ || H2_) {
+        if (G_ || eo_ || H_) {
             FAIL() << "Use Read once in your test.";
         } else {
             G_ = new chordalg::Graph(new chordalg::AdjacencyLists(A));
-            Geo_ = MCS(*G_);
-            H1_ = chordalg::Triangulation::New(G_, Geo_);
-            Heo_ = MCS(*H1_);
-            H2_ = chordalg::Triangulation::New(H1_, Heo_);
+            eo_ = MCS(*G_);
+            H_ = chordalg::Triangulation::New(G_, eo_);
         }
     }
  protected:
     chordalg::Graph* G_;
-    chordalg::EliminationOrder* Geo_;
-    chordalg::Triangulation* H1_;
-    chordalg::EliminationOrder* Heo_;
-    chordalg::Triangulation* H2_;
+    chordalg::EliminationOrder* eo_;
+    chordalg::Triangulation* H_;
 };  // MCSTest
 
 //////////////////////
 // Triangulation Tests
 // These tests compute a triangulation of a graph using MCS,
-// then run MCS on the triangulation. The resulting graph should
-// be the same.
+// then run MCS on the triangulation via IsChordal to check
+// that it is a chordal graph
 
 TEST_F(MCSTest, BipartiteReductionTriangulation) {
     Read(bipartite_reduction);
-    EXPECT_EQ(H1_->IsIsomorphic(*H2_), true);
+    EXPECT_EQ(H_->IsChordal(), true);
 }
 
 TEST_F(MCSTest, ManyMinsepsFourTriangulation) {
     Read(many_minseps_four);
-    EXPECT_EQ(H1_->IsIsomorphic(*H2_), true);
+    EXPECT_EQ(H_->IsChordal(), true);
 }
 
 TEST_F(MCSTest, TreeTriangulation) {
     Read(tree);
-    EXPECT_EQ(H1_->IsIsomorphic(*H2_), true);
+    EXPECT_EQ(H_->IsChordal(), true);
 }
 
-TEST_F(MCSTest, BipartiteReductionIsPerfect) {
+TEST_F(MCSTest, BipartiteReductionNotPerfect) {
     Read(bipartite_reduction);
-    EXPECT_EQ(Heo_->IsPerfect(), true);
+    EXPECT_EQ(eo_->IsPerfect(), false);
 }
 
-TEST_F(MCSTest, ManyMinsepsFourIsPerfect) {
+TEST_F(MCSTest, ManyMinsepsFourNotPerfect) {
     Read(many_minseps_four);
-    EXPECT_EQ(Heo_->IsPerfect(), true);
+    EXPECT_EQ(eo_->IsPerfect(), false);
 }
 
 TEST_F(MCSTest, TreeIsPerfect) {
     Read(tree);
-    EXPECT_EQ(Heo_->IsPerfect(), true);
+    EXPECT_EQ(eo_->IsPerfect(), true);
 }

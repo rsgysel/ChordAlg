@@ -8,6 +8,7 @@ add_gmock_test(ChordAlgTests atoms_graph_integration_tests.cpp
                              heuristic_run_integration_tests.cpp
                              lex_trie_unit_tests.cpp
                              mcs_triangulation_integration_tests.cpp
+                             mcs_m_triangulation_integration_tests.cpp
                              minimal_separator_algorithms_integration_tests.cpp
                              separator_components_integration_tests.cpp
                              separator_graph_integration_tests.cpp
