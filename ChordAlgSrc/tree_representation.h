@@ -60,6 +60,6 @@ class CliqueTree : public TreeRepresentation {
     ~CliqueTree();
 };  // CliqueTree
 
-};  // namespace chordalg
+}  // namespace chordalg
 
 #endif  // CHORDALGSRC_TREE_REPRESENTATION_H_

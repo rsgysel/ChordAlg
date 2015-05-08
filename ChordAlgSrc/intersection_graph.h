@@ -52,6 +52,7 @@ class PartitionIntersectionGraph : public CharacterIntersectionGraph {
     static PartitionIntersectionGraph* New(std::string);
     static PartitionIntersectionGraph* New(GraphFile*);
 
+    using CharacterIntersectionGraph::FillCount;
     Weight FillCount(Vertex, Vertex) const;
     bool IsMonochromatic(Vertex, Vertex) const;
     Color vertex_color(Vertex) const;
@@ -72,6 +73,7 @@ class CellIntersectionGraph : public CharacterIntersectionGraph {
     explicit CellIntersectionGraph(CellIntGraphFR*);
     virtual ~CellIntersectionGraph();
 
+    using CharacterIntersectionGraph::FillCount;
     Weight FillCount(Vertex, Vertex) const;
     bool IsMonochromatic(Vertex, Vertex) const;
     const Multicolor& vertex_color(Vertex) const;

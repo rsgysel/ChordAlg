@@ -301,7 +301,7 @@ void SeparatorBlocks::FindNeighborhoods(const FillEdges* fill) {
     for (ConnectedComponentID &C : last_separator_vertex_seen_) {
         C = -1;
     }
-    S_.sort();
+    //S_.sort();
     for (Vertex v : S_) {
         const Vertices& neighborhood = GetNeighborhood(v, fill);
         for (Vertex u : neighborhood) {

@@ -109,13 +109,13 @@ class LexTrie {
 
 template< class InputIterator >
 const LexTrieNode* LexTrie::InsertRange(
-    InputIterator begin,
-    InputIterator end,
+    InputIterator begin_itr,
+    InputIterator end_itr,
     bool* new_set) {
     LexTrieNode* node = root_;
 
     // Traverse trie, creating nodes if they don't exist
-    for (InputIterator itr = begin; itr != end; ++itr) {
+    for (InputIterator itr = begin_itr; itr != end_itr; ++itr) {
         if (!node->HasChild(*itr)) {
             LexTrieNode* newChild = new LexTrieNode(false);
             if (newChild == nullptr) {

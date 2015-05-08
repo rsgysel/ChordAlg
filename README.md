@@ -24,5 +24,3 @@ Installation
 
 4) Executables will be in
     ChordAlg/build/executables
-    ChordAlg/build/heuristic_experiments
-    ChordAlg/build/separatorgraph_experiments

@@ -102,10 +102,10 @@ bool Graph::HasClique(Container set) const {
 }
 
 template< class InputIterator >
-bool Graph::HasClique(InputIterator begin, InputIterator end) const {
-    for (InputIterator vertex_itr = begin; vertex_itr != end; ++vertex_itr) {
+bool Graph::HasClique(InputIterator begin_itr, InputIterator end_itr) const {
+    for (InputIterator vertex_itr = begin_itr; vertex_itr != end_itr; ++vertex_itr) {
         InputIterator neighbor_itr = vertex_itr;
-        for (++neighbor_itr; neighbor_itr != end; ++neighbor_itr) {
+        for (++neighbor_itr; neighbor_itr != end_itr; ++neighbor_itr) {
             if (!HasEdge(*vertex_itr, *neighbor_itr)) {
                 return false;
             }

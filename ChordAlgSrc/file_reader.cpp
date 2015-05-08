@@ -188,6 +188,9 @@ void GraphFR::ParseDimacs(
                 adjacency_lists->resize(order);
                 break;
             }
+            default : {
+                break;
+            }
         }
     }
     return;

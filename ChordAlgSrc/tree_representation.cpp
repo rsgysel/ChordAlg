@@ -228,4 +228,4 @@ void TreeRepresentation::PhyloNewickVisit(
     return;
 }
 
-};  // namespace chordalg
+}  // namespace chordalg

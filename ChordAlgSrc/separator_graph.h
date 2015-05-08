@@ -30,6 +30,7 @@ class SeparatorGraph : public Graph {
 
     std::string str() const;
     VertexName name(Vertex v) const;
+    using Graph::HasEdge;
     bool HasEdge(Vertex u, Vertex v) const;
     const Vertices& N(Vertex v) const;
 
