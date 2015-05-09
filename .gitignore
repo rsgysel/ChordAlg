@@ -2,6 +2,7 @@
 bin/
 obj/
 build*/
+dependencies/
 
 # Compiled Object files
 *.slo
