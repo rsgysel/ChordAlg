@@ -25,6 +25,7 @@ class EliminationOrder {
     explicit EliminationOrder(const Graph*);
     ~EliminationOrder();
 
+    static EliminationOrder* FromFile(const Graph*, std::string);
     void Init();
     void Emplace(Vertex, int);
     void Swap(int, int);

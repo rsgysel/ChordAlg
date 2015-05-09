@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 
+#include "ChordAlgSrc/chordalg_string.h"
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/vertices.h"
 
@@ -26,6 +27,39 @@ EliminationOrder::~EliminationOrder() {
 
 ///////////////////
 // EliminationOrder
+
+EliminationOrder* EliminationOrder::FromFile(
+    const Graph* G,
+    std::string filename) {
+    EliminationOrder* eo = new EliminationOrder(G);
+    std::fstream file_stream;
+    file_stream.open(filename.c_str());
+    std::string file_line;
+    std::getline(file_stream, file_line);
+    file_stream.close();
+    StringTokens tokens = Split(file_line, " \t");
+    std::map< std::string, Vertex > vertex_id;
+    for (Vertex v : *G) {
+        vertex_id[G->name(v)] = v;
+    }
+    std::set< Vertex > vertices_emplaced;
+    for (size_t i = 0; i < tokens.size(); ++i) {
+        if (vertex_id.find(tokens[i]) == vertex_id.end()) {
+            std::cerr << "Vertex " << tokens[i] << " not in graph\n";
+            exit(EXIT_FAILURE);
+        }
+        Vertex v = vertex_id[tokens[i]];
+        eo->Emplace(v, i);
+        vertices_emplaced.insert(v);
+    }
+    // Check that elimination order file is a permutation
+    if (vertices_emplaced.size() != G->order() ||
+        tokens.size() != G->order()) {
+        std::cerr << "File " << filename << " is not an elimination ordering (permutation)\n";
+        exit(EXIT_FAILURE);
+    }
+    return eo;
+}
 
 void EliminationOrder::Init() {
     int i = 0;

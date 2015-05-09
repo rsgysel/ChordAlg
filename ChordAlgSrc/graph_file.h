@@ -15,7 +15,7 @@ enum class FileType {
     UNKNOWN
 };  // FileType
 
-// Wrapper to facilitate testing
+// Determines graph file format
 class GraphFile {
  public:
     GraphFile(const GraphFile&) = delete;
@@ -42,7 +42,7 @@ class GraphFile {
     bool IsDimacsFile(std::string) const;
     bool IsMatrixFile(std::string) const;
     bool IsNexusMRPFile(std::string) const;
-};
+};  // GraphFile
 
 }  // namespace chordalg
 
