@@ -30,6 +30,7 @@ class MCSmPlusTest : public ::testing::Test {
             F_ = new chordalg::FillEdges(G_);
             MCSmPlus(*G_, eo_, F_);
             H_ = chordalg::Triangulation::New(G_, eo_);
+            EXPECT_EQ(H_->IsMinimalTriangulation(), true);
         }
     }
  protected:
@@ -43,18 +44,27 @@ class MCSmPlusTest : public ::testing::Test {
 // Minimal Triangulation Tests
 // MCSmPlus should always return a minimal triangulation
 
-TEST_F(MCSmPlusTest, BipartiteReductionTriangulation) {
+TEST_F(MCSmPlusTest, AtomTestMinimalTriangulation) {
+    Read(atom_test);
+}
+
+TEST_F(MCSmPlusTest, BipartiteReductionMinimalTriangulation) {
     Read(bipartite_reduction);
-    EXPECT_EQ(H_->IsMinimalTriangulation(), true);
 }
 
-TEST_F(MCSmPlusTest, ManyMinsepsFourTriangulation) {
+TEST_F(MCSmPlusTest, DimacsTestMinimalTriangulation) {
+    Read(dimacs_test);
+}
+
+TEST_F(MCSmPlusTest, IndependentSetMinimalTriangulation) {
+    Read(independent_set);
+}
+
+TEST_F(MCSmPlusTest, ManyMinsepsFourMinimalTriangulation) {
     Read(many_minseps_four);
-    EXPECT_EQ(H_->IsMinimalTriangulation(), true);
 }
 
-TEST_F(MCSmPlusTest, TreeTriangulation) {
+TEST_F(MCSmPlusTest, TreeMinimalTriangulation) {
     Read(tree);
-    EXPECT_EQ(H_->IsMinimalTriangulation(), true);
 }
 

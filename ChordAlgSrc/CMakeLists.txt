@@ -9,6 +9,7 @@ add_library(ChordAlgLib
                 graph_file.cpp
                 heuristic_run.cpp
                 intersection_graph.cpp
+                lb_triang.cpp
                 lex_trie.cpp
                 mcs.cpp
                 mcs_m.cpp

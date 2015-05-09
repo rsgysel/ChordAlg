@@ -6,6 +6,7 @@ add_gmock_test(ChordAlgTests atoms_graph_integration_tests.cpp
                              fill_edge_graph_integration_tests.cpp
                              graph_unit_tests.cpp
                              heuristic_run_integration_tests.cpp
+                             lb_triang_triangulation_integration_tests.cpp
                              lex_trie_unit_tests.cpp
                              mcs_triangulation_integration_tests.cpp
                              mcs_m_triangulation_integration_tests.cpp
