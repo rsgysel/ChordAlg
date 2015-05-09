@@ -14,8 +14,14 @@ endif()
 ################################
 # GMock
 ################################
-set(GMOCK_DIR "/usr/src/gmock"
-    CACHE PATH "The path to the GoogleMock test framework.")
+# ${CMAKE_SOURCE_DIR}/dependencies/gmock-1.7.0
+if(EXISTS "usr/src/gmock")
+    set(GMOCK_DIR "/usr/src/gmock"
+        CACHE PATH "The path to the GoogleMock test framework.")
+else()
+    set(GMOCK_DIR "${CMAKE_SOURCE_DIR}/dependencies/gmock-1.7.0"
+        CACHE PATH "The path to the GoogleMock test framework")
+endif()
 add_subdirectory(${GMOCK_DIR} ${CMAKE_BINARY_DIR}/gmock)
 set_property(TARGET gtest APPEND_STRING PROPERTY COMPILE_FLAGS " -w")
 include_directories(SYSTEM ${GMOCK_DIR}/gtest/include
