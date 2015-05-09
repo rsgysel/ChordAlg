@@ -12,7 +12,7 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     } else {
         Graph* G = Graph::New(argv[1]);
-        EliminationOrder* eo = MCS(*G);
+        EliminationOrder* eo = MCS(G);
         Triangulation* H = Triangulation::New(G, eo);
         std::cout << H->str();
         delete H;

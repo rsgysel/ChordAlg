@@ -28,7 +28,7 @@ class MCSmPlusTest : public ::testing::Test {
             G_ = new chordalg::Graph(new chordalg::AdjacencyLists(A));
             eo_ = new chordalg::EliminationOrder(G_);
             F_ = new chordalg::FillEdges(G_);
-            MCSmPlus(*G_, eo_, F_);
+            MCSmPlus(G_, eo_, F_);
             H_ = chordalg::Triangulation::New(G_, eo_);
             EXPECT_EQ(H_->IsMinimalTriangulation(), true);
         }

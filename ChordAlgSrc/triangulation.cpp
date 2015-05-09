@@ -43,18 +43,13 @@ bool Triangulation::IsFillEdge(VertexPair uv) const {
 }
 
 bool Triangulation::IsChordal() const {
-    chordalg::EliminationOrder* eo = MCS(*this);
-    Triangulation* H = Triangulation::New(this, eo);
-    bool result = IsIsomorphic(*H);
-    delete H;
-    delete eo;
-    return result;
+    return IsChordal(this);
 }
 
 bool Triangulation::IsChordal(const Graph* G) {
-    chordalg::EliminationOrder* eo = MCS(*G);
+    chordalg::EliminationOrder* eo = MCS(G);
     Triangulation* H = Triangulation::New(G, eo);
-    bool result = G->IsIsomorphic(*H);
+    bool result = G->IsIsomorphic(H);
     delete H;
     delete eo;
     return result;

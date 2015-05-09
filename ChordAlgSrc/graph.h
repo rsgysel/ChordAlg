@@ -31,11 +31,11 @@ class Graph {
     static Graph* New(std::string);
     static Graph* New(GraphFile*);
 
-    bool IsIsomorphic(Graph&) const;
+    bool IsIsomorphic(const Graph*) const;
     virtual std::string str() const;
-    std::string str(const LexTrie&) const;
-    std::string str(const VertexVector&) const;
-    std::string str(const Vertices&) const;
+    std::string str(const LexTrie*) const;
+    std::string str(const VertexVector*) const;
+    std::string str(const Vertices*) const;
 
     Vertices V() const;
     GraphVertexIterator begin() const;
@@ -62,7 +62,7 @@ class Graph {
  protected:
     void Init();
     // Induced Subgraph Initialization
-    AdjacencyLists* InducedVertices(const Graph&, Vertices);
+    AdjacencyLists* InducedVertices(const Graph*, Vertices);
     VertexNames* DefaultNames(size_t);
 
     const AdjacencyLists* const neighborhoods_;

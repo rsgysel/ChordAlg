@@ -39,7 +39,7 @@ SeparatorGraph::~SeparatorGraph() {
 // SeparatorGraph
 
 SeparatorGraph* SeparatorGraph::New(const Graph* G) {
-    SeparatorGraph* SG = new SeparatorGraph(G, MinimalSeparators(*G));
+    SeparatorGraph* SG = new SeparatorGraph(G, MinimalSeparators(G));
     SG->ComputeCrossingRelations();
     return SG;
 }

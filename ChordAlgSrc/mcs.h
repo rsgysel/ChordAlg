@@ -16,8 +16,8 @@
 
 namespace chordalg {
 
-EliminationOrder* MCS(const Graph& G);
-CliqueTree* MCSCliqueTree(const Graph& G);
+EliminationOrder* MCS(const Graph* G);
+CliqueTree* MCSCliqueTree(const Graph* G);
 
 class MCSQueue {
  public:

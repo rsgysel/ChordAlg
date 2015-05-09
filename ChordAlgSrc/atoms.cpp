@@ -56,7 +56,7 @@ void Atoms::ComputeAtoms() {
     EliminationOrder* eo = new EliminationOrder(G_);
     FillEdges* F = new FillEdges(G_);
     VertexList* minsep_generators = new VertexList();
-    MCSmPlus(*G_, eo, F, minsep_generators);
+    MCSmPlus(G_, eo, F, minsep_generators);
 
     std::list< Vertices > vertices_of_atoms;
     SeparatorComponents cc(G_);

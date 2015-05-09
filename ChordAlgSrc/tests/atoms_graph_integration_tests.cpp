@@ -39,7 +39,7 @@ TEST_F(AtomsTest, PaperFigureIsomorphism) {
     size_t i = 0;
     for (auto a : *A_) {
         chordalg::Graph G(new chordalg::AdjacencyLists(atom_test_atoms[i]));
-        EXPECT_EQ(a->IsIsomorphic(G), true);
+        EXPECT_EQ(a->IsIsomorphic(&G), true);
         ++i;
     }
 }

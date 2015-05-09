@@ -122,7 +122,7 @@ std::string TreeRepresentation::strPhyloNewick(
 
 std::string TreeRepresentation::strMaxClique(Vertices K) const {
     std::string maxclique("{");
-    maxclique += G_->str(K);
+    maxclique += G_->str(&K);
     maxclique += std::string("}");
     return maxclique;
 }

@@ -23,7 +23,7 @@ class MCSTest : public ::testing::Test {
             FAIL() << "Use Read once in your test.";
         } else {
             G_ = new chordalg::Graph(new chordalg::AdjacencyLists(A));
-            eo_ = MCS(*G_);
+            eo_ = MCS(G_);
             H_ = chordalg::Triangulation::New(G_, eo_);
         }
     }

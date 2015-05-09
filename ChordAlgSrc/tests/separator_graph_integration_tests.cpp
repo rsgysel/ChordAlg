@@ -84,7 +84,7 @@ TEST_F(SeparatorGraphTest, CliqueAutomorphism) {
     Read(clique);
     for (auto H : *A_) {
         chordalg::SeparatorGraph* SepH = chordalg::SeparatorGraph::New(H);
-        EXPECT_EQ(SepH->IsIsomorphic(*SepG_), true);
+        EXPECT_EQ(SepH->IsIsomorphic(SepG_), true);
         delete SepH;
     }
 }

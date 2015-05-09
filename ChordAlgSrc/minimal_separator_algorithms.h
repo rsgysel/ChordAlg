@@ -14,13 +14,13 @@
 
 namespace chordalg {
 
-std::string strMinimalSeparators(const MinsepTrie&, const Graph&);
+std::string strMinimalSeparators(const MinsepTrie*, const Graph*);
 
 // All minimal separators
-MinsepTrie* MinimalSeparators(const Graph& G);
+MinsepTrie* MinimalSeparators(const Graph* G);
 
 // minimal ab-separators
-MinsepTrie* MinimalSeparators(const Graph& G, Vertex a, Vertex b);
+MinsepTrie* MinimalSeparators(const Graph* G, Vertex a, Vertex b);
 
 }  // namespace chordalg
 

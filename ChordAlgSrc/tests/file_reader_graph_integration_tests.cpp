@@ -72,7 +72,7 @@ class IsomorphismTest : public FileReadingTest {
             G_ = chordalg::CellIntersectionGraph::New(mock_file_);
         }
         chordalg::Graph H(new chordalg::AdjacencyLists(graph));
-        EXPECT_EQ(G_->IsIsomorphic(H), true);
+        EXPECT_EQ(G_->IsIsomorphic(&H), true);
     }
     void TearDown() {
         FileReadingTest::TearDown();

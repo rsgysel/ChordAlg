@@ -15,12 +15,12 @@ namespace chordalg {
 // Described for atom computation by Berry, Pogorelcnik, and Simonet.
 // paper: http://www.mdpi.com/1999-4893/3/2/197
 //
-void MCSmPlus(const Graph& G,
+void MCSmPlus(const Graph* G,
               EliminationOrder* eo,
               FillEdges* F,
               VertexList* minsep_generators) {
     int s = -1;  // as in paper: for finding minimal separator generators
-    size_t n = G.order();
+    size_t n = G->order();
     std::vector< int > label;  // as in paper
     label.resize(n);
     for (Vertex v : label) {
@@ -39,13 +39,13 @@ void MCSmPlus(const Graph& G,
         s = max_label;
         std::list< int > Y;  // as in paper
         label[x] = kDeleted;
-        for (Vertex v : G) {
+        for (Vertex v : *G) {
             reached[v] = false;
         }
         reached[x] = true;
         std::vector< std::list< Vertex > > reach;
         reach.resize(n);
-        for (Vertex y : G.N(x)) {
+        for (Vertex y : G->N(x)) {
             if (label[y] != kDeleted) {
                 reached[y] = true;
                 reach[ label[y] ].push_back(y);
@@ -56,7 +56,7 @@ void MCSmPlus(const Graph& G,
             while (!reach[j].empty()) {
                 Vertex y = reach[j].back();
                 reach[j].pop_back();
-                for (Vertex z : G.N(y)) {
+                for (Vertex z : G->N(y)) {
                     if (label[z] != kDeleted && !reached[z]) {
                         reached[z] = true;
                         reach[ label[z] ].push_back(z);

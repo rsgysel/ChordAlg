@@ -67,7 +67,7 @@ Graph::~Graph() {
 }
 
 InducedSubgraph::InducedSubgraph(const Graph* G, Vertices U) :
-    Graph(InducedVertices(*G, U)),
+    Graph(InducedVertices(G, U)),
     G_(G),
     U_(U) {
     return;
@@ -100,16 +100,16 @@ Graph* Graph::New(GraphFile* file) {
 }
 
 // Determines if H is isomorphic to G with respect to their fixed orderings
-bool Graph::IsIsomorphic(Graph& H) const {
-    const Graph& G = *this;
-    if (G.order() != H.order() || G.size() != H.size()) {
+bool Graph::IsIsomorphic(const Graph* H) const {
+    const Graph* G = this;
+    if (G->order() != H->order() || G->size() != H->size()) {
         return false;
     }
-    for (Vertex v : G) {
-        if (G.N(v).size() != H.N(v).size()) {
+    for (Vertex v : *G) {
+        if (G->N(v).size() != H->N(v).size()) {
             return false;
         }
-        if (!std::equal(G.N(v).begin(), G.N(v).end(), H.N(v).begin())) {
+        if (!std::equal(G->N(v).begin(), G->N(v).end(), H->N(v).begin())) {
             return false;
         }
     }
@@ -129,24 +129,26 @@ std::string Graph::str() const {
     return Gstr;
 }
 
-std::string Graph::str(const LexTrie& T) const {
+std::string Graph::str(const LexTrie* T) const {
     std::string Tstr;
-    for (FiniteSet S : T) {
-        Tstr += str(Vertices(S));
+    for (FiniteSet S : *T) {
+        Vertices V(S);
+        Tstr += str(&V);
     }
     return Tstr;
 }
 
-std::string Graph::str(const VertexVector& U) const {
-    return str(Vertices(U));
+std::string Graph::str(const VertexVector* U) const {
+    Vertices V(*U);
+    return str(&V);
 }
 
-std::string Graph::str(const Vertices& U) const {
-    if (U.empty()) {
+std::string Graph::str(const Vertices* U) const {
+    if (U->empty()) {
         return std::string();
     } else {
         std::string Ustr;
-        for (Vertex v : U) {
+        for (Vertex v : *U) {
             Ustr += name(v) + ' ';
         }
         Ustr.pop_back();
@@ -240,26 +242,26 @@ void Graph::Init() {
     return;
 }
 
-AdjacencyLists* Graph::InducedVertices(const Graph& super_graph, Vertices X) {
+AdjacencyLists* Graph::InducedVertices(const Graph* super_graph, Vertices X) {
     std::sort(X.begin(), X.end());
     AdjacencyLists* a_lists = new AdjacencyLists();
     a_lists->resize(X.size());
-    std::map< Vertex, int > vertex_order;
-    int i = 0;
+    std::map< Vertex, size_t > vertex_order;
+    size_t i = 0;
     for (Vertex v : X) {
         vertex_order[v] = i;
         ++i;
     }
     std::vector< bool > in_subgraph;
-    in_subgraph.resize(super_graph.order());
-    for (Vertex v : super_graph) {
+    in_subgraph.resize(super_graph->order());
+    for (Vertex v : *super_graph) {
         in_subgraph[v] = false;
     }
     for (Vertex v : X) {
         in_subgraph[v] = true;
     }
     for (Vertex v : X) {
-        for (Vertex u : super_graph.N(v)) {
+        for (Vertex u : super_graph->N(v)) {
             if (in_subgraph[u]) {
                 Vertex v_induced_id = vertex_order[v];
                 Vertex u_induced_id = vertex_order[u];

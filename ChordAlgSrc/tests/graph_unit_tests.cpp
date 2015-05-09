@@ -62,5 +62,5 @@ TEST_F(GraphTest, Cliques) {
 
 TEST_F(GraphTest, Automorphism) {
     Read(two_cliques);
-    EXPECT_EQ(G_->IsIsomorphic(*G_), true);
+    EXPECT_EQ(G_->IsIsomorphic(G_), true);
 }
