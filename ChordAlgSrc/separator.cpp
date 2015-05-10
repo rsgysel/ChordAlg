@@ -228,11 +228,11 @@ void SeparatorBlocks::Separate(
     return;
 }
 
-std::vector< Block >::const_iterator SeparatorBlocks::begin() {
+std::vector< Block >::const_iterator SeparatorBlocks::begin() const {
     return blocks_.begin();
 }
 
-std::vector< Block >::const_iterator SeparatorBlocks::end() {
+std::vector< Block >::const_iterator SeparatorBlocks::end() const {
     return blocks_.end();
 }
 

@@ -21,7 +21,6 @@ class Graph {
     Graph(const Graph&) = delete;
     void operator=(const Graph&) = delete;
 
-    explicit Graph(Graph&);
     explicit Graph(GraphFR*);
     explicit Graph(AdjacencyLists*);
     Graph(AdjacencyLists*, VertexNames);

@@ -15,15 +15,6 @@ namespace chordalg {
 //////////////////
 // c'tors & d'tors
 
-Graph::Graph(Graph& H) :
-    neighborhoods_(new AdjacencyLists(*(H.neighborhoods_))),
-    vertex_names_(new VertexNames(*(H.vertex_names_))),
-    order_(H.order_),
-    size_(H.size_) {
-    Init();
-    return;
-}
-
 Graph::Graph(GraphFR* fr) :
     neighborhoods_(fr->TakeNeighborhoods()),
     vertex_names_(fr->TakeNames()),

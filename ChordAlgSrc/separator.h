@@ -87,8 +87,8 @@ class SeparatorBlocks : public SeparatorComponents {
     void Separate(const Vertices*,
                   const FillEdges* fill = nullptr,
                   const Vertex* v = nullptr);
-    std::vector< Block >::const_iterator begin();
-    std::vector< Block >::const_iterator end();
+    std::vector< Block >::const_iterator begin() const;
+    std::vector< Block >::const_iterator end() const;
     bool IsFull(ConnectedComponentID C) const;
     const Vertices& Component(ConnectedComponentID C) const;
     const Vertices& NComponent(ConnectedComponentID C) const;
