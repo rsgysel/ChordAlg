@@ -169,6 +169,29 @@ std::string Graph::strDOT(std::string graphname) const {
     return result;
 }
 
+// Outputs graph in GML format
+//
+std::string Graph::strGML(std::string graphname) const {
+    std::string result("graph [\n\tundirected 1\n");
+    result += std::string("\tlabel \"") + graphname + std::string("\"\n");
+    for (Vertex v : *this) {
+        result += std::string("\tnode [\n\t\tid ") + std::to_string(v);
+        result += std::string("\n\t\tlabel \"") + name(v);
+        result += std::string("\"\n\t]\n");
+    }
+    for (Vertex v : *this) {
+        for (Vertex u : N(v)) {
+            if (u < v) {
+                result += std::string("\tedge [\n\t\tsource ");
+                result += std::to_string(u) + std::string("\n\t\ttarget ");
+                result += std::to_string(v) + std::string("\n\t]\n");
+            }
+        }
+    }
+    result += "]\n";
+    return result;
+}
+
 Vertices Graph::V() const {
     Vertices V(order_);
     for (size_t i = 0; i < V.size(); ++i) {

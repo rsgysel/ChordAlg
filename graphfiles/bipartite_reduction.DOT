@@ -1,0 +1,23 @@
+graph bipartite_reduction {
+	v1 [shape=box];
+	v2 [shape=box];
+	v3 [shape=box];
+	w1 [shape=box];
+	w2 [shape=box];
+	w3 [shape=box];
+	s [shape=box];
+	t [shape=box];
+	v1 -- w1;
+	v3 -- w1;
+	v1 -- w2;
+	v2 -- w2;
+	v3 -- w2;
+	v2 -- w3;
+	v3 -- w3;
+	v1 -- s;
+	v2 -- s;
+	v3 -- s;
+	w1 -- t;
+	w2 -- t;
+	w3 -- t;
+}

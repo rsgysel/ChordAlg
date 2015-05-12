@@ -1,11 +1,11 @@
 /*
- *  ChordalGraph -  checks if a graph is chordal
+ *  GMLFormat - outputs GML format of a graph
  */
 
 #include <iostream>
 
+#include "ChordAlgSrc/chordalg_string.h"
 #include "ChordAlgSrc/graph.h"
-#include "ChordAlgSrc/triangulation.h"
 
 using namespace chordalg;
 
@@ -15,11 +15,8 @@ int main(int argc, char** argv) {
         return EXIT_FAILURE;
     } else {
         Graph* G = Graph::New(argv[1]);
-        if (Triangulation::IsChordal(G)) {
-            std::cout << "Graph is chordal.\n";
-        } else {
-            std::cout << "Graph is not chordal.\n";
-        }
+        StringTokens tokens = Split(argv[1], "./");
+        std::cout << G->strGML(tokens[tokens.size() - 2]);
         delete G;
         return EXIT_SUCCESS;
     }

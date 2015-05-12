@@ -1,5 +1,5 @@
 /*
- *  ChordalGraph - main program that checks if a graph is chordal
+ *  ChordalGraph -  checks if a graph is chordal
  */
 
 #include <iostream>

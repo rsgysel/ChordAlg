@@ -1,5 +1,5 @@
 /*
- *  MMC_MaxCompatSupertree - main program that constructs a supertree
+ *  MMC_MaxCompatSupertree -  constructs a supertree
  *  from an MRP matrix representing a collection of partially labeled
  *  trees. Utilizes MMC heuristic to estimate maximum compatibility.
  */

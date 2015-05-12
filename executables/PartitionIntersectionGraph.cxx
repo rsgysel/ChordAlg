@@ -1,5 +1,5 @@
 /*
- *  PartitionIntersectionGraph - main program that computes and prints
+ *  PartitionIntersectionGraph -  computes and prints
  *  the partition intersection graph for a set of phylogenetic characters
  */
 
