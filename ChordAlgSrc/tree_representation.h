@@ -10,53 +10,38 @@
 #include <vector>
 
 #include "ChordAlgSrc/graph.h"
-#include "ChordAlgSrc/intersection_graph.h"
+#include "ChordAlgSrc/tree.h"
 #include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
 
+typedef std::vector< Vertices > CliqueMap;
+
 class TreeRepresentation {
  public:
     explicit TreeRepresentation(
-        AdjacencyLists*,
         const Graph*,
-        std::vector< Vertices >);
+        AdjacencyLists*,
+        CliqueMap*);
     virtual ~TreeRepresentation();
 
-    std::string str() const;
-    const Graph* G() const;
-    const Graph& T() const;
-    std::string strNewick() const;
-    std::string strPhyloNewick(
-        const CellIntersectionGraph&,
-        bool rooted = false) const;
+    const Graph& G() const;
+    const Tree& T() const;
 
  protected:
-    std::string strMaxClique(Vertices K) const;
-    VertexNames NamesFromCliqueMap(std::vector< Vertices > clique_map) const;
+    VertexNames NamesFromCliqueMap(const Graph* G, const CliqueMap* K) const;
 
-    void NewickVisit(
-        VertexSet& visited,
-        Vertex v,
-        std::string& newick_tree) const;
-    void PhyloNewickVisit(
-        VertexSet& visited,
-        Vertex v,
-        std::string& newick_tree,
-        const CellIntersectionGraph& cig,
-        std::vector< size_t >& taxon_clique_size) const;
-
-    const Graph* G_;  // represented chordal graph
-    Graph T_;  // tree representation topology
-    std::vector< Vertices > clique_map_;  // maps nodes of T_ to cliques of G_
+    const Graph* G_;    // represented chordal graph
+    const Tree* T_;     // host tree
+    const CliqueMap* K_;  // maps nodes of T_ to cliques of G_
 };  // TreeRepresentation
 
 class CliqueTree : public TreeRepresentation {
  public:
     explicit CliqueTree(
-        AdjacencyLists*,
         const Graph*,
-        std::vector< Vertices >);
+        AdjacencyLists*,
+        CliqueMap*);
     ~CliqueTree();
 };  // CliqueTree
 

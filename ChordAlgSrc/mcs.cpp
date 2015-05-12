@@ -39,7 +39,7 @@ CliqueTree* MCSCliqueTree(const Graph* G) {
     bool init_prev_card = true;
     std::vector<size_t> clique;
     clique.resize(G->order());
-    std::vector< Vertices > clique_map;
+    CliqueMap* K = new CliqueMap();
     for (size_t i = G->order(); i > 0; i--) {
         // Get max weight vertex and update others
         size_t new_card = mcs_q.max_weight();
@@ -53,7 +53,7 @@ CliqueTree* MCSCliqueTree(const Graph* G) {
         // Check for maxclique construction
         if (new_card <= prev_card || init_prev_card) {
             init_prev_card = false;
-            clique_map.push_back(Vertices(Ks));
+            K->push_back(Vertices(Ks));
             Ks.clear();
             Ks_indices.clear();
             ++s;
@@ -74,7 +74,7 @@ CliqueTree* MCSCliqueTree(const Graph* G) {
         prev_card = new_card;
     }
     if (!Ks.empty()) {
-        clique_map.push_back(Vertices(Ks));
+        K->push_back(Vertices(Ks));
     }
     AdjacencyLists* E = new AdjacencyLists;
     E->resize(s + 1);
@@ -82,7 +82,7 @@ CliqueTree* MCSCliqueTree(const Graph* G) {
         (*E)[e.first].push_back(e.second);
         (*E)[e.second].push_back(e.first);
     }
-    CliqueTree* tr = new CliqueTree(E, G, clique_map);
+    CliqueTree* tr = new CliqueTree(G, E, K);
     return tr;
 }
 

@@ -143,7 +143,6 @@ std::string Graph::str(const Vertices* U) const {
             Ustr += name(v) + ' ';
         }
         Ustr.pop_back();
-        Ustr += '\n';
         return Ustr;
     }
 }
