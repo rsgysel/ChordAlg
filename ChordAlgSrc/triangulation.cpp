@@ -2,6 +2,7 @@
 
 #include "ChordAlgSrc/fill_edges.h"
 #include "ChordAlgSrc/graph.h"
+#include "ChordAlgSrc/graph_file.h"
 #include "ChordAlgSrc/mcs.h"
 
 namespace chordalg {
@@ -11,6 +12,12 @@ namespace chordalg {
 
 Triangulation::Triangulation(const Graph* G, const FillEdges* F) :
     Graph(F->TriangulationNbhds()),
+    G_(G) {
+    return;
+}
+
+Triangulation::Triangulation(const Graph* G, GraphFR* fr) :
+    Graph(fr),
     G_(G) {
     return;
 }
@@ -27,6 +34,23 @@ Triangulation* Triangulation::New(const Graph* G, const EliminationOrder* eo) {
 
 Triangulation* Triangulation::New(const Graph* G, const HeuristicRun* R) {
     Triangulation* H = new Triangulation(G, R->fill_edges());
+    return H;
+}
+
+Triangulation* Triangulation::New(const Graph* G, const std::string filename) {
+    Triangulation* H = nullptr;
+    GraphFile* file = GraphFile::New(filename);
+    if (file->file_type() == FileType::ADJLIST ||
+        file->file_type() == FileType::DIMACS) {
+        GraphFR* file_reader = GraphFR::New(file);
+        H = new Triangulation(G, file_reader);
+        delete file_reader;
+    } else if (file->file_type() == FileType::CHARACTERMATRIX ||
+               file->file_type() == FileType::NEXUSMRP) {
+        CellIntGraphFR* file_reader = CellIntGraphFR::New(file);
+        H = new Triangulation(G, file_reader);
+        delete file_reader;
+    }
     return H;
 }
 

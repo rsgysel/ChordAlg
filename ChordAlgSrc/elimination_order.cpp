@@ -34,6 +34,10 @@ EliminationOrder* EliminationOrder::FromFile(
     EliminationOrder* eo = new EliminationOrder(G);
     std::fstream file_stream;
     file_stream.open(filename.c_str());
+    if (!file_stream) {
+        std::cerr << "Error: can't open " << filename << '\n';
+        exit(EXIT_FAILURE);
+    }
     std::string file_line;
     std::getline(file_stream, file_line);
     file_stream.close();
@@ -196,7 +200,6 @@ const Graph* EliminationOrder::G() const {
     return G_;
 }
 
-
 void EliminationOrder::SetOrder(VertexVector pi) {
     if (pi.size() != G_->order()) {
         std::cerr << "Error in SetOrder: elimination order size and graph ";
@@ -218,7 +221,7 @@ void EliminationOrder::SetVertex(int i, Vertex v) {
 }
 
 std::string EliminationOrder::str() const {
-    std::string Estr = "elimination order:\t";
+    std::string Estr;
     for (Vertex v : alpha_) {
         Estr += G_->name(v) + " ";
     }

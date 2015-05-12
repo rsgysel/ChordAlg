@@ -3,6 +3,7 @@
 
 #include "ChordAlgSrc/elimination_order.h"
 #include "ChordAlgSrc/fill_edges.h"
+#include "ChordAlgSrc/file_reader.h"
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/heuristic_run.h"
 
@@ -15,9 +16,11 @@ class Triangulation : public Graph {
     void operator=(const Triangulation&) = delete;
 
     explicit Triangulation(const Graph*, const FillEdges*);
+    explicit Triangulation(const Graph*, GraphFR*);
 
     static Triangulation* New(const Graph*, const EliminationOrder*);
     static Triangulation* New(const Graph*, const HeuristicRun*);
+    static Triangulation* New(const Graph*, const std::string);
     VertexName name(Vertex v) const;
     bool IsFillEdge(Vertex, Vertex) const;
     bool IsFillEdge(VertexPair) const;

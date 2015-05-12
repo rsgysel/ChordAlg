@@ -11,7 +11,7 @@ using namespace chordalg;
 
 int main(int argc, char* argv[]) {
     std::string filename;
-    ChordAlgOptions(argc, argv, &filename, nullptr, FileMode::CHARACTERMATRIX);
+    ChordAlgOptions(argc, argv, &filename, nullptr, nullptr, FileMode::CHARACTERMATRIX);
     PartitionIntersectionGraph* G = PartitionIntersectionGraph::New(filename);
     std::cout << G->str();
     delete G;

@@ -4,12 +4,14 @@ const std::string
     preamble = " [OPTION] ...\nOptions:\n",
     graph_opt = "-g, --graph\n\tGraph filename\n",
     eo_opt = "-e, --eo\n\tElimination Order filename\n",
-    matrix_opt = "-m, --matrix\n\tCharacter Matrix / Nexus MRP filename\n";
+    matrix_opt = "-m, --matrix\n\tCharacter Matrix / Nexus MRP filename\n",
+    triangulation_opt = "-t, --triang\n\tTriangulation filename\n";
 
 void ChordAlgOptions(int argc,
                      char* argv[],
-                     std::string *graph_filename,
-                     std::string *eo_filename,
+                     std::string* graph_filename,
+                     std::string* eo_filename,
+                     std::string* triangulation_filename,
                      FileMode mode) {
     std::string usage = argv[0] + preamble;
     std::string graph_type_opt;
@@ -23,8 +25,12 @@ void ChordAlgOptions(int argc,
     if (eo_filename) {
         usage += eo_opt;
     }
+    if (triangulation_filename) {
+        usage += triangulation_opt;
+    }
     bool eo_filename_set = false,
-         graph_filename_set = false;
+         graph_filename_set = false,
+         triangulation_filename_set = false;
     static struct option long_options[] = {
         {"e",       required_argument, 0, 'e'},
         {"eo",      required_argument, 0, 'e'},
@@ -32,10 +38,12 @@ void ChordAlgOptions(int argc,
         {"graph",   required_argument, 0, 'g'},
         {"m",       required_argument, 0, 'm'},
         {"matrix",  required_argument, 0, 'm'},
+        {"t",       required_argument, 0, 't'},
+        {"triang",  required_argument, 0, 't'},
         {0,         0,                 0,  0 }
     };
     while (1) {
-        char c = getopt_long(argc, argv, "e:g:m:", long_options, nullptr);
+        char c = getopt_long(argc, argv, "e:g:m:t:", long_options, nullptr);
         if (c == -1) {
             if(graph_filename && !graph_filename_set) {
                 std::cerr << argv[0] << graph_type_opt << " must be provided\n";
@@ -76,6 +84,15 @@ void ChordAlgOptions(int argc,
                     exit(EXIT_FAILURE);
                 }
             break;
+            case 't':
+                if (triangulation_filename && !triangulation_filename_set) {
+                    *triangulation_filename = optarg;
+                    triangulation_filename_set = true;
+                } else {
+                    std::cerr << usage;
+                    exit(EXIT_FAILURE);
+                }
+            break;
             case '?':
                 std::cerr << usage << std::endl;
                 exit(EXIT_FAILURE);
@@ -83,7 +100,7 @@ void ChordAlgOptions(int argc,
             default:
                 std::cerr << "?? getopt returned character code 0" << c << "??\n";
                 exit(EXIT_FAILURE);
-        } 
+        }
     }  // getopts
     return;
 }

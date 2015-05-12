@@ -31,6 +31,7 @@ class Graph {
     static Graph* New(GraphFile*);
 
     bool IsIsomorphic(const Graph*) const;
+    bool IsSupergraph(const Graph*) const;
     virtual std::string str() const;
     std::string str(const LexTrie*) const;
     std::string str(const VertexVector*) const;

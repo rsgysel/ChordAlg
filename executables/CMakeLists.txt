@@ -15,7 +15,9 @@ add_chordalg_executable(GMLFormat)
 # Chordal Graphs
 add_chordalg_executable(ChordalGraph)
 add_chordalg_executable(FillEliminationOrder)
+add_chordalg_executable(LBTriang)
 add_chordalg_executable(MCS)
+add_chordalg_executable(MinimalTriangulation)
 add_chordalg_executable(PerfectEliminationOrder)
 
 # Graph Computations

@@ -107,6 +107,39 @@ bool Graph::IsIsomorphic(const Graph* H) const {
     return true;
 }
 
+bool Graph::IsSupergraph(const Graph* H) const {
+    const Graph* G = this;
+    if (G->order() != H->order()) {
+        return false;
+    }
+    std::set< VertexName > names;
+    typedef std::pair< VertexName, VertexName > EdgeName;
+    std::set< EdgeName > edges;
+    for (Vertex v : *G) {
+        names.insert(G->name(v));
+        for (Vertex u : G->N(v)) {
+            std::string u_str = G->name(u), v_str = G->name(v);
+            if (u_str < v_str) {
+                edges.insert(EdgeName(u_str, v_str));
+            }
+        }
+    }
+    for (Vertex v : *H) {
+        if (names.find(H->name(v)) == names.end()) {
+            return false;
+        }
+        for (Vertex u : H->N(v)) {
+            std::string u_str = H->name(u), v_str = H->name(v);
+            if (u_str < v_str) {
+                if (edges.find(EdgeName(u_str, v_str)) == edges.end()) {
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
 std::string Graph::str() const {
     std::string result = std::to_string(order_) + '\n';
     for (Vertex v : *this) {
