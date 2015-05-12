@@ -6,18 +6,16 @@
 
 #include "ChordAlgSrc/chordalg_string.h"
 #include "ChordAlgSrc/graph.h"
+#include "chordalg_options.cpp"
 
 using namespace chordalg;
 
 int main(int argc, char** argv) {
-    if (argc != 2) {
-        std::cerr << "usage: " << argv[0] << " <filename>" << std::endl;
-        return EXIT_FAILURE;
-    } else {
-        Graph* G = Graph::New(argv[1]);
-        StringTokens tokens = Split(argv[1], "./");
-        std::cout << G->strGML(tokens[tokens.size() - 2]);
-        delete G;
-        return EXIT_SUCCESS;
-    }
+    std::string filename;
+    ChordAlgOptions(argc, argv, &filename);
+    Graph* G = Graph::New(filename);
+    StringTokens tokens = Split(filename, "./");
+    std::cout << G->strGML(tokens[tokens.size() - 2]);
+    delete G;
+    return EXIT_SUCCESS;
 }

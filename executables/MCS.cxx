@@ -1,11 +1,13 @@
 /*
- *  ChordalGraph -  checks if a graph is chordal
+ *  MCS - runs Maximum Cardinality Search to obtain an elimination
+ *  ordering of a graph. If graph is chordal, elimination ordering
+ *  is perfect.
  */
 
 #include <iostream>
 
 #include "ChordAlgSrc/graph.h"
-#include "ChordAlgSrc/triangulation.h"
+#include "ChordAlgSrc/mcs.h"
 #include "chordalg_options.h"
 
 using namespace chordalg;
@@ -14,11 +16,9 @@ int main(int argc, char** argv) {
     std::string filename;
     ChordAlgOptions(argc, argv, &filename);
     Graph* G = Graph::New(filename);
-    if (Triangulation::IsChordal(G)) {
-        std::cout << "Graph is chordal.\n";
-    } else {
-        std::cout << "Graph is not chordal.\n";
-    }
+    EliminationOrder* eo = MCS(G);
+    std::cout << eo->str();
+    delete eo;
     delete G;
     return EXIT_SUCCESS;
 }

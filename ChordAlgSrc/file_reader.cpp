@@ -474,7 +474,7 @@ void PartitionIntGraphFR::AddVertex(
     if (!C.empty()) {
         size_t v = subsets_.size();
         size_t state = (*M)[C[0]][col];
-        std::string name = std::to_string(col) + "#" + std::to_string(state);
+        std::string name = std::to_string(col) + "," + std::to_string(state);
         vertex_id_[name] = v;
         subsets_.push_back(FiniteSet(C));
         vertex_color_.push_back(col);
@@ -524,7 +524,7 @@ void CellIntGraphFR::AddVertex(
             size_t cell = subsets_.size();
             cell_id_[node] = cell;
             size_t state = (*M)[C[0]][col];
-            std::string name = std::to_string(col) + "#"
+            std::string name = std::to_string(col) + ","
                                + std::to_string(state);
             vertex_id_[name] = cell;
             subsets_.push_back(FiniteSet(C));
