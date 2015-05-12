@@ -108,25 +108,25 @@ bool Graph::IsIsomorphic(const Graph* H) const {
 }
 
 std::string Graph::str() const {
-    std::string Gstr = std::to_string(order_) + '\n';
+    std::string result = std::to_string(order_) + '\n';
     for (Vertex v : *this) {
-        Gstr += name(v) + ' ';
+        result += name(v) + ' ';
         for (Vertex u : N(v)) {
-            Gstr += name(u) + ' ';
+            result += name(u) + ' ';
         }
-        Gstr.pop_back();
-        Gstr += '\n';
+        result.pop_back();
+        result += '\n';
     }
-    return Gstr;
+    return result;
 }
 
 std::string Graph::str(const LexTrie* T) const {
-    std::string Tstr;
+    std::string result;
     for (FiniteSet S : *T) {
         Vertices V(S);
-        Tstr += str(&V);
+        result += str(&V);
     }
-    return Tstr;
+    return result;
 }
 
 std::string Graph::str(const VertexVector* U) const {
@@ -138,13 +138,35 @@ std::string Graph::str(const Vertices* U) const {
     if (U->empty()) {
         return std::string();
     } else {
-        std::string Ustr;
+        std::string result;
         for (Vertex v : *U) {
-            Ustr += name(v) + ' ';
+            result += name(v) + ' ';
         }
-        Ustr.pop_back();
-        return Ustr;
+        result.pop_back();
+        return result;
     }
+}
+
+// Outputs graph in DOT format
+// http://en.wikipedia.org/wiki/DOT_%28graph_description_language%29
+std::string Graph::strDOT(std::string graphname) const {
+    std::string result("graph ");
+    result += graphname + std::string(" {\n");
+    for (Vertex v : *this) {
+        result += std::string("\t") + name(v);
+        result += std::string(" [shape=box];\n");
+    }
+    for (Vertex v : *this) {
+        for (Vertex u : N(v)) {
+            if (u < v) {
+                result += std::string("\t") + name(u);
+                result += std::string(" -- ") + name(v);
+                result += std::string(";\n");
+            }
+        }
+    }
+    result += "}\n";
+    return result;
 }
 
 Vertices Graph::V() const {

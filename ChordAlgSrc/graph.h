@@ -35,6 +35,7 @@ class Graph {
     std::string str(const LexTrie*) const;
     std::string str(const VertexVector*) const;
     std::string str(const Vertices*) const;
+    std::string strDOT(std::string graphname) const;
 
     Vertices V() const;
     GraphVertexIterator begin() const;
