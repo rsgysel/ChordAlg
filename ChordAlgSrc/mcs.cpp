@@ -53,10 +53,12 @@ CliqueTree* MCSCliqueTree(const Graph* G) {
         // Check for maxclique construction
         if (new_card <= prev_card || init_prev_card) {
             init_prev_card = false;
-            K->push_back(Vertices(Ks));
+            if (!Ks.empty()) {
+                K->push_back(Vertices(Ks));
+                ++s;
+            }
             Ks.clear();
             Ks_indices.clear();
-            ++s;
             for (Vertex u : eo.RNbhd(v)) {
                 Ks.push_back(u);
                 Ks_indices.push_back(eo.PositionOf(u));

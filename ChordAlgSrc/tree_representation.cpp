@@ -49,6 +49,10 @@ const Tree& TreeRepresentation::T() const {
     return *T_;
 }
 
+std::string TreeRepresentation::str() const {
+    return T_->str();
+}
+
 VertexNames TreeRepresentation::NamesFromCliqueMap(
     const Graph* G,
     const CliqueMap* K) const {
@@ -56,7 +60,12 @@ VertexNames TreeRepresentation::NamesFromCliqueMap(
     names.resize(K->size());
     for (Vertex v = 0; v < K->size(); ++v) {
         std::string maxclique("{");
-        maxclique += G->str(&(*K)[v]);
+        for (Vertex u : (*K)[v]) {
+            maxclique += G->name(u) + std::string(",");
+        }
+        if (!(*K)[v].empty()) {
+            maxclique.pop_back();
+        }
         maxclique += std::string("}");
         names[v] = maxclique;
     }

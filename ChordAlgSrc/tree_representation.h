@@ -27,6 +27,7 @@ class TreeRepresentation {
 
     const Graph& G() const;
     const Tree& T() const;
+    std::string str() const;
 
  protected:
     VertexNames NamesFromCliqueMap(const Graph* G, const CliqueMap* K) const;
