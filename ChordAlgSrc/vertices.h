@@ -47,7 +47,6 @@ class Vertices : public VertexVector {
  public:
     Vertices();
     explicit Vertices(size_t);
-    explicit Vertices(FiniteSet);
     explicit Vertices(VertexList);
     explicit Vertices(VertexSet);
     explicit Vertices(VertexVector);

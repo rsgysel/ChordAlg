@@ -45,10 +45,10 @@ SeparatorGraph* SeparatorGraph::New(const Graph* G) {
 }
 
 std::string SeparatorGraph::str() const {
-    std::string SGstr = "Order" + std::to_string(order_) + '\n'
-                        + "Size" + std::to_string(size_) + '\n';
+    std::string SGstr = "Minimal Separators: " + std::to_string(order_) + '\n'
+                        + "Crossing Relations: " + std::to_string(size_) + '\n';
     for (Vertex v : *this) {
-        SGstr += 'S' + std::to_string(v) + ':' + name(v) + '\n';
+        SGstr += 'S' + std::to_string(v) + ": " + name(v) + '\n';
     }
     SGstr += '\n';
     for (Vertex v : *this) {
@@ -56,6 +56,7 @@ std::string SeparatorGraph::str() const {
         for (Vertex u : N(v)) {
             SGstr += 'S' + std::to_string(u) + ' ';
         }
+        SGstr.pop_back();
         SGstr += '\n';
     }
     return SGstr;
@@ -66,12 +67,7 @@ VertexName SeparatorGraph::name(Vertex v) const {
     if (S_v.empty()) {
         return std::string();
     } else {
-        std::string name;
-        for (auto itr = S_v.begin(); itr != S_v.end() - 1; ++itr) {
-            name += G_->name(*itr) + ' ';
-        }
-        name += G_->name(*(S_v.end() - 1));
-        return name;
+        return G_->str(&S_v);
     }
 }
 

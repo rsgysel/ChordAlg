@@ -1,8 +1,8 @@
 #include "ChordAlgSrc/lex_trie.h"
 
 #include <algorithm>
-#include <iterator>
 #include <iostream>
+#include <iterator>
 #include <sstream>
 #include <string>
 
@@ -16,6 +16,7 @@ LexTrieIterator::LexTrieIterator(const LexTrie* T) :
     set_(),
     nodes_(),
     children_itrs_(),
+    only_empty_set_returned_(false),
     T_(T) {
     return;
 }
@@ -28,6 +29,7 @@ LexTrieIterator::LexTrieIterator(
     set_(),
     nodes_(),
     children_itrs_(),
+    only_empty_set_returned_(false),
     T_(T) {
     set_.reserve(n_);
     nodes_.reserve(n_);
@@ -42,6 +44,7 @@ LexTrieIterator::LexTrieIterator(const LexTrieIterator& other) :
     set_(other.set_),
     nodes_(other.nodes_),
     children_itrs_(other.children_itrs_),
+    only_empty_set_returned_(other.only_empty_set_returned_),
     T_(other.T_) {
     return;
 }
@@ -90,6 +93,15 @@ std::string FiniteSet::str() const {
 // LexTrieIterator
 
 LexTrieIterator LexTrieIterator::operator++() {
+    // if T_ contains only the empty set
+    if (nodes_.back()->children_.empty() && T_->size() == 1) {
+        if (!only_empty_set_returned_) {
+            only_empty_set_returned_ = true;
+            return *this;
+        } else {
+            nodes_.pop_back();
+        }
+    }
     // if at end of trie
     if (nodes_.empty() || T_->size() == 0) {
         return LexTrieIterator(T_);
@@ -111,7 +123,8 @@ LexTrieIterator LexTrieIterator::operator++() {
             return LexTrieIterator(T_);
         }
     }
-    // now we dive down trie to find next set
+    // now we dive down trie to find next set, unless T_ contains
+    // only the empty set
     do {
         size_t index = children_itrs_.back()->first;
         LexTrieNode* child_node = nodes_.back()->children_[index];

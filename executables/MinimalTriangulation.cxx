@@ -25,6 +25,7 @@ int main(int argc, char** argv) {
     } else {
         std::cout << "Triangulation is not minimal.\n";
     }
+    delete T;
     delete G;
     return EXIT_SUCCESS;
 }

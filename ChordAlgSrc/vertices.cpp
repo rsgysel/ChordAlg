@@ -18,9 +18,6 @@ Vertices::Vertices() {
 Vertices::Vertices(size_t n) : VertexVector(n, 0) {
     return;
 }
-Vertices::Vertices(FiniteSet S) : VertexVector(S.begin(), S.end()) {
-    return;
-}
 
 Vertices::Vertices(VertexList V) : VertexVector(V.begin(), V.end()) {
     return;

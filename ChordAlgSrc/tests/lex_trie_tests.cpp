@@ -36,10 +36,11 @@ class LexTrieTest : public ::testing::Test {
         if (X.size() == 0) {
             T_strings.insert(std::string());
         } else {
-            std::ostringstream oss;
-            std::copy(X.begin(), X.end() - 1, std::ostream_iterator<size_t>(oss, " "));
-            oss << *(X.end() - 1);
-            T_strings.insert(oss.str());
+            chordalg::FiniteSet Xset;
+            for (auto x : X) {
+                Xset.push_back(x);
+            }
+            T_strings.insert(Xset.str());
         }
         return;
     }
@@ -66,6 +67,15 @@ class LexTrieTest : public ::testing::Test {
 TEST_F(LexTrieTest, Empty) {
     this->InitTrie(10);
     EXPECT_EQ(T_->size(), 0);
+}
+
+TEST_F(LexTrieTest, EmptySet) {
+    InitTrie(10);
+    Insert({});
+    EXPECT_EQ(T_->size(), 1);
+    for (auto X : *T_) {
+        EXPECT_EQ(X.size(), 0);
+    }
 }
 
 TEST_F(LexTrieTest, Insertion) {

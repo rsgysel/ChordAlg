@@ -43,6 +43,7 @@ class LexTrieIterator {
     FiniteSet set_;  // Current set
     std::vector< LexTrieNode* > nodes_;  // Path in lex trie to current set
     std::vector< LexTrieNodeChildren::const_iterator > children_itrs_;
+    bool only_empty_set_returned_;  // If T_ is only the empty set
     const LexTrie* T_;
 };  // LexTrieIterator
 
@@ -113,7 +114,6 @@ const LexTrieNode* LexTrie::InsertRange(
     InputIterator end_itr,
     bool* new_set) {
     LexTrieNode* node = root_;
-
     // Traverse trie, creating nodes if they don't exist
     for (InputIterator itr = begin_itr; itr != end_itr; ++itr) {
         if (!node->HasChild(*itr)) {
