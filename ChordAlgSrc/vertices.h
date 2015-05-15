@@ -9,11 +9,10 @@
 #include <initializer_list>
 #include <list>
 #include <set>
+#include <stack>
 #include <string>
 #include <vector>
 #include <utility>
-
-#include "ChordAlgSrc/lex_trie.h"
 
 namespace chordalg {
 
@@ -54,6 +53,7 @@ class Vertices : public VertexVector {
 
     void sort();
     void merge(Vertices, Vertices);
+    std::string str() const;
 };  // Vertices
 
 class GraphVertexIterator {

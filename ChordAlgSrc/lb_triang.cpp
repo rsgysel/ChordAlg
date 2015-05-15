@@ -8,7 +8,9 @@
 
 namespace chordalg {
 
-Triangulation* LBTriang(const Graph* G, const EliminationOrder* eo) {
+namespace LBTriang {
+
+Triangulation* Run(const Graph* G, const EliminationOrder* eo) {
     const EliminationOrder* pi = eo ? eo : new EliminationOrder(G);
     FillEdges F(G);
     SeparatorBlocks S(G);
@@ -16,7 +18,7 @@ Triangulation* LBTriang(const Graph* G, const EliminationOrder* eo) {
         Vertex v = pi->VertexAt(i);
         S.SeparateClosedNbhd(v, &F);
         for (Block B : S) {
-            F.Saturate(B.NC());
+            F.Saturate(&B.NC());
         }
     }
     Triangulation* H = new Triangulation(G, &F);
@@ -25,5 +27,7 @@ Triangulation* LBTriang(const Graph* G, const EliminationOrder* eo) {
     }
     return H;
 }
+
+}  // namespace LBTriang
 
 }  // namespace chordalg

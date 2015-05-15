@@ -11,14 +11,16 @@
 
 namespace chordalg {
 
+namespace MCSmPlus {
+
 // Implementation of MCS-M+, which minimally triangulates a graph.
 // Described for atom computation by Berry, Pogorelcnik, and Simonet.
 // paper: http://www.mdpi.com/1999-4893/3/2/197
 //
-void MCSmPlus(const Graph* G,
-              EliminationOrder* eo,
-              FillEdges* F,
-              VertexList* minsep_generators) {
+void Run(const Graph* G,
+         EliminationOrder* eo,
+         FillEdges* F,
+         VertexList* minsep_generators) {
     int s = -1;  // as in paper: for finding minimal separator generators
     size_t n = G->order();
     std::vector< int > label;  // as in paper
@@ -78,6 +80,8 @@ void MCSmPlus(const Graph* G,
     }
     return;
 }
+
+}  // namespace MCSmPlus
 
 }  // namespace chordalg
 

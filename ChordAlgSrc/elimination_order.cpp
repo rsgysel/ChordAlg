@@ -193,7 +193,7 @@ Vertices EliminationOrder::RNbhd(Vertex v, const FillEdges* F) const {
     return R_N;
 }
 
-int EliminationOrder::size() const {
+size_t EliminationOrder::size() const {
     return alpha_.size();
 }
 const Graph* EliminationOrder::G() const {
@@ -210,14 +210,6 @@ void EliminationOrder::SetOrder(VertexVector pi) {
         Emplace(pi[i], i);
     }
     return;
-}
-
-void EliminationOrder::SetPosition(Vertex v, int i) {
-    alpha_inverse_[v] = i;
-}
-
-void EliminationOrder::SetVertex(int i, Vertex v) {
-    alpha_[i] = v;
 }
 
 std::string EliminationOrder::str() const {

@@ -93,18 +93,21 @@ std::string FiniteSet::str() const {
 // LexTrieIterator
 
 LexTrieIterator LexTrieIterator::operator++() {
+    // if at end of trie
+    if (nodes_.empty() || T_->size() == 0) {
+        return LexTrieIterator(T_);
+    }
     // if T_ contains only the empty set
-    if (nodes_.back()->children_.empty() && T_->size() == 1) {
-        if (!only_empty_set_returned_) {
+    if (nodes_[0]->has_set_ && T_->size() == 1) {
+        nodes_.pop_back();
+        children_itrs_.pop_back();
+        return *this;
+/*        if (!only_empty_set_returned_) {
             only_empty_set_returned_ = true;
             return *this;
         } else {
             nodes_.pop_back();
-        }
-    }
-    // if at end of trie
-    if (nodes_.empty() || T_->size() == 0) {
-        return LexTrieIterator(T_);
+        }*/
     }
     // otherwise Iterator either points to root, leaf, or internal node
     // we only traverse up trie if Iterator points to leaf
@@ -185,6 +188,47 @@ const LexTrieNode* LexTrieNode::GetChild(size_t k) const {
 
 //////////
 // LexTrie
+
+bool LexTrie::Contains(const std::vector< size_t >* X) const {
+    const LexTrieNode* node = root_;
+    for (auto x : *X) {
+        if (!node->HasChild(x)) {
+            return false;
+        }
+        node = node->GetChild(x);
+    }
+    return node->has_set_;
+}
+
+const LexTrieNode* LexTrie::Insert(const std::vector< size_t >* X, bool* new_set) {
+    std::vector< size_t > SortedX(*X);
+    std::sort(SortedX.begin(), SortedX.end());
+    return SortedInsert(&SortedX, new_set);
+}
+
+const LexTrieNode* LexTrie::SortedInsert(const std::vector< size_t >* X, bool* new_set) {
+    LexTrieNode* node = root_;
+    for (auto x : *X) {
+        if (!node->HasChild(x)) {
+            LexTrieNode* newChild = new LexTrieNode(false);
+            if (newChild == nullptr) {
+                throw std::bad_alloc();
+            }
+            node->AddChild(newChild, x);
+        }
+        node = node->GetChild(x);
+    }
+    if (new_set != nullptr && node->has_set_) {
+        *new_set = false;
+    } else if (new_set != nullptr) {
+        *new_set = true;
+    }
+    if (!node->has_set_) {
+        ++set_count_;
+        node->has_set_ = true;
+    }
+    return node;
+}
 
 std::string LexTrie::str() const {
     std::ostringstream oss;

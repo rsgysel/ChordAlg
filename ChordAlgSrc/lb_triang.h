@@ -7,7 +7,11 @@
 
 namespace chordalg {
 
-Triangulation* LBTriang(const Graph*, const EliminationOrder* = nullptr);
+namespace LBTriang {
+
+Triangulation* Run(const Graph*, const EliminationOrder* = nullptr);
+
+}  // namespace LBTriang
 
 }  // namespace chordalg
 

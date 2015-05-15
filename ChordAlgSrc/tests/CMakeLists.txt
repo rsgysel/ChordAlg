@@ -10,7 +10,7 @@ add_gmock_test(ChordAlgTests atoms_graph_tests.cpp
                              lex_trie_tests.cpp
                              mcs_triangulation_tests.cpp
                              mcs_m_triangulation_tests.cpp
-                             minimal_separator_algorithms_tests.cpp
+                             minimal_separators_tests.cpp
                              separator_components_tests.cpp
                              separator_graph_tests.cpp
                              test_graphs.cpp

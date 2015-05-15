@@ -13,7 +13,7 @@ add_library(ChordAlgLib
                 lex_trie.cpp
                 mcs.cpp
                 mcs_m.cpp
-                minimal_separator_algorithms.cpp
+                minimal_separators.cpp
                 separator.cpp
                 separator_graph.cpp
                 tree.cpp

@@ -4,7 +4,6 @@
 #include <iterator>
 
 #include "ChordAlgSrc/graph.h"
-#include "ChordAlgSrc/lex_trie.h"
 
 namespace chordalg {
 
@@ -86,6 +85,18 @@ void Vertices::merge(Vertices U, Vertices W) {
                W.begin(), W.end(),
                std::back_inserter(*this));
     return;
+}
+
+std::string Vertices::str() const {
+    std::string result;
+    if (empty()) {
+        return result;
+    }
+    for (auto v : *this) {
+        result += std::to_string(v) + std::string(" ");
+    }
+    result.pop_back();
+    return result;
 }
 
 //////////////////////

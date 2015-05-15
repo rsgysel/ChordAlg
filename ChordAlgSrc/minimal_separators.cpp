@@ -1,4 +1,4 @@
-#include "ChordAlgSrc/minimal_separator_algorithms.h"
+#include "ChordAlgSrc/minimal_separators.h"
 
 #include <string>
 
@@ -9,17 +9,30 @@
 
 namespace chordalg {
 
-std::string strMinimalSeparators(const MinsepTrie* M, const Graph* G) {
-    std::string MSstr;
-    for (FiniteSet S : *M) {
-        MSstr += G->str(&S) + '\n';
+MinsepVector* MinsepTrieToVector(const MinsepTrie& MT) {
+    MinsepVector* MV = new MinsepVector();
+    MV->resize(MT.size());
+    size_t i = 0;
+    for (auto S : MT) {
+        (*MV)[i] = Vertices(VertexVector(S));
+        ++i;
     }
-    return MSstr;
+    return MV;
+}
+
+namespace MinimalSeparators {
+
+std::string str(const MinsepTrie* M, const Graph* G) {
+    std::string result;
+    for (FiniteSet S : *M) {
+        result += G->str(&S) + '\n';
+    }
+    return result;
 }
 
 // Berry, Bordat, and Cogis' algorithm to generate minimal separators
 // paper: http://www.worldscientific.com/doi/pdf/10.1142/S0129054100000211
-MinsepTrie* MinimalSeparators(const Graph* G) {
+MinsepTrie* Generate(const Graph* G) {
     bool new_set;
     int n = G->order();
     MinsepTrie* M = new MinsepTrie(n);
@@ -32,7 +45,7 @@ MinsepTrie* MinimalSeparators(const Graph* G) {
     for (Vertex v : *G) {
         S.SeparateClosedNbhd(v);
         for (Block B : S) {
-            M->SortedInsert< Vertices >(B.NC(), &new_set);
+            M->SortedInsert(&B.NC(), &new_set);
             if (new_set) {
                 M_stack.push(B.NC());
             }
@@ -48,7 +61,7 @@ MinsepTrie* MinimalSeparators(const Graph* G) {
             V.merge(U, G->N(v));
             S.Separate(&V);
             for (Block B : S) {
-                M->SortedInsert< Vertices >(B.NC(), &new_set);
+                M->SortedInsert(&B.NC(), &new_set);
                 if (new_set) {
                     M_stack.push(B.NC());
                 }
@@ -58,7 +71,7 @@ MinsepTrie* MinimalSeparators(const Graph* G) {
     return M;
 }
 
-MinsepTrie* MinimalSeparators(const Graph* G, Vertex a, Vertex b) {
+MinsepTrie* Generate(const Graph* G, Vertex a, Vertex b) {
     bool new_set;
     int n = G->order();
     MinsepTrie* M = new MinsepTrie(n);
@@ -71,7 +84,7 @@ MinsepTrie* MinimalSeparators(const Graph* G, Vertex a, Vertex b) {
     // of G - N[a] containing b is a minimal ab-separator
     S.SeparateClosedNbhd(a);
     if (!S.IsInSeparator(b)) {
-        M->SortedInsert< Vertices >(S.NComponentOf(b));
+        M->SortedInsert(&S.NComponentOf(b));
         M_stack.push(S.NComponentOf(b));
     }
     // second phase: for each v in S, the neighborhood of each
@@ -84,7 +97,7 @@ MinsepTrie* MinimalSeparators(const Graph* G, Vertex a, Vertex b) {
             V.merge(U, G->N(v));
             S.Separate(&V);
             if (!S.IsInSeparator(b) && !S.NComponentOf(b).empty()) {
-                M->SortedInsert<Vertices>(S.NComponentOf(b), &new_set);
+                M->SortedInsert(&S.NComponentOf(b), &new_set);
                 if (new_set) {
                     M_stack.push(S.NComponentOf(b));
                 }
@@ -93,5 +106,7 @@ MinsepTrie* MinimalSeparators(const Graph* G, Vertex a, Vertex b) {
     }
     return M;
 }
+
+}  // namespace MinimalSeparators
 
 }  // namespace chordalg

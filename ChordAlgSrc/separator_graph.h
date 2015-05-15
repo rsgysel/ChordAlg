@@ -1,22 +1,15 @@
 #ifndef CHORDALGSRC_SEPARATOR_GRAPH_H_
 #define CHORDALGSRC_SEPARATOR_GRAPH_H_
 
-#include <stack>
 #include <string>
-#include <vector>
 
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/lex_trie.h"
+#include "ChordAlgSrc/minimal_separators.h"
 #include "ChordAlgSrc/separator.h"
 #include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
-
-typedef LexTrie                     MinsepTrie;
-typedef std::stack< Vertices >      MinsepStack;
-typedef std::vector< Vertices >     MinsepVector;
-
-MinsepVector* MinsepTrieToVector(const MinsepTrie&);
 
 class SeparatorGraph : public Graph {
  public:

@@ -236,8 +236,8 @@ std::vector< Block >::const_iterator SeparatorBlocks::end() const {
     return blocks_.end();
 }
 
-bool SeparatorBlocks::IsFull(ConnectedComponentID C) const {
-    return separator_size_ == NComponent(C).size();
+bool SeparatorBlocks::IsFull(const Block* B) const {
+    return separator_size_ == B->NC().size();
 }
 
 const Vertices& SeparatorBlocks::Component(ConnectedComponentID C) const {

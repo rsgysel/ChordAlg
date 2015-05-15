@@ -16,8 +16,10 @@
 
 namespace chordalg {
 
-EliminationOrder* MCS(const Graph* G);
-CliqueTree* MCSCliqueTree(const Graph* G);
+namespace MCS {
+
+EliminationOrder* Run(const Graph* G);
+CliqueTree* NewCliqueTree(const Graph* G);
 
 class MCSQueue {
  public:
@@ -36,6 +38,8 @@ class MCSQueue {
     std::vector< std::set<Vertex> > queue_;
     std::vector< int > weight_;
 };  // MCSQueue
+
+}  // namespace MCS
 
 }  // namespace chordalg
 

@@ -15,6 +15,8 @@
 
 namespace chordalg {
 
+class EliminationOrder;
+
 class Graph {
  public:
     Graph() = delete;
@@ -83,7 +85,7 @@ class InducedSubgraph : public Graph {
     InducedSubgraph(const InducedSubgraph&) = delete;
     void operator=(const InducedSubgraph&) = delete;
 
-    InducedSubgraph(const Graph*, Vertices);
+    InducedSubgraph(const Graph*, const Vertices*);
 
     VertexName name(Vertex v) const;
     Weight FillCount(Vertex u, Vertex v) const;

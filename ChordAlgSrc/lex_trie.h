@@ -84,72 +84,20 @@ class LexTrie {
     explicit LexTrie(size_t);
     ~LexTrie();
 
-    template< class Container >
-    const LexTrieNode* Insert(Container&, bool* new_set = nullptr);
-    template< class Container >
-    const LexTrieNode* SortedInsert(const Container&, bool* new_set = nullptr);
+    bool Contains(const std::vector< size_t >*) const;
+    const LexTrieNode* Insert(const std::vector< size_t >*, bool* new_set = nullptr);
+    const LexTrieNode* SortedInsert(const std::vector< size_t >*, bool* new_set = nullptr);
     std::string str() const;
     size_t size() const;        // number of sets in family
     size_t n() const;
     LexTrieIterator begin() const;
     LexTrieIterator end() const;
 
- protected:
-    template< class InputIterator >
-    const LexTrieNode* InsertRange(InputIterator, InputIterator,
-                                   bool* new_set = nullptr);
-
  private:
     size_t n_;  // size of original set
     size_t set_count_;  // number of sets in family
     LexTrieNode* root_;
 };  // LexTrie
-
-///////////
-// Generics
-
-template< class InputIterator >
-const LexTrieNode* LexTrie::InsertRange(
-    InputIterator begin_itr,
-    InputIterator end_itr,
-    bool* new_set) {
-    LexTrieNode* node = root_;
-    // Traverse trie, creating nodes if they don't exist
-    for (InputIterator itr = begin_itr; itr != end_itr; ++itr) {
-        if (!node->HasChild(*itr)) {
-            LexTrieNode* newChild = new LexTrieNode(false);
-            if (newChild == nullptr) {
-                throw std::bad_alloc();
-            }
-            node->AddChild(newChild, *itr);
-        }
-        node = node->GetChild(*itr);
-    }
-    if (new_set != nullptr && node->has_set_) {
-        *new_set = false;
-    } else if (new_set != nullptr) {
-        *new_set = true;
-    }
-    if (!node->has_set_) {
-        set_count_++;
-        node->has_set_ = true;
-    }
-    return node;
-}
-
-template< class Container >
-const LexTrieNode* LexTrie::Insert(Container& set, bool* new_set) {
-    std::sort(set.begin(), set.end());
-    return InsertRange< typename Container::const_iterator >(
-                set.begin(), set.end(), new_set);
-}
-
-template< class Container >
-const LexTrieNode* LexTrie::SortedInsert(const Container& set,
-                                         bool* new_set) {
-    return InsertRange< typename Container::const_iterator >(
-                set.begin(), set.end(), new_set);
-}
 
 }  // namespace chordalg
 

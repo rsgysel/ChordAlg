@@ -71,7 +71,7 @@ bool Triangulation::IsChordal() const {
 }
 
 bool Triangulation::IsChordal(const Graph* G) {
-    chordalg::EliminationOrder* eo = MCS(G);
+    chordalg::EliminationOrder* eo = MCS::Run(G);
     Triangulation* H = Triangulation::New(G, eo);
     bool result = G->IsIsomorphic(H);
     delete H;

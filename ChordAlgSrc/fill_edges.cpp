@@ -42,6 +42,15 @@ bool FillEdges::IsFillEdge(Vertex u, Vertex v) const {
     return (*this)[u].find(v) != (*this)[u].end();
 }
 
+bool FillEdges::IsClique(const Vertices* U) const {
+    for (VertexPair uv : VertexPairs(*U)) {
+        if (!IsEdge(uv)) {
+            return false;
+        }
+    }
+    return true;
+}
+
 bool FillEdges::AddEdge(VertexPair uv) {
     return AddEdge(uv.first, uv.second);
 }
@@ -71,8 +80,8 @@ void FillEdges::RemoveEdge(Vertex u, Vertex v) {
     return;
 }
 
-void FillEdges::Saturate(Vertices U) {
-    for (VertexPair uv : VertexPairs(U)) {
+void FillEdges::Saturate(const Vertices* U) {
+    for (VertexPair uv : VertexPairs(*U)) {
         AddEdge(uv);
     }
     return;

@@ -41,13 +41,9 @@ class EliminationOrder {
     // neighbors of v ``right" (after) v. Unsorted.
     Vertices RNbhd(Vertex, const FillEdges* F = nullptr) const;
 
-    int size() const;
+    size_t size() const;
     const Graph* G() const;
-
     void SetOrder(VertexVector);
-    void SetPosition(Vertex v, int i);
-    void SetVertex(int i, Vertex v);
-
     std::string str() const;
 
  private:

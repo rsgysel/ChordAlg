@@ -44,7 +44,8 @@ class AddEdgeTest : public FillEdgesTest {
 class SaturateTest : public FillEdgesTest {
  public:
     void TestFillFunction() {
-        F_->Saturate(G_->V());
+        chordalg::Vertices V = G_->V();
+        F_->Saturate(&V);
     }
 };  // SaturateTest
 

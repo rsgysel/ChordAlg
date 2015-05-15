@@ -20,7 +20,7 @@ class LBTriangTest : public ::testing::Test {
             FAIL() << "Use Read once in your test.";
         } else {
             G_ = new chordalg::Graph(new chordalg::AdjacencyLists(A));
-            H_ = LBTriang(G_);
+            H_ = chordalg::LBTriang::Run(G_);
             EXPECT_EQ(H_->IsMinimalTriangulation(), true);
         }
     }

@@ -519,7 +519,7 @@ void CellIntGraphFR::AddVertex(
         bool new_cell;
         std::sort(C.begin(), C.end());
         const LexTrieNode* node =
-                subset_family_->Insert< FiniteSet >(C, &new_cell);
+                subset_family_->Insert(&C, &new_cell);
         if (new_cell) {
             size_t cell = subsets_.size();
             cell_id_[node] = cell;

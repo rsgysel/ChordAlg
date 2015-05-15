@@ -2,7 +2,6 @@
 
 #include "ChordAlgSrc/atoms.h"
 #include "ChordAlgSrc/graph.h"
-#include "ChordAlgSrc/minimal_separator_algorithms.h"
 #include "ChordAlgSrc/separator_graph.h"
 #include "test_graphs.h"
 

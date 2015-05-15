@@ -56,7 +56,7 @@ void Atoms::ComputeAtoms() {
     EliminationOrder* eo = new EliminationOrder(G_);
     FillEdges* F = new FillEdges(G_);
     VertexList* minsep_generators = new VertexList();
-    MCSmPlus(G_, eo, F, minsep_generators);
+    MCSmPlus::Run(G_, eo, F, minsep_generators);
 
     std::list< Vertices > vertices_of_atoms;
     SeparatorComponents cc(G_);
@@ -79,7 +79,7 @@ void Atoms::ComputeAtoms() {
             }
         }
         if (G_->HasClique(S)) {
-            clique_minimal_separators_.Insert(S);
+            clique_minimal_separators_.Insert(&S);
             for (Vertex u : deleted_vertices) {
                 S.push_back(u);
             }
@@ -113,7 +113,7 @@ void Atoms::ComputeAtoms() {
     }
     for (Vertices U : vertices_of_atoms) {
         std::sort(U.begin(), U.end());
-        atom_subgraphs_.push_back(new InducedSubgraph(G_, U));
+        atom_subgraphs_.push_back(new InducedSubgraph(G_, &U));
     }
     delete eo;
     delete F;

@@ -10,7 +10,7 @@
 #include "ChordAlgSrc/atoms.h"
 #include "ChordAlgSrc/file_reader.h"
 #include "ChordAlgSrc/intersection_graph.h"
-#include "ChordAlgSrc/minimal_separator_algorithms.h"
+#include "ChordAlgSrc/minimal_separators.h"
 #include "ChordAlgSrc/separator_graph.h"
 
 using namespace chordalg;

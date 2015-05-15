@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "ChordAlgSrc/elimination_order.h"
 #include "ChordAlgSrc/file_reader.h"
 #include "ChordAlgSrc/graph_file.h"
 #include "ChordAlgSrc/lex_trie.h"
@@ -57,10 +58,10 @@ Graph::~Graph() {
     delete vertex_names_;
 }
 
-InducedSubgraph::InducedSubgraph(const Graph* G, Vertices U) :
-    Graph(InducedVertices(G, U)),
+InducedSubgraph::InducedSubgraph(const Graph* G, const Vertices* U) :
+    Graph(InducedVertices(G, *U)),
     G_(G),
-    U_(U) {
+    U_(*U) {
     return;
 }
 
@@ -158,7 +159,9 @@ std::string Graph::str(const LexTrie* T) const {
     for (FiniteSet S : *T) {
         Vertices V(S);
         result += str(&V);
+        result += '\n';
     }
+    result.pop_back();
     return result;
 }
 

@@ -3,21 +3,10 @@
 #include <string>
 
 #include "ChordAlgSrc/graph.h"
-#include "ChordAlgSrc/minimal_separator_algorithms.h"
+#include "ChordAlgSrc/minimal_separators.h"
 #include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
-
-MinsepVector* MinsepTrieToVector(const MinsepTrie& MT) {
-    MinsepVector* MV = new MinsepVector();
-    MV->resize(MT.size());
-    size_t i = 0;
-    for (auto S : MT) {
-        (*MV)[i] = Vertices(VertexVector(S));
-        ++i;
-    }
-    return MV;
-}
 
 //////////////////
 // c'tors & d'tors
@@ -39,7 +28,7 @@ SeparatorGraph::~SeparatorGraph() {
 // SeparatorGraph
 
 SeparatorGraph* SeparatorGraph::New(const Graph* G) {
-    SeparatorGraph* SG = new SeparatorGraph(G, MinimalSeparators(G));
+    SeparatorGraph* SG = new SeparatorGraph(G, MinimalSeparators::Generate(G));
     SG->ComputeCrossingRelations();
     return SG;
 }

@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
     std::string filename;
     ChordAlgOptions(argc, argv, &filename);
     Graph* G = Graph::New(filename);
-    EliminationOrder* eo = MCS(G);
+    EliminationOrder* eo = MCS::Run(G);
     std::cout << eo->str();
     delete eo;
     delete G;

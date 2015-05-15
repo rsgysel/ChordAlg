@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
         CellIntersectionGraph* G = CellIntersectionGraph::New(argv[1]);
         ClassicElimination eo(G, new DeficiencyCriterion());
         Supergraph triangulation(G, eo.TriangNbhds());
-        CliqueTree* ct = MCSCliqueTree(triangulation);
+        CliqueTree* ct = MCS::NewCliqueTree(triangulation);
         std::cout << ct->strPhyloNewick(*G, true) << std::endl << std::endl;
         std::cout << eo.str() << std::endl;
         std::cout << "fill weight: " << eo.fill_cost() << std::endl;

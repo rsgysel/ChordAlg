@@ -164,7 +164,8 @@ void EliminationAlgorithm::Elimination() {
 
 void EliminationAlgorithm::Eliminate(Vertex v) {
     if (parameters_->Classic()) {
-        fill_edges_->Saturate(MonotoneNbhd(v));
+        Vertices Nv = MonotoneNbhd(v);
+        fill_edges_->Saturate(&Nv);
         return;
     } else {
         B_->SeparateClosedNbhd(v, fill_edges_);

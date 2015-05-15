@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
         delete G;
         exit(EXIT_FAILURE);
     }
-    CliqueTree* T = MCSCliqueTree(G);
+    CliqueTree* T = MCS::NewCliqueTree(G);
     std::cout << T->str();
     delete T;
     delete G;
