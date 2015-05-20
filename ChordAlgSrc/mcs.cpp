@@ -16,14 +16,14 @@ namespace chordalg {
 
 namespace MCS {
 
-EliminationOrder* Run(const Graph* G) {
-    MCSQueue mcs_q(G->order());
-    EliminationOrder* eo = new EliminationOrder(G);
-    for (size_t i = G->order() ; i > 0 ; i--) {
+EliminationOrder* Run(const Graph& G) {
+    MCSQueue mcs_q(G.order());
+    EliminationOrder* eo = new EliminationOrder(&G);
+    for (size_t i = G.order() ; i > 0 ; i--) {
         Vertex v = mcs_q.Pop();
         eo->Emplace(v, i - 1);
         if (i != 1) {
-            for (Vertex u : G->N(v)) {
+            for (Vertex u : G.N(v)) {
                 mcs_q.Increment(u);
             }
         }
@@ -31,9 +31,9 @@ EliminationOrder* Run(const Graph* G) {
     return eo;
 }
 
-CliqueTree* NewCliqueTree(const Triangulation* G) {
-    MCSQueue mcs_q(G->order());
-    EliminationOrder eo(G);
+CliqueTree* NewCliqueTree(const Triangulation& G) {
+    MCSQueue mcs_q(G.order());
+    EliminationOrder eo(&G);
     std::list< std::pair<size_t, size_t> > ct_edges;
     size_t s = 0;
     VertexList Ks;
@@ -41,15 +41,15 @@ CliqueTree* NewCliqueTree(const Triangulation* G) {
     size_t prev_card = 0;
     bool init_prev_card = true;
     std::vector<size_t> clique;
-    clique.resize(G->order());
+    clique.resize(G.order());
     CliqueMap* K = new CliqueMap();
-    for (size_t i = G->order(); i > 0; i--) {
+    for (size_t i = G.order(); i > 0; i--) {
         // Get max weight vertex and update others
         size_t new_card = mcs_q.max_weight();
         Vertex v = mcs_q.Pop();
         eo.Emplace(v, i - 1);
         if (i != 1) {
-            for (Vertex u : G->N(v)) {
+            for (Vertex u : G.N(v)) {
                 mcs_q.Increment(u);
             }
         }
@@ -87,7 +87,7 @@ CliqueTree* NewCliqueTree(const Triangulation* G) {
         (*E)[e.first].push_back(e.second);
         (*E)[e.second].push_back(e.first);
     }
-    CliqueTree* tr = new CliqueTree(G, E, K);
+    CliqueTree* tr = new CliqueTree(&G, E, K);
     return tr;
 }
 

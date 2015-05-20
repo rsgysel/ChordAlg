@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
               << " Columns / Characters Removed:\n"
               << R->fill_summary() << '\n';
     Triangulation* H = Triangulation::New(G, R->fill_edges());
-    CliqueTree* CT = MCS::NewCliqueTree(H);
+    CliqueTree* CT = MCS::NewCliqueTree(*H);
     std::cout << SuperTree::NewickStr(*CT, *G) << '\n';
     delete R;
     delete G;

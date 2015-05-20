@@ -87,7 +87,7 @@ bool Triangulation::IsTriangulated() const {
 }
 
 bool Triangulation::IsTriangulated(const Graph* G) {
-    chordalg::EliminationOrder* eo = MCS::Run(G);
+    chordalg::EliminationOrder* eo = MCS::Run(*G);
     Triangulation* H = Triangulation::New(G, eo);
     bool result = G->IsIsomorphic(*H);
     delete H;

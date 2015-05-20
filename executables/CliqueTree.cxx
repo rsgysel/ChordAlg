@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
     ChordAlgOptions(argc, argv, &filename);
     Graph* G = Graph::New(filename);
     Triangulation* H = Triangulation::New(G);
-    CliqueTree* T = MCS::NewCliqueTree(H);
+    CliqueTree* T = MCS::NewCliqueTree(*H);
     std::cout << T->str();
     delete T;
     delete H;
