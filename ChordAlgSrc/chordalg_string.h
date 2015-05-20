@@ -15,10 +15,10 @@ typedef std::vector< std::string > StringTokens;
 typedef std::pair< std::string, std::string > StringPair;
 
 // True iff str is a natural number
-bool IsNum(std::string);
+bool IsNum(const std::string&);
 
 // Splits string and changes chars to lowercase
-StringTokens Split(std::string, std::string);
+StringTokens Split(const std::string&, const std::string&);
 
 }  // namespace chordalg
 

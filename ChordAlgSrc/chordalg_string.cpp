@@ -6,7 +6,7 @@
 namespace chordalg {
 
 // True iff str is a natural number
-bool IsNum(std::string str) {
+bool IsNum(const std::string& str) {
     for (auto c : str) {
         if (!std::isdigit(c)) {
             return false;
@@ -16,7 +16,7 @@ bool IsNum(std::string str) {
 }
 
 // Splits string and changes chars to lowercase
-StringTokens Split(std::string str, std::string delim) {
+StringTokens Split(const std::string& str, const std::string& delim) {
     StringTokens tokens;
     char* pch = nullptr;
     char* cstr = new char[str.length() + 1];
