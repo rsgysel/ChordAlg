@@ -24,7 +24,7 @@ class MinimalSeparatorAlgorithmsTest : public testing::Test {
             FAIL() << "Use Read once in your test.";
         } else {
             G_ = new chordalg::Graph(new chordalg::AdjacencyLists(A));
-            MS_ = chordalg::MinimalSeparators::Generate(G_);
+            MS_ = chordalg::MinimalSeparators::Generate(*G_);
         }
         return;
     }
@@ -33,7 +33,7 @@ class MinimalSeparatorAlgorithmsTest : public testing::Test {
             FAIL() << "Use Read once in your test.";
         } else {
             G_ = new chordalg::Graph(new chordalg::AdjacencyLists(A));
-            MS_ = chordalg::MinimalSeparators::Generate(G_, u, v);
+            MS_ = chordalg::MinimalSeparators::Generate(*G_, u, v);
         }
         return;
     }
@@ -125,7 +125,7 @@ TEST_F(MinimalSeparatorAlgorithmsTest, AllPairsSanityCheck) {
     Read(many_minseps_four);
     chordalg::LexTrie AllPairsMinseps(G_->order());
     for (auto uv : chordalg::VertexPairs(G_->V()) ) {
-        chordalg::LexTrie* PairMinseps = chordalg::MinimalSeparators::Generate(G_, uv.first, uv.second);
+        chordalg::LexTrie* PairMinseps = chordalg::MinimalSeparators::Generate(*G_, uv.first, uv.second);
         for (auto S : *PairMinseps) {
             AllPairsMinseps.Insert(&S);
         }

@@ -28,7 +28,7 @@ SeparatorGraph::~SeparatorGraph() {
 // SeparatorGraph
 
 SeparatorGraph* SeparatorGraph::New(const Graph* G) {
-    SeparatorGraph* SG = new SeparatorGraph(G, MinimalSeparators::Generate(G));
+    SeparatorGraph* SG = new SeparatorGraph(G, MinimalSeparators::Generate(*G));
     SG->ComputeCrossingRelations();
     return SG;
 }

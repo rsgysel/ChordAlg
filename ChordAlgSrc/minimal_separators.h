@@ -21,13 +21,13 @@ MinsepVector* MinsepTrieToVector(const MinsepTrie&);
 
 namespace MinimalSeparators {
 
-std::string str(const MinsepTrie*, const Graph*);
+std::string str(const MinsepTrie&, const Graph&);
 
 // All minimal separators
-MinsepTrie* Generate(const Graph* G);
+MinsepTrie* Generate(const Graph& G);
 
 // minimal ab-separators
-MinsepTrie* Generate(const Graph* G, Vertex a, Vertex b);
+MinsepTrie* Generate(const Graph& G, Vertex a, Vertex b);
 
 }  // namespace MinimalSeparators
 
