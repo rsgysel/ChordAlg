@@ -24,11 +24,12 @@ class Triangulation : public Graph {
     void operator=(const Triangulation&) = delete;
 
     explicit Triangulation(const Graph*);
-    explicit Triangulation(const Graph*, const FillEdges*);
+    explicit Triangulation(const Graph*, AdjacencyLists*);
     explicit Triangulation(const Graph*, GraphFR*);
 
     static Triangulation* New(const Graph*);
     static Triangulation* New(const Graph*, const EliminationOrder*);
+    static Triangulation* New(const Graph*, const FillEdges&);
     static Triangulation* New(const Graph*, const HeuristicRun*);
     static Triangulation* New(const Graph*, const std::string);
     VertexName name(Vertex v) const;

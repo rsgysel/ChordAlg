@@ -29,7 +29,7 @@ class EliminationOrder {
     void Init();
     void Emplace(Vertex, int);
     void Swap(int, int);
-    FillEdges* ComputeFill() const;
+    AdjacencyLists* EliminationNbhds() const;
     bool IsPerfect() const;
 
     bool Before(Vertex, Vertex) const;

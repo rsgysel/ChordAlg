@@ -95,7 +95,7 @@ Weight FillEdges::fill_weight() const {
     return fill_weight_;
 }
 
-AdjacencyLists* FillEdges::TriangulationNbhds() const {
+AdjacencyLists* FillEdges::FilledNbhds() const {
     AdjacencyLists* a_lists = new AdjacencyLists(G_->neighborhoods());
     for (Vertex v : *G_) {
         for (Vertex u : (*this)[v]) {

@@ -16,8 +16,8 @@ Triangulation::Triangulation(const Graph* G) :
     return;
 }
 
-Triangulation::Triangulation(const Graph* G, const FillEdges* F) :
-    Graph(F->TriangulationNbhds()),
+Triangulation::Triangulation(const Graph* G, AdjacencyLists* nbhds) :
+    Graph(nbhds),
     G_(G) {
     return;
 }
@@ -38,20 +38,19 @@ Triangulation* Triangulation::New(const Graph* G) {
         delete G;
         exit(EXIT_FAILURE);
     }
-    Triangulation* H = new Triangulation (G);
-    return H;
+    return new Triangulation(G);
 }
 
 Triangulation* Triangulation::New(const Graph* G, const EliminationOrder* eo) {
-    FillEdges* F = eo->ComputeFill();
-    Triangulation* H = new Triangulation(G, F);
-    delete F;
-    return H;
+    return new Triangulation(G, eo->EliminationNbhds());
+}
+
+Triangulation* Triangulation::New(const Graph* G, const FillEdges& F) {
+   return new Triangulation(G, F.FilledNbhds());
 }
 
 Triangulation* Triangulation::New(const Graph* G, const HeuristicRun* R) {
-    Triangulation* H = new Triangulation(G, R->fill_edges());
-    return H;
+    return new Triangulation(G, R->fill_edges().FilledNbhds());
 }
 
 Triangulation* Triangulation::New(const Graph* G, const std::string filename) {
@@ -110,7 +109,7 @@ bool Triangulation::IsMinimalTriangulation() const {
             if (IsFillEdge(u, v)) {
                 FillEdges* subfill = CopyFill();
                 subfill->RemoveEdge(u, v);
-                Triangulation Huv(G_, subfill);
+                Triangulation Huv(G_, subfill->FilledNbhds());
                 if (Huv.IsTriangulated()) {
                     return false;
                 }

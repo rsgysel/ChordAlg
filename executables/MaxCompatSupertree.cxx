@@ -43,10 +43,10 @@ int main(int argc, char* argv[]) {
     CellIntersectionGraph* G = CellIntersectionGraph::New(filename);
     HeuristicRun* R = HeuristicRun::New(
         G, criterion, mode, atoms, runs, deficiency_wt, separation_wt);
-    std::cout << R->fill_edges()->fill_weight()
+    std::cout << R->fill_edges().fill_weight()
               << " Columns / Characters Removed:\n"
               << R->fill_summary() << '\n';
-    Triangulation* H = new Triangulation(G, R->fill_edges());
+    Triangulation* H = Triangulation::New(G, R->fill_edges());
     CliqueTree* CT = MCS::NewCliqueTree(H);
     std::cout << SuperTree::NewickStr(*CT, *G) << '\n';
     delete R;

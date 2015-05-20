@@ -36,7 +36,7 @@ class FillEdges : public std::vector< VertexSet > {
     size_t fill_count() const;
     Weight fill_weight() const;
     // Returns amalgamation of neighborhoods_ and G_->neighborhoods_
-    AdjacencyLists* TriangulationNbhds() const;
+    AdjacencyLists* FilledNbhds() const;
 
  private:
     const Graph* const G_;

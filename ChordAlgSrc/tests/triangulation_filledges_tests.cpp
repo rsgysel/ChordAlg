@@ -32,7 +32,7 @@ class TriangulationTest : public ::testing::Test {
             for (chordalg::VertexPair uv : fill) {
                 F_->AddEdge(uv);
             }
-            H_ = new chordalg::Triangulation(G_, F_);
+            H_ = chordalg::Triangulation::New(G_, *F_);
         }
     }
  protected:

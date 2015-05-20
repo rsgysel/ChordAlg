@@ -94,8 +94,8 @@ void EliminationOrder::Swap(int i, int j) {
 // chordality of graphs, test acyclicity of hypergraphs, and selectively
 // reduce acyclic hypergraphs".
 // SIAM J. Comput., 13:566-579, 1984.
-FillEdges* EliminationOrder::ComputeFill() const {
-    FillEdges* F = new FillEdges(G_);
+AdjacencyLists* EliminationOrder::EliminationNbhds() const {
+    FillEdges F(G_);
     VertexVector follower;
     follower.resize(G_->order());
     VertexVector index;
@@ -104,11 +104,11 @@ FillEdges* EliminationOrder::ComputeFill() const {
         Vertex w = VertexAt(i);
         follower[w] = w;
         index[w] = i;
-        for (Vertex v : LNbhd(w, F)) {
+        for (Vertex v : LNbhd(w, &F)) {
             Vertex x = v;
             while (index[x] < i) {
                 index[x] = i;
-                F->AddEdge(x, w);
+                F.AddEdge(x, w);
                 x = follower[x];
             }
             if (follower[x] == x) {
@@ -116,7 +116,7 @@ FillEdges* EliminationOrder::ComputeFill() const {
             }
         }
     }
-    return F;
+    return F.FilledNbhds();
 }
 
 // Tarjan and Yannakakis' algorithm to check if an elimination order is

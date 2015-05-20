@@ -38,8 +38,8 @@ HeuristicRun::~HeuristicRun() {
 ///////////////
 // HeuristicRun
 
-const FillEdges* HeuristicRun::fill_edges() const {
-    return fill_edges_;
+const FillEdges& HeuristicRun::fill_edges() const {
+    return *fill_edges_;
 }
 
 const std::string& HeuristicRun::fill_summary() const {
@@ -94,7 +94,7 @@ HeuristicRun* HeuristicRun::New(
     // Return columns to remove
     std::set< Color > columns;
     for (Vertex v : *G) {
-        for (Vertex u : (*R->fill_edges())[v]) {
+        for (Vertex u : R->fill_edges()[v]) {
             if (u < v) {
                 for (Color c : G->CommonColors(u, v)) {
                     columns.insert(c);

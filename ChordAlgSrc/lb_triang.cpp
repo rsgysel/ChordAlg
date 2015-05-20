@@ -21,7 +21,7 @@ Triangulation* Run(const Graph* G, const EliminationOrder* eo) {
             F.Saturate(B.NC());
         }
     }
-    Triangulation* H = new Triangulation(G, &F);
+    Triangulation* H = Triangulation::New(G, F);
     if (!eo) {
         delete pi;
     }

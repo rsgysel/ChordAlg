@@ -28,7 +28,7 @@ class HeuristicRun {
         size_t);
     ~HeuristicRun();
 
-    const FillEdges* fill_edges() const;
+    const FillEdges& fill_edges() const;
     const std::string& fill_summary() const;
     const std::string& run_summary() const;
     static HeuristicRun* New(
