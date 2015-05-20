@@ -57,7 +57,7 @@ class CharacterMatrix {
     CharacterMatrix(size_t, size_t, size_t);
 
     std::vector< size_t >& operator[](size_t);
-    const std::vector< size_t >& operator[](size_t i) const;
+    const std::vector< size_t >& operator[](size_t) const;
     void set_max_states(size_t);
     size_t cols() const;
     size_t rows() const;

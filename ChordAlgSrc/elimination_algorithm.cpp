@@ -126,8 +126,8 @@ const std::vector< size_t >& EliminationAlgorithm::tie_count() const {
     return tie_count_;
 }
 
-const FillEdges* EliminationAlgorithm::fill_edges() const {
-    return fill_edges_;
+const FillEdges& EliminationAlgorithm::fill_edges() const {
+    return *fill_edges_;
 }
 
 FillEdges* EliminationAlgorithm::TakeFillEdges() {
@@ -136,8 +136,8 @@ FillEdges* EliminationAlgorithm::TakeFillEdges() {
     return temp;
 }
 
-const EliminationParameters* EliminationAlgorithm::parameters() const {
-    return parameters_;
+const EliminationParameters& EliminationAlgorithm::parameters() const {
+    return *parameters_;
 }
 
 void EliminationAlgorithm::Init() {
@@ -165,7 +165,7 @@ void EliminationAlgorithm::Elimination() {
 void EliminationAlgorithm::Eliminate(Vertex v) {
     if (parameters_->Classic()) {
         Vertices Nv = MonotoneNbhd(v);
-        fill_edges_->Saturate(&Nv);
+        fill_edges_->Saturate(Nv);
         return;
     } else {
         B_->SeparateClosedNbhd(v, fill_edges_);

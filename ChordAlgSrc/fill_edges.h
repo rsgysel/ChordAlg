@@ -26,16 +26,16 @@ class FillEdges : public std::vector< VertexSet > {
     bool IsEdge(Vertex, Vertex) const;
     bool IsFillEdge(VertexPair) const;  // is in F_
     bool IsFillEdge(Vertex, Vertex) const;
-    bool IsClique(const Vertices*) const;
+    bool IsClique(const Vertices&) const;
     bool AddEdge(VertexPair);           // new edge?
     bool AddEdge(Vertex, Vertex);
     void RemoveEdge(VertexPair);
     void RemoveEdge(Vertex, Vertex);
-    void Saturate(const Vertices*);
+    void Saturate(const Vertices&);
 
     size_t fill_count() const;
     Weight fill_weight() const;
-
+    // Returns amalgamation of neighborhoods_ and G_->neighborhoods_
     AdjacencyLists* TriangulationNbhds() const;
 
  private:

@@ -69,9 +69,9 @@ class EliminationAlgorithm {
     std::string str() const;
 
     const std::vector< size_t >& tie_count() const;
-    const FillEdges* fill_edges() const;
+    const FillEdges& fill_edges() const;
     FillEdges* TakeFillEdges();
-    const EliminationParameters* parameters() const;
+    const EliminationParameters& parameters() const;
 
  protected:
     void Init();

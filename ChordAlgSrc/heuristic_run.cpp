@@ -128,11 +128,11 @@ void HeuristicRun::Run() {
                 EliminationAlgorithm algorithm(G, parameters);
                 for (size_t i = 0; i < runs_; ++i) {
                     algorithm.Run();
-                    const FillEdges* fill_edges = algorithm.fill_edges();
+                    const FillEdges& fill_edges = algorithm.fill_edges();
                     if (!best_fill_edges ||
-                        fill_edges->fill_weight() < best_fill_weight) {
+                        fill_edges.fill_weight() < best_fill_weight) {
                         delete best_fill_edges;
-                        best_fill_weight = fill_edges->fill_weight();
+                        best_fill_weight = fill_edges.fill_weight();
                         best_fill_edges = algorithm.TakeFillEdges();
                     }
                 }

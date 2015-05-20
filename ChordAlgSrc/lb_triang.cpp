@@ -18,7 +18,7 @@ Triangulation* Run(const Graph* G, const EliminationOrder* eo) {
         Vertex v = pi->VertexAt(i);
         S.SeparateClosedNbhd(v, &F);
         for (Block B : S) {
-            F.Saturate(&B.NC());
+            F.Saturate(B.NC());
         }
     }
     Triangulation* H = new Triangulation(G, &F);
