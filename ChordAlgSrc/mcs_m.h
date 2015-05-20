@@ -15,7 +15,7 @@ namespace chordalg {
 namespace MCSmPlus {
 
 void Run(
-    const Graph*,
+    const Graph&,
     EliminationOrder*,
     FillEdges*,
     VertexList* minsep_generators = nullptr);
