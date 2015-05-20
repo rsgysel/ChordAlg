@@ -25,15 +25,15 @@ class EliminationOrder {
     explicit EliminationOrder(const Graph*);
     ~EliminationOrder();
 
-    static EliminationOrder* FromFile(const Graph*, std::string);
+    static EliminationOrder* File(const Graph*, std::string);
     void Init();
     void Emplace(Vertex, int);
     void Swap(int, int);
     FillEdges* ComputeFill() const;
     bool IsPerfect() const;
 
-    bool Before(Vertex u, Vertex v) const;
-    int PositionOf(Vertex v) const;
+    bool Before(Vertex, Vertex) const;
+    int PositionOf(Vertex) const;
     Vertex VertexAt(int i) const;
 
     // neighbors of v ``left" (before) v. Unsorted.
@@ -43,7 +43,7 @@ class EliminationOrder {
 
     size_t size() const;
     const Graph* G() const;
-    void SetOrder(VertexVector);
+    void SetOrder(const VertexVector&);
     std::string str() const;
 
  private:

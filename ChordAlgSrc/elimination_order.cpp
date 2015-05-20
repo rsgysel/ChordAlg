@@ -28,7 +28,7 @@ EliminationOrder::~EliminationOrder() {
 ///////////////////
 // EliminationOrder
 
-EliminationOrder* EliminationOrder::FromFile(
+EliminationOrder* EliminationOrder::File(
     const Graph* G,
     std::string filename) {
     EliminationOrder* eo = new EliminationOrder(G);
@@ -200,7 +200,7 @@ const Graph* EliminationOrder::G() const {
     return G_;
 }
 
-void EliminationOrder::SetOrder(VertexVector pi) {
+void EliminationOrder::SetOrder(const VertexVector& pi) {
     if (pi.size() != G_->order()) {
         std::cerr << "Error in SetOrder: elimination order size and graph ";
         std::cerr << "order does not match" << std::endl;
