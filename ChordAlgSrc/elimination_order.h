@@ -29,8 +29,6 @@ class EliminationOrder {
     void Init();
     void Emplace(Vertex, int);
     void Swap(int, int);
-    AdjacencyLists* EliminationNbhds() const;
-    bool IsPerfect() const;
 
     bool Before(Vertex, Vertex) const;
     int PositionOf(Vertex) const;

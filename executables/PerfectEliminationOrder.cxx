@@ -5,6 +5,7 @@
 
 #include <iostream>
 
+#include "ChordAlgSrc/elimination.h"
 #include "ChordAlgSrc/elimination_order.h"
 #include "ChordAlgSrc/graph.h"
 #include "chordalg_options.h"
@@ -16,7 +17,7 @@ int main(int argc, char** argv) {
     ChordAlgOptions(argc, argv, &graph_filename, &eo_filename);
     Graph* G = Graph::New(graph_filename);
     EliminationOrder* eo = EliminationOrder::File(G, eo_filename);
-    if (eo->IsPerfect()) {
+    if (Elimination::ZeroFill(*G, *eo)) {
         std::cout << "Elimination ordering is perfect.\n";
     } else {
         std::cout << "Elimination ordering is not perfect.\n";

@@ -88,67 +88,6 @@ void EliminationOrder::Swap(int i, int j) {
     return;
 }
 
-// Tarjan and Yannakakis' algorithm to compute fill edges from an elimination
-// order, from:
-// R.E. Tarjan and M. Yannakakis. "Simple linear-time algorithms to test
-// chordality of graphs, test acyclicity of hypergraphs, and selectively
-// reduce acyclic hypergraphs".
-// SIAM J. Comput., 13:566-579, 1984.
-AdjacencyLists* EliminationOrder::EliminationNbhds() const {
-    FillEdges F(G_);
-    VertexVector follower;
-    follower.resize(G_->order());
-    VertexVector index;
-    index.resize(G_->order());
-    for (size_t i = 0; i < G_->order(); ++i) {
-        Vertex w = VertexAt(i);
-        follower[w] = w;
-        index[w] = i;
-        for (Vertex v : LNbhd(w, &F)) {
-            Vertex x = v;
-            while (index[x] < i) {
-                index[x] = i;
-                F.AddEdge(x, w);
-                x = follower[x];
-            }
-            if (follower[x] == x) {
-                follower[x] = w;
-            }
-        }
-    }
-    return F.FilledNbhds();
-}
-
-// Tarjan and Yannakakis' algorithm to check if an elimination order is
-// perfect, from:
-// R.E. Tarjan and M. Yannakakis. "Simple linear-time algorithms to test
-// chordality of graphs, test acyclicity of hypergraphs, and selectively
-// reduce acyclic hypergraphs".
-// SIAM J. Comput., 13:566-579, 1984.
-bool EliminationOrder::IsPerfect() const {
-    VertexVector follower;
-    follower.resize(G_->order());
-    VertexVector index;
-    index.resize(G_->order());
-    for (size_t i = 0; i < G_->order(); ++i) {
-        Vertex w = VertexAt(i);
-        follower[w] = w;
-        index[w] = i;
-        for (Vertex v : LNbhd(w)) {
-            index[v] = i;
-            if (follower[v] == v) {
-                follower[v] = w;
-            }
-        }
-        for (Vertex v : LNbhd(w)) {
-            if (index[follower[v]] < i) {
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
 bool EliminationOrder::Before(Vertex u, Vertex v) const {
     return alpha_inverse_[u] < alpha_inverse_[v];
 }

@@ -1,5 +1,6 @@
 #include "ChordAlgSrc/triangulation.h"
 
+#include "ChordAlgSrc/elimination.h"
 #include "ChordAlgSrc/fill_edges.h"
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/graph_file.h"
@@ -42,7 +43,7 @@ Triangulation* Triangulation::New(const Graph* G) {
 }
 
 Triangulation* Triangulation::New(const Graph* G, const EliminationOrder& eo) {
-    return new Triangulation(G, eo.EliminationNbhds());
+    return new Triangulation(G, Elimination::FillIn(*G, eo));
 }
 
 Triangulation* Triangulation::New(const Graph* G, const FillEdges& F) {
@@ -88,9 +89,7 @@ bool Triangulation::IsTriangulated() const {
 
 bool Triangulation::IsTriangulated(const Graph& G) {
     chordalg::EliminationOrder* eo = MCS::Run(G);
-    Triangulation* H = Triangulation::New(&G, *eo);
-    bool result = G.IsIsomorphic(*H);
-    delete H;
+    bool result = Elimination::ZeroFill(G, *eo);
     delete eo;
     return result;
 }

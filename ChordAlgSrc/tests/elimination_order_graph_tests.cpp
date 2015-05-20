@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 
+#include "ChordAlgSrc/elimination.h"
 #include "ChordAlgSrc/elimination_order.h"
 #include "ChordAlgSrc/graph.h"
 #include "test_graphs.h"
@@ -32,10 +33,10 @@ class EliminationOrderTest : public ::testing::Test {
 
 TEST_F(EliminationOrderTest, IndependentSetIsPerfect) {
     Read(independent_set);
-    EXPECT_EQ(eo_->IsPerfect(), true);
+    EXPECT_EQ(chordalg::Elimination::ZeroFill(*G_, *eo_), true);
 }
 
 TEST_F(EliminationOrderTest, TwoCliquesIsPerfect) {
     Read(two_cliques);
-    EXPECT_EQ(eo_->IsPerfect(), true);
+    EXPECT_EQ(chordalg::Elimination::ZeroFill(*G_, *eo_), true);
 }

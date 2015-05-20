@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 
+#include "ChordAlgSrc/elimination.h"
 #include "ChordAlgSrc/elimination_order.h"
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/mcs.h"
@@ -56,15 +57,15 @@ TEST_F(MCSTest, TreeTriangulation) {
 
 TEST_F(MCSTest, BipartiteReductionNotPerfect) {
     Read(bipartite_reduction);
-    EXPECT_EQ(eo_->IsPerfect(), false);
+    EXPECT_EQ(chordalg::Elimination::ZeroFill(*G_, *eo_), false);
 }
 
 TEST_F(MCSTest, ManyMinsepsFourNotPerfect) {
     Read(many_minseps_four);
-    EXPECT_EQ(eo_->IsPerfect(), false);
+    EXPECT_EQ(chordalg::Elimination::ZeroFill(*G_, *eo_), false);
 }
 
 TEST_F(MCSTest, TreeIsPerfect) {
     Read(tree);
-    EXPECT_EQ(eo_->IsPerfect(), true);
+    EXPECT_EQ(chordalg::Elimination::ZeroFill(*G_, *eo_), true);
 }

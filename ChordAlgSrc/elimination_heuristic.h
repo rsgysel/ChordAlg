@@ -2,8 +2,8 @@
  *  elimination_heuristic.h - base class for vertex elimination algorithms
  */
 
-#ifndef CHORDALGSRC_ELIMINATION_ALGORITHM_H_
-#define CHORDALGSRC_ELIMINATION_ALGORITHM_H_
+#ifndef CHORDALGSRC_ELIMINATION_HEURISTIC_H_
+#define CHORDALGSRC_ELIMINATION_HEURISTIC_H_
 
 #include <map>
 #include <string>
@@ -102,4 +102,4 @@ class EliminationHeuristic {
 
 }  // namespace chordalg
 
-#endif  // CHORDALGSRC_ELIMINATION_ALGORITHM_H_
+#endif  // CHORDALGSRC_ELIMINATION_HEURISTIC_H_
