@@ -126,7 +126,6 @@ class CellIntGraphFR : public CharacterIntGraphFR {
 
     virtual ~CellIntGraphFR();
 
-    LexTrie* TakeSubsetFamily();
     std::vector< Multicolor >* TakeVertexColors();
 
     static CellIntGraphFR* New(const std::string&);
@@ -134,13 +133,11 @@ class CellIntGraphFR : public CharacterIntGraphFR {
 
  protected:
     explicit CellIntGraphFR(GraphFile*);
-
     void AddVertex(const FiniteSet&, const CharacterMatrix&, size_t);
 
-    LexTrie* subset_family_;
     std::vector< Multicolor >* vertex_colors_;
-
     std::map< const LexTrieNode*, Vertex > cell_id_;
+    LexTrie* cells_;
 };  // CellIntGraphFR
 
 }  // namespace chordalg

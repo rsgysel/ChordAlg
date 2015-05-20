@@ -11,7 +11,6 @@
 #include "ChordAlgSrc/file_reader.h"
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/graph_file.h"
-#include "ChordAlgSrc/lex_trie.h"
 #include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
@@ -85,11 +84,8 @@ class CellIntersectionGraph : public CharacterIntersectionGraph {
     size_t CommonColorCount(Vertex, Vertex) const;
     size_t CommonColorCount(VertexPair) const;
 
-    const LexTrie* subset_family() const;
-
  protected:
     const std::vector< Multicolor >* vertex_colors_;
-    const LexTrie* subset_family_;
 };  // CellIntersectionGraph
 
 }  // namespace chordalg

@@ -8,7 +8,6 @@
 #include "ChordAlgSrc/file_reader.h"
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/graph_file.h"
-#include "ChordAlgSrc/lex_trie.h"
 
 namespace chordalg {
 
@@ -41,13 +40,11 @@ PartitionIntersectionGraph::~PartitionIntersectionGraph() {
 
 CellIntersectionGraph::CellIntersectionGraph(CellIntGraphFR* fr) :
     CharacterIntersectionGraph(fr),
-    vertex_colors_(fr->TakeVertexColors()),
-    subset_family_(fr->TakeSubsetFamily()) {
+    vertex_colors_(fr->TakeVertexColors()) {
     return;
 }
 
 CellIntersectionGraph::~CellIntersectionGraph() {
-    delete subset_family_;
     return;
 }
 
@@ -169,10 +166,6 @@ size_t CellIntersectionGraph::CommonColorCount(Vertex u, Vertex v) const {
 
 size_t CellIntersectionGraph::CommonColorCount(VertexPair uv) const {
     return CommonColorCount(uv.first, uv.second);
-}
-
-const LexTrie* CellIntersectionGraph::subset_family() const {
-    return subset_family_;
 }
 
 }  // namespace chordalg

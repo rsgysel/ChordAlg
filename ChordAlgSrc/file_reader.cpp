@@ -81,13 +81,13 @@ PartitionIntGraphFR::~PartitionIntGraphFR() {
 
 CellIntGraphFR::CellIntGraphFR(GraphFile* file) :
     CharacterIntGraphFR(file),
-    subset_family_(nullptr),
-    vertex_colors_(new std::vector< Multicolor >()) {
+    vertex_colors_(new std::vector< Multicolor >()),
+    cells_(nullptr) {
     return;
 }
 
 CellIntGraphFR::~CellIntGraphFR() {
-    delete subset_family_;
+    delete cells_;
     delete vertex_colors_;
     return;
 }
@@ -506,12 +506,6 @@ void PartitionIntGraphFR::AddVertex(
 /////////////////
 // CellIntGraphFR
 
-LexTrie* CellIntGraphFR::TakeSubsetFamily() {
-    LexTrie* temp = nullptr;
-    std::swap(temp, subset_family_);
-    return temp;
-}
-
 std::vector< Multicolor >* CellIntGraphFR::TakeVertexColors() {
     std::vector< Multicolor >* temp = nullptr;
     std::swap(temp, vertex_colors_);
@@ -536,12 +530,12 @@ void CellIntGraphFR::AddVertex(
     const CharacterMatrix& M,
     size_t col) {
     if (!C.empty()) {
-        if (!subset_family_) {
-            subset_family_ = new LexTrie(M.rows());
+        if (!cells_) {
+            cells_ = new LexTrie(M.rows());
         }
         bool new_cell;
         const LexTrieNode* node =
-                subset_family_->Insert(&C, &new_cell);
+                cells_->Insert(&C, &new_cell);
         if (new_cell) {
             size_t cell = subsets_->size();
             cell_id_[node] = cell;
