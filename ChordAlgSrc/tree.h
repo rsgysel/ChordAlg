@@ -26,7 +26,7 @@ class Tree : public Graph {
     std::string strNewick() const;
     std::string strNewick(Vertex) const;
  protected:
-    std::string NewickVisit(VertexSet*, Vertex) const;
+    std::string NewickVisit(Vertex, VertexSet*) const;
 };  // Tree
 
 }  // namespace chordalg

@@ -50,13 +50,13 @@ std::string Tree::strNewick() const {
 std::string Tree::strNewick(Vertex v) const {
     std::string str;
     VertexSet* visited = new VertexSet();
-    str += NewickVisit(visited, v);
+    str += NewickVisit(v, visited);
     str += ";";
     delete visited;
     return str;
 }
 
-std::string Tree::NewickVisit(VertexSet* visited, Vertex v) const {
+std::string Tree::NewickVisit(Vertex v, VertexSet* visited) const {
     std::string str;
     visited->insert(v);
     bool is_leaf = true;
@@ -64,7 +64,7 @@ std::string Tree::NewickVisit(VertexSet* visited, Vertex v) const {
     for (Vertex u : N(v)) {
         if (visited->find(u) == visited->end()) {
             is_leaf = false;
-            subtree += NewickVisit(visited, u);
+            subtree += NewickVisit(u, visited);
             subtree += ",";
         }
     }
