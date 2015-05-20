@@ -32,7 +32,7 @@ class TreeRepresentation {
     std::string str() const;
 
  protected:
-    VertexNames NamesFromCliqueMap(const Graph* G, const CliqueMap* K) const;
+    static VertexNames NamesFromCliqueMap(const Graph&, const CliqueMap&);
 
     const Triangulation* H_;    // represented chordal graph
     const Tree* T_;     // host tree

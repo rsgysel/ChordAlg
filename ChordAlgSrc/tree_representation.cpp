@@ -17,7 +17,7 @@ TreeRepresentation::TreeRepresentation(
     AdjacencyLists* E,
     CliqueMap* K) :
     H_(H),
-    T_(new Tree(E, NamesFromCliqueMap(H, K))),
+    T_(new Tree(E, NamesFromCliqueMap(*H, *K))),
     K_(K) {
     return;
 }
@@ -58,16 +58,16 @@ std::string TreeRepresentation::str() const {
 }
 
 VertexNames TreeRepresentation::NamesFromCliqueMap(
-    const Graph* G,
-    const CliqueMap* K) const {
+    const Graph& G,
+    const CliqueMap& K) {
     VertexNames names;
-    names.resize(K->size());
-    for (Vertex v = 0; v < K->size(); ++v) {
+    names.resize(K.size());
+    for (Vertex v = 0; v < K.size(); ++v) {
         std::string maxclique("{");
-        for (Vertex u : (*K)[v]) {
-            maxclique += G->name(u) + std::string(",");
+        for (Vertex u : K[v]) {
+            maxclique += G.name(u) + std::string(",");
         }
-        if (!(*K)[v].empty()) {
+        if (!K[v].empty()) {
             maxclique.pop_back();
         }
         maxclique += std::string("}");
