@@ -9,7 +9,7 @@
 #include <iostream>
 #include <string>
 
-#include "ChordAlgSrc/elimination_algorithm.h"
+#include "ChordAlgSrc/elimination_heuristic.h"
 #include "ChordAlgSrc/heuristic_run.h"
 #include "ChordAlgSrc/intersection_graph.h"
 #include "ChordAlgSrc/mcs.h"

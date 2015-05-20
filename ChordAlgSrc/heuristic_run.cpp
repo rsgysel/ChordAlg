@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "ChordAlgSrc/atoms.h"
-#include "ChordAlgSrc/elimination_algorithm.h"
+#include "ChordAlgSrc/elimination_heuristic.h"
 #include "ChordAlgSrc/file_reader.h"
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/intersection_graph.h"
@@ -125,7 +125,7 @@ void HeuristicRun::Run() {
             double best_fill_weight = DBL_MAX;
             FillEdges* best_fill_edges = nullptr;
             for (auto parameters : *elimination_parameters_) {
-                EliminationAlgorithm algorithm(G, parameters);
+                EliminationHeuristic algorithm(G, parameters);
                 for (size_t i = 0; i < runs_; ++i) {
                     algorithm.Run();
                     const FillEdges& fill_edges = algorithm.fill_edges();

@@ -1,5 +1,5 @@
 /*
- *  elimination_algorithm.h - base class for vertex elimination algorithms
+ *  elimination_heuristic.h - base class for vertex elimination algorithms
  */
 
 #ifndef CHORDALGSRC_ELIMINATION_ALGORITHM_H_
@@ -55,14 +55,14 @@ class EliminationParameters {
     float deficiency_wt_, separation_wt_;
 };  // EliminationParameters
 
-class EliminationAlgorithm {
+class EliminationHeuristic {
  public:
-    EliminationAlgorithm() = delete;
-    EliminationAlgorithm(const EliminationAlgorithm&) = delete;
-    void operator=(const EliminationAlgorithm&) = delete;
+    EliminationHeuristic() = delete;
+    EliminationHeuristic(const EliminationHeuristic&) = delete;
+    void operator=(const EliminationHeuristic&) = delete;
 
-    explicit EliminationAlgorithm(const Graph*, const EliminationParameters*);
-    virtual ~EliminationAlgorithm();
+    explicit EliminationHeuristic(const Graph*, const EliminationParameters*);
+    virtual ~EliminationHeuristic();
 
     virtual void Run();
 
@@ -98,7 +98,7 @@ class EliminationAlgorithm {
 
     SeparatorBlocks* B_;
     std::map< VertexPair, Weight > unseparated_pairs_;
-};  // EliminationAlgorithm
+};  // EliminationHeuristic
 
 }  // namespace chordalg
 

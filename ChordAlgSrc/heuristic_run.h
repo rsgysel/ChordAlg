@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-#include "ChordAlgSrc/elimination_algorithm.h"
+#include "ChordAlgSrc/elimination_heuristic.h"
 #include "ChordAlgSrc/fill_edges.h"
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/intersection_graph.h"

@@ -1,4 +1,4 @@
-#include "ChordAlgSrc/elimination_algorithm.h"
+#include "ChordAlgSrc/elimination_heuristic.h"
 
 #include <cstdlib>
 #include <algorithm>
@@ -30,7 +30,7 @@ EliminationParameters::EliminationParameters(
     return;
 }
 
-EliminationAlgorithm::EliminationAlgorithm(
+EliminationHeuristic::EliminationHeuristic(
     const Graph* G,
     const EliminationParameters* parameters) :
     G_(G),
@@ -47,7 +47,7 @@ EliminationAlgorithm::EliminationAlgorithm(
     return;
 }
 
-EliminationAlgorithm::~EliminationAlgorithm() {
+EliminationHeuristic::~EliminationHeuristic() {
     delete B_;
     return;
 }
@@ -85,9 +85,9 @@ bool EliminationParameters::Mixed() const {
 }
 
 ///////////////////////
-// EliminationAlgorithm
+// EliminationHeuristic
 
-void EliminationAlgorithm::Run() {
+void EliminationHeuristic::Run() {
     delete fill_edges_;
     fill_edges_ = new FillEdges(G_);
     for (Vertex v : *G_) {
@@ -110,7 +110,7 @@ void EliminationAlgorithm::Run() {
     return;
 }
 
-std::string EliminationAlgorithm::str() const {
+std::string EliminationHeuristic::str() const {
     std::string Estr = "elimination order:\t";
     Estr += eo_.str();
     Estr += "\ntie distribution:\t";
@@ -122,25 +122,25 @@ std::string EliminationAlgorithm::str() const {
     return Estr;
 }
 
-const std::vector< size_t >& EliminationAlgorithm::tie_count() const {
+const std::vector< size_t >& EliminationHeuristic::tie_count() const {
     return tie_count_;
 }
 
-const FillEdges& EliminationAlgorithm::fill_edges() const {
+const FillEdges& EliminationHeuristic::fill_edges() const {
     return *fill_edges_;
 }
 
-FillEdges* EliminationAlgorithm::TakeFillEdges() {
+FillEdges* EliminationHeuristic::TakeFillEdges() {
     FillEdges* temp = nullptr;
     std::swap(temp, fill_edges_);
     return temp;
 }
 
-const EliminationParameters& EliminationAlgorithm::parameters() const {
+const EliminationParameters& EliminationHeuristic::parameters() const {
     return *parameters_;
 }
 
-void EliminationAlgorithm::Init() {
+void EliminationHeuristic::Init() {
     int n = G_->order();
     tie_count_.resize(n);
     if (!parameters_->Classic()) {
@@ -149,7 +149,7 @@ void EliminationAlgorithm::Init() {
     return;
 }
 
-void EliminationAlgorithm::Elimination() {
+void EliminationHeuristic::Elimination() {
     for (size_t i = 0; i < G_->order(); ++i) {
         VertexWeight vc = ArgMin();
         Vertex v = vc.first;
@@ -162,7 +162,7 @@ void EliminationAlgorithm::Elimination() {
     return;
 }
 
-void EliminationAlgorithm::Eliminate(Vertex v) {
+void EliminationHeuristic::Eliminate(Vertex v) {
     if (parameters_->Classic()) {
         Vertices Nv = MonotoneNbhd(v);
         fill_edges_->Saturate(Nv);
@@ -179,7 +179,7 @@ void EliminationAlgorithm::Eliminate(Vertex v) {
     }
 }
 
-VertexWeight EliminationAlgorithm::ArgMin() {
+VertexWeight EliminationHeuristic::ArgMin() {
     Weight min = MAX_WEIGHT;
     for (Vertex v : remaining_vertices_) {
         std::pair< Weight, Weight > wc = WeightOf(v);
@@ -196,12 +196,12 @@ VertexWeight EliminationAlgorithm::ArgMin() {
     return TieBreak();
 }
 
-VertexWeight EliminationAlgorithm::TieBreak() {
+VertexWeight EliminationHeuristic::TieBreak() {
     int i = rand() % ties_.size();
     return ties_[i];
 }
 
-Vertices EliminationAlgorithm::MonotoneNbhd(Vertex v) {
+Vertices EliminationHeuristic::MonotoneNbhd(Vertex v) {
     Vertices N_alpha;
     for (Vertex u : G_->N(v)) {
         if (!IsRemoved(u)) {
@@ -216,11 +216,11 @@ Vertices EliminationAlgorithm::MonotoneNbhd(Vertex v) {
     return N_alpha;
 }
 
-bool EliminationAlgorithm::IsRemoved(Vertex v) {
+bool EliminationHeuristic::IsRemoved(Vertex v) {
     return remaining_vertices_.find(v) == remaining_vertices_.end();
 }
 
-std::pair< Weight, Weight > EliminationAlgorithm::WeightOf(Vertex v) {
+std::pair< Weight, Weight > EliminationHeuristic::WeightOf(Vertex v) {
     if (parameters_->LBElimination()) {
         Weight deficiency_wt = 0, separated_wt = 0;
         B_->SeparateClosedNbhd(v, fill_edges_);

@@ -1,7 +1,7 @@
 add_library(ChordAlgLib
                 atoms.cpp
                 chordalg_string.cpp
-                elimination_algorithm.cpp
+                elimination_heuristic.cpp
                 elimination_order.cpp
                 file_reader.cpp
                 fill_edges.cpp
