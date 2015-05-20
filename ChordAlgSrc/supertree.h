@@ -7,6 +7,8 @@
 #ifndef CHORDALGSRC_SUPERTREE_H_
 #define CHORDALGSRC_SUPERTREE_H_
 
+#include <string>
+
 #include "ChordAlgSrc/intersection_graph.h"
 #include "ChordAlgSrc/tree_representation.h"
 

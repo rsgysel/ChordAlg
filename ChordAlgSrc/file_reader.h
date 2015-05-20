@@ -89,7 +89,9 @@ class CharacterIntGraphFR : public GraphFR {
     void ReadFileOrDie();
     void ComputeGraphData();
     void TieSubsetsToVertices(const CharacterMatrix&);
-    virtual void AddVertex(const FiniteSet&, const CharacterMatrix&, size_t) = 0;
+    virtual void AddVertex(
+        const FiniteSet&,
+        const CharacterMatrix&, size_t) = 0;
     CharacterMatrix* ParseMatrix();
     CharacterMatrix* ParseNexusMRP();
 

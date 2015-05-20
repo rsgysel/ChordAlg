@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <string>
 
 #include "ChordAlgSrc/graph.h"
 

@@ -6,7 +6,9 @@
 #ifndef CHORDALGSRC_MINIMAL_SEPARATORS_H_
 #define CHORDALGSRC_MINIMAL_SEPARATORS_H_
 
+#include <stack>
 #include <string>
+#include <vector>
 
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/vertices.h"

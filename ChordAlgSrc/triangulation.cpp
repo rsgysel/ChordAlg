@@ -1,5 +1,7 @@
 #include "ChordAlgSrc/triangulation.h"
 
+#include <string>
+
 #include "ChordAlgSrc/elimination.h"
 #include "ChordAlgSrc/fill_edges.h"
 #include "ChordAlgSrc/graph.h"
@@ -47,7 +49,7 @@ Triangulation* Triangulation::New(const Graph* G, const EliminationOrder& eo) {
 }
 
 Triangulation* Triangulation::New(const Graph* G, const FillEdges& F) {
-   return new Triangulation(G, F.FilledNbhds());
+    return new Triangulation(G, F.FilledNbhds());
 }
 
 Triangulation* Triangulation::New(const Graph* G, const HeuristicRun& R) {

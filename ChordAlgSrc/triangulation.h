@@ -9,6 +9,8 @@
 #ifndef CHORDALGSRC_TRIANGULATION_H_
 #define CHORDALGSRC_TRIANGULATION_H_
 
+#include <string>
+
 #include "ChordAlgSrc/elimination_order.h"
 #include "ChordAlgSrc/fill_edges.h"
 #include "ChordAlgSrc/file_reader.h"

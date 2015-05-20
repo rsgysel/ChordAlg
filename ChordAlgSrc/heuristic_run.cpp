@@ -161,7 +161,9 @@ void HeuristicRun::Run() {
     return;
 }
 
-bool HeuristicRun::Compatible(EliminationMode mode, EliminationCriterion criterion) {
+bool HeuristicRun::Compatible(
+    EliminationMode mode,
+    EliminationCriterion criterion) {
     if (mode == EliminationMode::CLASSIC) {
         if (criterion == EliminationCriterion::DEFICIENCY) {
             return true;

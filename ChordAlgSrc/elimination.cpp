@@ -69,7 +69,7 @@ bool ZeroFill(const Graph& G, const EliminationOrder& eo) {
     }
     return true;
 }
-\
-}  // namespace EliminationOrder
+
+}  // namespace Elimination
 
 }  // namespace chordalg

@@ -16,4 +16,4 @@ bool ZeroFill(const Graph&, const EliminationOrder&);
 
 }  // namespace chordalg
 
-#endif
+#endif  // CHORDALGSRC_ELIMINATION_H_

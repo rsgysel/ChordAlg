@@ -2,6 +2,8 @@
 
 #include <algorithm>
 #include <iostream>
+#include <map>
+#include <set>
 #include <string>
 
 #include "ChordAlgSrc/chordalg_string.h"
@@ -59,7 +61,8 @@ EliminationOrder* EliminationOrder::File(
     // Check that elimination order file is a permutation
     if (vertices_emplaced.size() != G->order() ||
         tokens.size() != G->order()) {
-        std::cerr << "File " << filename << " is not an elimination ordering (permutation)\n";
+        std::cerr << "File " << filename
+                  << " is not an elimination ordering (permutation)\n";
         exit(EXIT_FAILURE);
     }
     return eo;

@@ -1,5 +1,7 @@
 #include "ChordAlgSrc/tree.h"
 
+#include <string>
+
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/separator.h"
 #include "ChordAlgSrc/vertices.h"

@@ -8,6 +8,8 @@
 #ifndef CHORDALGSRC_TREE_H_
 #define CHORDALGSRC_TREE_H_
 
+#include <string>
+
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/vertices.h"
 
@@ -19,8 +21,8 @@ class Tree : public Graph {
     Tree(const Tree&) = delete;
     void operator=(const Tree&) = delete;
 
-    Tree(AdjacencyLists*);
-    Tree(AdjacencyLists*, VertexNames);
+    explicit Tree(AdjacencyLists*);
+    explicit Tree(AdjacencyLists*, VertexNames);
 
     bool IsTree() const;
     std::string strNewick() const;

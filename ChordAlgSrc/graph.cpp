@@ -2,8 +2,10 @@
 
 #include <algorithm>
 #include <map>
+#include <set>
 #include <string>
 #include <vector>
+#include <utility>
 
 #include "ChordAlgSrc/elimination_order.h"
 #include "ChordAlgSrc/file_reader.h"

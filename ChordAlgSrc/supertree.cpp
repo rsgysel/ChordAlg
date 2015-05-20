@@ -1,5 +1,9 @@
 #include "ChordAlgSrc/supertree.h"
 
+#include <map>
+#include <string>
+#include <utility>
+
 #include "ChordAlgSrc/intersection_graph.h"
 #include "ChordAlgSrc/tree.h"
 #include "ChordAlgSrc/tree_representation.h"
