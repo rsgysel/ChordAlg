@@ -1,2 +1,3 @@
 [ ] Analyze/Optimize CellIntersectionGraph::CommonColors
 [ ] Smart Pointers
+[ ] Remove SeparatorComponents::GetNeighborhood? Something smells funny.

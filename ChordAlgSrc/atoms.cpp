@@ -83,7 +83,7 @@ void Atoms::ComputeAtoms() {
             for (Vertex u : deleted_vertices) {
                 S.push_back(u);
             }
-            cc.Separate(&S);
+            cc.Separate(S);
             Vertices C = cc.ConnectedComponent(v);
             Vertices atom;
             for (Vertex u : C) {

@@ -26,7 +26,7 @@ bool Tree::IsTree() const {
     }
     SeparatorComponents S(this);
     Vertices V;
-    S.Separate(&V);
+    S.Separate(V);
     return S.size() == 1;
 }
 

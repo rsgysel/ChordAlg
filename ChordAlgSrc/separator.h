@@ -42,9 +42,9 @@ class SeparatorComponents {
     explicit SeparatorComponents(const Graph*);
     virtual ~SeparatorComponents();
 
-    const Vertices* GetNeighborhood(Vertex, const FillEdges* fill = nullptr);
+    const Vertices& GetNeighborhood(Vertex, const FillEdges* fill = nullptr);
     void SeparateClosedNbhd(Vertex, const FillEdges* fill = nullptr);
-    virtual void Separate(const Vertices*,
+    virtual void Separate(const Vertices&,
                           const FillEdges* fill = nullptr,
                           const Vertex* v = nullptr);
     Vertices ConnectedComponent(Vertex) const;
@@ -59,11 +59,11 @@ class SeparatorComponents {
     // AreSeparated is not the complement of AreConnected, because vertices in
     // S_ are neither connected or separated
     bool AreSeparated(Vertex, Vertex) const;
-    bool IsSeparated(Vertices) const;
+    bool IsSeparated(const Vertices&) const;
     virtual std::string str() const;
 
  protected:
-    void InitializeSeparator(const Vertices*, const Vertex* v = nullptr);
+    void InitializeSeparator(const Vertices&, const Vertex* v = nullptr);
     virtual void FindComponents(const FillEdges* fill = nullptr);
     bool IsUnsearched(Vertex) const;
 
@@ -83,12 +83,12 @@ class SeparatorBlocks : public SeparatorComponents {
     explicit SeparatorBlocks(const Graph*);
     ~SeparatorBlocks();
 
-    void Separate(const Vertices*,
+    void Separate(const Vertices&,
                   const FillEdges* fill = nullptr,
                   const Vertex* v = nullptr);
     std::vector< Block >::const_iterator begin() const;
     std::vector< Block >::const_iterator end() const;
-    bool IsFull(const Block*) const;
+    bool IsFull(const Block&) const;
     const Vertices& Component(ConnectedComponentID C) const;
     const Vertices& NComponent(ConnectedComponentID C) const;
     const Block& BlockOf(Vertex v) const;
@@ -101,7 +101,7 @@ class SeparatorBlocks : public SeparatorComponents {
 
  private:
     virtual void FindComponents(const FillEdges*);
-    void FindNeighborhoods(const Vertices*, const FillEdges*);
+    void FindNeighborhoods(const Vertices&, const FillEdges*);
 
     std::vector< Block > blocks_;
     std::vector< int > last_separator_vertex_seen_;

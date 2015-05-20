@@ -63,7 +63,7 @@ VertexName SeparatorGraph::name(Vertex v) const {
 // uv is an edge iff S_u crosses (separates) S_v
 bool SeparatorGraph::IsEdge(Vertex u, Vertex v) const {
     SeparatorComponents S(G_);
-    S.Separate(&(*M_)[u]);
+    S.Separate((*M_)[u]);
     return S.IsSeparated((*M_)[v]);
 }
 
@@ -76,7 +76,7 @@ void SeparatorGraph::ComputeCrossingRelations() {
     crossing_relations_.resize(M_->size());
     // Compute crossing relations
     for (auto U : *M_) {
-        S_.Separate(&U);
+        S_.Separate(U);
         size_t j = 0;
         for (auto W : *M_) {
             if (i < j && S_.IsSeparated(W)) {

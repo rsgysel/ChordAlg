@@ -20,7 +20,7 @@ class SeparatorComponentsTest : public ::testing::Test {
         delete G_;
         delete S_;
     }
-    void Read(chordalg::AdjacencyLists& A, chordalg::Vertices* X) {
+    void Read(const chordalg::AdjacencyLists& A, const chordalg::Vertices& X) {
         if (G_) {
             FAIL() << "Use Read once in your test.";
         } else {
@@ -49,20 +49,17 @@ TYPED_TEST_CASE(SeparatorComponentsTest, SeparatorTypes);
 // Typed Tests
 
 TYPED_TEST(SeparatorComponentsTest, Connected) {
-    chordalg::Vertices V = {};
-    this->Read(connected_components_test, &V);
+    this->Read(connected_components_test, chordalg::Vertices());
     EXPECT_EQ(this->S_->size(), 1);
 }
 
 TYPED_TEST(SeparatorComponentsTest, Size) {
-    chordalg::Vertices V = {0, 1, 2, 3};
-    this->Read(connected_components_test, &V);
+    this->Read(connected_components_test, chordalg::Vertices({0, 1, 2, 3}));
     EXPECT_EQ(this->S_->size(), 4);
 }
 
 TYPED_TEST(SeparatorComponentsTest, Searched) {
-    chordalg::Vertices V = {};
-    this->Read(connected_components_test, &V);
+    this->Read(connected_components_test, chordalg::Vertices());
     for (auto v : *(this->G_)) {
         EXPECT_NE(this->S_->ComponentId(v), this->S_->kUnsearched());
     }
@@ -70,8 +67,7 @@ TYPED_TEST(SeparatorComponentsTest, Searched) {
 
 // Compares ComponentId of adjacent vertices not in the separator
 TYPED_TEST(SeparatorComponentsTest, NeighborsConnected) {
-    chordalg::Vertices V = {0, 1, 2, 3};
-    this->Read(connected_components_test, &V);
+    this->Read(connected_components_test, chordalg::Vertices({0, 1, 2, 3}));
     EXPECT_EQ(this->S_->size(), 4);
     for (auto v : *(this->G_)) {
         if (!this->S_->IsInSeparator(v)) {
@@ -90,8 +86,7 @@ TYPED_TEST(SeparatorComponentsTest, NeighborsConnected) {
 TEST(BlockTest, EmptySeparatorNeighborhoodSize) {
     chordalg::Graph G(new chordalg::AdjacencyLists(connected_components_test));
     chordalg::SeparatorBlocks S(&G);
-    chordalg::Vertices V = {};
-    S.Separate(&V);
+    S.Separate(chordalg::Vertices());
     for (auto B : S) {
         EXPECT_EQ(B.NC().size(), 0);
     }
@@ -100,8 +95,7 @@ TEST(BlockTest, EmptySeparatorNeighborhoodSize) {
 TEST(BlockTest, NeighborhoodSizes) {
     chordalg::Graph G(new chordalg::AdjacencyLists(connected_components_test));
     chordalg::SeparatorBlocks S(&G);
-    chordalg::Vertices V = {0, 1, 2, 3};
-    S.Separate(&V);
+    S.Separate(chordalg::Vertices({0, 1, 2, 3}));
     size_t i = 0, neighborhood_sizes[]{4, 1, 2, 4};
     for (auto B : S) {
         EXPECT_EQ(B.NC().size(), neighborhood_sizes[i]);
