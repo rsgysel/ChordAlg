@@ -28,15 +28,15 @@ class Triangulation : public Graph {
     explicit Triangulation(const Graph*, GraphFR*);
 
     static Triangulation* New(const Graph*);
-    static Triangulation* New(const Graph*, const EliminationOrder*);
+    static Triangulation* New(const Graph*, const EliminationOrder&);
     static Triangulation* New(const Graph*, const FillEdges&);
-    static Triangulation* New(const Graph*, const HeuristicRun*);
-    static Triangulation* New(const Graph*, const std::string);
+    static Triangulation* New(const Graph*, const HeuristicRun&);
+    static Triangulation* New(const Graph*, const std::string&);
     VertexName name(Vertex v) const;
     bool IsFillEdge(Vertex, Vertex) const;
     bool IsFillEdge(VertexPair) const;
     bool IsTriangulated() const;
-    static bool IsTriangulated(const Graph*);
+    static bool IsTriangulated(const Graph&);
     bool IsMinimalTriangulation() const;
     FillEdges* CopyFill() const;
     const Graph& G() const;

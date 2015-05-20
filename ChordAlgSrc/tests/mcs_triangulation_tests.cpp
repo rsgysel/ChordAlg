@@ -24,7 +24,7 @@ class MCSTest : public ::testing::Test {
         } else {
             G_ = new chordalg::Graph(new chordalg::AdjacencyLists(A));
             eo_ = chordalg::MCS::Run(*G_);
-            H_ = chordalg::Triangulation::New(G_, eo_);
+            H_ = chordalg::Triangulation::New(G_, *eo_);
         }
     }
  protected:

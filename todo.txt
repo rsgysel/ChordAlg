@@ -1,5 +1,7 @@
-[ ] Analyze/Optimize CellIntersectionGraph::CommonColors
+[ ] GraphFile / FileReader GML format
+[ ] GraphFile / FileReader DOT format
 [ ] Smart Pointers
+[ ] Analyze/Optimize CellIntersectionGraph::CommonColors
 [ ] EliminationAlgorithm -> EliminationHeuristics
 [ ] EliminationOrder::EliminationFill -> chordalg::EliminationAlgorithms?
     Not if de-coupling from EliminationOrder is prohibative

@@ -29,7 +29,7 @@ class MCSmPlusTest : public ::testing::Test {
             eo_ = new chordalg::EliminationOrder(G_);
             F_ = new chordalg::FillEdges(G_);
             chordalg::MCSmPlus::Run(*G_, eo_, F_);
-            H_ = chordalg::Triangulation::New(G_, eo_);
+            H_ = chordalg::Triangulation::New(G_, *eo_);
             EXPECT_EQ(H_->IsMinimalTriangulation(), true);
         }
     }

@@ -14,7 +14,7 @@ int main(int argc, char** argv) {
     std::string filename;
     ChordAlgOptions(argc, argv, &filename);
     Graph* G = Graph::New(filename);
-    if (Triangulation::IsTriangulated(G)) {
+    if (Triangulation::IsTriangulated(*G)) {
         std::cout << "Graph is chordal.\n";
     } else {
         std::cout << "Graph is not chordal.\n";

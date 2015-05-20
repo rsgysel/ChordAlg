@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
     ChordAlgOptions(argc, argv, &graph_filename, &eo_filename);
     Graph* G = Graph::New(graph_filename);
     EliminationOrder* eo = EliminationOrder::File(G, eo_filename);
-    Triangulation* T = Triangulation::New(G, eo);
+    Triangulation* T = Triangulation::New(G, *eo);
     std::cout << T->str();
     delete T;
     delete eo;

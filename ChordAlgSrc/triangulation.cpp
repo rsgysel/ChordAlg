@@ -32,7 +32,7 @@ Triangulation::Triangulation(const Graph* G, GraphFR* fr) :
 // Triangulation
 
 Triangulation* Triangulation::New(const Graph* G) {
-    if (!Triangulation::IsTriangulated(G)) {
+    if (!Triangulation::IsTriangulated(*G)) {
         std::cerr << "Error in Triangulation::New:"
                   << " Graph is not chordal\n";
         delete G;
@@ -41,19 +41,19 @@ Triangulation* Triangulation::New(const Graph* G) {
     return new Triangulation(G);
 }
 
-Triangulation* Triangulation::New(const Graph* G, const EliminationOrder* eo) {
-    return new Triangulation(G, eo->EliminationNbhds());
+Triangulation* Triangulation::New(const Graph* G, const EliminationOrder& eo) {
+    return new Triangulation(G, eo.EliminationNbhds());
 }
 
 Triangulation* Triangulation::New(const Graph* G, const FillEdges& F) {
    return new Triangulation(G, F.FilledNbhds());
 }
 
-Triangulation* Triangulation::New(const Graph* G, const HeuristicRun* R) {
-    return new Triangulation(G, R->fill_edges().FilledNbhds());
+Triangulation* Triangulation::New(const Graph* G, const HeuristicRun& R) {
+    return new Triangulation(G, R.fill_edges().FilledNbhds());
 }
 
-Triangulation* Triangulation::New(const Graph* G, const std::string filename) {
+Triangulation* Triangulation::New(const Graph* G, const std::string& filename) {
     Triangulation* H = nullptr;
     GraphFile* file = GraphFile::New(filename);
     if (file->file_type() == FileType::ADJLIST ||
@@ -83,13 +83,13 @@ bool Triangulation::IsFillEdge(VertexPair uv) const {
 }
 
 bool Triangulation::IsTriangulated() const {
-    return IsTriangulated(this);
+    return IsTriangulated(*this);
 }
 
-bool Triangulation::IsTriangulated(const Graph* G) {
-    chordalg::EliminationOrder* eo = MCS::Run(*G);
-    Triangulation* H = Triangulation::New(G, eo);
-    bool result = G->IsIsomorphic(*H);
+bool Triangulation::IsTriangulated(const Graph& G) {
+    chordalg::EliminationOrder* eo = MCS::Run(G);
+    Triangulation* H = Triangulation::New(&G, *eo);
+    bool result = G.IsIsomorphic(*H);
     delete H;
     delete eo;
     return result;
