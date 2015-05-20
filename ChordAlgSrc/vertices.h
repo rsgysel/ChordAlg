@@ -46,13 +46,13 @@ class Vertices : public VertexVector {
  public:
     Vertices();
     explicit Vertices(size_t);
-    explicit Vertices(VertexList);
-    explicit Vertices(VertexSet);
-    explicit Vertices(VertexVector);
-    Vertices(std::initializer_list<Vertex>);
+    explicit Vertices(const VertexList&);
+    explicit Vertices(const VertexSet&);
+    explicit Vertices(const VertexVector&);
+    Vertices(const std::initializer_list<Vertex>&);
 
     void sort();
-    void merge(Vertices, Vertices);
+    void merge(const Vertices&, const Vertices&);
     std::string str() const;
 };  // Vertices
 

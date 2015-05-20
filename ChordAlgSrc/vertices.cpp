@@ -18,19 +18,19 @@ Vertices::Vertices(size_t n) : VertexVector(n, 0) {
     return;
 }
 
-Vertices::Vertices(VertexList V) : VertexVector(V.begin(), V.end()) {
+Vertices::Vertices(const VertexList& V) : VertexVector(V.begin(), V.end()) {
     return;
 }
 
-Vertices::Vertices(VertexSet V) : VertexVector(V.begin(), V.end()) {
+Vertices::Vertices(const VertexSet& V) : VertexVector(V.begin(), V.end()) {
     return;
 }
 
-Vertices::Vertices(VertexVector V) : VertexVector(V.begin(), V.end()) {
+Vertices::Vertices(const VertexVector& V) : VertexVector(V.begin(), V.end()) {
     return;
 }
 
-Vertices::Vertices(std::initializer_list<Vertex> V) :
+Vertices::Vertices(const std::initializer_list<Vertex>& V) :
     VertexVector(V.begin(), V.end()) {
     return;
 }
@@ -78,7 +78,7 @@ void Vertices::sort() {
     std::sort(begin(), end());
 }
 
-void Vertices::merge(Vertices U, Vertices W) {
+void Vertices::merge(const Vertices& U, const Vertices& W) {
     clear();
     reserve(U.size() + W.size());
     std::merge(U.begin(), U.end(),
