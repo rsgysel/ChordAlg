@@ -1,3 +1,8 @@
+/*
+ * graph_file.h - determines type of graph file and provides
+ * GetLine functionality (useful for mocking)
+ */
+
 #ifndef CHORDALGSRC_GRAPH_FILE_H_
 #define CHORDALGSRC_GRAPH_FILE_H_
 

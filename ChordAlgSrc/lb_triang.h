@@ -1,3 +1,11 @@
+/*
+ * lb_triang.h - computes a minimal triangulation
+ *
+ * see Berry et. al.
+ * 'A wide-range algorithm for minimal triangulation from an arbitrary ordering'
+ * http://www.sciencedirect.com/science/article/pii/S0196677404001142
+ */
+
 #ifndef CHORDALGSRC_LB_TRIANG_H_
 #define CHORDALGSRC_LB_TRIANG_H_
 

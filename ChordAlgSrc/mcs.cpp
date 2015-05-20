@@ -9,6 +9,7 @@
 #include "ChordAlgSrc/elimination_order.h"
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/tree_representation.h"
+#include "ChordAlgSrc/triangulation.h"
 #include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
@@ -30,7 +31,7 @@ EliminationOrder* Run(const Graph* G) {
     return eo;
 }
 
-CliqueTree* NewCliqueTree(const Graph* G) {
+CliqueTree* NewCliqueTree(const Triangulation* G) {
     MCSQueue mcs_q(G->order());
     EliminationOrder eo(G);
     std::list< std::pair<size_t, size_t> > ct_edges;

@@ -13,71 +13,6 @@
 
 namespace chordalg {
 
-bool Compatible(EliminationMode mode, EliminationCriterion criterion) {
-    if (mode == EliminationMode::CLASSIC) {
-        if (criterion == EliminationCriterion::DEFICIENCY) {
-            return true;
-        }
-    } else if (mode == EliminationMode::LBELIMINATION) {
-        if (criterion == EliminationCriterion::RATIO ||
-            criterion == EliminationCriterion::WSUM) {
-            return true;
-        }
-    } else if (mode == EliminationMode::MIXED) {
-        if (criterion == EliminationCriterion::DEFICIENCY) {
-            return true;
-        }
-    }
-    return false;
-}
-
-std::string SetupAndRunHeuristic(
-    std::string filename,
-    std::vector< EliminationCriterion > criteria,
-    std::vector< EliminationMode > modes,
-    bool atoms,
-    size_t runs,
-    float deficiency_wt,
-    float separation_wt) {
-    CellIntersectionGraph* G = CellIntersectionGraph::New(filename);
-    std::vector< EliminationParameters* > elimination_parameters;
-    for (auto mode : modes) {
-        for (auto criterion : criteria) {
-            if (!Compatible(mode, criterion)) {
-                continue;
-            }
-            auto P = new EliminationParameters(
-                            criterion,
-                            mode,
-                            deficiency_wt,
-                            separation_wt);
-            elimination_parameters.push_back(P);
-        }
-    }
-    HeuristicRun R(G, &elimination_parameters, atoms, runs);
-    std::cout << R.Run() << std::endl;
-    for (auto P : elimination_parameters) {
-        delete P;
-    }
-    // Return columns to remove
-    std::set< Color > columns;
-    for (Vertex v : *G) {
-        for (Vertex u : (*R.fill_edges())[v]) {
-            if (u < v) {
-                for (Color c : G->CommonColors(u, v)) {
-                    columns.insert(c);
-                }
-            }
-        }
-    }
-    std::string columns_str;
-    for (Color c : columns) {
-        columns_str += std::to_string(c) + " ";
-    }
-    delete G;
-    return columns_str;
-}
-
 //////////////////
 // c'tors & d'tors
 
@@ -90,7 +25,9 @@ HeuristicRun::HeuristicRun(
     elimination_parameters_(elimination_parameters),
     atoms_(atoms),
     runs_(runs),
-    fill_edges_(new FillEdges(G)) {
+    fill_edges_(new FillEdges(G)),
+    fill_summary_(),
+    run_summary_() {
     return;
 }
 
@@ -105,7 +42,73 @@ const FillEdges* HeuristicRun::fill_edges() const {
     return fill_edges_;
 }
 
-std::string HeuristicRun::Run() {
+const std::string& HeuristicRun::fill_summary() const {
+    return fill_summary_;
+}
+
+const std::string& HeuristicRun::run_summary() const {
+    return run_summary_;
+}
+
+HeuristicRun* HeuristicRun::New(
+    const CellIntersectionGraph* G,
+    EliminationCriterion criterion,
+    EliminationMode mode,
+    bool atoms,
+    size_t runs,
+    float deficiency_wt,
+    float separation_wt) {
+    std::vector< EliminationCriterion > criteria(1, criterion);
+    std::vector< EliminationMode > modes(1, mode);
+    return HeuristicRun::New(
+        G, criteria, modes, atoms, runs, deficiency_wt, separation_wt);
+}
+
+HeuristicRun* HeuristicRun::New(
+    const CellIntersectionGraph* G,
+    std::vector< EliminationCriterion > criteria,
+    std::vector< EliminationMode > modes,
+    bool atoms,
+    size_t runs,
+    float deficiency_wt,
+    float separation_wt) {
+    std::vector< EliminationParameters* > elimination_parameters;
+    for (auto mode : modes) {
+        for (auto criterion : criteria) {
+            if (!Compatible(mode, criterion)) {
+                continue;
+            }
+            auto P = new EliminationParameters(
+                            criterion,
+                            mode,
+                            deficiency_wt,
+                            separation_wt);
+            elimination_parameters.push_back(P);
+        }
+    }
+    HeuristicRun* R = new HeuristicRun(G, &elimination_parameters, atoms, runs);
+    R->Run();
+    for (auto P : elimination_parameters) {
+        delete P;
+    }
+    // Return columns to remove
+    std::set< Color > columns;
+    for (Vertex v : *G) {
+        for (Vertex u : (*R->fill_edges())[v]) {
+            if (u < v) {
+                for (Color c : G->CommonColors(u, v)) {
+                    columns.insert(c);
+                }
+            }
+        }
+    }
+    for (Color c : columns) {
+        R->fill_summary_ += std::to_string(c) + " ";
+    }
+    return R;
+}
+
+void HeuristicRun::Run() {
     std::vector< const Graph* > graphs;
     Atoms* A = atoms_ ? Atoms::New(G_) : nullptr;
     if (atoms_) {
@@ -144,18 +147,36 @@ std::string HeuristicRun::Run() {
             ++clique_atoms;
         }
     }
-    std::string log = "characters removed: "
+    run_summary_ = "characters removed: "
         + std::to_string(fill_edges_->fill_weight()) + '\n'
         + "fill edges added: " + std::to_string(fill_count) + '\n'
         + "vertices: " + std::to_string(G_->order()) + '\n'
         + "edges: " + std::to_string(G_->size()) + '\n';
     if (atoms_) {
-        log += "atom-subgraphs: " + std::to_string(A->size()) + '\n'
+        run_summary_ += "atom-subgraphs: " + std::to_string(A->size()) + '\n'
                + "clique atom-subgraphs: "
                + std::to_string(clique_atoms) + '\n';
         delete A;
     }
-    return log;
+    return;
+}
+
+bool HeuristicRun::Compatible(EliminationMode mode, EliminationCriterion criterion) {
+    if (mode == EliminationMode::CLASSIC) {
+        if (criterion == EliminationCriterion::DEFICIENCY) {
+            return true;
+        }
+    } else if (mode == EliminationMode::LBELIMINATION) {
+        if (criterion == EliminationCriterion::RATIO ||
+            criterion == EliminationCriterion::WSUM) {
+            return true;
+        }
+    } else if (mode == EliminationMode::MIXED) {
+        if (criterion == EliminationCriterion::DEFICIENCY) {
+            return true;
+        }
+    }
+    return false;
 }
 
 }  // namespace chordalg

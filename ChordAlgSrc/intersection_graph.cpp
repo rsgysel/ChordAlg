@@ -18,8 +18,9 @@ namespace chordalg {
 CharacterIntersectionGraph::CharacterIntersectionGraph(
     CharacterIntGraphFR* fr) :
     Graph(fr),
-    subsets_(fr->subsets()),
-    taxon_name_(fr->taxon_name()) {
+    subsets_(fr->TakeSubsets()),
+    taxon_name_(fr->TakeTaxonName()),
+    taxon_clique_(fr->TakeTaxonClique()) {
     return;
 }
 
@@ -30,7 +31,7 @@ CharacterIntersectionGraph::~CharacterIntersectionGraph() {
 PartitionIntersectionGraph::PartitionIntersectionGraph(
     PartitionIntGraphFR* fr) :
     CharacterIntersectionGraph(fr),
-    vertex_color_(fr->vertex_color()) {
+    vertex_color_(fr->TakeVertexColor()) {
     return;
 }
 
@@ -40,7 +41,7 @@ PartitionIntersectionGraph::~PartitionIntersectionGraph() {
 
 CellIntersectionGraph::CellIntersectionGraph(CellIntGraphFR* fr) :
     CharacterIntersectionGraph(fr),
-    vertex_colors_(fr->vertex_colors()),
+    vertex_colors_(fr->TakeVertexColors()),
     subset_family_(fr->TakeSubsetFamily()) {
     return;
 }
@@ -62,15 +63,19 @@ bool CharacterIntersectionGraph::IsMonochromatic(VertexPair uv) const {
 }
 
 const FiniteSet& CharacterIntersectionGraph::subset(Vertex v) const {
-    return subsets_[v];
+    return (*subsets_)[v];
 }
 
-const std::string CharacterIntersectionGraph::taxon_name(size_t t) const {
-    return taxon_name_[t];
+const std::string& CharacterIntersectionGraph::taxon_name(size_t t) const {
+    return (*taxon_name_)[t];
+}
+
+const Vertices& CharacterIntersectionGraph::taxon_clique(Vertex v) const {
+    return (*taxon_clique_)[v];
 }
 
 size_t CharacterIntersectionGraph::taxa() const {
-    return taxon_name_.size();
+    return taxon_name_->size();
 }
 
 std::string CharacterIntersectionGraph::strSubsets() {
@@ -78,9 +83,9 @@ std::string CharacterIntersectionGraph::strSubsets() {
     for (Vertex v : *this) {
         Sstr += "Taxa(" + name(v) + "): ";
         std::ostringstream oss;
-        std::copy(subsets_[v].begin(), subsets_[v].end() - 1,
+        std::copy((*subsets_)[v].begin(), (*subsets_)[v].end() - 1,
                   std::ostream_iterator< Vertex >(oss, " "));
-        oss << subsets_[v].back();
+        oss << (*subsets_)[v].back();
         Sstr += oss.str() + '\n';
     }
     Sstr += '\n';
@@ -110,11 +115,11 @@ Weight PartitionIntersectionGraph::FillCount(Vertex u, Vertex v) const {
 }
 
 bool PartitionIntersectionGraph::IsMonochromatic(Vertex u, Vertex v) const {
-    return vertex_color_[u] == vertex_color_[v];
+    return (*vertex_color_)[u] == (*vertex_color_)[v];
 }
 
 Color PartitionIntersectionGraph::vertex_color(Vertex v) const {
-    return vertex_color_[v];
+    return (*vertex_color_)[v];
 }
 
 ////////////////////////
@@ -143,7 +148,7 @@ bool CellIntersectionGraph::IsMonochromatic(Vertex u, Vertex v) const {
 }
 
 const Multicolor& CellIntersectionGraph::vertex_color(Vertex v) const {
-    return vertex_colors_[v];
+    return (*vertex_colors_)[v];
 }
 
 Multicolor CellIntersectionGraph::CommonColors(Vertex u, Vertex v) const {

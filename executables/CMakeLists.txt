@@ -27,5 +27,5 @@ add_chordalg_executable(Atoms)
 
 # Phylogenetic Character Compatibility
 add_chordalg_executable(CellIntersectionGraph)
-#add_chordalg_executable(MaxCompatSupertree)
+add_chordalg_executable(MaxCompatSupertree)
 add_chordalg_executable(PartitionIntersectionGraph)

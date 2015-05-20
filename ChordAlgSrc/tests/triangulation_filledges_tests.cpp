@@ -74,13 +74,13 @@ TEST_F(TriangulationTest, TwoCliquesSelfMinimalTriangulation) {
 
 TEST_F(TriangulationTest, IndependentSetNonminimalTriangulation) {
     Read(independent_set, {{0, 1}, {1, 2}, {2, 3}});
-    EXPECT_EQ(H_->IsChordal(), true);
+    EXPECT_EQ(H_->IsTriangulated(), true);
     EXPECT_EQ(H_->IsMinimalTriangulation(), false);
 }
 
 TEST_F(TriangulationTest, TwoCliquesNonminimalTriangulation) {
     Read(two_cliques, {{0, 5}, {0, 6}});
-    EXPECT_EQ(H_->IsChordal(), true);
+    EXPECT_EQ(H_->IsTriangulated(), true);
     EXPECT_EQ(H_->IsMinimalTriangulation(), false);
 }
 

@@ -36,22 +36,22 @@ class MCSTest : public ::testing::Test {
 //////////////////////
 // Triangulation Tests
 // These tests compute a triangulation of a graph using MCS,
-// then run MCS on the triangulation via IsChordal to check
+// then run MCS on the triangulation via IsTriangulated to check
 // that it is a chordal graph
 
 TEST_F(MCSTest, BipartiteReductionTriangulation) {
     Read(bipartite_reduction);
-    EXPECT_EQ(H_->IsChordal(), true);
+    EXPECT_EQ(H_->IsTriangulated(), true);
 }
 
 TEST_F(MCSTest, ManyMinsepsFourTriangulation) {
     Read(many_minseps_four);
-    EXPECT_EQ(H_->IsChordal(), true);
+    EXPECT_EQ(H_->IsTriangulated(), true);
 }
 
 TEST_F(MCSTest, TreeTriangulation) {
     Read(tree);
-    EXPECT_EQ(H_->IsChordal(), true);
+    EXPECT_EQ(H_->IsTriangulated(), true);
 }
 
 TEST_F(MCSTest, BipartiteReductionNotPerfect) {

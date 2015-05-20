@@ -20,9 +20,9 @@ class EliminationOrder;
 class Graph {
  public:
     Graph() = delete;
-    Graph(const Graph&) = delete;
     void operator=(const Graph&) = delete;
 
+    Graph(const Graph&);
     explicit Graph(GraphFR*);
     explicit Graph(AdjacencyLists*);
     Graph(AdjacencyLists*, VertexNames);

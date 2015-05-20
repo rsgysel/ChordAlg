@@ -10,6 +10,12 @@ namespace chordalg {
 //////////////////
 // c'tors & d'tors
 
+Triangulation::Triangulation(const Graph* G) :
+    Graph(*G),
+    G_(G) {
+    return;
+}
+
 Triangulation::Triangulation(const Graph* G, const FillEdges* F) :
     Graph(F->TriangulationNbhds()),
     G_(G) {
@@ -24,6 +30,17 @@ Triangulation::Triangulation(const Graph* G, GraphFR* fr) :
 
 ////////////////
 // Triangulation
+
+Triangulation* Triangulation::New(const Graph* G) {
+    if (!Triangulation::IsTriangulated(G)) {
+        std::cerr << "Error in Triangulation::New:"
+                  << " Graph is not chordal\n";
+        delete G;
+        exit(EXIT_FAILURE);
+    }
+    Triangulation* H = new Triangulation (G);
+    return H;
+}
 
 Triangulation* Triangulation::New(const Graph* G, const EliminationOrder* eo) {
     FillEdges* F = eo->ComputeFill();
@@ -66,11 +83,11 @@ bool Triangulation::IsFillEdge(VertexPair uv) const {
     return IsFillEdge(uv.first, uv.second);
 }
 
-bool Triangulation::IsChordal() const {
-    return IsChordal(this);
+bool Triangulation::IsTriangulated() const {
+    return IsTriangulated(this);
 }
 
-bool Triangulation::IsChordal(const Graph* G) {
+bool Triangulation::IsTriangulated(const Graph* G) {
     chordalg::EliminationOrder* eo = MCS::Run(G);
     Triangulation* H = Triangulation::New(G, eo);
     bool result = G->IsIsomorphic(H);
@@ -85,7 +102,7 @@ bool Triangulation::IsChordal(const Graph* G) {
 // paper: http://epubs.siam.org/doi/abs/10.1137/0205021
 //
 bool Triangulation::IsMinimalTriangulation() const {
-    if (!IsChordal()) {
+    if (!IsTriangulated()) {
         return false;
     }
     for (Vertex v : *this) {
@@ -94,7 +111,7 @@ bool Triangulation::IsMinimalTriangulation() const {
                 FillEdges* subfill = CopyFill();
                 subfill->RemoveEdge(u, v);
                 Triangulation Huv(G_, subfill);
-                if (Huv.IsChordal()) {
+                if (Huv.IsTriangulated()) {
                     return false;
                 }
                 delete subfill;
@@ -112,6 +129,10 @@ FillEdges* Triangulation::CopyFill() const {
         }
     }
     return F;
+}
+
+const Graph& Triangulation::G() const {
+    return *G_;
 }
 
 }  // namespace chordalg

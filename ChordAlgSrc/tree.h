@@ -1,3 +1,10 @@
+/*
+ * tree.h - graph-subclass representing a tree.
+ *
+ * The user is responsible for validating that a Tree
+ * object is a tree (use IsTree).
+ */
+
 #ifndef CHORDALGSRC_TREE_H_
 #define CHORDALGSRC_TREE_H_
 

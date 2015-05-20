@@ -11,6 +11,7 @@
 
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/tree.h"
+#include "ChordAlgSrc/triangulation.h"
 #include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
@@ -20,19 +21,20 @@ typedef std::vector< Vertices > CliqueMap;
 class TreeRepresentation {
  public:
     explicit TreeRepresentation(
-        const Graph*,
+        const Triangulation*,
         AdjacencyLists*,
         CliqueMap*);
     virtual ~TreeRepresentation();
 
-    const Graph& G() const;
+    const Triangulation& H() const;
     const Tree& T() const;
+    const Vertices& K(Vertex) const;
     std::string str() const;
 
  protected:
     VertexNames NamesFromCliqueMap(const Graph* G, const CliqueMap* K) const;
 
-    const Graph* G_;    // represented chordal graph
+    const Triangulation* H_;    // represented chordal graph
     const Tree* T_;     // host tree
     const CliqueMap* K_;  // maps nodes of T_ to cliques of G_
 };  // TreeRepresentation
@@ -40,7 +42,7 @@ class TreeRepresentation {
 class CliqueTree : public TreeRepresentation {
  public:
     explicit CliqueTree(
-        const Graph*,
+        const Triangulation*,
         AdjacencyLists*,
         CliqueMap*);
     ~CliqueTree();

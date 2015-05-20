@@ -1,3 +1,11 @@
+/*
+ * triangulation.h - graph-subclass for triangulated graphs
+ *
+ * The user is responsible for validating that a Triangulation
+ * object is a triangulated graph (use IsTriangulated).
+ * Alternatively, use Triangulation::New(const Graph*).
+ */
+
 #ifndef CHORDALGSRC_TRIANGULATION_H_
 #define CHORDALGSRC_TRIANGULATION_H_
 
@@ -15,19 +23,22 @@ class Triangulation : public Graph {
     Triangulation(const Triangulation&) = delete;
     void operator=(const Triangulation&) = delete;
 
+    explicit Triangulation(const Graph*);
     explicit Triangulation(const Graph*, const FillEdges*);
     explicit Triangulation(const Graph*, GraphFR*);
 
+    static Triangulation* New(const Graph*);
     static Triangulation* New(const Graph*, const EliminationOrder*);
     static Triangulation* New(const Graph*, const HeuristicRun*);
     static Triangulation* New(const Graph*, const std::string);
     VertexName name(Vertex v) const;
     bool IsFillEdge(Vertex, Vertex) const;
     bool IsFillEdge(VertexPair) const;
-    bool IsChordal() const;
-    static bool IsChordal(const Graph*);
+    bool IsTriangulated() const;
+    static bool IsTriangulated(const Graph*);
     bool IsMinimalTriangulation() const;
     FillEdges* CopyFill() const;
+    const Graph& G() const;
 
  protected:
     const Graph* const G_;

@@ -16,6 +16,7 @@ add_library(ChordAlgLib
                 minimal_separators.cpp
                 separator.cpp
                 separator_graph.cpp
+                supertree.cpp
                 tree.cpp
                 tree_representation.cpp
                 triangulation.cpp

@@ -54,31 +54,41 @@ CharacterMatrix::CharacterMatrix(size_t rows, size_t cols, size_t max_states) :
 }
 
 CharacterIntGraphFR::CharacterIntGraphFR(GraphFile* file) :
-    GraphFR(file) {
+    GraphFR(file),
+    subsets_(new std::vector< FiniteSet >()),
+    taxon_name_(new std::vector< std::string >()),
+    taxon_clique_(new std::vector< Vertices >()) {
     return;
 }
 
 CharacterIntGraphFR::~CharacterIntGraphFR() {
+    delete subsets_;
+    delete taxon_name_;
+    delete taxon_clique_;
     return;
 }
 
 PartitionIntGraphFR::PartitionIntGraphFR(GraphFile* file) :
-    CharacterIntGraphFR(file) {
+    CharacterIntGraphFR(file),
+    vertex_color_(new std::vector< Color >()) {
     return;
 }
 
 PartitionIntGraphFR::~PartitionIntGraphFR() {
+    delete vertex_color_;
     return;
 }
 
 CellIntGraphFR::CellIntGraphFR(GraphFile* file) :
     CharacterIntGraphFR(file),
-    subset_family_(nullptr) {
+    subset_family_(nullptr),
+    vertex_colors_(new std::vector< Multicolor >()) {
     return;
 }
 
 CellIntGraphFR::~CellIntGraphFR() {
     delete subset_family_;
+    delete vertex_colors_;
     return;
 }
 
@@ -97,7 +107,7 @@ VertexNames* GraphFR::TakeNames() {
     return temp;
 }
 
-GraphFR* GraphFR::New(std::string filename) {
+GraphFR* GraphFR::New(const std::string& filename) {
     GraphFile* file = GraphFile::New(filename);
     GraphFR* file_reader = New(file);
     delete file;
@@ -112,35 +122,35 @@ GraphFR* GraphFR::New(GraphFile* file) {
 
 void GraphFR::ReadFileOrDie() {
     FileType file_type = file_->file_type();
-    StringAdjLists* adjacency_lists = new StringAdjLists();
+    StringAdjLists* adjacency_lists = nullptr;
     if (file_type == FileType::ADJLIST) {
-        ParseAdjList(adjacency_lists);
+        adjacency_lists = ParseAdjList();
     } else if (file_type == FileType::DIMACS) {
-        ParseDimacs(adjacency_lists);
+        adjacency_lists = ParseDimacs();
     } else {
         std::cerr << "Unrecognized file type\n";
         exit(EXIT_FAILURE);
     }
-    ComputeGraphData(adjacency_lists);
+    ComputeGraphData(*adjacency_lists);
     delete adjacency_lists;
     return;
 }
 
 void GraphFR::ComputeGraphData(
-    const StringAdjLists* adjacency_lists) {
+    const StringAdjLists& adjacency_lists) {
     // String to Vertices
     neighborhoods_ = new AdjacencyLists;
-    size_t order = adjacency_lists->size();
+    size_t order = adjacency_lists.size();
     ComputeNames(order);
     neighborhoods_->resize(order);
     for (size_t i = 0; i < order; ++i) {
-        Vertices* nbhd = &(*neighborhoods_)[i];
-        for (std::string neighbor : (*adjacency_lists)[i]) {
+        for (std::string neighbor : adjacency_lists[i]) {
             Vertex v = vertex_id_[neighbor];
-            nbhd->push_back(v);
+            (*neighborhoods_)[i].push_back(v);
         }
-        std::sort(nbhd->begin(), nbhd->end());
+        std::sort((*neighborhoods_)[i].begin(), (*neighborhoods_)[i].end());
     }
+    return;
 }
 
 void GraphFR::ComputeNames(size_t order) {
@@ -158,8 +168,8 @@ void GraphFR::ComputeNames(size_t order) {
 // p FORMAT NODES EDGES // we ignore FORMAT, NODES = number of nodes, etc.
 // e U V // edge descriptors: (U,V) = e is an edge of G. not to be duplicated
 // with e V U. U and V are integers in 1, 2, ..., n
-void GraphFR::ParseDimacs(
-    StringAdjLists* adjacency_lists) {
+StringAdjLists* GraphFR::ParseDimacs() {
+    StringAdjLists* adjacency_lists;
     size_t order;
     std::string line;
     while (file_->GetLine(line)) {
@@ -185,7 +195,7 @@ void GraphFR::ParseDimacs(
             }
             case 'p' : {
                 order = std::stoi(line_tokens[2]);
-                adjacency_lists->resize(order);
+                adjacency_lists = new StringAdjLists(order);
                 break;
             }
             default : {
@@ -193,20 +203,19 @@ void GraphFR::ParseDimacs(
             }
         }
     }
-    return;
+    return adjacency_lists;
 }
 
 // Adjacency List Format:
 // Line 1: non-negative integer denoting the number of vertices
 // Line i>1: i-1, representing vertex i-1, followed by its neighbors as sorted
 // integers delimited by whitespace
-void GraphFR::ParseAdjList(
-    StringAdjLists* adjacency_lists) {
+StringAdjLists* GraphFR::ParseAdjList() {
     // First line should be number of vertices
     std::string line;
     file_->GetLine(line);
     size_t order = std::stoi(line);
-    adjacency_lists->resize(order);
+    StringAdjLists* adjacency_lists = new StringAdjLists(order);
     // Next lines should be adjacency lists
     size_t row = 0;
     while (file_->GetLine(line)) {
@@ -219,7 +228,7 @@ void GraphFR::ParseAdjList(
         }
         ++row;
     }
-    return;
+    return adjacency_lists;
 }
 
 //////////////////
@@ -273,12 +282,22 @@ std::string CharacterMatrix::str() const {
 //////////////////////
 // CharacterIntGraphFR
 
-std::vector< FiniteSet > CharacterIntGraphFR::subsets() const {
-    return subsets_;
+std::vector< FiniteSet >* CharacterIntGraphFR::TakeSubsets() {
+    std::vector< FiniteSet >* temp = nullptr;
+    std::swap(temp, subsets_);
+    return temp;
 }
 
-std::vector< std::string > CharacterIntGraphFR::taxon_name() const {
-    return taxon_name_;
+std::vector< std::string >* CharacterIntGraphFR::TakeTaxonName() {
+    std::vector< std::string >* temp = nullptr;
+    std::swap(temp, taxon_name_);
+    return temp;
+}
+
+std::vector< Vertices >* CharacterIntGraphFR::TakeTaxonClique() {
+    std::vector< Vertices >* temp = nullptr;
+    std::swap(temp, taxon_clique_);
+    return temp;
 }
 
 void CharacterIntGraphFR::ReadFileOrDie() {
@@ -292,27 +311,27 @@ void CharacterIntGraphFR::ReadFileOrDie() {
         std::cerr << "Unrecognized file type\n";
         exit(EXIT_FAILURE);
     }
-    TieSubsetsToVertices(M);
+    TieSubsetsToVertices(*M);
     ComputeGraphData();
     delete M;
     return;
 }
 
 void CharacterIntGraphFR::ComputeGraphData() {
-    size_t order = subsets_.size();
+    size_t order = subsets_->size();
     ComputeNames(order);
     neighborhoods_ = new AdjacencyLists(order);
     Vertex v = 0;
-    size_t rows = taxon_name_.size();
-    std::vector< VertexVector > taxon_clique(rows);
-    for (FiniteSet& C : subsets_) {
+    size_t rows = taxon_name_->size();
+    taxon_clique_->resize(rows);
+    for (FiniteSet& C : *subsets_) {
         for (size_t t : C) {
-            taxon_clique[t].push_back(v);
+            (*taxon_clique_)[t].push_back(v);
         }
         v++;
     }
     std::map< VertexPair, bool > edges;
-    for (VertexVector V : taxon_clique) {
+    for (VertexVector V : *taxon_clique_) {
         for (Vertex v : V) {
             for (Vertex u : V) {
                 if (u < v) {
@@ -333,18 +352,18 @@ void CharacterIntGraphFR::ComputeGraphData() {
     return;
 }
 
-void CharacterIntGraphFR::TieSubsetsToVertices(const CharacterMatrix* M) {
-    size_t rows = M->rows();
-    size_t cols = M->cols();
+void CharacterIntGraphFR::TieSubsetsToVertices(const CharacterMatrix& M) {
+    size_t rows = M.rows();
+    size_t cols = M.cols();
     for (size_t j = 0; j < cols; ++j) {
-        std::vector< FiniteSet > cells(M->max_states(), FiniteSet());
+        std::vector< FiniteSet > cells(M.max_states(), FiniteSet());
         for (size_t i = 0; i < rows; ++i) {
-            size_t state = (*M)[i][j];
-            if (state != M->kMissingData()) {
+            size_t state = M[i][j];
+            if (state != M.kMissingData()) {
                 cells[state].push_back(i);
             }
         }
-        for (FiniteSet& C : cells) {
+        for (const FiniteSet& C : cells) {
             AddVertex(C, M, j);
         }
     }
@@ -378,9 +397,9 @@ CharacterMatrix* CharacterIntGraphFR::ParseMatrix() {
         ++i;
     }
     // default taxon names
-    taxon_name_.resize(rows);
+    taxon_name_->resize(rows);
     for (size_t i = 0; i < rows; ++i) {
-        taxon_name_[i] = std::to_string(i);
+        (*taxon_name_)[i] = std::to_string(i);
     }
     return M;
 }
@@ -415,12 +434,12 @@ CharacterMatrix* CharacterIntGraphFR::ParseNexusMRP() {
     } while (line_tokens.empty());
     // Matrix lines: taxon_name 0101?
     CharacterMatrix* M = new CharacterMatrix(rows, cols, 2);
-    taxon_name_.resize(rows);
+    taxon_name_->resize(rows);
     size_t i = 0;
     while (file_->GetLine(line) &&
            line.compare(";") != 0) {
         line_tokens = Split(line, " \t");
-        taxon_name_[i] = line_tokens[0];
+        (*taxon_name_)[i] = line_tokens[0];
         for (size_t j = 0; j < line_tokens[1].length(); ++j) {
             switch (line_tokens[1][j]) {
                 case '0' : {
@@ -449,12 +468,14 @@ CharacterMatrix* CharacterIntGraphFR::ParseNexusMRP() {
 //////////////////////
 // PartitionIntGraphFR
 
-std::vector< Color > PartitionIntGraphFR::vertex_color() const {
-    return vertex_color_;
+std::vector< Color >* PartitionIntGraphFR::TakeVertexColor() {
+    std::vector< Color >* temp = nullptr;
+    std::swap(temp, vertex_color_);
+    return temp;
 }
 
 
-PartitionIntGraphFR* PartitionIntGraphFR::New(std::string filename) {
+PartitionIntGraphFR* PartitionIntGraphFR::New(const std::string& filename) {
     GraphFile* file = GraphFile::New(filename);
     PartitionIntGraphFR* file_reader = New(file);
     delete file;
@@ -468,16 +489,16 @@ PartitionIntGraphFR* PartitionIntGraphFR::New(GraphFile* file) {
 }
 
 void PartitionIntGraphFR::AddVertex(
-    FiniteSet C,
-    const CharacterMatrix* M,
+    const FiniteSet& C,
+    const CharacterMatrix& M,
     size_t col) {
     if (!C.empty()) {
-        size_t v = subsets_.size();
-        size_t state = (*M)[C[0]][col];
-        std::string name = std::to_string(col) + "," + std::to_string(state);
+        size_t v = subsets_->size();
+        size_t state = M[C[0]][col];
+        std::string name = std::to_string(col) + "#" + std::to_string(state);
         vertex_id_[name] = v;
-        subsets_.push_back(FiniteSet(C));
-        vertex_color_.push_back(col);
+        subsets_->push_back(FiniteSet(C));
+        vertex_color_->push_back(col);
     }
     return;
 }
@@ -491,11 +512,13 @@ LexTrie* CellIntGraphFR::TakeSubsetFamily() {
     return temp;
 }
 
-std::vector< Multicolor > CellIntGraphFR::vertex_colors() const {
-    return vertex_colors_;
+std::vector< Multicolor >* CellIntGraphFR::TakeVertexColors() {
+    std::vector< Multicolor >* temp = nullptr;
+    std::swap(temp, vertex_colors_);
+    return temp;
 }
 
-CellIntGraphFR* CellIntGraphFR::New(std::string filename) {
+CellIntGraphFR* CellIntGraphFR::New(const std::string& filename) {
     GraphFile* file = GraphFile::New(filename);
     CellIntGraphFR* file_reader = New(file);
     delete file;
@@ -509,29 +532,28 @@ CellIntGraphFR* CellIntGraphFR::New(GraphFile* file) {
 }
 
 void CellIntGraphFR::AddVertex(
-    FiniteSet C,
-    const CharacterMatrix* M,
+    const FiniteSet& C,
+    const CharacterMatrix& M,
     size_t col) {
     if (!C.empty()) {
         if (!subset_family_) {
-            subset_family_ = new LexTrie(M->rows());
+            subset_family_ = new LexTrie(M.rows());
         }
         bool new_cell;
-        std::sort(C.begin(), C.end());
         const LexTrieNode* node =
                 subset_family_->Insert(&C, &new_cell);
         if (new_cell) {
-            size_t cell = subsets_.size();
+            size_t cell = subsets_->size();
             cell_id_[node] = cell;
-            size_t state = (*M)[C[0]][col];
-            std::string name = std::to_string(col) + ","
+            size_t state = M[C[0]][col];
+            std::string name = std::to_string(col) + "#"
                                + std::to_string(state);
             vertex_id_[name] = cell;
-            subsets_.push_back(FiniteSet(C));
-            vertex_colors_.push_back(Multicolor());
+            subsets_->push_back(FiniteSet(C));
+            vertex_colors_->push_back(Multicolor());
         }
         Vertex v = cell_id_[node];
-        vertex_colors_[v].push_back(col);
+        (*vertex_colors_)[v].push_back(col);
     }
     return;
 }

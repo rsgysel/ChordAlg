@@ -1,3 +1,7 @@
+/*
+ * chordalg_string.h - string utility functions
+ */
+
 #ifndef CHORDALGSRC_CHORDALG_STRING_H__
 #define CHORDALGSRC_CHORDALG_STRING_H__
 

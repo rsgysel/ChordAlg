@@ -31,13 +31,15 @@ class CharacterIntersectionGraph : public Graph {
     bool IsMonochromatic(VertexPair) const;
 
     const FiniteSet& subset(Vertex) const;
-    const std::string taxon_name(size_t) const;
+    const std::string& taxon_name(size_t) const;
+    const Vertices& taxon_clique(Vertex) const;
     size_t taxa() const;
     std::string strSubsets();
 
  protected:
-    std::vector< FiniteSet > subsets_;
-    std::vector< std::string > taxon_name_;
+    const std::vector< FiniteSet >* subsets_;
+    const std::vector< std::string >* taxon_name_;
+    const std::vector< Vertices >* taxon_clique_;
 };  // CharacterIntersectionGraph
 
 class PartitionIntersectionGraph : public CharacterIntersectionGraph {
@@ -58,7 +60,7 @@ class PartitionIntersectionGraph : public CharacterIntersectionGraph {
     Color vertex_color(Vertex) const;
 
  protected:
-    std::vector< Color > vertex_color_;
+    const std::vector< Color >* vertex_color_;
 };  // PartitionIntersectionGraph
 
 class CellIntersectionGraph : public CharacterIntersectionGraph {
@@ -86,8 +88,8 @@ class CellIntersectionGraph : public CharacterIntersectionGraph {
     const LexTrie* subset_family() const;
 
  protected:
-    std::vector< Multicolor > vertex_colors_;
-    LexTrie* subset_family_;
+    const std::vector< Multicolor >* vertex_colors_;
+    const LexTrie* subset_family_;
 };  // CellIntersectionGraph
 
 }  // namespace chordalg

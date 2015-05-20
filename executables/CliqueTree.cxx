@@ -16,14 +16,11 @@ int main(int argc, char** argv) {
     std::string filename;
     ChordAlgOptions(argc, argv, &filename);
     Graph* G = Graph::New(filename);
-    if (!Triangulation::IsChordal(G)) {
-        std::cerr << "Error: Graph is not chordal.\n";
-        delete G;
-        exit(EXIT_FAILURE);
-    }
-    CliqueTree* T = MCS::NewCliqueTree(G);
+    Triangulation* H = Triangulation::New(G);
+    CliqueTree* T = MCS::NewCliqueTree(H);
     std::cout << T->str();
     delete T;
+    delete H;
     delete G;
     return EXIT_SUCCESS;
 }

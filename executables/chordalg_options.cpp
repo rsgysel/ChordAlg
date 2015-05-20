@@ -7,12 +7,13 @@ const std::string
     matrix_opt = "-m, --matrix\n\tCharacter Matrix / Nexus MRP filename\n",
     triangulation_opt = "-t, --triang\n\tTriangulation filename\n";
 
-void ChordAlgOptions(int argc,
-                     char* argv[],
-                     std::string* graph_filename,
-                     std::string* eo_filename,
-                     std::string* triangulation_filename,
-                     FileMode mode) {
+void ChordAlgOptions(
+    int argc,
+    char* argv[],
+    std::string* graph_filename,
+    std::string* eo_filename,
+    std::string* triangulation_filename,
+    FileMode mode) {
     std::string usage = argv[0] + preamble;
     std::string graph_type_opt;
     if (graph_filename) {
@@ -45,7 +46,7 @@ void ChordAlgOptions(int argc,
     while (1) {
         char c = getopt_long(argc, argv, "e:g:m:t:", long_options, nullptr);
         if (c == -1) {
-            if(graph_filename && !graph_filename_set) {
+            if (graph_filename && !graph_filename_set) {
                 std::cerr << argv[0] << graph_type_opt << " must be provided\n";
                 std::cerr << usage << std::endl;
                 exit(EXIT_FAILURE);
@@ -98,7 +99,7 @@ void ChordAlgOptions(int argc,
                 exit(EXIT_FAILURE);
             break;
             default:
-                std::cerr << "?? getopt returned character code 0" << c << "??\n";
+                std::cerr << usage << std::endl;
                 exit(EXIT_FAILURE);
         }
     }  // getopts

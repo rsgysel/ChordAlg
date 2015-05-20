@@ -49,12 +49,12 @@ TEST_F(HeuristicRunTest, BipartiteReduction) {
     Read(bipartite_reduction,
          chordalg::EliminationMode::CLASSIC,
          chordalg::EliminationCriterion::DEFICIENCY);
-    EXPECT_EQ(H_->IsChordal(), true);
+    EXPECT_EQ(H_->IsTriangulated(), true);
 }
 
 TEST_F(HeuristicRunTest, ManyMinsepsFour) {
     Read(many_minseps_four,
          chordalg::EliminationMode::CLASSIC,
          chordalg::EliminationCriterion::DEFICIENCY);
-    EXPECT_EQ(H_->IsChordal(), true);
+    EXPECT_EQ(H_->IsTriangulated(), true);
 }

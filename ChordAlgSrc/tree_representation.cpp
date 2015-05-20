@@ -13,11 +13,11 @@ namespace chordalg {
 // c'tors & d'tors
 
 TreeRepresentation::TreeRepresentation(
-    const Graph* G,
+    const Triangulation* H,
     AdjacencyLists* E,
     CliqueMap* K) :
-    G_(G),
-    T_(new Tree(E, NamesFromCliqueMap(G, K))),
+    H_(H),
+    T_(new Tree(E, NamesFromCliqueMap(H, K))),
     K_(K) {
     return;
 }
@@ -27,10 +27,10 @@ TreeRepresentation::~TreeRepresentation() {
 }
 
 CliqueTree::CliqueTree(
-    const Graph* G,
+    const Triangulation* H,
     AdjacencyLists* E,
     CliqueMap* K) :
-    TreeRepresentation(G, E, K) {
+    TreeRepresentation(H, E, K) {
     return;
 }
 
@@ -41,12 +41,16 @@ CliqueTree::~CliqueTree() {
 /////////////////////
 // TreeRepresentation
 
-const Graph& TreeRepresentation::G() const {
-    return *G_;
+const Triangulation& TreeRepresentation::H() const {
+    return *H_;
 }
 
 const Tree& TreeRepresentation::T() const {
     return *T_;
+}
+
+const Vertices& TreeRepresentation::K(Vertex v) const {
+    return (*K_)[v];
 }
 
 std::string TreeRepresentation::str() const {

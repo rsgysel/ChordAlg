@@ -1,3 +1,8 @@
+/*
+ * fill_edges.h - class used to represent a dynamic
+ * set of fill edges of a graph.
+ */
+
 #ifndef CHORDALGSRC_FILL_EDGES_H_
 #define CHORDALGSRC_FILL_EDGES_H_
 
