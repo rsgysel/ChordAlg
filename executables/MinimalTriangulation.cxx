@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
     ChordAlgOptions(argc, argv, &graph_filename, nullptr, &triangulation_filename);
     Graph* G = Graph::New(graph_filename);
     Triangulation* T = Triangulation::New(G, triangulation_filename);
-    if (!T->IsSupergraph(G)) {
+    if (!T->IsSupergraph(*G)) {
         std::cerr << "Error: " << triangulation_filename << " is not a supergraph of ";
         std::cerr << graph_filename << '\n';
         exit(EXIT_FAILURE);

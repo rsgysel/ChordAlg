@@ -40,7 +40,7 @@ std::istream& GraphFile::GetLine(std::string& str) {
     return std::getline(file_stream_, str);
 }
 
-FileType GraphFile::file_type() const {
+const FileType& GraphFile::file_type() const {
     return file_type_;
 }
 

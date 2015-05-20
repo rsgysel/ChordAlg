@@ -78,7 +78,7 @@ void Atoms::ComputeAtoms() {
                 S.push_back(u);
             }
         }
-        if (G_->HasClique(S)) {
+        if (G_->IsClique(S)) {
             clique_minimal_separators_.Insert(&S);
             for (Vertex u : deleted_vertices) {
                 S.push_back(u);

@@ -68,7 +68,7 @@ Graph::~Graph() {
 }
 
 InducedSubgraph::InducedSubgraph(const Graph* G, const Vertices* U) :
-    Graph(InducedVertices(G, *U)),
+    Graph(InducedVertices(*G, *U)),
     G_(G),
     U_(*U) {
     return;
@@ -100,46 +100,47 @@ Graph* Graph::New(GraphFile* file) {
     return G;
 }
 
-// Determines if H is isomorphic to G with respect to their fixed orderings
-bool Graph::IsIsomorphic(const Graph* H) const {
-    const Graph* G = this;
-    if (G->order() != H->order() || G->size() != H->size()) {
+// Determines if H is isomorphic to G with respect to their
+// vertex orderings
+bool Graph::IsIsomorphic(const Graph& H) const {
+    const Graph& G = *this;
+    if (G.order() != H.order() || G.size() != H.size()) {
         return false;
     }
-    for (Vertex v : *G) {
-        if (G->N(v).size() != H->N(v).size()) {
+    for (Vertex v : G) {
+        if (G.N(v).size() != H.N(v).size()) {
             return false;
         }
-        if (!std::equal(G->N(v).begin(), G->N(v).end(), H->N(v).begin())) {
+        if (!std::equal(G.N(v).begin(), G.N(v).end(), H.N(v).begin())) {
             return false;
         }
     }
     return true;
 }
 
-bool Graph::IsSupergraph(const Graph* H) const {
-    const Graph* G = this;
-    if (G->order() != H->order()) {
+bool Graph::IsSupergraph(const Graph& H) const {
+    const Graph& G = *this;
+    if (G.order() != H.order()) {
         return false;
     }
     std::set< VertexName > names;
     typedef std::pair< VertexName, VertexName > EdgeName;
     std::set< EdgeName > edges;
-    for (Vertex v : *G) {
-        names.insert(G->name(v));
-        for (Vertex u : G->N(v)) {
-            std::string u_str = G->name(u), v_str = G->name(v);
+    for (Vertex v : G) {
+        names.insert(G.name(v));
+        for (Vertex u : G.N(v)) {
+            std::string u_str = G.name(u), v_str = G.name(v);
             if (u_str < v_str) {
                 edges.insert(EdgeName(u_str, v_str));
             }
         }
     }
-    for (Vertex v : *H) {
-        if (names.find(H->name(v)) == names.end()) {
+    for (Vertex v : H) {
+        if (names.find(H.name(v)) == names.end()) {
             return false;
         }
-        for (Vertex u : H->N(v)) {
-            std::string u_str = H->name(u), v_str = H->name(v);
+        for (Vertex u : H.N(v)) {
+            std::string u_str = H.name(u), v_str = H.name(v);
             if (u_str < v_str) {
                 if (edges.find(EdgeName(u_str, v_str)) == edges.end()) {
                     return false;
@@ -163,28 +164,28 @@ std::string Graph::str() const {
     return result;
 }
 
-std::string Graph::str(const LexTrie* T) const {
+std::string Graph::str(const LexTrie& T) const {
     std::string result;
-    for (FiniteSet S : *T) {
+    for (FiniteSet S : T) {
         Vertices V(S);
-        result += str(&V);
+        result += str(V);
         result += '\n';
     }
     result.pop_back();
     return result;
 }
 
-std::string Graph::str(const VertexVector* U) const {
-    Vertices V(*U);
-    return str(&V);
+std::string Graph::str(const VertexVector& U) const {
+    Vertices V(U);
+    return str(V);
 }
 
-std::string Graph::str(const Vertices* U) const {
-    if (U->empty()) {
+std::string Graph::str(const Vertices& U) const {
+    if (U.empty()) {
         return std::string();
     } else {
         std::string result;
-        for (Vertex v : *U) {
+        for (Vertex v : U) {
             result += name(v) + ' ';
         }
         result.pop_back();
@@ -194,7 +195,7 @@ std::string Graph::str(const Vertices* U) const {
 
 // Outputs graph in DOT format
 // http://en.wikipedia.org/wiki/DOT_%28graph_description_language%29
-std::string Graph::strDOT(std::string graphname) const {
+std::string Graph::strDOT(const std::string& graphname) const {
     std::string result("graph ");
     result += graphname + std::string(" {\n");
     for (Vertex v : *this) {
@@ -216,7 +217,7 @@ std::string Graph::strDOT(std::string graphname) const {
 
 // Outputs graph in GML format
 //
-std::string Graph::strGML(std::string graphname) const {
+std::string Graph::strGML(const std::string& graphname) const {
     std::string result("graph [\n\tundirected 1\n");
     result += std::string("\tlabel \"") + graphname + std::string("\"\n");
     for (Vertex v : *this) {
@@ -266,16 +267,16 @@ size_t Graph::size() const {
     return size_;
 }
 
-bool Graph::HasEdge(Vertex u, Vertex v) const {
+bool Graph::IsEdge(Vertex u, Vertex v) const {
     return is_edge_[u][v];
 }
 
-bool Graph::HasEdge(VertexPair uv) const {
-    return HasEdge(uv.first, uv.second);
+bool Graph::IsEdge(VertexPair uv) const {
+    return IsEdge(uv.first, uv.second);
 }
 
 Weight Graph::FillCount(Vertex u, Vertex v) const {
-    return HasEdge(u, v) ? 0 : 1;
+    return IsEdge(u, v) ? 0 : 1;
 }
 
 Weight Graph::FillCount(VertexPair uv) const {
@@ -284,6 +285,15 @@ Weight Graph::FillCount(VertexPair uv) const {
 
 bool Graph::IsClique() const {
     return 2 * size_ == order_ * (order_ - 1);
+}
+
+bool Graph::IsClique(const Vertices& K) const {
+    for (VertexPair uv : VertexPairs(K)) {
+        if (!IsEdge(uv)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 const Vertices& Graph::N(Vertex v) const {
@@ -322,7 +332,10 @@ void Graph::Init() {
     return;
 }
 
-AdjacencyLists* Graph::InducedVertices(const Graph* super_graph, Vertices X) {
+AdjacencyLists* Graph::InducedVertices(
+    const Graph& super_graph,
+    const Vertices& U) {
+    Vertices X(U);
     std::sort(X.begin(), X.end());
     AdjacencyLists* a_lists = new AdjacencyLists();
     a_lists->resize(X.size());
@@ -333,15 +346,15 @@ AdjacencyLists* Graph::InducedVertices(const Graph* super_graph, Vertices X) {
         ++i;
     }
     std::vector< bool > in_subgraph;
-    in_subgraph.resize(super_graph->order());
-    for (Vertex v : *super_graph) {
+    in_subgraph.resize(super_graph.order());
+    for (Vertex v : super_graph) {
         in_subgraph[v] = false;
     }
     for (Vertex v : X) {
         in_subgraph[v] = true;
     }
     for (Vertex v : X) {
-        for (Vertex u : super_graph->N(v)) {
+        for (Vertex u : super_graph.N(v)) {
             if (in_subgraph[u]) {
                 Vertex v_induced_id = vertex_order[v];
                 Vertex u_induced_id = vertex_order[u];

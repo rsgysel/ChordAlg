@@ -55,12 +55,12 @@ TEST_F(GraphTest, SortedNeighborhoods) {
 
 TEST_F(GraphTest, Cliques) {
     Read(two_cliques);
-    chordalg::VertexVector K1{0, 1, 2, 3, 4}, K2{5, 6};
-    EXPECT_EQ(G_->HasClique(K1), true);
-    EXPECT_EQ(G_->HasClique(K2), true);
+    chordalg::Vertices K1{0, 1, 2, 3, 4}, K2{5, 6};
+    EXPECT_EQ(G_->IsClique(K1), true);
+    EXPECT_EQ(G_->IsClique(K2), true);
 }
 
 TEST_F(GraphTest, Automorphism) {
     Read(two_cliques);
-    EXPECT_EQ(G_->IsIsomorphic(G_), true);
+    EXPECT_EQ(G_->IsIsomorphic(*G_), true);
 }

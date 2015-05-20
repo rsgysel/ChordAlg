@@ -56,12 +56,12 @@ VertexName SeparatorGraph::name(Vertex v) const {
     if (S_v.empty()) {
         return std::string();
     } else {
-        return G_->str(&S_v);
+        return G_->str(S_v);
     }
 }
 
 // uv is an edge iff S_u crosses (separates) S_v
-bool SeparatorGraph::HasEdge(Vertex u, Vertex v) const {
+bool SeparatorGraph::IsEdge(Vertex u, Vertex v) const {
     SeparatorComponents S(G_);
     S.Separate(&(*M_)[u]);
     return S.IsSeparated((*M_)[v]);

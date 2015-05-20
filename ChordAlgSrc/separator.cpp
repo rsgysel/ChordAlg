@@ -278,7 +278,7 @@ std::string SeparatorBlocks::str() const {
     std::string SCstr = SeparatorComponents::str();
     ConnectedComponentID cc = 0;
     for (Block B : blocks_) {
-        SCstr += "N(C_" + std::to_string(cc) + "): " + G_->str(&B.NC());
+        SCstr += "N(C_" + std::to_string(cc) + "): " + G_->str(B.NC());
         ++cc;
     }
     return SCstr;

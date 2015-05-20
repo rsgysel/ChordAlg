@@ -76,7 +76,7 @@ VertexName Triangulation::name(Vertex v) const {
 }
 
 bool Triangulation::IsFillEdge(Vertex u, Vertex v) const {
-    return HasEdge(u, v) && !G_->HasEdge(u, v);
+    return IsEdge(u, v) && !G_->IsEdge(u, v);
 }
 
 bool Triangulation::IsFillEdge(VertexPair uv) const {
@@ -90,7 +90,7 @@ bool Triangulation::IsTriangulated() const {
 bool Triangulation::IsTriangulated(const Graph* G) {
     chordalg::EliminationOrder* eo = MCS::Run(G);
     Triangulation* H = Triangulation::New(G, eo);
-    bool result = G->IsIsomorphic(H);
+    bool result = G->IsIsomorphic(*H);
     delete H;
     delete eo;
     return result;

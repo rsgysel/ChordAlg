@@ -25,7 +25,7 @@ namespace MinimalSeparators {
 std::string str(const MinsepTrie* M, const Graph* G) {
     std::string result;
     for (FiniteSet S : *M) {
-        result += G->str(&S) + '\n';
+        result += G->str(S) + '\n';
     }
     return result;
 }

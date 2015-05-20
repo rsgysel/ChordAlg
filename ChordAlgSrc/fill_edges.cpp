@@ -31,7 +31,7 @@ bool FillEdges::IsEdge(VertexPair uv) const {
 }
 
 bool FillEdges::IsEdge(Vertex u, Vertex v) const {
-    return G_->HasEdge(u, v) || IsFillEdge(u, v);
+    return G_->IsEdge(u, v) || IsFillEdge(u, v);
 }
 
 bool FillEdges::IsFillEdge(VertexPair uv) const {

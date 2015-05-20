@@ -32,14 +32,14 @@ class Graph {
     static Graph* New(std::string);
     static Graph* New(GraphFile*);
 
-    bool IsIsomorphic(const Graph*) const;
-    bool IsSupergraph(const Graph*) const;
+    bool IsIsomorphic(const Graph&) const;
+    bool IsSupergraph(const Graph&) const;
     virtual std::string str() const;
-    std::string str(const LexTrie*) const;
-    std::string str(const VertexVector*) const;
-    std::string str(const Vertices*) const;
-    std::string strDOT(std::string graphname) const;
-    std::string strGML(std::string graphname) const;
+    std::string str(const LexTrie&) const;
+    std::string str(const VertexVector&) const;
+    std::string str(const Vertices&) const;
+    std::string strDOT(const std::string&) const;
+    std::string strGML(const std::string&) const;
 
     Vertices V() const;
     GraphVertexIterator begin() const;
@@ -49,34 +49,29 @@ class Graph {
     virtual VertexName name(Vertex v) const;
     size_t order() const;
     size_t size() const;
-    virtual bool HasEdge(Vertex u, Vertex v) const;
-    virtual bool HasEdge(VertexPair uv) const;
+    virtual bool IsEdge(Vertex u, Vertex v) const;
+    virtual bool IsEdge(VertexPair uv) const;
     virtual Weight FillCount(Vertex u, Vertex v) const;
     virtual Weight FillCount(VertexPair uv) const;
     bool IsClique() const;
+    bool IsClique(const Vertices& set) const;
     const Vertices& N(Vertex v) const;
 
     // Use to transform InducedSubgraph vertices to parent graph vertices
     virtual Vertex ParentGraph(Vertex v) const;
     virtual VertexPair ParentGraph(VertexPair uv) const;
 
-    template< class Container >
-    bool HasClique(Container set) const;
-
  protected:
     void Init();
     // Induced Subgraph Initialization
-    AdjacencyLists* InducedVertices(const Graph*, Vertices);
-    VertexNames* DefaultNames(size_t);
+    static AdjacencyLists* InducedVertices(const Graph&, const Vertices&);
+    static VertexNames* DefaultNames(size_t);
 
     const AdjacencyLists* const neighborhoods_;
     const VertexNames* const vertex_names_;
     std::vector< std::vector< bool > > is_edge_;
     size_t order_;  // #vertices
     size_t size_;  // #edges
-
-    template< class InputIterator >
-    bool HasClique(InputIterator begin, InputIterator end) const;
 };  // Graph
 
 class InducedSubgraph : public Graph {
@@ -97,29 +92,6 @@ class InducedSubgraph : public Graph {
     const Graph* const G_;
     const Vertices U_;
 };  // InducedSubgraph
-
-///////////
-// Generics
-
-template< class Container >
-bool Graph::HasClique(Container set) const {
-    return HasClique(set.begin(), set.end());
-}
-
-template< class InputIterator >
-bool Graph::HasClique(InputIterator begin_itr, InputIterator end_itr) const {
-    for (InputIterator vertex_itr = begin_itr;
-         vertex_itr != end_itr;
-         ++vertex_itr) {
-        InputIterator neighbor_itr = vertex_itr;
-        for (++neighbor_itr; neighbor_itr != end_itr; ++neighbor_itr) {
-            if (!HasEdge(*vertex_itr, *neighbor_itr)) {
-                return false;
-            }
-        }
-    }
-    return true;
-}
 
 }  // namespace chordalg
 
