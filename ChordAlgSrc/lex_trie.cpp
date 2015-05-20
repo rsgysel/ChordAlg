@@ -49,7 +49,10 @@ LexTrieIterator::LexTrieIterator(const LexTrieIterator& other) :
     return;
 }
 
-LexTrieNode::LexTrieNode(bool has_set) : has_set_(has_set), children_() {
+LexTrieNode::LexTrieNode(bool has_set) :
+    has_set_(has_set),
+    set_id_(0),
+    children_() {
     return;
 }
 
@@ -200,13 +203,13 @@ bool LexTrie::Contains(const std::vector< size_t >* X) const {
     return node->has_set_;
 }
 
-const LexTrieNode* LexTrie::Insert(const std::vector< size_t >* X, bool* new_set) {
+size_t LexTrie::Insert(const std::vector< size_t >* X, bool* new_set) {
     std::vector< size_t > SortedX(*X);
     std::sort(SortedX.begin(), SortedX.end());
     return SortedInsert(&SortedX, new_set);
 }
 
-const LexTrieNode* LexTrie::SortedInsert(const std::vector< size_t >* X, bool* new_set) {
+size_t LexTrie::SortedInsert(const std::vector< size_t >* X, bool* new_set) {
     LexTrieNode* node = root_;
     for (auto x : *X) {
         if (!node->HasChild(x)) {
@@ -226,8 +229,9 @@ const LexTrieNode* LexTrie::SortedInsert(const std::vector< size_t >* X, bool* n
     if (!node->has_set_) {
         ++set_count_;
         node->has_set_ = true;
+        node->set_id_ = set_count_;
     }
-    return node;
+    return node->set_id_;
 }
 
 std::string LexTrie::str() const {

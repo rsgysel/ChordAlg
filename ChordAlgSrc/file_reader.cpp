@@ -534,11 +534,10 @@ void CellIntGraphFR::AddVertex(
             cells_ = new LexTrie(M.rows());
         }
         bool new_cell;
-        const LexTrieNode* node =
-                cells_->Insert(&C, &new_cell);
+        size_t id = cells_->Insert(&C, &new_cell);
         if (new_cell) {
             size_t cell = subsets_->size();
-            cell_id_[node] = cell;
+            cell_id_[id] = cell;
             size_t state = M[C[0]][col];
             std::string name = std::to_string(col) + "#"
                                + std::to_string(state);
@@ -546,7 +545,7 @@ void CellIntGraphFR::AddVertex(
             subsets_->push_back(FiniteSet(C));
             vertex_colors_->push_back(Multicolor());
         }
-        Vertex v = cell_id_[node];
+        Vertex v = cell_id_[id];
         (*vertex_colors_)[v].push_back(col);
     }
     return;

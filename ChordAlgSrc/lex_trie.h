@@ -62,6 +62,7 @@ class LexTrieNode {
     ~LexTrieNode();
 
     bool has_set_;  // true if node represents a set
+    size_t set_id_;
     LexTrieNodeChildren children_;
 
     bool HasChild(size_t) const;
@@ -85,8 +86,8 @@ class LexTrie {
     ~LexTrie();
 
     bool Contains(const std::vector< size_t >*) const;
-    const LexTrieNode* Insert(const std::vector< size_t >*, bool* new_set = nullptr);
-    const LexTrieNode* SortedInsert(const std::vector< size_t >*, bool* new_set = nullptr);
+    size_t Insert(const std::vector< size_t >*, bool* new_set = nullptr);
+    size_t SortedInsert(const std::vector< size_t >*, bool* new_set = nullptr);
     std::string str() const;
     size_t size() const;        // number of sets in family
     size_t n() const;

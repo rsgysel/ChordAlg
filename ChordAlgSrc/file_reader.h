@@ -136,7 +136,7 @@ class CellIntGraphFR : public CharacterIntGraphFR {
     void AddVertex(const FiniteSet&, const CharacterMatrix&, size_t);
 
     std::vector< Multicolor >* vertex_colors_;
-    std::map< const LexTrieNode*, Vertex > cell_id_;
+    std::map< size_t, Vertex > cell_id_;
     LexTrie* cells_;
 };  // CellIntGraphFR
 
