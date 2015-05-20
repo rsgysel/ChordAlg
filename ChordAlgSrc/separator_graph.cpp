@@ -11,13 +11,12 @@ namespace chordalg {
 //////////////////
 // c'tors & d'tors
 
-SeparatorGraph::SeparatorGraph(const Graph* G, const MinsepTrie* M) :
-    Graph(M->size()),
+SeparatorGraph::SeparatorGraph(const Graph* G, const MinsepTrie& M) :
+    Graph(M.size()),
     G_(G),
-    M_(MinsepTrieToVector(*M)),
+    M_(MinsepTrieToVector(M)),
     crossing_relations_(),
     S_(G_) {
-    delete M;
 }
 
 SeparatorGraph::~SeparatorGraph() {
@@ -28,8 +27,10 @@ SeparatorGraph::~SeparatorGraph() {
 // SeparatorGraph
 
 SeparatorGraph* SeparatorGraph::New(const Graph* G) {
-    SeparatorGraph* SG = new SeparatorGraph(G, MinimalSeparators::Generate(*G));
+    MinsepTrie* MS = MinimalSeparators::Generate(*G);
+    SeparatorGraph* SG = new SeparatorGraph(G, *MS);
     SG->ComputeCrossingRelations();
+    delete MS;
     return SG;
 }
 

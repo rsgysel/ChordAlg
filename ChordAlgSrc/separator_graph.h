@@ -28,7 +28,7 @@ class SeparatorGraph : public Graph {
     const Vertices& N(Vertex v) const;
 
  protected:
-    SeparatorGraph(const Graph*, const MinsepTrie*);
+    SeparatorGraph(const Graph*, const MinsepTrie&);
     void ComputeCrossingRelations();
 
     const Graph* const G_;                  // Original graph

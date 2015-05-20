@@ -257,12 +257,15 @@ GraphVertexIterator Graph::end() const {
 const AdjacencyLists& Graph::neighborhoods() const {
     return *neighborhoods_;
 }
+
 VertexName Graph::name(Vertex v) const {
     return (*vertex_names_)[v];
 }
+
 size_t Graph::order() const {
     return order_;
 }
+
 size_t Graph::size() const {
     return size_;
 }

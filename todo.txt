@@ -1,3 +1,6 @@
 [ ] Analyze/Optimize CellIntersectionGraph::CommonColors
 [ ] Smart Pointers
-[ ] Remove SeparatorComponents::GetNeighborhood? Something smells funny.
+[ ] EliminationAlgorithm -> EliminationHeuristics
+[ ] EliminationOrder::EliminationFill -> chordalg::EliminationAlgorithms?
+    Not if de-coupling from EliminationOrder is prohibative
+[ ] Remove SeparatorComponents::GetNeighborhood? Something smells funny
