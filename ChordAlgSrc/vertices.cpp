@@ -79,12 +79,31 @@ void Vertices::sort() {
     std::sort(begin(), end());
 }
 
-void Vertices::merge(const Vertices& U, const Vertices& W) {
+void Vertices::set_intersection(const Vertices& U, const Vertices& W) {
+    clear();
+    reserve(std::min(U.size(), W.size()));
+    if (U.empty() || W.empty()) {
+        return;
+    } else {
+        std::set_intersection(U.begin(), U.end(),
+                              W.begin(), W.end(),
+                              std::back_inserter(*this));
+    }
+    return;
+}
+
+void Vertices::set_union(const Vertices& U, const Vertices& W) {
     clear();
     reserve(U.size() + W.size());
-    std::merge(U.begin(), U.end(),
-               W.begin(), W.end(),
-               std::back_inserter(*this));
+    if (U.empty()) {
+        *this = W;
+    } else if (W.empty()) {
+        *this = U;
+    } else {
+        std::set_union(U.begin(), U.end(),
+                       W.begin(), W.end(),
+                       std::back_inserter(*this));
+    }
     return;
 }
 

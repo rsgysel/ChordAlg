@@ -358,6 +358,7 @@ AdjacencyLists* Graph::InducedVertices(
     for (Vertex v : X) {
         in_subgraph[v] = true;
     }
+    // a_lists sorted as long as super_graph.N(v) is
     for (Vertex v : X) {
         for (Vertex u : super_graph.N(v)) {
             if (in_subgraph[u]) {

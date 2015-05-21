@@ -58,7 +58,7 @@ MinsepTrie* Generate(const Graph& G) {
         Vertices U = M_stack.top();
         M_stack.pop();
         for (Vertex v : U) {
-            V.merge(U, G.N(v));
+            V.set_union(U, G.N(v));
             S.Separate(V);
             for (Block B : S) {
                 M->SortedInsert(&B.NC(), &new_set);
@@ -94,7 +94,7 @@ MinsepTrie* Generate(const Graph& G, Vertex a, Vertex b) {
         Vertices U = M_stack.top();
         M_stack.pop();
         for (Vertex v : U) {
-            V.merge(U, G.N(v));
+            V.set_union(U, G.N(v));
             S.Separate(V);
             if (!S.IsInSeparator(b) && !S.NComponentOf(b).empty()) {
                 M->SortedInsert(&S.NComponentOf(b), &new_set);

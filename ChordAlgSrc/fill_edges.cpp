@@ -1,5 +1,6 @@
 #include "ChordAlgSrc/fill_edges.h"
 
+#include <algorithm>
 #include <vector>
 
 #include "ChordAlgSrc/graph.h"
@@ -101,6 +102,7 @@ AdjacencyLists* FillEdges::FilledNbhds() const {
         for (Vertex u : (*this)[v]) {
             (*a_lists)[v].push_back(u);
         }
+        std::sort((*a_lists)[v].begin(), (*a_lists)[v].end());
     }
     return a_lists;
 }

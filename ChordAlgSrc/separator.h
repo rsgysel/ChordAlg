@@ -27,6 +27,8 @@ class Block {
     const Vertices& NC() const;
     void addC(Vertex v);
     void addNC(Vertex v);
+    void sort();
+
  private:
     Vertices C_, NC_;
 };  // Block

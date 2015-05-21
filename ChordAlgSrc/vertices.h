@@ -27,6 +27,7 @@ typedef std::pair< Vertex, Vertex >     VertexPair;
 
 typedef std::list   < Vertex >          VertexList;
 typedef std::set    < Vertex >          VertexSet;
+typedef std::stack  < Vertex >          VertexStack;
 typedef std::vector < Vertex >          VertexVector;
 
 typedef Vertices                        Nbhd;
@@ -52,7 +53,10 @@ class Vertices : public VertexVector {
     Vertices(const std::initializer_list<Vertex>&);
 
     void sort();
-    void merge(const Vertices&, const Vertices&);
+    // These functions require sorted inputs
+    void set_intersection(const Vertices&, const Vertices&);
+    void set_union(const Vertices&, const Vertices&);
+
     std::string str() const;
 };  // Vertices
 

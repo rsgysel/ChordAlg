@@ -1,5 +1,6 @@
 #include "ChordAlgSrc/separator.h"
 
+#include <algorithm>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -71,6 +72,12 @@ void Block::addC(Vertex v) {
 
 void Block::addNC(Vertex v) {
     NC_.push_back(v);
+}
+
+void Block::sort() {
+    std::sort(C_.begin(), C_.end());
+    std::sort(NC_.begin(), NC_.end());
+    return;
 }
 
 //////////////////////
@@ -292,6 +299,9 @@ void SeparatorBlocks::FindComponents(const FillEdges* fill) {
             ConnectedComponentID C = connected_component_[v];
             blocks_[C].addC(v);
         }
+    }
+    for (Block& B : blocks_) {
+        B.sort();
     }
     last_separator_vertex_seen_.clear();
     return;
