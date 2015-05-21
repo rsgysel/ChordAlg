@@ -45,46 +45,46 @@ TEST_F(VertexPairsTest, Sorted) {
 TEST(VertexAlgorithmsTest, SetUnion) {
     chordalg::Vertices U{0, 1, 3}, W{1, 2, 4};
     chordalg::Vertices V;
-    V.set_union(U, W);
+    V.SetUnion(U, W);
     EXPECT_EQ(V.size(), 5);
 }
 
 TEST(VertexAlgorithmsTest, SetUnionOneEmpty) {
     chordalg::Vertices U, W{1, 2};
     chordalg::Vertices V;
-    V.set_union(U, W);
+    V.SetUnion(U, W);
     EXPECT_EQ(V.size(), 2);
-    V.set_union(W, U);
+    V.SetUnion(W, U);
     EXPECT_EQ(V.size(), 2);
 }
 
 TEST(VertexAlgorithmsTest, SetUnionBothEmpty) {
     chordalg::Vertices U, W;
     chordalg::Vertices V;
-    V.set_union(U, W);
+    V.SetUnion(U, W);
     EXPECT_EQ(V.size(), 0);
 }
 
 TEST(VertexAlgorithmsTest, SetIntersection) {
     chordalg::Vertices U{0, 1, 3}, W{1, 2, 4};
     chordalg::Vertices V;
-    V.set_intersection(U, W);
+    V.SetIntersection(U, W);
     EXPECT_EQ(V.size(), 1);
 }
 
 TEST(VertexAlgorithmsTest, SetIntersectionOneEmpty) {
     chordalg::Vertices U, W{1, 2};
     chordalg::Vertices V;
-    V.set_intersection(U, W);
+    V.SetIntersection(U, W);
     EXPECT_EQ(V.size(), 0);
-    V.set_intersection(W, U);
+    V.SetIntersection(W, U);
     EXPECT_EQ(V.size(), 0);
 }
 
 TEST(VertexAlgorithmsTest, SetIntersectionBothEmpty) {
     chordalg::Vertices U, W;
     chordalg::Vertices V;
-    V.set_intersection(U, W);
+    V.SetIntersection(U, W);
     EXPECT_EQ(V.size(), 0);
 }
 

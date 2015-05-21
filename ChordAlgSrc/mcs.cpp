@@ -88,7 +88,7 @@ CliqueTree* NewCliqueTree(const Triangulation& G) {
         (*E)[e.second].push_back(e.first);
     }
     for (Vertices& V : *E) {
-        std::sort(V.begin(), V.end());
+        V.Sort();
     }
     CliqueTree* tr = new CliqueTree(&G, E, K);
     return tr;

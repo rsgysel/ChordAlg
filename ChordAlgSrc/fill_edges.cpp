@@ -102,7 +102,7 @@ AdjacencyLists* FillEdges::FilledNbhds() const {
         for (Vertex u : (*this)[v]) {
             (*a_lists)[v].push_back(u);
         }
-        std::sort((*a_lists)[v].begin(), (*a_lists)[v].end());
+        (*a_lists)[v].Sort();
     }
     return a_lists;
 }

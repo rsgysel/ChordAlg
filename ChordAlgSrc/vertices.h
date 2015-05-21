@@ -52,10 +52,10 @@ class Vertices : public VertexVector {
     explicit Vertices(const VertexVector&);
     Vertices(const std::initializer_list<Vertex>&);
 
-    void sort();
+    void Sort();
     // These functions require sorted inputs
-    void set_intersection(const Vertices&, const Vertices&);
-    void set_union(const Vertices&, const Vertices&);
+    void SetIntersection(const Vertices&, const Vertices&);
+    void SetUnion(const Vertices&, const Vertices&);
 
     std::string str() const;
 };  // Vertices

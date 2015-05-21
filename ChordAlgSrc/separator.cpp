@@ -18,16 +18,6 @@ Block::Block() : C_(), NC_() {
     return;
 }
 
-Block::Block(const Vertices& C) : C_(C), NC_() {
-    return;
-}
-
-Block::Block(const Vertices& C, const Vertices& NC) :
-    C_(C),
-    NC_(NC) {
-    return;
-}
-
 SeparatorComponents::SeparatorComponents(const Graph* G) :
     G_(G),
     connected_component_(),
@@ -58,6 +48,11 @@ SeparatorBlocks::~SeparatorBlocks() {
 ////////
 // Block
 
+void Block::SetSeparatorSize(size_t separator_size) {
+    separator_size_ = separator_size;
+    return;
+}
+
 const Vertices& Block::C() const {
     return C_;
 }
@@ -66,17 +61,21 @@ const Vertices& Block::NC() const {
     return NC_;
 }
 
-void Block::addC(Vertex v) {
+void Block::AddC(Vertex v) {
     C_.push_back(v);
 }
 
-void Block::addNC(Vertex v) {
+void Block::AddNC(Vertex v) {
     NC_.push_back(v);
 }
 
-void Block::sort() {
-    std::sort(C_.begin(), C_.end());
-    std::sort(NC_.begin(), NC_.end());
+bool Block::IsFull() const {
+    return NC_.size() == separator_size_;
+}
+
+void Block::Sort() {
+    C_.Sort();
+    NC_.Sort();
     return;
 }
 
@@ -242,10 +241,6 @@ std::vector< Block >::const_iterator SeparatorBlocks::end() const {
     return blocks_.end();
 }
 
-bool SeparatorBlocks::IsFull(const Block& B) const {
-    return separator_size_ == B.NC().size();
-}
-
 const Vertices& SeparatorBlocks::Component(ConnectedComponentID C) const {
     return blocks_[C].C();
 }
@@ -269,7 +264,7 @@ const Vertices& SeparatorBlocks::NComponentOf(Vertex v) const {
 size_t SeparatorBlocks::FullComponentCt() const {
     size_t count = 0;
     for (Block B : blocks_) {
-        if (B.NC().size() == separator_size_) {
+        if (B.IsFull()) {
             ++count;
         }
     }
@@ -297,11 +292,12 @@ void SeparatorBlocks::FindComponents(const FillEdges* fill) {
     for (Vertex v : *G_) {
         if (!IsInSeparator(v)) {
             ConnectedComponentID C = connected_component_[v];
-            blocks_[C].addC(v);
+            blocks_[C].AddC(v);
         }
     }
     for (Block& B : blocks_) {
-        B.sort();
+        B.SetSeparatorSize(separator_size_);
+        B.Sort();
     }
     last_separator_vertex_seen_.clear();
     return;
@@ -325,7 +321,7 @@ void SeparatorBlocks::FindNeighborhoods(
             // determined that v is in N(C)
             if (!IsInSeparator(u) &&
                 last_separator_vertex_seen_[C] != static_cast<int>(v)) {
-                blocks_[C].addNC(v);
+                blocks_[C].AddNC(v);
                 last_separator_vertex_seen_[C] = v;
             }
         }

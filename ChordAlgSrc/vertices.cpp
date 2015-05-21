@@ -75,11 +75,11 @@ VertexPairs::VertexPairs(Vertices V) : V_(V), begin_(0), end_(V_.size()) {
 ///////////
 // Vertices
 
-void Vertices::sort() {
+void Vertices::Sort() {
     std::sort(begin(), end());
 }
 
-void Vertices::set_intersection(const Vertices& U, const Vertices& W) {
+void Vertices::SetIntersection(const Vertices& U, const Vertices& W) {
     clear();
     reserve(std::min(U.size(), W.size()));
     if (U.empty() || W.empty()) {
@@ -92,7 +92,7 @@ void Vertices::set_intersection(const Vertices& U, const Vertices& W) {
     return;
 }
 
-void Vertices::set_union(const Vertices& U, const Vertices& W) {
+void Vertices::SetUnion(const Vertices& U, const Vertices& W) {
     clear();
     reserve(U.size() + W.size());
     if (U.empty()) {

@@ -15,6 +15,7 @@ add_library(ChordAlgLib
                 mcs.cpp
                 mcs_m.cpp
                 minimal_separators.cpp
+                potential_maxcliques.cpp
                 separator.cpp
                 separator_graph.cpp
                 supertree.cpp

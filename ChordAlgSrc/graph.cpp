@@ -341,7 +341,7 @@ AdjacencyLists* Graph::InducedVertices(
     const Graph& super_graph,
     const Vertices& U) {
     Vertices X(U);
-    std::sort(X.begin(), X.end());
+    X.Sort();
     AdjacencyLists* a_lists = new AdjacencyLists();
     a_lists->resize(X.size());
     std::map< Vertex, size_t > vertex_order;

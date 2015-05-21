@@ -20,16 +20,17 @@ typedef int ConnectedComponentID;
 class Block {
  public:
     Block();
-    explicit Block(const Vertices&);
-    Block(const Vertices&, const Vertices&);
 
+    void SetSeparatorSize(size_t);
     const Vertices& C() const;
     const Vertices& NC() const;
-    void addC(Vertex v);
-    void addNC(Vertex v);
-    void sort();
+    void AddC(Vertex v);
+    void AddNC(Vertex v);
+    bool IsFull() const;
+    void Sort();
 
  private:
+    size_t separator_size_;
     Vertices C_, NC_;
 };  // Block
 
@@ -90,7 +91,6 @@ class SeparatorBlocks : public SeparatorComponents {
                   const Vertex* v = nullptr);
     std::vector< Block >::const_iterator begin() const;
     std::vector< Block >::const_iterator end() const;
-    bool IsFull(const Block&) const;
     const Vertices& Component(ConnectedComponentID C) const;
     const Vertices& NComponent(ConnectedComponentID C) const;
     const Block& BlockOf(Vertex v) const;
