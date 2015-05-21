@@ -8,8 +8,8 @@
 #include <algorithm>
 #include <initializer_list>
 #include <list>
+#include <queue>
 #include <set>
-#include <stack>
 #include <string>
 #include <vector>
 #include <utility>
@@ -26,8 +26,8 @@ typedef size_t                          Vertex;
 typedef std::pair< Vertex, Vertex >     VertexPair;
 
 typedef std::list   < Vertex >          VertexList;
+typedef std::queue  < Vertex >          VertexQueue;
 typedef std::set    < Vertex >          VertexSet;
-typedef std::stack  < Vertex >          VertexStack;
 typedef std::vector < Vertex >          VertexVector;
 
 typedef Vertices                        Nbhd;

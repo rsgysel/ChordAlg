@@ -69,10 +69,10 @@ Graph::~Graph() {
     delete vertex_names_;
 }
 
-InducedSubgraph::InducedSubgraph(const Graph* G, const Vertices* U) :
-    Graph(InducedVertices(*G, *U)),
+InducedSubgraph::InducedSubgraph(const Graph* G, const Vertices& U) :
+    Graph(InducedVertices(*G, U)),
     G_(G),
-    U_(*U) {
+    U_(U) {
     return;
 }
 

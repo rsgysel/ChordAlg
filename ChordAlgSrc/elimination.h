@@ -12,6 +12,8 @@ AdjacencyLists* FillIn(const Graph&, const EliminationOrder&);
 
 bool ZeroFill(const Graph&, const EliminationOrder&);
 
+EliminationOrder* ConnectedOrder(const Graph&);
+
 }  // namespace Elimination
 
 }  // namespace chordalg

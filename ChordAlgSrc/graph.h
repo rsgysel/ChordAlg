@@ -80,7 +80,7 @@ class InducedSubgraph : public Graph {
     InducedSubgraph(const InducedSubgraph&) = delete;
     void operator=(const InducedSubgraph&) = delete;
 
-    InducedSubgraph(const Graph*, const Vertices*);
+    InducedSubgraph(const Graph*, const Vertices&);
 
     VertexName name(Vertex v) const;
     Weight FillCount(Vertex u, Vertex v) const;

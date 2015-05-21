@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
 add_gmock_test(ChordAlgTests atoms_graph_tests.cpp
+                             elimination_tests.cpp
                              elimination_order_graph_tests.cpp
                              file_reader_graph_tests.cpp
                              fill_edge_graph_tests.cpp

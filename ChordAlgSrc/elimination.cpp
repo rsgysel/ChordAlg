@@ -70,6 +70,34 @@ bool ZeroFill(const Graph& G, const EliminationOrder& eo) {
     return true;
 }
 
+// Creates an elimination ordering eo = v_1, v_2, ..., v_n
+// such that G[v_1, v_2, ..., v_i] is connected for every
+// i between 1 and n (assumes G is connected)
+EliminationOrder* ConnectedOrder(const Graph& G) {
+    EliminationOrder* eo = new EliminationOrder(&G);
+    if (G.order() == 0) {
+        return eo;
+    }
+    VertexSet reached;
+    VertexQueue to_emplace;
+    size_t i = 0;
+    to_emplace.push(0);
+    reached.insert(0);
+    while (!to_emplace.empty()) {
+        Vertex v = to_emplace.front();
+        to_emplace.pop();
+        eo->Emplace(v, i);
+        ++i;
+        for (Vertex u : G.N(v)) {
+            if (reached.find(u) == reached.end()) {
+                to_emplace.push(u);
+                reached.insert(u);
+            }
+        }
+    }
+    return eo;
+}
+
 }  // namespace Elimination
 
 }  // namespace chordalg

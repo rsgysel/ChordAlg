@@ -113,7 +113,7 @@ void Atoms::ComputeAtoms() {
     }
     for (Vertices U : vertices_of_atoms) {
         std::sort(U.begin(), U.end());
-        atom_subgraphs_.push_back(new InducedSubgraph(G_, &U));
+        atom_subgraphs_.push_back(new InducedSubgraph(G_, U));
     }
     delete eo;
     delete F;
