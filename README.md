@@ -25,3 +25,6 @@ Installation
 
 4) Executables will be in
     ChordAlg/build/executables
+
+5) Sanity checks, which are expensive to run (and may not terminate), will be in
+    ChordAlg/build/sanity_checks

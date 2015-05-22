@@ -1,5 +1,5 @@
 /*
- *  ChordalGraph -  checks if a graph is chordal
+ *  SeparatorGraph - computes separator graph of a graph
  */
 
 #include <iostream>

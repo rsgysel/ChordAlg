@@ -85,9 +85,9 @@ class LexTrie {
     explicit LexTrie(size_t);
     ~LexTrie();
 
-    bool Contains(const std::vector< size_t >*) const;
-    size_t Insert(const std::vector< size_t >*, bool* new_set = nullptr);
-    size_t SortedInsert(const std::vector< size_t >*, bool* new_set = nullptr);
+    bool Contains(const std::vector< size_t >&) const;
+    size_t Insert(const std::vector< size_t >&, bool* new_set = nullptr);
+    size_t SortedInsert(const std::vector< size_t >&, bool* new_set = nullptr);
     std::string str() const;
     size_t size() const;        // number of sets in family
     size_t n() const;

@@ -20,6 +20,7 @@ add_chordalg_executable(LBTriang)
 add_chordalg_executable(MCS)
 add_chordalg_executable(MinimalTriangulation)
 add_chordalg_executable(PerfectEliminationOrder)
+add_chordalg_executable(PotentialMaxcliques)
 add_chordalg_executable(SeparatorGraph)
 
 # Graph Computations

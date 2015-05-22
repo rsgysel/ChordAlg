@@ -534,7 +534,7 @@ void CellIntGraphFR::AddVertex(
             cells_ = new LexTrie(M.rows());
         }
         bool new_cell;
-        size_t id = cells_->Insert(&C, &new_cell);
+        size_t id = cells_->Insert(C, &new_cell);
         if (new_cell) {
             size_t cell = subsets_->size();
             cell_id_[id] = cell;

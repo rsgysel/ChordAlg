@@ -69,7 +69,7 @@ Graph::~Graph() {
     delete vertex_names_;
 }
 
-InducedSubgraph::InducedSubgraph(const Graph* G, const Vertices& U) :
+InducedSubgraph::InducedSubgraph(const Graph* G, const VertexSet& U) :
     Graph(InducedVertices(*G, U)),
     G_(G),
     U_(U) {
@@ -167,19 +167,22 @@ std::string Graph::str() const {
 }
 
 std::string Graph::str(const LexTrie& T) const {
-    std::string result;
-    for (FiniteSet S : T) {
-        Vertices V(S);
-        result += str(V);
-        result += '\n';
+    if (T.size() == 0) {
+        return std::string();
+    } else {
+        std::string result;
+        for (FiniteSet S : T) {
+            Vertices V(S);
+            result += str(V);
+            result += '\n';
+        }
+        result.pop_back();
+        return result;
     }
-    result.pop_back();
-    return result;
 }
 
 std::string Graph::str(const VertexVector& U) const {
-    Vertices V(U);
-    return str(V);
+    return str(Vertices(U));
 }
 
 std::string Graph::str(const Vertices& U) const {
@@ -305,7 +308,6 @@ const Vertices& Graph::N(Vertex v) const {
     return (*neighborhoods_)[v];
 }
 
-// Use to transform InducedSubgraph vertices to parent graph vertices
 Vertex Graph::ParentGraph(Vertex v) const {
     return v;
 }
@@ -339,32 +341,25 @@ void Graph::Init() {
 
 AdjacencyLists* Graph::InducedVertices(
     const Graph& super_graph,
-    const Vertices& U) {
-    Vertices X(U);
-    X.Sort();
+    const VertexSet& U) {
     AdjacencyLists* a_lists = new AdjacencyLists();
-    a_lists->resize(X.size());
+    a_lists->reserve(U.size());
     std::map< Vertex, size_t > vertex_order;
     size_t i = 0;
-    for (Vertex v : X) {
+    for (Vertex v : U) {
         vertex_order[v] = i;
         ++i;
     }
-    std::vector< bool > in_subgraph;
-    in_subgraph.resize(super_graph.order());
-    for (Vertex v : super_graph) {
-        in_subgraph[v] = false;
-    }
-    for (Vertex v : X) {
+    std::vector< bool > in_subgraph(super_graph.order(), false);
+    for (Vertex v : U) {
         in_subgraph[v] = true;
     }
     // a_lists sorted as long as super_graph.N(v) is
-    for (Vertex v : X) {
+    for (Vertex v : U) {
+        a_lists->push_back(Vertices());
         for (Vertex u : super_graph.N(v)) {
             if (in_subgraph[u]) {
-                Vertex v_induced_id = vertex_order[v];
-                Vertex u_induced_id = vertex_order[u];
-                (*a_lists)[v_induced_id].push_back(u_induced_id);
+                a_lists->back().push_back(vertex_order[u]);
             }
         }
     }
@@ -384,18 +379,27 @@ VertexNames* Graph::DefaultNames(size_t order) {
 //////////////////
 // InducedSubgraph
 
+InducedSubgraph* InducedSubgraph::New(const Graph* G, const Vertices& U) {
+    VertexSet W(U.begin(), U.end());
+    return new InducedSubgraph(G, W); 
+}
+
 VertexName InducedSubgraph::name(Vertex v) const {
     return G_->name(U_[v]);
 }
+
 Weight InducedSubgraph::FillCount(Vertex u, Vertex v) const {
     return G_->FillCount(U_[u], U_[v]);
 }
+
 Weight InducedSubgraph::FillCount(VertexPair uv) const {
     return G_->FillCount(U_[uv.first], U_[uv.second]);
 }
+
 Vertex InducedSubgraph::ParentGraph(Vertex v) const {
     return U_[v];
 }
+
 VertexPair InducedSubgraph::ParentGraph(VertexPair uv) const {
     return VertexPair(ParentGraph(uv.first), ParentGraph(uv.second));
 }

@@ -193,9 +193,9 @@ const LexTrieNode* LexTrieNode::GetChild(size_t k) const {
 //////////
 // LexTrie
 
-bool LexTrie::Contains(const std::vector< size_t >* X) const {
+bool LexTrie::Contains(const std::vector< size_t >& X) const {
     const LexTrieNode* node = root_;
-    for (auto x : *X) {
+    for (auto x : X) {
         if (!node->HasChild(x)) {
             return false;
         }
@@ -204,15 +204,15 @@ bool LexTrie::Contains(const std::vector< size_t >* X) const {
     return node->has_set_;
 }
 
-size_t LexTrie::Insert(const std::vector< size_t >* X, bool* new_set) {
-    std::vector< size_t > SortedX(*X);
+size_t LexTrie::Insert(const std::vector< size_t >& X, bool* new_set) {
+    std::vector< size_t > SortedX(X);
     std::sort(SortedX.begin(), SortedX.end());
-    return SortedInsert(&SortedX, new_set);
+    return SortedInsert(SortedX, new_set);
 }
 
-size_t LexTrie::SortedInsert(const std::vector< size_t >* X, bool* new_set) {
+size_t LexTrie::SortedInsert(const std::vector< size_t >& X, bool* new_set) {
     LexTrieNode* node = root_;
-    for (auto x : *X) {
+    for (auto x : X) {
         if (!node->HasChild(x)) {
             LexTrieNode* newChild = new LexTrieNode(false);
             if (newChild == nullptr) {

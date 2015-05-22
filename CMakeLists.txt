@@ -27,6 +27,7 @@ endif()
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(ChordAlgSrc)
 add_subdirectory(executables)
+add_subdirectory(sanity_checks)
 add_subdirectory(separatorgraph_experiments)
 
 set(CONFIGURED_ONCE TRUE CACHE INTERNAL

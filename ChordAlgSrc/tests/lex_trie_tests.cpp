@@ -29,7 +29,7 @@ class LexTrieTest : public ::testing::Test {
     }
     void Insert(std::initializer_list<size_t> X) {
         std::vector<size_t> Xvec(X);
-        T_->SortedInsert(&Xvec, &new_insert_);
+        T_->SortedInsert(Xvec, &new_insert_);
         return;
     }
     void InsertSetAndString(std::initializer_list<size_t> X) {

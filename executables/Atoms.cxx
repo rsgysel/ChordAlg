@@ -1,6 +1,12 @@
 /*
  *  Atoms -  computes and prints the atom subgraphs
- *  of a graph
+ *  of a graph.
+ *
+ *  Unlike other executables in ChordAlg, Atoms
+ *  will print to files instead of stdout.
+ *  If graph.g is the input file, then atom subgraphs
+ *  will look like either graph.g_atom9 or
+ *  graph.g_cliqueatom5
  */
 
 #include <cstdlib>

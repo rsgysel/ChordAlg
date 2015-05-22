@@ -1,8 +1,9 @@
 [ ] GraphFile / FileReader GML format
 [ ] GraphFile / FileReader DOT format
+[ ] Vertex class? Contains name, optional data (color, multicolor, subset...)
+    Would simplify InducedSubgraph / Graph relationship (see ParentGraph)
 [ ] Smart Pointers
 [ ] Analyze/Optimize CellIntersectionGraph::CommonColors
-[ ] EliminationAlgorithm -> EliminationHeuristics
-[ ] EliminationOrder::EliminationFill -> chordalg::EliminationAlgorithms?
-    Not if de-coupling from EliminationOrder is prohibative
 [ ] Remove SeparatorComponents::GetNeighborhood? Something smells funny
+[x] EliminationOrder::EliminationFill -> chordalg::EliminationAlgorithms?
+[x] EliminationAlgorithm -> EliminationHeuristics

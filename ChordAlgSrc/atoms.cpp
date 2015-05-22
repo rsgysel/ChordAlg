@@ -58,7 +58,7 @@ void Atoms::ComputeAtoms() {
     VertexList* minsep_generators = new VertexList();
     MCSmPlus::Run(*G_, eo, F, minsep_generators);
 
-    std::list< Vertices > vertices_of_atoms;
+    std::list< VertexSet* > vertices_of_atoms;
     SeparatorComponents cc(G_);
     Vertices deleted_vertices;  // in paper, this is V(G_) - V(G_')
     std::vector< bool > is_deleted(G_->order(), false);
@@ -79,23 +79,23 @@ void Atoms::ComputeAtoms() {
             }
         }
         if (G_->IsClique(S)) {
-            clique_minimal_separators_.Insert(&S);
+            clique_minimal_separators_.Insert(S);
             for (Vertex u : deleted_vertices) {
                 S.push_back(u);
             }
             cc.Separate(S);
             Vertices C = cc.ConnectedComponent(v);
-            Vertices atom;
+            VertexSet* atom = new VertexSet();
             for (Vertex u : C) {
                 if (!is_deleted[u]) {
                     deleted_vertices.push_back(u);
                     is_deleted[u] = true;
-                    atom.push_back(u);
+                    atom->insert(u);
                 }
             }
             for (Vertex u : S) {
                 if (!is_deleted[u]) {
-                    atom.push_back(u);
+                    atom->insert(u);
                 }
             }
             vertices_of_atoms.push_back(atom);
@@ -109,11 +109,15 @@ void Atoms::ComputeAtoms() {
         }
     }
     if (!C.empty()) {
-        vertices_of_atoms.push_back(C);
+        VertexSet* atom = new VertexSet();
+        for (Vertex v : C) {
+            atom->insert(v);
+        }
+        vertices_of_atoms.push_back(atom);
     }
-    for (Vertices U : vertices_of_atoms) {
-        U.Sort();
-        atom_subgraphs_.push_back(new InducedSubgraph(G_, U));
+    for (VertexSet* U : vertices_of_atoms) {
+        atom_subgraphs_.push_back(new InducedSubgraph(G_, *U));
+        delete U;
     }
     delete eo;
     delete F;

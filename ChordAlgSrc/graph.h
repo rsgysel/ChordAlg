@@ -15,8 +15,6 @@
 
 namespace chordalg {
 
-class EliminationOrder;
-
 class Graph {
  public:
     Graph() = delete;
@@ -49,22 +47,23 @@ class Graph {
     virtual VertexName name(Vertex v) const;
     size_t order() const;
     size_t size() const;
-    virtual bool IsEdge(Vertex u, Vertex v) const;
-    virtual bool IsEdge(VertexPair uv) const;
-    virtual Weight FillCount(Vertex u, Vertex v) const;
-    virtual Weight FillCount(VertexPair uv) const;
+    virtual bool IsEdge(Vertex, Vertex) const;
+    virtual bool IsEdge(VertexPair) const;
+    virtual Weight FillCount(Vertex, Vertex) const;
+    virtual Weight FillCount(VertexPair) const;
     bool IsClique() const;
-    bool IsClique(const Vertices& set) const;
-    const Vertices& N(Vertex v) const;
+    bool IsClique(const Vertices&) const;
+    const Vertices& N(Vertex) const;
 
     // Use to transform InducedSubgraph vertices to parent graph vertices
-    virtual Vertex ParentGraph(Vertex v) const;
-    virtual VertexPair ParentGraph(VertexPair uv) const;
+    virtual Vertex ParentGraph(Vertex) const;
+    virtual VertexPair ParentGraph(VertexPair) const;
+    void ParentGraph(Vertices*) const;
 
  protected:
     void Init();
     // Induced Subgraph Initialization
-    static AdjacencyLists* InducedVertices(const Graph&, const Vertices&);
+    static AdjacencyLists* InducedVertices(const Graph&, const VertexSet&);
     static VertexNames* DefaultNames(size_t);
 
     const AdjacencyLists* const neighborhoods_;
@@ -80,13 +79,17 @@ class InducedSubgraph : public Graph {
     InducedSubgraph(const InducedSubgraph&) = delete;
     void operator=(const InducedSubgraph&) = delete;
 
-    InducedSubgraph(const Graph*, const Vertices&);
+    InducedSubgraph(const Graph*, const VertexSet&);
 
-    VertexName name(Vertex v) const;
-    Weight FillCount(Vertex u, Vertex v) const;
-    Weight FillCount(VertexPair uv) const;
-    Vertex ParentGraph(Vertex v) const;
-    VertexPair ParentGraph(VertexPair uv) const;
+    static InducedSubgraph* New(const Graph*, const Vertices&);
+
+    VertexName name(Vertex) const;
+    Weight FillCount(Vertex, Vertex) const;
+    Weight FillCount(VertexPair) const;
+    // Use to transform InducedSubgraph vertices to parent graph vertices
+    Vertex ParentGraph(Vertex) const;
+    VertexPair ParentGraph(VertexPair) const;
+    void ParentGraph(Vertices*) const;
 
  protected:
     const Graph* const G_;

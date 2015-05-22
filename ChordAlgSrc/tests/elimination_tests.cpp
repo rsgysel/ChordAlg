@@ -46,10 +46,11 @@ class EliminationConnectedTest : public EliminationTest {
             // Check that every G[v_1, v_2, ..., v_i] is connected
             for (size_t i = 0; i < G_->order(); ++i) {
                 V.push_back(eo_->VertexAt(i));
-                chordalg::InducedSubgraph GV(G_, V);
-                chordalg::SeparatorComponents S(&GV);
+                chordalg::InducedSubgraph* GV = chordalg::InducedSubgraph::New(G_, V);
+                chordalg::SeparatorComponents S(GV);
                 S.Separate(chordalg::Vertices());
                 EXPECT_EQ(S.size(), 1);
+                delete GV;
             }
         }
     }
