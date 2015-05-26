@@ -36,7 +36,7 @@ LexTrieIterator::LexTrieIterator(
     nodes_.reserve(n_);
     children_itrs_.reserve(n_);
     nodes_.push_back(root);
-    children_itrs_.push_back(root->children_.begin());
+    children_itrs_.push_back(root->children().begin());
     return;
 }
 
@@ -50,9 +50,14 @@ LexTrieIterator::LexTrieIterator(const LexTrieIterator& other) :
     return;
 }
 
-LexTrieNode::LexTrieNode(bool has_set) :
-    has_set_(has_set),
-    set_id_(0),
+LexTrieNodeData::LexTrieNodeData() :
+    is_set_(false),
+    set_id_(0) {
+    return;
+}
+
+LexTrieNode::LexTrieNode() :
+    data_(new LexTrieNodeData()),
     children_() {
     return;
 }
@@ -61,12 +66,13 @@ LexTrieNode::~LexTrieNode() {
     for (auto kv : children_) {
         delete kv.second;
     }
+    delete data_;
     return;
 }
 
 LexTrie::LexTrie(size_t n) : n_(n), set_count_(0) {
     try {
-        this->root_ = new LexTrieNode(false);
+        this->root_ = new LexTrieNode();
     } catch(const std::bad_alloc& e) {
         std::cerr << "In LexTrie.cpp LexTrie(size_t): " << e.what();
         std::cerr << std::endl;
@@ -102,27 +108,21 @@ LexTrieIterator LexTrieIterator::operator++() {
         return LexTrieIterator(T_);
     }
     // if T_ contains only the empty set
-    if (nodes_[0]->has_set_ && T_->size() == 1) {
+    if (nodes_[0]->IsSet() && T_->size() == 1) {
         nodes_.pop_back();
         children_itrs_.pop_back();
         return *this;
-/*        if (!only_empty_set_returned_) {
-            only_empty_set_returned_ = true;
-            return *this;
-        } else {
-            nodes_.pop_back();
-        }*/
     }
     // otherwise Iterator either points to root, leaf, or internal node
     // we only traverse up trie if Iterator points to leaf
-    if (nodes_.back()->children_.empty()) {
+    if (nodes_.back()->children().empty()) {
         // climb up trie until there is a new branch
         do {
             nodes_.pop_back();
             children_itrs_.pop_back();
             set_.pop_back();
         } while (!nodes_.empty() && ++children_itrs_.back() ==
-                nodes_.back()->children_.end());
+                nodes_.back()->children().end());
         // while condition is also iterating children_itrs
 
         // if at last set, exit
@@ -134,11 +134,11 @@ LexTrieIterator LexTrieIterator::operator++() {
     // only the empty set
     do {
         size_t index = children_itrs_.back()->first;
-        LexTrieNode* child_node = nodes_.back()->children_[index];
-        children_itrs_.push_back(child_node->children_.begin());
+        LexTrieNode* child_node = nodes_.back()->children()[index];
+        children_itrs_.push_back(child_node->children().begin());
         nodes_.push_back(child_node);
         set_.push_back(index);
-    } while (!nodes_.back()->has_set_);
+    } while (!nodes_.back()->IsSet());
     return *this;
 }
 
@@ -169,6 +169,22 @@ const FiniteSet& LexTrieIterator::operator*() const {
     return set_;
 }
 
+//////////////////
+// LexTrieNodeData
+
+void LexTrieNodeData::CreateSet(size_t n) {
+    is_set_ = true;
+    set_id_ = n;
+    return;
+}
+
+bool LexTrieNodeData::is_set() const {
+    return is_set_;
+}
+
+size_t LexTrieNodeData::set_id() const {
+    return set_id_;
+}
 
 //////////////
 // LexTrieNode
@@ -190,6 +206,23 @@ const LexTrieNode* LexTrieNode::GetChild(size_t k) const {
     return children_.find(k) != children_.end() ? children_.at(k) : nullptr;
 }
 
+bool LexTrieNode::IsSet() const {
+    return data_->is_set();
+}
+
+size_t LexTrieNode::Id() const {
+    return data_->set_id();
+}
+
+void LexTrieNode::CreateSet(size_t n) {
+    data_->CreateSet(n);
+    return;
+}
+
+LexTrieNodeChildren& LexTrieNode::children() {
+    return children_;
+}
+
 //////////
 // LexTrie
 
@@ -201,7 +234,7 @@ bool LexTrie::Contains(const std::vector< size_t >& X) const {
         }
         node = node->GetChild(x);
     }
-    return node->has_set_;
+    return node->IsSet();
 }
 
 size_t LexTrie::Insert(const std::vector< size_t >& X, bool* new_set) {
@@ -214,7 +247,7 @@ size_t LexTrie::SortedInsert(const std::vector< size_t >& X, bool* new_set) {
     LexTrieNode* node = root_;
     for (auto x : X) {
         if (!node->HasChild(x)) {
-            LexTrieNode* newChild = new LexTrieNode(false);
+            LexTrieNode* newChild = new LexTrieNode();
             if (newChild == nullptr) {
                 throw std::bad_alloc();
             }
@@ -222,17 +255,14 @@ size_t LexTrie::SortedInsert(const std::vector< size_t >& X, bool* new_set) {
         }
         node = node->GetChild(x);
     }
-    if (new_set != nullptr && node->has_set_) {
-        *new_set = false;
-    } else if (new_set != nullptr) {
-        *new_set = true;
+    if (new_set != nullptr) {
+        *new_set = node->IsSet() ? false : true;
     }
-    if (!node->has_set_) {
+    if (!node->IsSet()) {
         ++set_count_;
-        node->has_set_ = true;
-        node->set_id_ = set_count_;
+        node->CreateSet(set_count_);
     }
-    return node->set_id_;
+    return node->Id();
 }
 
 std::string LexTrie::str() const {

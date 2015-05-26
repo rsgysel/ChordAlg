@@ -47,32 +47,43 @@ class LexTrieIterator {
     const LexTrie* T_;
 };  // LexTrieIterator
 
+class LexTrieNodeData {
+ public:
+    LexTrieNodeData();
+
+    void CreateSet(size_t);
+
+    bool is_set() const;
+    size_t set_id() const;
+
+ private:
+    bool is_set_;
+    size_t set_id_;
+};  // LexTrieNodeData
+
 // Each node may represent a set by its path to the root.
 // A node is a k-child if the largest element in its set is k (equivalently,
 // traversing an edge from any node to a k-child is "adding" k to the set
 // we're inserting/checking).
 class LexTrieNode {
  public:
-    LexTrieNode() = delete;
     LexTrieNode(const LexTrieNode&) = delete;
     void operator=(const LexTrieNode&) = delete;
-
- private:
-    explicit LexTrieNode(bool);
+    LexTrieNode();
     ~LexTrieNode();
-
-    bool has_set_;  // true if node represents a set
-    size_t set_id_;
-    LexTrieNodeChildren children_;
 
     bool HasChild(size_t) const;
     void AddChild(LexTrieNode*, size_t);
     LexTrieNode* GetChild(size_t);
     const LexTrieNode* GetChild(size_t) const;
+    bool IsSet() const;
+    size_t Id() const;
+    void CreateSet(size_t);
+    LexTrieNodeChildren& children();
 
-    friend LexTrieIterator LexTrieIterator::operator++();
-    friend class LexTrie;
-    friend class LexTrieIterator;
+ private:
+    LexTrieNodeData* data_;
+    LexTrieNodeChildren children_;
 };  // LexTrieNode
 
 // A tree representing a family of subsets of [0, 1, ..., n-1]
