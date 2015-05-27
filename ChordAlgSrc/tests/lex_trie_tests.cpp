@@ -29,7 +29,7 @@ class LexTrieTest : public ::testing::Test {
     }
     void Insert(std::initializer_list<size_t> X) {
         std::vector<size_t> Xvec(X);
-        T_->SortedInsert(Xvec, &new_insert_);
+        T_->PresortedInsert(Xvec, &new_insert_);
         return;
     }
     void InsertSetAndString(std::initializer_list<size_t> X) {
@@ -84,6 +84,18 @@ TEST_F(LexTrieTest, Insertion) {
     this->Insert({2, 4, 9});
     EXPECT_EQ(new_insert_, true);
     EXPECT_EQ(T_->size(), 1);
+}
+
+TEST_F(LexTrieTest, ScoredInsertion) {
+    this->InitTrie(10);
+    float score = 10;
+    chordalg::FiniteSet X;
+    X.push_back(2);
+    X.push_back(4);
+    T_->PresortedInsert(X, nullptr, &score);
+    float stored_score = 0;
+    EXPECT_EQ(T_->Contains(X, &stored_score), true);
+    EXPECT_EQ(stored_score, 10);
 }
 
 TEST_F(LexTrieTest, SuperfluousInsertion) {

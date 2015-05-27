@@ -50,14 +50,10 @@ LexTrieIterator::LexTrieIterator(const LexTrieIterator& other) :
     return;
 }
 
-LexTrieNodeData::LexTrieNodeData() :
-    is_set_(false),
-    set_id_(0) {
-    return;
-}
-
 LexTrieNode::LexTrieNode() :
-    data_(new LexTrieNodeData()),
+    is_set_(false),
+    set_id_(0),
+    score_(0),
     children_() {
     return;
 }
@@ -66,7 +62,6 @@ LexTrieNode::~LexTrieNode() {
     for (auto kv : children_) {
         delete kv.second;
     }
-    delete data_;
     return;
 }
 
@@ -108,7 +103,7 @@ LexTrieIterator LexTrieIterator::operator++() {
         return LexTrieIterator(T_);
     }
     // if T_ contains only the empty set
-    if (nodes_[0]->IsSet() && T_->size() == 1) {
+    if (nodes_[0]->is_set() && T_->size() == 1) {
         nodes_.pop_back();
         children_itrs_.pop_back();
         return *this;
@@ -138,7 +133,7 @@ LexTrieIterator LexTrieIterator::operator++() {
         children_itrs_.push_back(child_node->children().begin());
         nodes_.push_back(child_node);
         set_.push_back(index);
-    } while (!nodes_.back()->IsSet());
+    } while (!nodes_.back()->is_set());
     return *this;
 }
 
@@ -169,23 +164,6 @@ const FiniteSet& LexTrieIterator::operator*() const {
     return set_;
 }
 
-//////////////////
-// LexTrieNodeData
-
-void LexTrieNodeData::CreateSet(size_t n) {
-    is_set_ = true;
-    set_id_ = n;
-    return;
-}
-
-bool LexTrieNodeData::is_set() const {
-    return is_set_;
-}
-
-size_t LexTrieNodeData::set_id() const {
-    return set_id_;
-}
-
 //////////////
 // LexTrieNode
 
@@ -206,17 +184,28 @@ const LexTrieNode* LexTrieNode::GetChild(size_t k) const {
     return children_.find(k) != children_.end() ? children_.at(k) : nullptr;
 }
 
-bool LexTrieNode::IsSet() const {
-    return data_->is_set();
-}
-
-size_t LexTrieNode::Id() const {
-    return data_->set_id();
-}
-
-void LexTrieNode::CreateSet(size_t n) {
-    data_->CreateSet(n);
+void LexTrieNode::CreateSet(size_t set_id) {
+    is_set_ = true;
+    set_id_ = set_id;
     return;
+}
+
+void LexTrieNode::CreateSet(size_t set_id, float score) {
+    is_set_ = true;
+    set_id_ = set_id;
+    score_ = score;
+}
+
+bool LexTrieNode::is_set() const {
+    return is_set_;
+}
+
+size_t LexTrieNode::set_id() const {
+    return set_id_;
+}
+
+float LexTrieNode::score() const {
+    return score_;
 }
 
 LexTrieNodeChildren& LexTrieNode::children() {
@@ -226,7 +215,9 @@ LexTrieNodeChildren& LexTrieNode::children() {
 //////////
 // LexTrie
 
-bool LexTrie::Contains(const std::vector< size_t >& X) const {
+bool LexTrie::Contains(
+    const std::vector< size_t >& X,
+    float* score) const {
     const LexTrieNode* node = root_;
     for (auto x : X) {
         if (!node->HasChild(x)) {
@@ -234,16 +225,25 @@ bool LexTrie::Contains(const std::vector< size_t >& X) const {
         }
         node = node->GetChild(x);
     }
-    return node->IsSet();
+    if (score) {
+        *score = node->score();
+    }
+    return node->is_set();
 }
 
-size_t LexTrie::Insert(const std::vector< size_t >& X, bool* new_set) {
+size_t LexTrie::Insert(
+    const std::vector< size_t >& X,
+    bool* new_set,
+    float* score) {
     std::vector< size_t > SortedX(X);
     std::sort(SortedX.begin(), SortedX.end());
-    return SortedInsert(SortedX, new_set);
+    return PresortedInsert(SortedX, new_set, score);
 }
 
-size_t LexTrie::SortedInsert(const std::vector< size_t >& X, bool* new_set) {
+size_t LexTrie::PresortedInsert(
+    const std::vector< size_t >& X,
+    bool* new_set,
+    float* score) {
     LexTrieNode* node = root_;
     for (auto x : X) {
         if (!node->HasChild(x)) {
@@ -256,13 +256,17 @@ size_t LexTrie::SortedInsert(const std::vector< size_t >& X, bool* new_set) {
         node = node->GetChild(x);
     }
     if (new_set != nullptr) {
-        *new_set = node->IsSet() ? false : true;
+        *new_set = node->is_set() ? false : true;
     }
-    if (!node->IsSet()) {
+    if (!node->is_set()) {
         ++set_count_;
-        node->CreateSet(set_count_);
+        if (score) {
+            node->CreateSet(set_count_, *score);
+        } else {
+            node->CreateSet(set_count_);
+        }
     }
-    return node->Id();
+    return node->set_id();
 }
 
 std::string LexTrie::str() const {

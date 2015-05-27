@@ -47,20 +47,6 @@ class LexTrieIterator {
     const LexTrie* T_;
 };  // LexTrieIterator
 
-class LexTrieNodeData {
- public:
-    LexTrieNodeData();
-
-    void CreateSet(size_t);
-
-    bool is_set() const;
-    size_t set_id() const;
-
- private:
-    bool is_set_;
-    size_t set_id_;
-};  // LexTrieNodeData
-
 // Each node may represent a set by its path to the root.
 // A node is a k-child if the largest element in its set is k (equivalently,
 // traversing an edge from any node to a k-child is "adding" k to the set
@@ -76,13 +62,17 @@ class LexTrieNode {
     void AddChild(LexTrieNode*, size_t);
     LexTrieNode* GetChild(size_t);
     const LexTrieNode* GetChild(size_t) const;
-    bool IsSet() const;
-    size_t Id() const;
     void CreateSet(size_t);
+    void CreateSet(size_t, float);
+    bool is_set() const;
+    size_t set_id() const;
+    float score() const;
     LexTrieNodeChildren& children();
 
  private:
-    LexTrieNodeData* data_;
+    bool is_set_;
+    size_t set_id_;
+    float score_;
     LexTrieNodeChildren children_;
 };  // LexTrieNode
 
@@ -96,9 +86,13 @@ class LexTrie {
     explicit LexTrie(size_t);
     ~LexTrie();
 
-    bool Contains(const std::vector< size_t >&) const;
-    size_t Insert(const std::vector< size_t >&, bool* new_set = nullptr);
-    size_t SortedInsert(const std::vector< size_t >&, bool* new_set = nullptr);
+    bool Contains(const std::vector< size_t >&, float* score = nullptr) const;
+    size_t Insert(const std::vector< size_t >&,
+                  bool* new_set = nullptr,
+                  float* score = nullptr);
+    size_t PresortedInsert(const std::vector< size_t >&,
+                        bool* new_set = nullptr,
+                        float* score = nullptr);
     std::string str() const;
     size_t size() const;        // number of sets in family
     size_t n() const;

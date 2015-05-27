@@ -45,7 +45,7 @@ MinsepTrie* Generate(const Graph& G) {
     for (Vertex v : G) {
         S.SeparateClosedNbhd(v);
         for (Block B : S) {
-            M->SortedInsert(B.NC(), &new_set);
+            M->PresortedInsert(B.NC(), &new_set);
             if (new_set) {
                 M_stack.push(B.NC());
             }
@@ -61,7 +61,7 @@ MinsepTrie* Generate(const Graph& G) {
             V.SetUnion(U, G.N(v));
             S.Separate(V);
             for (Block B : S) {
-                M->SortedInsert(B.NC(), &new_set);
+                M->PresortedInsert(B.NC(), &new_set);
                 if (new_set) {
                     M_stack.push(B.NC());
                 }
@@ -84,7 +84,7 @@ MinsepTrie* Generate(const Graph& G, Vertex a, Vertex b) {
     // of G - N[a] containing b is a minimal ab-separator
     S.SeparateClosedNbhd(a);
     if (!S.IsInSeparator(b)) {
-        M->SortedInsert(S.NComponentOf(b));
+        M->PresortedInsert(S.NComponentOf(b));
         M_stack.push(S.NComponentOf(b));
     }
     // second phase: for each v in S, the neighborhood of each
@@ -97,7 +97,7 @@ MinsepTrie* Generate(const Graph& G, Vertex a, Vertex b) {
             V.SetUnion(U, G.N(v));
             S.Separate(V);
             if (!S.IsInSeparator(b) && !S.NComponentOf(b).empty()) {
-                M->SortedInsert(S.NComponentOf(b), &new_set);
+                M->PresortedInsert(S.NComponentOf(b), &new_set);
                 if (new_set) {
                     M_stack.push(S.NComponentOf(b));
                 }
