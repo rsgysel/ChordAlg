@@ -63,16 +63,16 @@ class LexTrieNode {
     LexTrieNode* GetChild(size_t);
     const LexTrieNode* GetChild(size_t) const;
     void CreateSet(size_t);
-    void CreateSet(size_t, float);
+    void CreateSet(size_t, unsigned long long);
     bool is_set() const;
     size_t set_id() const;
-    float score() const;
+    unsigned long long score() const;
     LexTrieNodeChildren& children();
 
  private:
     bool is_set_;
     size_t set_id_;
-    float score_;
+    unsigned long long score_;
     LexTrieNodeChildren children_;
 };  // LexTrieNode
 
@@ -86,13 +86,13 @@ class LexTrie {
     explicit LexTrie(size_t);
     ~LexTrie();
 
-    bool Contains(const std::vector< size_t >&, float* score = nullptr) const;
+    bool Contains(const std::vector< size_t >&, unsigned long long* score = nullptr) const;
     size_t Insert(const std::vector< size_t >&,
                   bool* new_set = nullptr,
-                  float* score = nullptr);
+                  unsigned long long* score = nullptr);
     size_t PresortedInsert(const std::vector< size_t >&,
-                        bool* new_set = nullptr,
-                        float* score = nullptr);
+                           bool* new_set = nullptr,
+                           unsigned long long* score = nullptr);
     std::string str() const;
     size_t size() const;        // number of sets in family
     size_t n() const;

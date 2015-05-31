@@ -1,0 +1,1 @@
+[ ] If LexTrie contains just the empty set, it is never returned by LexTrieNodeIterator

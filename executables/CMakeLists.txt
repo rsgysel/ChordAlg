@@ -13,6 +13,8 @@ add_chordalg_executable(DOTFormat)
 add_chordalg_executable(GMLFormat)
 
 # Chordal Graphs
+add_chordalg_executable(BTMinimumFill)
+add_chordalg_executable(BTTreewidth)
 add_chordalg_executable(ChordalGraph)
 add_chordalg_executable(CliqueTree)
 add_chordalg_executable(FillEliminationOrder)

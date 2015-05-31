@@ -1,7 +1,6 @@
 #!/bin/bash
 
-FILES="*.m
-*.g"
+FILES="*.m"
 
 if [ $# -ne 1 ]
     then
@@ -11,6 +10,9 @@ fi
 
 for f in $FILES
 do
+    echo "========================================="
     echo "Testing file $f..."
     $1 $f
+    echo "========================================="
+    echo ""
 done

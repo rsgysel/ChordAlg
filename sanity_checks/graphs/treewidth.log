@@ -1,0 +1,397 @@
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_0.m...
+There are 1 connected component(s).
+Computing treewidth of connected components...done.
+Computing atoms...done.
+There are 18 atom subgraph(s).
+Computing treewidth of atom subgraphs...done.
+
+102 vs. 102
+Check successfully completed: graph has treewidth 102
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_10.m...
+./run_sanity_checks.sh: line 12: 13694 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_11.m...
+./run_sanity_checks.sh: line 12: 13714 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_12.m...
+There are 1 connected component(s).
+Computing treewidth of connected components...done.
+Computing atoms...done.
+There are 18 atom subgraph(s).
+Computing treewidth of atom subgraphs...done.
+
+107 vs. 107
+Check successfully completed: graph has treewidth 107
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_13.m...
+./run_sanity_checks.sh: line 12: 13739 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_14.m...
+./run_sanity_checks.sh: line 12: 13756 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_15.m...
+./run_sanity_checks.sh: line 12: 13778 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_16.m...
+./run_sanity_checks.sh: line 12: 13791 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_17.m...
+There are 1 connected component(s).
+Computing treewidth of connected components...done.
+Computing atoms...done.
+There are 12 atom subgraph(s).
+Computing treewidth of atom subgraphs...done.
+
+104 vs. 104
+Check successfully completed: graph has treewidth 104
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_18.m...
+There are 1 connected component(s).
+Computing treewidth of connected components...done.
+Computing atoms...done.
+There are 12 atom subgraph(s).
+Computing treewidth of atom subgraphs...done.
+
+111 vs. 111
+Check successfully completed: graph has treewidth 111
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_19.m...
+./run_sanity_checks.sh: line 12: 13815 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_1.m...
+./run_sanity_checks.sh: line 12: 13834 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_20.m...
+./run_sanity_checks.sh: line 12: 13850 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_21.m...
+There are 1 connected component(s).
+Computing treewidth of connected components...done.
+Computing atoms...done.
+There are 19 atom subgraph(s).
+Computing treewidth of atom subgraphs...done.
+
+99 vs. 99
+Check successfully completed: graph has treewidth 99
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_22.m...
+There are 1 connected component(s).
+Computing treewidth of connected components...done.
+Computing atoms...done.
+There are 7 atom subgraph(s).
+Computing treewidth of atom subgraphs...done.
+
+116 vs. 116
+Check successfully completed: graph has treewidth 116
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_23.m...
+There are 1 connected component(s).
+Computing treewidth of connected components...done.
+Computing atoms...done.
+There are 18 atom subgraph(s).
+Computing treewidth of atom subgraphs...done.
+
+108 vs. 108
+Check successfully completed: graph has treewidth 108
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_24.m...
+There are 1 connected component(s).
+Computing treewidth of connected components...done.
+Computing atoms...done.
+There are 8 atom subgraph(s).
+Computing treewidth of atom subgraphs...done.
+
+119 vs. 119
+Check successfully completed: graph has treewidth 119
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_25.m...
+./run_sanity_checks.sh: line 12: 13911 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_26.m...
+There are 1 connected component(s).
+Computing treewidth of connected components...done.
+Computing atoms...done.
+There are 14 atom subgraph(s).
+Computing treewidth of atom subgraphs...done.
+
+105 vs. 105
+Check successfully completed: graph has treewidth 105
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_27.m...
+There are 1 connected component(s).
+Computing treewidth of connected components...done.
+Computing atoms...done.
+There are 12 atom subgraph(s).
+Computing treewidth of atom subgraphs...done.
+
+102 vs. 102
+Check successfully completed: graph has treewidth 102
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_28.m...
+There are 1 connected component(s).
+Computing treewidth of connected components...done.
+Computing atoms...done.
+There are 11 atom subgraph(s).
+Computing treewidth of atom subgraphs...done.
+
+101 vs. 101
+Check successfully completed: graph has treewidth 101
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_29.m...
+./run_sanity_checks.sh: line 12: 13955 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_2.m...
+./run_sanity_checks.sh: line 12: 13966 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_30.m...
+./run_sanity_checks.sh: line 12: 13979 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_31.m...
+./run_sanity_checks.sh: line 12: 13988 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_32.m...
+./run_sanity_checks.sh: line 12: 14006 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_33.m...
+There are 1 connected component(s).
+Computing treewidth of connected components...done.
+Computing atoms...done.
+There are 14 atom subgraph(s).
+Computing treewidth of atom subgraphs...done.
+
+106 vs. 106
+Check successfully completed: graph has treewidth 106
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_34.m...
+There are 1 connected component(s).
+Computing treewidth of connected components...done.
+Computing atoms...done.
+There are 12 atom subgraph(s).
+Computing treewidth of atom subgraphs...done.
+
+104 vs. 104
+Check successfully completed: graph has treewidth 104
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_35.m...
+There are 1 connected component(s).
+Computing treewidth of connected components...done.
+Computing atoms...done.
+There are 9 atom subgraph(s).
+Computing treewidth of atom subgraphs...done.
+
+107 vs. 107
+Check successfully completed: graph has treewidth 107
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_36.m...
+./run_sanity_checks.sh: line 12: 14105 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_37.m...
+There are 1 connected component(s).
+Computing treewidth of connected components...done.
+Computing atoms...done.
+There are 17 atom subgraph(s).
+Computing treewidth of atom subgraphs...done.
+
+105 vs. 105
+Check successfully completed: graph has treewidth 105
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_38.m...
+There are 1 connected component(s).
+Computing treewidth of connected components...done.
+Computing atoms...done.
+There are 21 atom subgraph(s).
+Computing treewidth of atom subgraphs...done.
+
+105 vs. 105
+Check successfully completed: graph has treewidth 105
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_39.m...
+./run_sanity_checks.sh: line 12: 14376 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_3.m...
+./run_sanity_checks.sh: line 12: 14395 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_40.m...
+./run_sanity_checks.sh: line 12: 14407 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_41.m...
+./run_sanity_checks.sh: line 12: 14449 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_42.m...
+There are 1 connected component(s).
+Computing treewidth of connected components...done.
+Computing atoms...done.
+There are 20 atom subgraph(s).
+Computing treewidth of atom subgraphs...done.
+
+105 vs. 105
+Check successfully completed: graph has treewidth 105
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_43.m...
+There are 1 connected component(s).
+Computing treewidth of connected components...done.
+Computing atoms...done.
+There are 18 atom subgraph(s).
+Computing treewidth of atom subgraphs...done.
+
+105 vs. 105
+Check successfully completed: graph has treewidth 105
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_44.m...
+There are 1 connected component(s).
+Computing treewidth of connected components...done.
+Computing atoms...done.
+There are 13 atom subgraph(s).
+Computing treewidth of atom subgraphs...done.
+
+104 vs. 104
+Check successfully completed: graph has treewidth 104
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_45.m...
+There are 1 connected component(s).
+Computing treewidth of connected components...done.
+Computing atoms...done.
+There are 15 atom subgraph(s).
+Computing treewidth of atom subgraphs...done.
+
+105 vs. 105
+Check successfully completed: graph has treewidth 105
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_46.m...
+./run_sanity_checks.sh: line 12: 14475 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_47.m...
+./run_sanity_checks.sh: line 12: 14487 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_48.m...
+There are 1 connected component(s).
+Computing treewidth of connected components...done.
+Computing atoms...done.
+There are 24 atom subgraph(s).
+Computing treewidth of atom subgraphs...done.
+
+100 vs. 100
+Check successfully completed: graph has treewidth 100
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_49.m...
+./run_sanity_checks.sh: line 12: 14504 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_4.m...
+./run_sanity_checks.sh: line 12: 14528 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_5.m...
+./run_sanity_checks.sh: line 12: 14541 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_6.m...
+./run_sanity_checks.sh: line 12: 14559 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_7.m...
+./run_sanity_checks.sh: line 12: 14570 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_8.m...
+./run_sanity_checks.sh: line 12: 14581 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_9.m...
+./run_sanity_checks.sh: line 12: 14598 Killed                  $1 $f
+=========================================
+

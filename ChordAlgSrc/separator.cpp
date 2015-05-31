@@ -14,7 +14,11 @@ namespace chordalg {
 //////////////////
 // c'tors & d'tors
 
-Block::Block() : C_(), NC_() {
+Block::Block(const Graph& G, size_t separator_size) :
+    C_(),
+    NC_(),
+    separator_size_(separator_size),
+    in_block_(G.order(), false) {
     return;
 }
 
@@ -48,9 +52,25 @@ SeparatorBlocks::~SeparatorBlocks() {
 ////////
 // Block
 
-void Block::SetSeparatorSize(size_t separator_size) {
-    separator_size_ = separator_size;
-    return;
+bool Block::IsFull() const {
+    return NC_.size() == separator_size_;
+}
+
+bool Block::IsSuperBlock(const Block& other) const {
+    if (size() == other.size()) {
+        return false;
+    }
+    for (const Vertex& v : other.C()) {
+        if (!in_block_[v]) {
+            return false;
+        }
+    }
+    for (const Vertex& v : other.NC()) {
+        if (!in_block_[v]) {
+            return false;
+        }
+    }
+    return true;
 }
 
 const Vertices& Block::C() const {
@@ -63,20 +83,22 @@ const Vertices& Block::NC() const {
 
 void Block::AddC(Vertex v) {
     C_.push_back(v);
+    in_block_[v] = true;
 }
 
 void Block::AddNC(Vertex v) {
     NC_.push_back(v);
-}
-
-bool Block::IsFull() const {
-    return NC_.size() == separator_size_;
+    in_block_[v] = true;
 }
 
 void Block::Sort() {
     C_.Sort();
     NC_.Sort();
     return;
+}
+
+size_t Block::size() const {
+    return C_.size() + NC_.size();
 }
 
 //////////////////////
@@ -241,6 +263,10 @@ std::vector< Block >::const_iterator SeparatorBlocks::end() const {
     return blocks_.end();
 }
 
+const std::vector< Block >& SeparatorBlocks::blocks() const {
+    return blocks_;
+}
+
 const Vertices& SeparatorBlocks::Component(ConnectedComponentID C) const {
     return blocks_[C].C();
 }
@@ -263,7 +289,7 @@ const Vertices& SeparatorBlocks::NComponentOf(Vertex v) const {
 
 size_t SeparatorBlocks::FullComponentCt() const {
     size_t count = 0;
-    for (Block B : blocks_) {
+    for (const Block& B : blocks_) {
         if (B.IsFull()) {
             ++count;
         }
@@ -275,10 +301,14 @@ size_t SeparatorBlocks::NonFullComponentCt() const {
     return size_ - FullComponentCt();
 }
 
+bool SeparatorBlocks::IsInclusionMinimal() const {
+    return NonFullComponentCt() == 0;
+}
+
 std::string SeparatorBlocks::str() const {
     std::string SCstr = SeparatorComponents::str();
     ConnectedComponentID cc = 0;
-    for (Block B : blocks_) {
+    for (const Block& B : blocks_) {
         SCstr += "N(C_" + std::to_string(cc) + "): " + G_->str(B.NC());
         ++cc;
     }
@@ -288,7 +318,7 @@ std::string SeparatorBlocks::str() const {
 void SeparatorBlocks::FindComponents(const FillEdges* fill) {
     SeparatorComponents::FindComponents(fill);
     blocks_.clear();
-    blocks_.resize(size_);
+    blocks_.resize(size_, Block(*G_, separator_size_));
     for (Vertex v : *G_) {
         if (!IsInSeparator(v)) {
             ConnectedComponentID C = connected_component_[v];
@@ -296,7 +326,6 @@ void SeparatorBlocks::FindComponents(const FillEdges* fill) {
         }
     }
     for (Block& B : blocks_) {
-        B.SetSeparatorSize(separator_size_);
         B.Sort();
     }
     last_separator_vertex_seen_.clear();

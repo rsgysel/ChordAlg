@@ -19,19 +19,21 @@ typedef int ConnectedComponentID;
 
 class Block {
  public:
-    Block();
+    Block(const Graph&, size_t);
 
-    void SetSeparatorSize(size_t);
+    bool IsFull() const;
+    bool IsSuperBlock(const Block&) const;
     const Vertices& C() const;
     const Vertices& NC() const;
     void AddC(Vertex v);
     void AddNC(Vertex v);
-    bool IsFull() const;
     void Sort();
+    size_t size() const;
 
  private:
-    size_t separator_size_;
     Vertices C_, NC_;
+    size_t separator_size_;
+    std::vector< bool > in_block_;
 };  // Block
 
 // Calculates the connected components of G - S for a graph G and vertex set S
@@ -91,14 +93,16 @@ class SeparatorBlocks : public SeparatorComponents {
                   const Vertex* v = nullptr);
     std::vector< Block >::const_iterator begin() const;
     std::vector< Block >::const_iterator end() const;
-    const Vertices& Component(ConnectedComponentID C) const;
-    const Vertices& NComponent(ConnectedComponentID C) const;
-    const Block& BlockOf(Vertex v) const;
-    const Vertices& ComponentOf(Vertex v) const;
-    const Vertices& NComponentOf(Vertex v) const;
+    const std::vector < Block >& blocks() const;
+    const Vertices& Component(ConnectedComponentID) const;
+    const Vertices& NComponent(ConnectedComponentID) const;
+    const Block& BlockOf(Vertex) const;
+    const Vertices& ComponentOf(Vertex) const;
+    const Vertices& NComponentOf(Vertex) const;
 
     size_t FullComponentCt() const;
     size_t NonFullComponentCt() const;
+    bool IsInclusionMinimal() const;
     std::string str() const;
 
  private:

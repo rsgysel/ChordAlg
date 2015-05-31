@@ -83,7 +83,7 @@ TYPED_TEST(SeparatorComponentsTest, NeighborsConnected) {
 ////////
 // Tests
 
-TEST(BlockTest, EmptySeparatorNeighborhoodSize) {
+TEST(SeparatorBlocksTest, EmptySeparatorNeighborhoodSize) {
     chordalg::Graph G(new chordalg::AdjacencyLists(connected_components_test));
     chordalg::SeparatorBlocks S(&G);
     S.Separate(chordalg::Vertices());
@@ -92,7 +92,7 @@ TEST(BlockTest, EmptySeparatorNeighborhoodSize) {
     }
 }
 
-TEST(BlockTest, NeighborhoodSizes) {
+TEST(SeparatorBlocksTest, NeighborhoodSizes) {
     chordalg::Graph G(new chordalg::AdjacencyLists(connected_components_test));
     chordalg::SeparatorBlocks S(&G);
     S.Separate(chordalg::Vertices({0, 1, 2, 3}));
@@ -101,4 +101,18 @@ TEST(BlockTest, NeighborhoodSizes) {
         EXPECT_EQ(B.NC().size(), neighborhood_sizes[i]);
         ++i;
     }
+}
+
+TEST(SeparatorBlocksTest, IsInclusionMinimal) {
+    chordalg::Graph G(new chordalg::AdjacencyLists(connected_components_test));
+    chordalg::SeparatorBlocks S(&G);
+    S.Separate(chordalg::Vertices({2, 3}));
+    EXPECT_EQ(S.IsInclusionMinimal(), true);
+}
+
+TEST(SeparatorBlocksTest, NotInclusionMinimal) {
+    chordalg::Graph G(new chordalg::AdjacencyLists(connected_components_test));
+    chordalg::SeparatorBlocks S(&G);
+    S.Separate(chordalg::Vertices({0, 1, 2, 3}));
+    EXPECT_EQ(S.IsInclusionMinimal(), false);
 }

@@ -100,7 +100,7 @@ std::string FiniteSet::str() const {
 LexTrieIterator LexTrieIterator::operator++() {
     // if at end of trie
     if (nodes_.empty() || T_->size() == 0) {
-        return LexTrieIterator(T_);
+        return T_->end();
     }
     // if T_ contains only the empty set
     if (nodes_[0]->is_set() && T_->size() == 1) {
@@ -122,7 +122,7 @@ LexTrieIterator LexTrieIterator::operator++() {
 
         // if at last set, exit
         if (nodes_.empty()) {
-            return LexTrieIterator(T_);
+            return T_->end();
         }
     }
     // now we dive down trie to find next set, unless T_ contains
@@ -156,6 +156,7 @@ void LexTrieIterator::operator=(const LexTrieIterator& other) {
     this->set_ = other.set_;
     this->nodes_ = other.nodes_;
     this->children_itrs_ = other.children_itrs_;
+    this->only_empty_set_returned_ = other.only_empty_set_returned_;
     this->T_ = other.T_;
     return;
 }
@@ -190,7 +191,7 @@ void LexTrieNode::CreateSet(size_t set_id) {
     return;
 }
 
-void LexTrieNode::CreateSet(size_t set_id, float score) {
+void LexTrieNode::CreateSet(size_t set_id, unsigned long long score) {
     is_set_ = true;
     set_id_ = set_id;
     score_ = score;
@@ -204,7 +205,7 @@ size_t LexTrieNode::set_id() const {
     return set_id_;
 }
 
-float LexTrieNode::score() const {
+unsigned long long LexTrieNode::score() const {
     return score_;
 }
 
@@ -217,15 +218,17 @@ LexTrieNodeChildren& LexTrieNode::children() {
 
 bool LexTrie::Contains(
     const std::vector< size_t >& X,
-    float* score) const {
+    unsigned long long* score) const {
     const LexTrieNode* node = root_;
-    for (auto x : X) {
+    std::vector< size_t > SortedX(X);
+    std::sort(SortedX.begin(), SortedX.end());
+    for (auto x : SortedX) {
         if (!node->HasChild(x)) {
             return false;
         }
         node = node->GetChild(x);
     }
-    if (score) {
+    if (score && node->is_set()) {
         *score = node->score();
     }
     return node->is_set();
@@ -234,7 +237,7 @@ bool LexTrie::Contains(
 size_t LexTrie::Insert(
     const std::vector< size_t >& X,
     bool* new_set,
-    float* score) {
+    unsigned long long* score) {
     std::vector< size_t > SortedX(X);
     std::sort(SortedX.begin(), SortedX.end());
     return PresortedInsert(SortedX, new_set, score);
@@ -243,7 +246,7 @@ size_t LexTrie::Insert(
 size_t LexTrie::PresortedInsert(
     const std::vector< size_t >& X,
     bool* new_set,
-    float* score) {
+    unsigned long long* score) {
     LexTrieNode* node = root_;
     for (auto x : X) {
         if (!node->HasChild(x)) {

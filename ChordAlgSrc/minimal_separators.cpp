@@ -107,6 +107,19 @@ MinsepTrie* Generate(const Graph& G, Vertex a, Vertex b) {
     return M;
 }
 
+MinsepVector* FilterInclusionMinimal(const Graph& G, const MinsepTrie& MT) {
+    MinsepVector *MV = new MinsepVector();
+    SeparatorBlocks B(&G);
+    for (auto X : MT) {
+        Vertices S(X);
+        B.Separate(S);
+        if (B.IsInclusionMinimal()) {
+            MV->push_back(S);
+        }
+    }
+    return MV;
+}
+
 }  // namespace MinimalSeparators
 
 }  // namespace chordalg

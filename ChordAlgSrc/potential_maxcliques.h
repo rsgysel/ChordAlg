@@ -8,7 +8,8 @@
 
 namespace chordalg {
 
-typedef LexTrie PMCTrie;
+typedef LexTrie                         PMCTrie;
+typedef std::vector< Vertices >     PMCVector;
 
 namespace PotentialMaxcliques {
 

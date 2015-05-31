@@ -63,6 +63,13 @@ TEST_F(MinimalSeparatorAlgorithmsTest, Tree) {
     EXPECT_EQ(MS_->size(), 6);
 }
 
+TEST_F(MinimalSeparatorAlgorithmsTest, TreeInclusionMinimal) {
+    Read(tree);
+    chordalg::MinsepVector* V = chordalg::MinimalSeparators::FilterInclusionMinimal(*G_, *MS_);
+    EXPECT_EQ(V->size(), 6);
+    delete V;
+}
+
 TEST_F(MinimalSeparatorAlgorithmsTest, BipartiteReduction) {
     Read(bipartite_reduction);
     EXPECT_EQ(MS_->size(), 9);

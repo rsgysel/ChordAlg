@@ -21,6 +21,7 @@ typedef std::vector< Vertices >     MinsepVector;
 
 MinsepVector* MinsepTrieToVector(const MinsepTrie&);
 
+
 namespace MinimalSeparators {
 
 std::string str(const MinsepTrie&, const Graph&);
@@ -30,6 +31,8 @@ MinsepTrie* Generate(const Graph& G);
 
 // minimal ab-separators
 MinsepTrie* Generate(const Graph& G, Vertex a, Vertex b);
+
+MinsepVector* FilterInclusionMinimal(const Graph&, const MinsepTrie&);
 
 }  // namespace MinimalSeparators
 

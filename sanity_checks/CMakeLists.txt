@@ -6,5 +6,7 @@ function(add_chordalg_sanitycheck arg1)
 endfunction()
 
 add_chordalg_sanitycheck(elimination_heuristics)
+add_chordalg_sanitycheck(minfill)
 add_chordalg_sanitycheck(potential_maxcliques)
 add_chordalg_sanitycheck(separator_graph)
+add_chordalg_sanitycheck(treewidth)

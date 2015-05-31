@@ -74,6 +74,7 @@ TEST_F(LexTrieTest, EmptySet) {
     InitTrie(10);
     Insert({});
     EXPECT_EQ(T_->size(), 1);
+    bool set_seen = false;
     for (auto X : *T_) {
         EXPECT_EQ(X.size(), 0);
     }
@@ -88,12 +89,12 @@ TEST_F(LexTrieTest, Insertion) {
 
 TEST_F(LexTrieTest, ScoredInsertion) {
     this->InitTrie(10);
-    float score = 10;
+    unsigned long long score = 10;
     chordalg::FiniteSet X;
     X.push_back(2);
     X.push_back(4);
     T_->PresortedInsert(X, nullptr, &score);
-    float stored_score = 0;
+    unsigned long long stored_score = 0;
     EXPECT_EQ(T_->Contains(X, &stored_score), true);
     EXPECT_EQ(stored_score, 10);
 }
