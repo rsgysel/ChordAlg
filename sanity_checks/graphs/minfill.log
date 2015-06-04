@@ -1,0 +1,382 @@
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_0.m...
+There are 1 connected component(s).
+Computing minfill of connected components...done.
+Computing atoms...done.
+There are 18 atom subgraph(s).
+Computing minfill of atom subgraphs...done.
+
+Check successfully completed: graph has minfill 75
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_10.m...
+./run_sanity_checks.sh: line 11:  2324 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_11.m...
+There are 1 connected component(s).
+Computing minfill of connected components...done.
+Computing atoms...done.
+There are 15 atom subgraph(s).
+Computing minfill of atom subgraphs...done.
+
+Check successfully completed: graph has minfill 124
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_12.m...
+There are 1 connected component(s).
+Computing minfill of connected components...done.
+Computing atoms...done.
+There are 18 atom subgraph(s).
+Computing minfill of atom subgraphs...done.
+
+Check successfully completed: graph has minfill 91
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_13.m...
+./run_sanity_checks.sh: line 11:  2371 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_14.m...
+./run_sanity_checks.sh: line 11:  2389 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_15.m...
+./run_sanity_checks.sh: line 11:  2439 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_16.m...
+./run_sanity_checks.sh: line 11:  2458 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_17.m...
+There are 1 connected component(s).
+Computing minfill of connected components...done.
+Computing atoms...done.
+There are 12 atom subgraph(s).
+Computing minfill of atom subgraphs...done.
+
+Check successfully completed: graph has minfill 60
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_18.m...
+There are 1 connected component(s).
+Computing minfill of connected components...done.
+Computing atoms...done.
+There are 12 atom subgraph(s).
+Computing minfill of atom subgraphs...done.
+
+Check successfully completed: graph has minfill 84
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_19.m...
+./run_sanity_checks.sh: line 11:  2491 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_1.m...
+./run_sanity_checks.sh: line 11:  2508 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_20.m...
+./run_sanity_checks.sh: line 11:  2520 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_21.m...
+There are 1 connected component(s).
+Computing minfill of connected components...done.
+Computing atoms...done.
+There are 19 atom subgraph(s).
+Computing minfill of atom subgraphs...done.
+
+Check successfully completed: graph has minfill 54
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_22.m...
+There are 1 connected component(s).
+Computing minfill of connected components...done.
+Computing atoms...done.
+There are 7 atom subgraph(s).
+Computing minfill of atom subgraphs...done.
+
+Check successfully completed: graph has minfill 115
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_23.m...
+There are 1 connected component(s).
+Computing minfill of connected components...done.
+Computing atoms...done.
+There are 18 atom subgraph(s).
+Computing minfill of atom subgraphs...done.
+
+Check successfully completed: graph has minfill 69
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_24.m...
+There are 1 connected component(s).
+Computing minfill of connected components...done.
+Computing atoms...done.
+There are 8 atom subgraph(s).
+Computing minfill of atom subgraphs...done.
+
+Check successfully completed: graph has minfill 149
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_25.m...
+./run_sanity_checks.sh: line 11:  2545 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_26.m...
+There are 1 connected component(s).
+Computing minfill of connected components...done.
+Computing atoms...done.
+There are 14 atom subgraph(s).
+Computing minfill of atom subgraphs...done.
+
+Check successfully completed: graph has minfill 92
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_27.m...
+There are 1 connected component(s).
+Computing minfill of connected components...done.
+Computing atoms...done.
+There are 12 atom subgraph(s).
+Computing minfill of atom subgraphs...done.
+
+Check successfully completed: graph has minfill 54
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_28.m...
+There are 1 connected component(s).
+Computing minfill of connected components...done.
+Computing atoms...done.
+There are 11 atom subgraph(s).
+Computing minfill of atom subgraphs...done.
+
+Check successfully completed: graph has minfill 50
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_29.m...
+./run_sanity_checks.sh: line 11:  2568 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_2.m...
+./run_sanity_checks.sh: line 11:  2574 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_30.m...
+./run_sanity_checks.sh: line 11:  2590 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_31.m...
+./run_sanity_checks.sh: line 11:  2607 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_32.m...
+./run_sanity_checks.sh: line 11:  2622 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_33.m...
+There are 1 connected component(s).
+Computing minfill of connected components...done.
+Computing atoms...done.
+There are 14 atom subgraph(s).
+Computing minfill of atom subgraphs...done.
+
+Check successfully completed: graph has minfill 72
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_34.m...
+There are 1 connected component(s).
+Computing minfill of connected components...done.
+Computing atoms...done.
+There are 12 atom subgraph(s).
+Computing minfill of atom subgraphs...done.
+
+Check successfully completed: graph has minfill 51
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_35.m...
+There are 1 connected component(s).
+Computing minfill of connected components...done.
+Computing atoms...done.
+There are 9 atom subgraph(s).
+Computing minfill of atom subgraphs...done.
+
+Check successfully completed: graph has minfill 102
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_36.m...
+./run_sanity_checks.sh: line 11:  2880 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_37.m...
+There are 1 connected component(s).
+Computing minfill of connected components...done.
+Computing atoms...done.
+There are 17 atom subgraph(s).
+Computing minfill of atom subgraphs...done.
+
+Check successfully completed: graph has minfill 42
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_38.m...
+There are 1 connected component(s).
+Computing minfill of connected components...done.
+Computing atoms...done.
+There are 21 atom subgraph(s).
+Computing minfill of atom subgraphs...done.
+
+Check successfully completed: graph has minfill 52
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_39.m...
+./run_sanity_checks.sh: line 11:  2990 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_3.m...
+./run_sanity_checks.sh: line 11:  3012 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_40.m...
+./run_sanity_checks.sh: line 11:  3024 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_41.m...
+./run_sanity_checks.sh: line 11:  3051 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_42.m...
+There are 1 connected component(s).
+Computing minfill of connected components...done.
+Computing atoms...done.
+There are 20 atom subgraph(s).
+Computing minfill of atom subgraphs...done.
+
+Check successfully completed: graph has minfill 67
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_43.m...
+There are 1 connected component(s).
+Computing minfill of connected components...done.
+Computing atoms...done.
+There are 18 atom subgraph(s).
+Computing minfill of atom subgraphs...done.
+
+Check successfully completed: graph has minfill 71
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_44.m...
+There are 1 connected component(s).
+Computing minfill of connected components...done.
+Computing atoms...done.
+There are 13 atom subgraph(s).
+Computing minfill of atom subgraphs...done.
+
+Check successfully completed: graph has minfill 63
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_45.m...
+There are 1 connected component(s).
+Computing minfill of connected components...done.
+Computing atoms...done.
+There are 15 atom subgraph(s).
+Computing minfill of atom subgraphs...done.
+
+Check successfully completed: graph has minfill 63
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_46.m...
+./run_sanity_checks.sh: line 11:  3083 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_47.m...
+./run_sanity_checks.sh: line 11:  3100 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_48.m...
+There are 1 connected component(s).
+Computing minfill of connected components...done.
+Computing atoms...done.
+There are 24 atom subgraph(s).
+Computing minfill of atom subgraphs...done.
+
+Check successfully completed: graph has minfill 65
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_49.m...
+./run_sanity_checks.sh: line 11:  3118 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_4.m...
+./run_sanity_checks.sh: line 11:  3138 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_5.m...
+./run_sanity_checks.sh: line 11:  3148 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_6.m...
+./run_sanity_checks.sh: line 11:  3161 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_7.m...
+./run_sanity_checks.sh: line 11:  3172 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_8.m...
+./run_sanity_checks.sh: line 11:  3187 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_9.m...
+./run_sanity_checks.sh: line 11:  3221 Killed                  $1 $f
+=========================================
+

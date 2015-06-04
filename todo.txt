@@ -1,5 +1,6 @@
 [ ] GraphFile / FileReader GML format
 [ ] GraphFile / FileReader DOT format
+[ ] BTAlgorithm backtracking
 [ ] Vertex class? Contains name, optional data (color, multicolor, subset...)
     Would simplify InducedSubgraph / Graph relationship (see ParentGraph)
 [ ] Smart Pointers

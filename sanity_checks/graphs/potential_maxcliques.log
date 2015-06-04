@@ -1,0 +1,376 @@
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_0.m...
+There are 1 connected component(s).
+Computing potential maxcliques of connected components...done.
+Computing atoms...done.
+There are 18 atom subgraph(s).
+Computing potential maxcliques of atom subgraphs...done.
+
+Check successfully completed: 471 potential maxcliques found.
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_10.m...
+./run_sanity_checks.sh: line 11: 21779 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_11.m...
+./run_sanity_checks.sh: line 11: 21796 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_12.m...
+There are 1 connected component(s).
+Computing potential maxcliques of connected components...done.
+Computing atoms...done.
+There are 18 atom subgraph(s).
+Computing potential maxcliques of atom subgraphs...done.
+
+Check successfully completed: 325 potential maxcliques found.
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_13.m...
+./run_sanity_checks.sh: line 11: 21816 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_14.m...
+./run_sanity_checks.sh: line 11: 21831 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_15.m...
+./run_sanity_checks.sh: line 11: 21848 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_16.m...
+./run_sanity_checks.sh: line 11: 21858 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_17.m...
+There are 1 connected component(s).
+Computing potential maxcliques of connected components...done.
+Computing atoms...done.
+There are 12 atom subgraph(s).
+Computing potential maxcliques of atom subgraphs...done.
+
+Check successfully completed: 187 potential maxcliques found.
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_18.m...
+There are 1 connected component(s).
+Computing potential maxcliques of connected components...done.
+Computing atoms...done.
+There are 12 atom subgraph(s).
+Computing potential maxcliques of atom subgraphs...done.
+
+Check successfully completed: 295 potential maxcliques found.
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_19.m...
+./run_sanity_checks.sh: line 11: 21879 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_1.m...
+./run_sanity_checks.sh: line 11: 21899 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_20.m...
+./run_sanity_checks.sh: line 11: 21910 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_21.m...
+There are 1 connected component(s).
+Computing potential maxcliques of connected components...done.
+Computing atoms...done.
+There are 19 atom subgraph(s).
+Computing potential maxcliques of atom subgraphs...done.
+
+Check successfully completed: 114 potential maxcliques found.
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_22.m...
+There are 1 connected component(s).
+Computing potential maxcliques of connected components...done.
+Computing atoms...done.
+There are 7 atom subgraph(s).
+Computing potential maxcliques of atom subgraphs...done.
+
+Check successfully completed: 237 potential maxcliques found.
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_23.m...
+There are 1 connected component(s).
+Computing potential maxcliques of connected components...done.
+Computing atoms...done.
+There are 18 atom subgraph(s).
+Computing potential maxcliques of atom subgraphs...done.
+
+Check successfully completed: 443 potential maxcliques found.
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_24.m...
+There are 1 connected component(s).
+Computing potential maxcliques of connected components...done.
+Computing atoms...done.
+There are 8 atom subgraph(s).
+Computing potential maxcliques of atom subgraphs...done.
+
+Check successfully completed: 565 potential maxcliques found.
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_25.m...
+./run_sanity_checks.sh: line 11: 21964 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_26.m...
+There are 1 connected component(s).
+Computing potential maxcliques of connected components...done.
+Computing atoms...done.
+There are 14 atom subgraph(s).
+Computing potential maxcliques of atom subgraphs...done.
+
+Check successfully completed: 305 potential maxcliques found.
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_27.m...
+There are 1 connected component(s).
+Computing potential maxcliques of connected components...done.
+Computing atoms...done.
+There are 12 atom subgraph(s).
+Computing potential maxcliques of atom subgraphs...done.
+
+Check successfully completed: 287 potential maxcliques found.
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_28.m...
+There are 1 connected component(s).
+Computing potential maxcliques of connected components...done.
+Computing atoms...done.
+There are 11 atom subgraph(s).
+Computing potential maxcliques of atom subgraphs...done.
+
+Check successfully completed: 142 potential maxcliques found.
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_29.m...
+./run_sanity_checks.sh: line 11: 21983 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_2.m...
+./run_sanity_checks.sh: line 11: 21992 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_30.m...
+./run_sanity_checks.sh: line 11: 22031 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_31.m...
+./run_sanity_checks.sh: line 11: 22047 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_32.m...
+./run_sanity_checks.sh: line 11: 22053 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_33.m...
+There are 1 connected component(s).
+Computing potential maxcliques of connected components...done.
+Computing atoms...done.
+There are 14 atom subgraph(s).
+Computing potential maxcliques of atom subgraphs...done.
+
+Check successfully completed: 302 potential maxcliques found.
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_34.m...
+There are 1 connected component(s).
+Computing potential maxcliques of connected components...done.
+Computing atoms...done.
+There are 12 atom subgraph(s).
+Computing potential maxcliques of atom subgraphs...done.
+
+Check successfully completed: 405 potential maxcliques found.
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_35.m...
+There are 1 connected component(s).
+Computing potential maxcliques of connected components...done.
+Computing atoms...done.
+There are 9 atom subgraph(s).
+Computing potential maxcliques of atom subgraphs...done.
+
+Check successfully completed: 534 potential maxcliques found.
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_36.m...
+./run_sanity_checks.sh: line 11: 22080 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_37.m...
+There are 1 connected component(s).
+Computing potential maxcliques of connected components...done.
+Computing atoms...done.
+There are 17 atom subgraph(s).
+Computing potential maxcliques of atom subgraphs...done.
+
+Check successfully completed: 200 potential maxcliques found.
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_38.m...
+There are 1 connected component(s).
+Computing potential maxcliques of connected components...done.
+Computing atoms...done.
+There are 21 atom subgraph(s).
+Computing potential maxcliques of atom subgraphs...done.
+
+Check successfully completed: 173 potential maxcliques found.
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_39.m...
+./run_sanity_checks.sh: line 11: 22096 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_3.m...
+./run_sanity_checks.sh: line 11: 22118 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_40.m...
+./run_sanity_checks.sh: line 11: 22136 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_41.m...
+./run_sanity_checks.sh: line 11: 22148 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_42.m...
+There are 1 connected component(s).
+Computing potential maxcliques of connected components...done.
+Computing atoms...done.
+There are 20 atom subgraph(s).
+Computing potential maxcliques of atom subgraphs...done.
+
+Check successfully completed: 268 potential maxcliques found.
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_43.m...
+There are 1 connected component(s).
+Computing potential maxcliques of connected components...done.
+Computing atoms...done.
+There are 18 atom subgraph(s).
+Computing potential maxcliques of atom subgraphs...done.
+
+Check successfully completed: 314 potential maxcliques found.
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_44.m...
+There are 1 connected component(s).
+Computing potential maxcliques of connected components...done.
+Computing atoms...done.
+There are 13 atom subgraph(s).
+Computing potential maxcliques of atom subgraphs...done.
+
+Check successfully completed: 117 potential maxcliques found.
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_45.m...
+There are 1 connected component(s).
+Computing potential maxcliques of connected components...done.
+Computing atoms...done.
+There are 15 atom subgraph(s).
+Computing potential maxcliques of atom subgraphs...done.
+
+Check successfully completed: 498 potential maxcliques found.
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_46.m...
+./run_sanity_checks.sh: line 11: 22167 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_47.m...
+./run_sanity_checks.sh: line 11: 22182 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_48.m...
+There are 1 connected component(s).
+Computing potential maxcliques of connected components...done.
+Computing atoms...done.
+There are 24 atom subgraph(s).
+Computing potential maxcliques of atom subgraphs...done.
+
+Check successfully completed: 239 potential maxcliques found.
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_49.m...
+./run_sanity_checks.sh: line 11: 22199 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_4.m...
+./run_sanity_checks.sh: line 11: 22222 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_5.m...
+./run_sanity_checks.sh: line 11: 22238 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_6.m...
+./run_sanity_checks.sh: line 11: 22293 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_7.m...
+./run_sanity_checks.sh: line 11: 22316 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_8.m...
+./run_sanity_checks.sh: line 11: 22336 Killed                  $1 $f
+=========================================
+
+=========================================
+Testing file 50n100m2k0.05miss0.01err600sec_9.m...
+./run_sanity_checks.sh: line 11: 22355 Killed                  $1 $f
+=========================================
+
