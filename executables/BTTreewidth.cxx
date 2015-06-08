@@ -1,6 +1,9 @@
 /*
  *  BTTreewidth - computes the treewidth of a graph using
  *  minimal separators and potential maxcliques
+ *
+ *  Warning: this computation requires exponential time/space
+ *  in general
  */
 
 #include <iostream>

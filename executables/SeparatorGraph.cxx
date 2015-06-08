@@ -1,5 +1,9 @@
 /*
- *  SeparatorGraph - computes separator graph of a graph
+ *  SeparatorGraph - computes the separator graph (minimal separators
+ *  and crossing relations) of a graph
+ *
+ *  Warning: this computation requires exponential time/space
+ *  in general
  */
 
 #include <iostream>

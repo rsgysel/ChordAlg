@@ -1,6 +1,9 @@
 /*
  *  PotentialMaxcliques - Computes Potential Maximal Cliques
  *  of a graph
+ *
+ *  Warning: this computation requires exponential time/space
+ *  in general
  */
 
 #include <iostream>

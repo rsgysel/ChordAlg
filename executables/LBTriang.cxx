@@ -1,6 +1,6 @@
 /*
  *  LBTriang - computes minimal triangulation of a graph
- *  determined by eliminaton order
+ *  determined by the given elimination order
  */
 
 #include <iostream>
