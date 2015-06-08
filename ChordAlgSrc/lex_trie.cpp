@@ -2,10 +2,11 @@
 
 #include <algorithm>
 #include <iostream>
-#include <iterator>
 #include <sstream>
 #include <string>
 #include <vector>
+
+#include "ChordAlgSrc/chordalg_string.h"
 
 namespace chordalg {
 
@@ -78,20 +79,6 @@ LexTrie::LexTrie(size_t n) : n_(n), set_count_(0) {
 LexTrie::~LexTrie() {
     delete this->root_;
     return;
-}
-
-/////////////
-// Finite Set
-
-std::string FiniteSet::str() const {
-    if (empty()) {
-        return std::string();
-    } else {
-        std::ostringstream oss;
-        std::copy(begin(), end() - 1, std::ostream_iterator<size_t>(oss, " "));
-        oss << back();
-        return oss.str();
-    }
 }
 
 //////////////////
@@ -276,7 +263,7 @@ std::string LexTrie::str() const {
     std::ostringstream oss;
     size_t i = 0;
     for (const FiniteSet& X : *this) {
-        oss << "X" << i << ": " << X.str() << std::endl;
+        oss << "X" << i << ": " << VectorToStr(X) << std::endl;
         ++i;
     }
     return oss.str();

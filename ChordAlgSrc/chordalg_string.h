@@ -20,6 +20,8 @@ bool IsNum(const std::string&);
 // Splits string and changes chars to lowercase
 StringTokens Split(const std::string&, const std::string&);
 
+std::string VectorToStr(const std::vector< size_t >&);
+
 }  // namespace chordalg
 
 #endif  // CHORDALGSRC_CHORDALG_STRING_H__

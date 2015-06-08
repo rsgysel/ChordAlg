@@ -1,6 +1,9 @@
 #include "ChordAlgSrc/chordalg_string.h"
 
+#include <algorithm>
 #include <cstring>
+#include <iterator>
+#include <sstream>
 #include <string>
 
 namespace chordalg {
@@ -35,6 +38,17 @@ StringTokens Split(const std::string& str, const std::string& delim) {
     }
     delete cstr;
     return tokens;
+}
+
+std::string VectorToStr(const std::vector< size_t >& V) {
+    if (V.empty()) {
+        return std::string();
+    } else {
+        std::ostringstream oss;
+        std::copy(V.begin(), V.end() - 1, std::ostream_iterator<size_t>(oss, " "));
+        oss << V.back();
+        return oss.str();
+    }
 }
 
 }  // namespace chordalg

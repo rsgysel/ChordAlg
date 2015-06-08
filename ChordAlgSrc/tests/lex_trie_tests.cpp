@@ -6,6 +6,7 @@
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 
+#include "ChordAlgSrc/chordalg_string.h"
 #include "ChordAlgSrc/lex_trie.h"
 
 /////////////
@@ -41,7 +42,7 @@ class LexTrieTest : public ::testing::Test {
             for (auto x : X) {
                 Xset.push_back(x);
             }
-            T_strings.insert(Xset.str());
+            T_strings.insert(chordalg::VectorToStr(Xset));
         }
         return;
     }
@@ -50,7 +51,7 @@ class LexTrieTest : public ::testing::Test {
     }
     bool IsTrieInStringSet() const {
         for (auto X : *T_) {
-            if (T_strings.find(X.str()) == T_strings.end()) {
+            if (T_strings.find(chordalg::VectorToStr(X)) == T_strings.end()) {
                 return false;
             }
         }

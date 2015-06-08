@@ -11,6 +11,8 @@
 #include <vector>
 #include <utility>
 
+#include "ChordAlgSrc/chordalg_string.h"
+
 namespace chordalg {
 
 class LexTrie;
@@ -18,11 +20,7 @@ class LexTrieNode;
 
 typedef std::map< size_t, LexTrieNode* > LexTrieNodeChildren;
 
-// Finite set of natural numbers
-class FiniteSet : public std::vector< size_t > {
- public:
-    std::string str() const;
-};  // FiniteSet
+typedef std::vector< size_t > FiniteSet;
 
 class LexTrieIterator {
  public:
