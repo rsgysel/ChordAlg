@@ -1,5 +1,6 @@
 #include "ChordAlgSrc/heuristic_run.h"
 
+#include <initializer_list>
 #include <iostream>
 #include <set>
 #include <string>
@@ -52,22 +53,8 @@ const std::string& HeuristicRun::run_summary() const {
 
 HeuristicRun* HeuristicRun::New(
     const CellIntersectionGraph* G,
-    EliminationCriterion criterion,
-    EliminationMode mode,
-    bool atoms,
-    size_t runs,
-    float deficiency_wt,
-    float separation_wt) {
-    std::vector< EliminationCriterion > criteria(1, criterion);
-    std::vector< EliminationMode > modes(1, mode);
-    return HeuristicRun::New(
-        G, criteria, modes, atoms, runs, deficiency_wt, separation_wt);
-}
-
-HeuristicRun* HeuristicRun::New(
-    const CellIntersectionGraph* G,
-    std::vector< EliminationCriterion > criteria,
-    std::vector< EliminationMode > modes,
+    std::initializer_list< EliminationCriterion > criteria,
+    std::initializer_list< EliminationMode > modes,
     bool atoms,
     size_t runs,
     float deficiency_wt,

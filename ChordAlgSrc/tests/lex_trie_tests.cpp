@@ -74,7 +74,6 @@ TEST_F(LexTrieTest, EmptySet) {
     InitTrie(10);
     Insert({});
     EXPECT_EQ(T_->size(), 1);
-    bool set_seen = false;
     for (auto X : *T_) {
         EXPECT_EQ(X.size(), 0);
     }

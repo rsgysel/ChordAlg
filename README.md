@@ -31,3 +31,7 @@ Installation
 
 5) Sanity checks, which are expensive to run (and may not terminate), will be in
     ChordAlg/build/sanity_checks
+
+Version History
+===============
+1.0.0 Initial Release

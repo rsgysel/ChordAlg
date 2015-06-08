@@ -5,6 +5,7 @@
 #ifndef CHORDALGSRC_HEURISTIC_RUN_H_
 #define CHORDALGSRC_HEURISTIC_RUN_H_
 
+#include <initializer_list>
 #include <string>
 #include <vector>
 
@@ -33,16 +34,8 @@ class HeuristicRun {
     const std::string& run_summary() const;
     static HeuristicRun* New(
         const CellIntersectionGraph*,
-        EliminationCriterion,
-        EliminationMode,
-        bool atoms = false,
-        size_t runs = 1,
-        float deficiency_wt = 0,
-        float separation_wt = 0);
-    static HeuristicRun* New(
-        const CellIntersectionGraph*,
-        std::vector< EliminationCriterion >,
-        std::vector< EliminationMode >,
+        std::initializer_list< EliminationCriterion >,
+        std::initializer_list< EliminationMode >,
         bool atoms = false,
         size_t runs = 1,
         float deficiency_wt = 0,
