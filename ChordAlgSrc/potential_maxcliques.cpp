@@ -27,7 +27,8 @@ PMCTrie* Generate(const Graph& G) {
     V.insert(eo->VertexAt(0));
     Gi = new InducedSubgraph(&G, V);
     Pi = new PMCTrie(1);
-    Pi->Insert({0});
+    Vertices point = {0};
+    Pi->Insert(point);
     MSi = new MinsepTrie(1);
     for (size_t i = 1; i < G.order(); ++i) {
         Vertex a = eo->VertexAt(i);

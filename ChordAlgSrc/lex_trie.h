@@ -12,6 +12,7 @@
 #include <utility>
 
 #include "ChordAlgSrc/chordalg_string.h"
+#include "ChordAlgSrc/vertices.h"
 
 namespace chordalg {
 
@@ -89,6 +90,13 @@ class LexTrie {
                   bool* new_set = nullptr,
                   unsigned long long* score = nullptr);
     size_t PresortedInsert(const std::vector< size_t >&,
+                           bool* new_set = nullptr,
+                           unsigned long long* score = nullptr);
+    bool Contains(const Vertices&, unsigned long long* score = nullptr) const;
+    size_t Insert(const Vertices&,
+                  bool* new_set = nullptr,
+                  unsigned long long* score = nullptr);
+    size_t PresortedInsert(const Vertices&,
                            bool* new_set = nullptr,
                            unsigned long long* score = nullptr);
     std::string str() const;

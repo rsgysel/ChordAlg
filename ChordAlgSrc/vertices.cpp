@@ -15,24 +15,23 @@ Vertices::Vertices() {
     return;
 }
 
-Vertices::Vertices(size_t n) : VertexVector(n, 0) {
+Vertices::Vertices(size_t n) : V_(n, 0) {
     return;
 }
 
-Vertices::Vertices(const VertexList& V) : VertexVector(V.begin(), V.end()) {
+Vertices::Vertices(const VertexList& V) : V_(V.begin(), V.end()) {
     return;
 }
 
-Vertices::Vertices(const VertexSet& V) : VertexVector(V.begin(), V.end()) {
+Vertices::Vertices(const VertexSet& V) : V_(V.begin(), V.end()) {
     return;
 }
 
-Vertices::Vertices(const VertexVector& V) : VertexVector(V.begin(), V.end()) {
+Vertices::Vertices(const VertexVector& V) : V_(V) {
     return;
 }
 
-Vertices::Vertices(const std::initializer_list<Vertex>& V) :
-    VertexVector(V.begin(), V.end()) {
+Vertices::Vertices(const std::initializer_list<Vertex>& V) : V_(V) {
     return;
 }
 
@@ -75,6 +74,72 @@ VertexPairs::VertexPairs(Vertices V) : V_(V), begin_(0), end_(V_.size()) {
 ///////////
 // Vertices
 
+VertexVector::const_iterator Vertices::begin() const {
+    return V_.begin();
+}
+
+VertexVector::iterator Vertices::begin() {
+    return V_.begin();
+}
+
+VertexVector::const_iterator Vertices::end() const {
+    return V_.end();
+}
+
+VertexVector::iterator Vertices::end() {
+    return V_.end();
+}
+
+void Vertices::operator=(const Vertices& other) {
+    V_ = other.V_;
+}
+
+const Vertex& Vertices::operator[](size_t i) const {
+    return V_[i];
+}
+
+Vertex& Vertices::operator[](size_t i) {
+    return V_[i];
+}
+
+const Vertex& Vertices::back() const {
+    return V_.back();
+}
+
+Vertex& Vertices::back() {
+    return V_.back();
+}
+
+void Vertices::push_back(Vertex v) {
+    V_.push_back(v);
+    return;
+}
+
+void Vertices::pop_back() {
+    V_.pop_back();
+}
+
+void Vertices::clear() {
+    V_.clear();
+}
+
+void Vertices::reserve(size_t n) {
+    V_.reserve(n);
+    return;
+}
+
+size_t Vertices::size() const {
+    return V_.size();
+}
+
+bool Vertices::empty() const {
+    return V_.empty();
+}
+
+const VertexVector& Vertices::V() const {
+    return V_;
+}
+
 void Vertices::Sort() {
     std::sort(begin(), end());
 }
@@ -87,7 +152,7 @@ void Vertices::SetIntersection(const Vertices& U, const Vertices& W) {
     } else {
         std::set_intersection(U.begin(), U.end(),
                               W.begin(), W.end(),
-                              std::back_inserter(*this));
+                              std::back_inserter(V_));
     }
     return;
 }
@@ -102,7 +167,7 @@ void Vertices::SetUnion(const Vertices& U, const Vertices& W) {
     } else {
         std::set_union(U.begin(), U.end(),
                        W.begin(), W.end(),
-                       std::back_inserter(*this));
+                       std::back_inserter(V_));
     }
     return;
 }

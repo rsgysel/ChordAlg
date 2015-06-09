@@ -258,6 +258,25 @@ size_t LexTrie::PresortedInsert(
     }
     return node->set_id();
 }
+bool LexTrie::Contains(
+    const Vertices& V,
+    unsigned long long* score) const {
+    return Contains(V.V(), score);
+}
+
+size_t LexTrie::Insert(
+    const Vertices& V,
+    bool* new_set,
+    unsigned long long* score) {
+    return Insert(V.V(), new_set, score);
+}
+
+size_t LexTrie::PresortedInsert(
+    const Vertices& V,
+    bool* new_set,
+    unsigned long long* score) {
+    return PresortedInsert(V.V(), new_set, score);
+}
 
 std::string LexTrie::str() const {
     std::ostringstream oss;

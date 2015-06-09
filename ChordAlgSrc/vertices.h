@@ -43,7 +43,7 @@ typedef std::list< Color >              Multicolor;
 typedef double                          Weight;         // weight of fill edge
 typedef std::pair< Vertex, Weight >     VertexWeight;
 
-class Vertices : public VertexVector {
+class Vertices {
  public:
     Vertices();
     explicit Vertices(size_t);
@@ -52,12 +52,33 @@ class Vertices : public VertexVector {
     explicit Vertices(const VertexVector&);
     Vertices(const std::initializer_list<Vertex>&);
 
+    VertexVector::const_iterator begin() const;
+    VertexVector::iterator begin();
+    VertexVector::const_iterator end() const;
+    VertexVector::iterator end();
+
+    void operator=(const Vertices&);
+    const Vertex& operator[](size_t) const;
+    Vertex& operator[](size_t);
+    const Vertex& back() const;
+    Vertex& back();
+    void push_back(Vertex);
+    void pop_back();
+    void clear();
+    size_t size() const;
+    void reserve(size_t);
+    bool empty() const;
+    const VertexVector& V() const;
+
     void Sort();
     // These functions require sorted inputs
     void SetIntersection(const Vertices&, const Vertices&);
     void SetUnion(const Vertices&, const Vertices&);
 
     std::string str() const;
+
+ private:
+    VertexVector V_;
 };  // Vertices
 
 class GraphVertexIterator {

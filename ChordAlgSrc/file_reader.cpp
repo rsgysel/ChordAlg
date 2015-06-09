@@ -324,14 +324,14 @@ void CharacterIntGraphFR::ComputeGraphData() {
     Vertex v = 0;
     size_t rows = taxon_name_->size();
     taxon_clique_->resize(rows);
-    for (FiniteSet& C : *subsets_) {
+    for (const FiniteSet& C : *subsets_) {
         for (size_t t : C) {
             (*taxon_clique_)[t].push_back(v);
         }
         v++;
     }
     std::map< VertexPair, bool > edges;
-    for (VertexVector V : *taxon_clique_) {
+    for (const Vertices& V : *taxon_clique_) {
         for (Vertex v : V) {
             for (Vertex u : V) {
                 if (u < v) {
