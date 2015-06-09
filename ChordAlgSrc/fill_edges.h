@@ -13,7 +13,7 @@
 
 namespace chordalg {
 
-class FillEdges : public std::vector< VertexSet > {
+class FillEdges {
  public:
     FillEdges() = delete;
     FillEdges(const FillEdges&) = delete;
@@ -33,6 +33,8 @@ class FillEdges : public std::vector< VertexSet > {
     void RemoveEdge(Vertex, Vertex);
     void Saturate(const Vertices&);
 
+    const VertexSet& operator[](size_t) const;
+    VertexSet& operator[](size_t);
     size_t fill_count() const;
     Weight fill_weight() const;
     // Returns amalgamation of neighborhoods_ and G_->neighborhoods_
@@ -41,6 +43,7 @@ class FillEdges : public std::vector< VertexSet > {
  private:
     const Graph* const G_;
 
+    std::vector< VertexSet > fill_;
     size_t fill_count_;
     Weight fill_weight_;
     AdjacencyLists* neighborhoods_;

@@ -12,8 +12,8 @@ namespace chordalg {
 // c'tors & d'tors
 
 FillEdges::FillEdges(const Graph* G) :
-    std::vector< VertexSet >(G->order(), VertexSet()),
     G_(G),
+    fill_(G->order(), VertexSet()),
     fill_count_(0),
     fill_weight_(0),
     neighborhoods_(new AdjacencyLists(G_->neighborhoods())) {
@@ -40,7 +40,11 @@ bool FillEdges::IsFillEdge(VertexPair uv) const {
 }
 
 bool FillEdges::IsFillEdge(Vertex u, Vertex v) const {
-    return (*this)[u].find(v) != (*this)[u].end();
+    if (fill_[u].size() < fill_[v].size() ) {
+        return fill_[u].find(v) != fill_[u].end();
+    } else {
+        return fill_[v].find(u) != fill_[v].end();
+    }
 }
 
 bool FillEdges::IsClique(const Vertices& U) const {
@@ -60,9 +64,9 @@ bool FillEdges::AddEdge(Vertex u, Vertex v) {
     if (IsEdge(u, v)) {
         return false;
     } else {
-        (*this)[u].insert(v);
+        fill_[u].insert(v);
         (*neighborhoods_)[u].push_back(v);
-        (*this)[v].insert(u);
+        fill_[v].insert(u);
         (*neighborhoods_)[v].push_back(u);
         fill_count_++;
         fill_weight_ += G_->FillCount(u, v);
@@ -76,8 +80,8 @@ void FillEdges::RemoveEdge(VertexPair uv) {
 }
 
 void FillEdges::RemoveEdge(Vertex u, Vertex v) {
-    (*this)[u].erase(v);
-    (*this)[v].erase(u);
+    fill_[u].erase(v);
+    fill_[v].erase(u);
     return;
 }
 
@@ -86,6 +90,14 @@ void FillEdges::Saturate(const Vertices& U) {
         AddEdge(uv);
     }
     return;
+}
+
+const VertexSet& FillEdges::operator[](size_t i) const {
+    return fill_[i];
+}
+
+VertexSet& FillEdges::operator[](size_t i) {
+    return fill_[i];
 }
 
 size_t FillEdges::fill_count() const {
@@ -99,7 +111,7 @@ Weight FillEdges::fill_weight() const {
 AdjacencyLists* FillEdges::FilledNbhds() const {
     AdjacencyLists* a_lists = new AdjacencyLists(G_->neighborhoods());
     for (Vertex v : *G_) {
-        for (Vertex u : (*this)[v]) {
+        for (Vertex u : fill_[v]) {
             (*a_lists)[v].push_back(u);
         }
         (*a_lists)[v].Sort();
