@@ -3,6 +3,7 @@
 [ ] BTAlgorithm backtracking
 [ ] Vertex class? Contains name, optional data (color, multicolor, subset...)
     Would simplify InducedSubgraph / Graph relationship (see ParentGraph)
+[ ] Maximal Label Search (Berry, Krueger, Simonet '05). Should contain LexBFS, MCS, etc. MLSM for meos.
 [ ] Smart Pointers
 [ ] Analyze/Optimize CellIntersectionGraph::CommonColors
 [ ] Remove SeparatorComponents::GetNeighborhood? Something smells funny
