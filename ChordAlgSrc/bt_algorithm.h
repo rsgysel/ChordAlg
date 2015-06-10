@@ -106,6 +106,12 @@ class TreeWidth : public CliqueType {
     unsigned long long g(const Graph&, const Vertices&) const;
 };  // class TreeWidth
 
+class MinimumFill : public FillType {
+ public:
+    using FillType::g;
+    unsigned long long g(const Graph&, const VertexPair&) const;
+};  // class MinimumFill
+
 class WeightedMinimumFill : public FillType {
  public:
     using FillType::g;

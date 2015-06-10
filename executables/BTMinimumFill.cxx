@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
     std::string filename;
     ChordAlgOptions(argc, argv, &filename);
     unsigned long long minimum_fill =
-        BTScheme::Run(filename, BTScheme::WeightedMinimumFill());
+        BTScheme::Run(filename, BTScheme::MinimumFill());
     std::cout << filename << " has minimum_fill " << minimum_fill << '\n';
     return EXIT_SUCCESS;
 }

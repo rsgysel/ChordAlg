@@ -114,6 +114,14 @@ unsigned long long TreeWidth::g(const Graph& G, const Vertices& V) const {
     return V.size() - 1;
 }
 
+unsigned long long MinimumFill::g(
+    const Graph& G,
+    const VertexPair& uv) const {
+    (void) G;
+    (void) uv;
+    return 1;
+}
+
 unsigned long long WeightedMinimumFill::g(
     const Graph& G,
     const VertexPair& uv) const {
