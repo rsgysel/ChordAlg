@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
     std::cout << "Computing minfill of connected components...";
     for (Block B : S) {
         InducedSubgraph* H = InducedSubgraph::New(G, B.C());
-        cc_minfill += BTAlgorithm::Run(*H, BTAlgorithm::WeightedMinimumFill());
+        cc_minfill += BTScheme::Run(*H, BTScheme::WeightedMinimumFill());
         delete H;
     }
     std::cout << "done.\nComputing atoms...";
@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
     std::cout << "Computing minfill of atom subgraphs...";
     unsigned long long atoms_minfill = 0;
     for (auto a : *A) {
-        atoms_minfill += BTAlgorithm::Run(*a, BTAlgorithm::WeightedMinimumFill());
+        atoms_minfill += BTScheme::Run(*a, BTScheme::WeightedMinimumFill());
     }
     std::cout << "done.\n" << std::endl;
     assert(cc_minfill == atoms_minfill);

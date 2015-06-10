@@ -38,7 +38,7 @@
 
 namespace chordalg {
 
-namespace BTAlgorithm {
+namespace BTScheme {
 
 class GraphParameter {
  public:
@@ -141,13 +141,16 @@ class GoodTripleBuckets {
 
 GoodTripleBuckets* GenerateGoodTriples(const Graph&, const MinsepTrie&);
 
+unsigned long long Run(const std::string&, const CliqueType&);
+unsigned long long Run(const std::string&, const FillType&);
+
 // Runs minimization algorithm on graph G.
 // WARNING: assumes G is connected.
 // Either compute connected InducedSubgraphs
 // or compute AtomSubgraphs first.
 unsigned long long Run(const Graph&, const GraphParameter&);
 
-}  // namespace BTAlgorithm
+}  // namespace BTScheme
 
 }  // namespace chordalg
 

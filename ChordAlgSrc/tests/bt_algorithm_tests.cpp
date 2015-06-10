@@ -27,7 +27,7 @@ class FullBlocksTest : public testing ::Test {
         } else {
             G_ = new chordalg::Graph(new chordalg::AdjacencyLists(A));
             MS_ = chordalg::MinimalSeparators::Generate(*G_);
-            B_ = chordalg::BTAlgorithm::GoodTripleBuckets::New(G_, *MS_);
+            B_ = chordalg::BTScheme::GoodTripleBuckets::New(G_, *MS_);
             size_t full_blocks_seen = 0, inclusion_minimal_full_blocks_seen = 0;
             for (auto bucket : B_->good_triples()) {
                 for (auto pair : bucket) {
@@ -45,7 +45,7 @@ class FullBlocksTest : public testing ::Test {
  protected:
     chordalg::Graph* G_;
     chordalg::MinsepTrie* MS_;
-    chordalg::BTAlgorithm::GoodTripleBuckets* B_;
+    chordalg::BTScheme::GoodTripleBuckets* B_;
 };  // FullBlocksTest
 
 ////////

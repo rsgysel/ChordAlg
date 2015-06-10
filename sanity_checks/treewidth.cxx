@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
     std::cout << "Computing treewidth of connected components...";
     for (Block B : S) {
         InducedSubgraph* H = InducedSubgraph::New(G, B.C());
-        cc_tw = std::max(cc_tw, BTAlgorithm::Run(*H, BTAlgorithm::TreeWidth()));
+        cc_tw = std::max(cc_tw, BTScheme::Run(*H, BTScheme::TreeWidth()));
         delete H;
     }
     std::cout << "done.\nComputing atoms...";
@@ -40,7 +40,7 @@ int main(int argc, char** argv) {
     std::cout << "Computing treewidth of atom subgraphs...";
     unsigned long long atoms_tw = 0;
     for (auto a : *A) {
-        atoms_tw = std::max(atoms_tw, BTAlgorithm::Run(*a, BTAlgorithm::TreeWidth()));
+        atoms_tw = std::max(atoms_tw, BTScheme::Run(*a, BTScheme::TreeWidth()));
     }
     std::cout << "done.\n" << std::endl;
     assert(cc_tw == atoms_tw);

@@ -4,6 +4,7 @@
 #include <limits>
 #include <map>
 
+#include "ChordAlgSrc/atoms.h"
 #include "ChordAlgSrc/graph.h"
 #include "ChordAlgSrc/minimal_separators.h"
 #include "ChordAlgSrc/potential_maxcliques.h"
@@ -12,7 +13,7 @@
 
 namespace chordalg {
 
-namespace BTAlgorithm {
+namespace BTScheme {
 
 unsigned long long GraphParameter::PMCRScore(
     const Graph& G,
@@ -188,6 +189,30 @@ const std::vector< GoodTripleVector >& GoodTripleBuckets::good_triples() const {
     return good_triples_;
 }
 
+unsigned long long Run(const std::string& filename, const CliqueType& f_c) {
+    Graph* G = Graph::New(filename);
+    Atoms* A = Atoms::New(G);
+    unsigned long long result = 0;
+    for (auto a : *A) {
+        result = std::max(result, Run(*a, f_c));
+    }
+    delete A;
+    delete G;
+    return result;
+}
+
+unsigned long long Run(const std::string& filename, const FillType& f_f) {
+    Graph* G = Graph::New(filename);
+    Atoms* A = Atoms::New(G);
+    unsigned long long result = 0;
+    for (auto a : *A) {
+        result += Run(*a, f_f);
+    }
+    delete A;
+    delete G;
+    return result;
+}
+
 unsigned long long Run(const Graph& G, const GraphParameter& F) {
     unsigned long long result =
         std::numeric_limits< unsigned long long >::max();
@@ -209,7 +234,6 @@ unsigned long long Run(const Graph& G, const GraphParameter& F) {
             const Block& b = good_triple.first;
             Vertices block_vertices;
             block_vertices.SetUnion(b.C(), b.NC());
-            // If 
             if (G.IsClique(block_vertices)) {
                 unsigned long long score = F.g(G, block_vertices);
                 block_score.Insert(b.C(), nullptr, &score);
@@ -240,7 +264,7 @@ unsigned long long Run(const Graph& G, const GraphParameter& F) {
     return result;
 }
 
-}  // namespace BTAlgorithm
+}  // namespace BTScheme
 
 }  // namespace chordalg
 
