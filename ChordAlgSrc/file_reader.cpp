@@ -169,7 +169,7 @@ void GraphFR::ComputeNames(size_t order) {
 // e U V // edge descriptors: (U,V) = e is an edge of G. not to be duplicated
 // with e V U. U and V are integers in 1, 2, ..., n
 StringAdjLists* GraphFR::ParseDimacs() {
-    StringAdjLists* adjacency_lists;
+    StringAdjLists* adjacency_lists = nullptr;
     size_t order;
     std::string line;
     while (file_->GetLine(line)) {
