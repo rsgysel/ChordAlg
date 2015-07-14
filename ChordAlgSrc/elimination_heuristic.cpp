@@ -80,6 +80,10 @@ bool EliminationParameters::LBElimination() const {
     return mode_ == EliminationMode::LBELIMINATION;
 }
 
+bool EliminationParameters::LBSeparation() const {
+    return mode_ == EliminationMode::LBSEPARATION;
+}
+
 bool EliminationParameters::Mixed() const {
     return mode_ == EliminationMode::MIXED;
 }
@@ -94,14 +98,17 @@ void EliminationHeuristic::Run() {
         remaining_vertices_.insert(v);
     }
     tie_count_.clear();
-    if (!parameters_->Classic()) {
+    if (parameters_->LBSeparation()) {
         // Monochromatic pair costs
         for (Vertex v : *G_) {
             for (Vertex u : *G_) {
+                if (u != v) {
                 Weight wt = G_->FillCount(u, v);
-                if (u != v && wt > 0) {
-                    VertexPair uv = VertexPair(std::min(u, v), std::max(u, v));
-                    unseparated_pairs_[uv] = wt;
+                    if (wt > 0) {
+                        VertexPair uv =
+                            VertexPair(std::min(u, v), std::max(u, v));
+                        unseparated_pairs_[uv] = wt;
+                    }
                 }
             }
         }
@@ -172,7 +179,9 @@ void EliminationHeuristic::Eliminate(Vertex v) {
         for (Block B : *B_) {
             for (VertexPair uv : VertexPairs(B.NC())) {
                 fill_edges_->AddEdge(uv);
-                unseparated_pairs_.erase(uv);
+                if (parameters_->LBSeparation()) {
+                    unseparated_pairs_.erase(uv);
+                }
             }
         }
         return;
@@ -221,7 +230,7 @@ bool EliminationHeuristic::IsRemoved(Vertex v) {
 }
 
 std::pair< Weight, Weight > EliminationHeuristic::WeightOf(Vertex v) {
-    if (parameters_->LBElimination()) {
+    if (parameters_->LBElimination() || parameters_->LBSeparation()) {
         Weight deficiency_wt = 0, separated_wt = 0;
         B_->SeparateClosedNbhd(v, fill_edges_);
         // monochromatic fill pairs
@@ -236,13 +245,15 @@ std::pair< Weight, Weight > EliminationHeuristic::WeightOf(Vertex v) {
         for (VertexPair uw : new_fill_edges) {
             deficiency_wt += G_->FillCount(uw);
         }
+        if (parameters_->LBSeparation()) {
         // new monochromatic separation
-        for (std::pair< VertexPair, Weight > p : unseparated_pairs_) {
-            VertexPair uw = p.first;
-            Vertex u = uw.first, w = uw.second;
-            Weight fill_weight = p.second;
-            if (B_->AreSeparated(u, w)) {
-                separated_wt += fill_weight;
+            for (std::pair< VertexPair, Weight > p : unseparated_pairs_) {
+                VertexPair uw = p.first;
+                Vertex u = uw.first, w = uw.second;
+                Weight fill_weight = p.second;
+                if (B_->AreSeparated(u, w)) {
+                    separated_wt += fill_weight;
+                }
             }
         }
         return std::pair< Weight, Weight >(

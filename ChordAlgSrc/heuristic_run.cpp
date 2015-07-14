@@ -156,6 +156,10 @@ bool HeuristicRun::Compatible(
             return true;
         }
     } else if (mode == EliminationMode::LBELIMINATION) {
+        if (criterion == EliminationCriterion::DEFICIENCY) {
+            return true;
+        }
+    } else if (mode == EliminationMode::LBSEPARATION) {
         if (criterion == EliminationCriterion::RATIO ||
             criterion == EliminationCriterion::WSUM) {
             return true;

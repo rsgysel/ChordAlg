@@ -29,6 +29,7 @@ enum class EliminationCriterion {
 enum class EliminationMode {
     CLASSIC,
     LBELIMINATION,
+    LBSEPARATION,
     MIXED
 };  // EliminationMode
 
@@ -47,6 +48,7 @@ class EliminationParameters {
     Weight ObjectiveFn(Weight, Weight separation = 0) const;
     bool Classic() const;
     bool LBElimination() const;
+    bool LBSeparation() const;
     bool Mixed() const;
 
  protected:
