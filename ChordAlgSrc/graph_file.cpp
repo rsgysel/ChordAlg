@@ -31,7 +31,7 @@ GraphFile::~GraphFile() {
 GraphFile* GraphFile::New(std::string filename) {
     GraphFile* file = new GraphFile();
     file->file_stream_.open(filename.c_str());
-    file->AssertOrDie(file->file_stream_, "Error: can't open " + filename);
+    file->AssertOrDie(static_cast<bool>(file->file_stream_), "Error: can't open " + filename);
     file->GetFileType(filename);
     return file;
 }
@@ -86,7 +86,7 @@ void GraphFile::GetFileType(std::string filename) {
 bool GraphFile::IsAdjacencyListFile(std::string filename) const {
     std::ifstream file_stream;
     file_stream.open(filename);
-    AssertOrDie(file_stream, "Error: can't open " + filename);
+    AssertOrDie(static_cast<bool>(file_stream), "Error: can't open " + filename);
 
     // First line should be number of vertices
     std::string line;
@@ -135,7 +135,7 @@ bool GraphFile::IsAdjacencyListFile(std::string filename) const {
 bool GraphFile::IsDimacsFile(std::string filename) const {
     std::ifstream file_stream;
     file_stream.open(filename);
-    AssertOrDie(file_stream, "Error: can't open " + filename);
+    AssertOrDie(static_cast<bool>(file_stream), "Error: can't open " + filename);
 
     bool problem_line_seen = false;
     size_t vertices = 0, edges = 0;
@@ -198,7 +198,7 @@ bool GraphFile::IsDimacsFile(std::string filename) const {
 bool GraphFile::IsMatrixFile(std::string filename) const {
     std::ifstream file_stream;
     file_stream.open(filename);
-    AssertOrDie(file_stream, "Error: can't open " + filename);
+    AssertOrDie(static_cast<bool>(file_stream), "Error: can't open " + filename);
 
     // First line is the name of the experiment, and is arbitrary
     std::string line;
@@ -243,7 +243,7 @@ bool GraphFile::IsMatrixFile(std::string filename) const {
 bool GraphFile::IsNexusMRPFile(std::string filename) const {
     std::ifstream file_stream;
     file_stream.open(filename);
-    AssertOrDie(file_stream, "Error: can't open " + filename);
+    AssertOrDie(static_cast<bool>(file_stream), "Error: can't open " + filename);
 
     // Line 1: #NEXUS
     std::string line;

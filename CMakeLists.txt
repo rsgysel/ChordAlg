@@ -2,14 +2,9 @@ cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
 
 project("ChordAlg")
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/Modules)
-
-enable_testing()
-include(gmock)
-
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
     "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    set(warnings "-pedantic -Wall -Wextra -Wcast-align -Wcast-qual -Wdisabled-optimization -Wformat=2 -Winit-self -Wlogical-op -Wmissing-include-dirs -Wnoexcept -Wold-style-cast -Woverloaded-virtual -Wredundant-decls -Wsign-promo -Wstrict-null-sentinel -Wstrict-overflow=5 -Wswitch-default -Werror -Wno-unused")
+    set(warnings "-Wall -Wextra -Werror")
     set(debug_flags "-g")
     set(opt_flags "-O3")
 endif()

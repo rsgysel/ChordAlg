@@ -25,4 +25,4 @@ add_library(ChordAlgLib
                 triangulation.cpp
                 vertices.cpp)
 
-add_subdirectory(tests)
+#add_subdirectory(tests)

@@ -49,7 +49,6 @@ class EliminationOrder {
 
     Vertices alpha_;  // alpha[i] = ith vertex eliminated
     std::vector< int > alpha_inverse_;
-    bool filled_;
 };  // class EliminationOrder
 
 }  // namespace chordalg
